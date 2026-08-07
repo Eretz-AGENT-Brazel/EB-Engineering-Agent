@@ -1,0 +1,8 @@
+{"op": "beam", "args": {"name": "HE200B", "catalog": "DIN_HEB", "p1": "0,1500,0", "p2": "2000,1500,0", "rot": 0}, "handle": "1F1", "ts": "16:12:52"}
+{"op": "beam", "args": {"name": "HE200B", "catalog": "DIN_HEB", "p1": "0,4500,0", "p2": "2000,4500,0", "rot": 0}, "handle": "1F4", "ts": "16:12:53"}
+{"op": "beam", "args": {"name": "HE200B", "catalog": "DIN_HEB", "p1": "0,7500,0", "p2": "2000,7500,0", "rot": 0}, "handle": "1F5", "ts": "16:12:53"}
+{"op": "beam", "args": {"name": "HE200B", "catalog": "DIN_HEB", "p1": "0,10500,0", "p2": "2000,10500,0", "rot": 0}, "handle": "1F6", "ts": "16:12:55"}
+{"op": "beam", "args": {"name": "U200", "catalog": "DIN_U", "p1": "0,-1000,0", "p2": "6000,-1000,0", "rot": 0}, "handle": "1F8", "ts": "16:12:56"}
+{"op": "beam", "args": {"name": "U200", "catalog": "DIN_U", "p1": "0,0,0", "p2": "5000.0,0,0", "rot": 0}, "handle": "231", "ts": "16:43:46"}
+{"op": "beam", "args": {"name": "U200", "catalog": "DIN_U", "p1": "5000.0,0,0", "p2": "5000.0,6000.0,0", "rot": 0}, "handle": "237", "ts": "16:45:48"}
+{"op": "beam", "args": {"name": "U200", "catalog": "DIN_U", "p1": "5000.0,6000.0,0", "p2": "5000.0,6000.0,6000", "rot": 0}, "handle": "238", "ts": "16:46:07"}

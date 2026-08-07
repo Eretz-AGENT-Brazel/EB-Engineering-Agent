@@ -1,0 +1,11 @@
+{"op": "bolt", "args": {"p1": "500,0,1000", "p2": "500,0,1060", "dia": 20, "style": "DIN6914", "hosts": ""}, "handle": "2BA", "ts": "15:24:50"}
+{"op": "boltfield", "args": {"center": "500,500,300", "nx": 2, "ny": 2, "sx": 100, "sy": 100, "dia": 20, "gap": 60, "style": "DIN6914", "hosts": ""}, "handle": null, "ts": "15:25:24"}
+{"op": "conn_bolted", "args": {"at": "3000,1500,250", "pl": 220, "pw": 220, "pt": 20, "gap": 60, "nx": 2, "ny": 2, "sx": 100, "sy": 100, "dia": 20, "style": "DIN6914"}, "handle": null, "ts": "15:25:27"}
+{"op": "beam", "args": {"name": "RR150x100x4", "catalog": "DIN_RECHTECKROHR_KALT", "p1": "0,-2000,0", "p2": "6000,-2000,0", "rot": 0}, "handle": "2CE", "ts": "15:27:09"}
+{"op": "beam", "args": {"name": "U220", "catalog": "DIN_U", "p1": "0,-2500,0", "p2": "3000,-2500,0", "rot": 0}, "handle": "2D0", "ts": "15:29:17"}
+{"op": "beam", "args": {"name": "U140", "catalog": "DIN_U", "p1": "0,-3000,0", "p2": "3000,-3000,0", "rot": 0}, "handle": "2D2", "ts": "15:29:17"}
+{"op": "beam", "args": {"name": "HE500B", "catalog": "DIN_HEB", "p1": "0,0,0", "p2": "6000,0,0", "rot": 0}, "handle": "E2", "ts": "15:32:22"}
+{"op": "beam", "args": {"name": "HE500B", "catalog": "DIN_HEB", "p1": "0,3000,0", "p2": "6000,3000,0", "rot": 0}, "handle": "E5", "ts": "15:32:23"}
+{"op": "beam", "args": {"name": "HE500A", "catalog": "DIN_HEA", "p1": "0,0,0", "p2": "6000,3000,0", "rot": 0}, "handle": "E7", "ts": "15:32:24"}
+{"op": "miter", "args": {"cut": "E7", "other": "E2", "type": 1}, "handle": null, "ts": "15:32:25"}
+{"op": "conn_bolted", "args": {"at": "6000,3000,0", "pl": 220, "pw": 220, "pt": 20, "gap": 60, "nx": 2, "ny": 2, "sx": 100, "sy": 100, "dia": 20, "style": "DIN6914"}, "handle": null, "ts": "15:32:26"}

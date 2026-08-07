@@ -1,0 +1,1549 @@
+[
+ {
+  "module": "en-1990-basis-of-structural-design-ec0",
+  "fact": "γ_G,sup unfavourable permanent action, STR/GEO",
+  "value": "1.35",
+  "clause": "Table A1.2(B)",
+  "source": "EN 1990:2002+A1"
+ },
+ {
+  "module": "en-1990-basis-of-structural-design-ec0",
+  "fact": "γ_Q unfavourable variable action, STR/GEO",
+  "value": "1.50",
+  "clause": "Table A1.2(B)",
+  "source": "EN 1990:2002+A1"
+ },
+ {
+  "module": "en-1990-basis-of-structural-design-ec0",
+  "fact": "γ_G,inf favourable permanent action, STR/GEO",
+  "value": "1.00",
+  "clause": "Table A1.2(B)",
+  "source": "EN 1990:2002+A1"
+ },
+ {
+  "module": "en-1990-basis-of-structural-design-ec0",
+  "fact": "ξ reduction factor on permanent actions in eq. 6.10b (CEN recommended)",
+  "value": "0.85",
+  "clause": "Table A1.2(B) / eq. 6.10b",
+  "source": "EN 1990:2002+A1"
+ },
+ {
+  "module": "en-1990-basis-of-structural-design-ec0",
+  "fact": "γ_G,sup / γ_G,inf for EQU verification",
+  "value": "1.10 / 0.90",
+  "clause": "Table A1.2(A)",
+  "source": "EN 1990:2002+A1"
+ },
+ {
+  "module": "en-1990-basis-of-structural-design-ec0",
+  "fact": "γ_Q unfavourable variable action, EQU",
+  "value": "1.50",
+  "clause": "Table A1.2(A)",
+  "source": "EN 1990:2002+A1"
+ },
+ {
+  "module": "en-1990-basis-of-structural-design-ec0",
+  "fact": "All partial factors in accidental and seismic design situations",
+  "value": "1.00",
+  "clause": "§6.4.3.3–6.4.3.4",
+  "source": "EN 1990:2002+A1"
+ },
+ {
+  "module": "en-1990-basis-of-structural-design-ec0",
+  "fact": "ψ0/ψ1/ψ2 imposed loads Category A (domestic) & B (office)",
+  "value": "0.7 / 0.5 / 0.3",
+  "clause": "Table A1.1",
+  "source": "EN 1990:2002+A1"
+ },
+ {
+  "module": "en-1990-basis-of-structural-design-ec0",
+  "fact": "ψ0/ψ1/ψ2 imposed loads Category C (congregation) & D (shopping)",
+  "value": "0.7 / 0.7 / 0.6",
+  "clause": "Table A1.1",
+  "source": "EN 1990:2002+A1"
+ },
+ {
+  "module": "en-1990-basis-of-structural-design-ec0",
+  "fact": "ψ0/ψ1/ψ2 imposed loads Category E (storage)",
+  "value": "1.0 / 0.9 / 0.8",
+  "clause": "Table A1.1",
+  "source": "EN 1990:2002+A1"
+ },
+ {
+  "module": "en-1990-basis-of-structural-design-ec0",
+  "fact": "ψ0/ψ1/ψ2 snow loads (sites with H ≤ 1000 m a.s.l.)",
+  "value": "0.7 / 0.5 / 0.2",
+  "clause": "Table A1.1",
+  "source": "EN 1990:2002+A1"
+ },
+ {
+  "module": "en-1990-basis-of-structural-design-ec0",
+  "fact": "ψ0/ψ1/ψ2 wind loads",
+  "value": "0.6 / 0.2 / 0",
+  "clause": "Table A1.1",
+  "source": "EN 1990:2002+A1"
+ },
+ {
+  "module": "en-1990-basis-of-structural-design-ec0",
+  "fact": "K_FI multiplier on γ for unfavourable actions: RC1 / RC2 / RC3",
+  "value": "0.9 / 1.0 / 1.1",
+  "clause": "Annex B, Table B3",
+  "source": "EN 1990:2002+A1"
+ },
+ {
+  "module": "en-1990-basis-of-structural-design-ec0",
+  "fact": "Target reliability index β (ULS, 50-year ref.): RC1 / RC2 / RC3",
+  "value": "3.3 / 3.8 / 4.3",
+  "clause": "Annex B, Table B2",
+  "source": "EN 1990:2002+A1"
+ },
+ {
+  "module": "en-1990-basis-of-structural-design-ec0",
+  "fact": "Target reliability index β (ULS, 1-year ref.): RC1 / RC2 / RC3",
+  "value": "4.2 / 4.7 / 5.2",
+  "clause": "Annex B/C, Tables B2 & C2",
+  "source": "EN 1990:2002+A1"
+ },
+ {
+  "module": "en-1990-basis-of-structural-design-ec0",
+  "fact": "Target reliability index β for SLS irreversible (50-year ref.)",
+  "value": "1.5",
+  "clause": "Annex C, Table C2",
+  "source": "EN 1990:2002+A1"
+ },
+ {
+  "module": "en-1990-basis-of-structural-design-ec0",
+  "fact": "Indicative design working life — common buildings (Category 4)",
+  "value": "50 years",
+  "clause": "Table 2.1",
+  "source": "EN 1990:2002+A1"
+ },
+ {
+  "module": "en-1990-basis-of-structural-design-ec0",
+  "fact": "Indicative design working life — monumental/bridges (Category 5)",
+  "value": "100 years",
+  "clause": "Table 2.1",
+  "source": "EN 1990:2002+A1"
+ },
+ {
+  "module": "en-1991-1-1-self-weight-imposed-loads",
+  "fact": "צפיפות nominal בטון מזוין",
+  "value": "25 kN/m³",
+  "source": "EN 1991-1-1:2002 Annex A, Table A.1",
+  "clause": "Annex A / Table A.1"
+ },
+ {
+  "module": "en-1991-1-1-self-weight-imposed-loads",
+  "fact": "צפיפות nominal בטון לא-מזוין",
+  "value": "24 kN/m³",
+  "source": "EN 1991-1-1:2002 Annex A, Table A.1",
+  "clause": "Annex A / Table A.1"
+ },
+ {
+  "module": "en-1991-1-1-self-weight-imposed-loads",
+  "fact": "צפיפות nominal פלדה מבנית",
+  "value": "77.0 kN/m³ (≈7850 kg/m³, g=9.81)",
+  "source": "EN 1991-1-1:2002 Annex A, Table A.4",
+  "clause": "Annex A / Table A.4"
+ },
+ {
+  "module": "en-1991-1-1-self-weight-imposed-loads",
+  "fact": "עומס שימושי קטגוריה A רצפות q_k",
+  "value": "1.5–2.0 kN/m²",
+  "source": "EN 1991-1-1:2002 Table 6.2 (recommended)",
+  "clause": "6.3.1.2 / Table 6.2"
+ },
+ {
+  "module": "en-1991-1-1-self-weight-imposed-loads",
+  "fact": "עומס שימושי קטגוריה B (משרדים) q_k",
+  "value": "2.0–3.0 kN/m²",
+  "source": "EN 1991-1-1:2002 Table 6.2 (recommended)",
+  "clause": "6.3.1.2 / Table 6.2"
+ },
+ {
+  "module": "en-1991-1-1-self-weight-imposed-loads",
+  "fact": "עומס שימושי קטגוריה C5 (קהל צפוף) q_k",
+  "value": "5.0–7.5 kN/m²",
+  "source": "EN 1991-1-1:2002 Table 6.2 (recommended)",
+  "clause": "6.3.1.2 / Table 6.2"
+ },
+ {
+  "module": "en-1991-1-1-self-weight-imposed-loads",
+  "fact": "עומס שימושי קטגוריה D (מסחר) q_k",
+  "value": "4.0–5.0 kN/m²",
+  "source": "EN 1991-1-1:2002 Table 6.2 (recommended)",
+  "clause": "6.3.1.2 / Table 6.2"
+ },
+ {
+  "module": "en-1991-1-1-self-weight-imposed-loads",
+  "fact": "עומס שימושי קטגוריה E1 (אחסון) q_k",
+  "value": "≥ 7.5 kN/m², Q_k 7.0 kN",
+  "source": "EN 1991-1-1:2002 Table 6.4 (recommended)",
+  "clause": "6.3.3 / Table 6.4"
+ },
+ {
+  "module": "en-1991-1-1-self-weight-imposed-loads",
+  "fact": "עומס שימושי גג קטגוריה H",
+  "value": "q_k 0.4 kN/m² (0.0–1.0), Q_k 1.0 kN (0.9–1.5)",
+  "source": "EN 1991-1-1:2002 Table 6.10 (recommended)",
+  "clause": "6.3.4.2 / Table 6.10"
+ },
+ {
+  "module": "en-1991-1-1-self-weight-imposed-loads",
+  "fact": "מקדם הפחתה לפי שטח α_A",
+  "value": "α_A = (5/7)·ψ₀ + A₀/A ≤ 1.0, A₀ = 10 m²",
+  "source": "EN 1991-1-1:2002 Eq. 6.1",
+  "clause": "6.3.1.2(10)"
+ },
+ {
+  "module": "en-1991-1-1-self-weight-imposed-loads",
+  "fact": "מקדם הפחתה לפי מספר קומות α_n",
+  "value": "α_n = [2 + (n−2)·ψ₀]/n",
+  "source": "EN 1991-1-1:2002 Eq. 6.2",
+  "clause": "6.3.1.2(11)"
+ },
+ {
+  "module": "en-1991-1-1-self-weight-imposed-loads",
+  "fact": "מקדם ψ₀ קטגוריות A,B,C,D",
+  "value": "0.7",
+  "source": "EN 1990 Table A1.1",
+  "clause": "EN 1990 A1.2.2 / Table A1.1"
+ },
+ {
+  "module": "en-1991-1-1-self-weight-imposed-loads",
+  "fact": "מקדם ψ₀ קטגוריה E (אחסון)",
+  "value": "1.0",
+  "source": "EN 1990 Table A1.1",
+  "clause": "EN 1990 A1.2.2 / Table A1.1"
+ },
+ {
+  "module": "en-1991-1-1-self-weight-imposed-loads",
+  "fact": "עומס אופקי על מעקה קטגוריה C5",
+  "value": "3.0 kN/m",
+  "source": "EN 1991-1-1:2002 Table 6.12 (recommended)",
+  "clause": "6.4 / Table 6.12"
+ },
+ {
+  "module": "en-1991-1-1-self-weight-imposed-loads",
+  "fact": "תוספת עומס מבוזר לקירות חלוקה ניידים",
+  "value": "≤2.0 kN/m → +0.8 kN/m²; ≤3.0 kN/m → +1.2 kN/m²",
+  "source": "EN 1991-1-1:2002 clause 6.3.1.2(8)",
+  "clause": "6.3.1.2(8)"
+ },
+ {
+  "module": "en-1991-1-3-snow-loads",
+  "fact": "נוסחת עומס שלג על גג, מצב תמידי/חולף",
+  "value": "s = μi·Ce·Ct·sk",
+  "clause": "EN 1991-1-3:2003 5.2(3)P a / eq. 5.1",
+  "source": "EN 1991-1-3:2003 (E) official text"
+ },
+ {
+  "module": "en-1991-1-3-snow-loads",
+  "fact": "נוסחת עומס שלג, מצב תאונתי (שלג חריג)",
+  "value": "s = μi·Ce·Ct·Cesl·sk",
+  "clause": "5.2(3)P b / eq. 5.2",
+  "source": "EN 1991-1-3:2003 (E)"
+ },
+ {
+  "module": "en-1991-1-3-snow-loads",
+  "fact": "נוסחת עומס שלג, סחיפה חריגה (Annex B)",
+  "value": "s = μi·sk (ללא Ce,Ct)",
+  "clause": "5.2(3)P c / eq. 5.3",
+  "source": "EN 1991-1-3:2003 (E)"
+ },
+ {
+  "module": "en-1991-1-3-snow-loads",
+  "fact": "מקדם חשיפה Ce — windswept / normal / sheltered",
+  "value": "0.8 / 1.0 / 1.2",
+  "clause": "Table 5.1 + 5.2(7)",
+  "source": "EN 1991-1-3:2003 (E), cross-checked FIN EC / Structural Basics"
+ },
+ {
+  "module": "en-1991-1-3-snow-loads",
+  "fact": "מקדם תרמי Ct ברירת מחדל",
+  "value": "1.0",
+  "clause": "5.2(8)",
+  "source": "EN 1991-1-3:2003 (E)"
+ },
+ {
+  "module": "en-1991-1-3-snow-loads",
+  "fact": "מקדם צורה μ1 גג חד/דו-שיפוע, 0°≤α≤30°",
+  "value": "0.8",
+  "clause": "Table 5.2 / 5.3.2",
+  "source": "EN 1991-1-3:2003 (E)"
+ },
+ {
+  "module": "en-1991-1-3-snow-loads",
+  "fact": "מקדם צורה μ1, 30°<α<60°",
+  "value": "0.8·(60−α)/30",
+  "clause": "Table 5.2",
+  "source": "EN 1991-1-3:2003 (E)"
+ },
+ {
+  "module": "en-1991-1-3-snow-loads",
+  "fact": "מקדם צורה μ1, α≥60°",
+  "value": "0",
+  "clause": "Table 5.2",
+  "source": "EN 1991-1-3:2003 (E)"
+ },
+ {
+  "module": "en-1991-1-3-snow-loads",
+  "fact": "מקדם עמק μ2 גג רב-מפתחים",
+  "value": "0.8 + 0.8·α/30 (α=(α1+α2)/2), מקס' 1.6",
+  "clause": "Table 5.2 / 5.3.4",
+  "source": "EN 1991-1-3:2003 (E)"
+ },
+ {
+  "module": "en-1991-1-3-snow-loads",
+  "fact": "מקדם גג גלילי μ3 (β≤60°)",
+  "value": "0.2 + 10·h/b, מוגבל ל-≤ 2.0",
+  "clause": "5.3.5(1) / eq. 5.5",
+  "source": "EN 1991-1-3:2003 (E)"
+ },
+ {
+  "module": "en-1991-1-3-snow-loads",
+  "fact": "מינימום μ בנוכחות מעצורי שלג/מעקה",
+  "value": "לא יפחת מ-0.8",
+  "clause": "5.3.2(2), 5.3.3(2)",
+  "source": "EN 1991-1-3:2003 (E)"
+ },
+ {
+  "module": "en-1991-1-3-snow-loads",
+  "fact": "מקדם שלג חריג Cesl (מומלץ)",
+  "value": "2.0",
+  "clause": "4.3(1) Note",
+  "source": "EN 1991-1-3:2003 (E)"
+ },
+ {
+  "module": "en-1991-1-3-snow-loads",
+  "fact": "צפיפות שלג לחישוב הצטברות/סחיפה γ",
+  "value": "2 kN/m³",
+  "clause": "5.3.6, 6.2",
+  "source": "EN 1991-1-3:2003 (E)"
+ },
+ {
+  "module": "en-1991-1-3-snow-loads",
+  "fact": "צפיפות שלג לחישוב overhang γ",
+  "value": "3 kN/m³",
+  "clause": "6.3",
+  "source": "EN 1991-1-3:2003 (E)"
+ },
+ {
+  "module": "en-1991-1-3-snow-loads",
+  "fact": "הגבלת אורך סחיפה ls",
+  "value": "5 m ≤ ls ≤ 15 m (ls=2h)",
+  "clause": "5.3.6, 6.2",
+  "source": "EN 1991-1-3:2003 (E)"
+ },
+ {
+  "module": "en-1991-1-3-snow-loads",
+  "fact": "מקדם μ2 בהצטברות ליד בליטות",
+  "value": "γ·h/sk, מוגבל 0.8 ≤ μ2 ≤ 2.0",
+  "clause": "6.2 / eq. 6.1–6.2",
+  "source": "EN 1991-1-3:2003 (E)"
+ },
+ {
+  "module": "en-1991-1-3-snow-loads",
+  "fact": "מקדם μw בגג צמוד למבנה גבוה (טווח מומלץ)",
+  "value": "0.8 ≤ μw ≤ 4",
+  "clause": "5.3.6 Note",
+  "source": "EN 1991-1-3:2003 (E)"
+ },
+ {
+  "module": "en-1991-1-3-snow-loads",
+  "fact": "כוח החלקת שלג על מעצור Fs",
+  "value": "Fs = s·b·sin α",
+  "clause": "6.4 / eq. 6.5",
+  "source": "EN 1991-1-3:2003 (E)"
+ },
+ {
+  "module": "en-1991-1-3-snow-loads",
+  "fact": "צפיפות שלג Annex E — fresh/settled/old/wet",
+  "value": "1.0 / 2.0 / 2.5–3.5 / 4.0 kN/m³",
+  "clause": "Table E.1",
+  "source": "EN 1991-1-3:2003 (E)"
+ },
+ {
+  "module": "en-1991-1-3-snow-loads",
+  "fact": "ψ0/ψ1/ψ2 שלג, אתרים H≤1000 m",
+  "value": "0.50 / 0.20 / 0.00",
+  "clause": "Table 4.1",
+  "source": "EN 1991-1-3:2003 (E)"
+ },
+ {
+  "module": "en-1991-1-3-snow-loads",
+  "fact": "ψ0/ψ1/ψ2 שלג, אתרים H>1000 m",
+  "value": "0.70 / 0.50 / 0.20",
+  "clause": "Table 4.1",
+  "source": "EN 1991-1-3:2003 (E)"
+ },
+ {
+  "module": "en-1991-1-3-snow-loads",
+  "fact": "הסתברות שנתית לחריגה של sk (ערך אופייני)",
+  "value": "0.02 (תקופת חזרה 50 שנה)",
+  "clause": "1.6.1 / Annex D",
+  "source": "EN 1991-1-3:2003 (E)"
+ },
+ {
+  "module": "en-1991-1-3-snow-loads",
+  "fact": "גבול גובה תחולת התקן",
+  "value": "עד 1500 m מעל פני הים",
+  "clause": "1.1(2)",
+  "source": "EN 1991-1-3:2003 (E)"
+ },
+ {
+  "module": "en-1991-1-3-snow-loads",
+  "fact": "מהדורה נוכחית + דור שני",
+  "value": "EN 1991-1-3:2003 (+A1:2015) בתוקף; EN 1991-1-3:2025 פורסמה, מודל Ce חדש מבוסס רוח",
+  "clause": "Foreword / CEN 2025",
+  "source": "CEN catalogue / newsteelconstruction"
+ },
+ {
+  "module": "en-1991-1-4-wind-actions",
+  "fact": "Terrain Category 0 roughness length z0",
+  "value": "0.003 m; zmin = 1 m",
+  "clause": "EN 1991-1-4:2005 Table 4.1",
+  "source": "eurocodeapplied.com; JRC EN1991_4"
+ },
+ {
+  "module": "en-1991-1-4-wind-actions",
+  "fact": "Terrain Category I",
+  "value": "z0 = 0.01 m; zmin = 1 m",
+  "clause": "EN 1991-1-4:2005 Table 4.1",
+  "source": "multiple engineering references"
+ },
+ {
+  "module": "en-1991-1-4-wind-actions",
+  "fact": "Terrain Category II",
+  "value": "z0 = 0.05 m; zmin = 2 m",
+  "clause": "EN 1991-1-4:2005 Table 4.1",
+  "source": "SkyCiv; eurocodeapplied.com"
+ },
+ {
+  "module": "en-1991-1-4-wind-actions",
+  "fact": "Terrain Category III",
+  "value": "z0 = 0.3 m; zmin = 5 m",
+  "clause": "EN 1991-1-4:2005 Table 4.1",
+  "source": "multiple engineering references"
+ },
+ {
+  "module": "en-1991-1-4-wind-actions",
+  "fact": "Terrain Category IV",
+  "value": "z0 = 1.0 m; zmin = 10 m",
+  "clause": "EN 1991-1-4:2005 Table 4.1",
+  "source": "multiple engineering references"
+ },
+ {
+  "module": "en-1991-1-4-wind-actions",
+  "fact": "Reference roughness length z0,II (base for kr)",
+  "value": "0.05 m",
+  "clause": "EN 1991-1-4 §4.3.2, Eq 4.5",
+  "source": "eurocodeapplied.com"
+ },
+ {
+  "module": "en-1991-1-4-wind-actions",
+  "fact": "Terrain factor formula kr",
+  "value": "kr = 0.19*(z0/z0,II)^0.07",
+  "clause": "EN 1991-1-4 Eq 4.5",
+  "source": "JRC; eurocodeapplied.com"
+ },
+ {
+  "module": "en-1991-1-4-wind-actions",
+  "fact": "Recommended air density rho",
+  "value": "1.25 kg/m3",
+  "clause": "EN 1991-1-4 §4.5 (note)",
+  "source": "SkyCiv worked example"
+ },
+ {
+  "module": "en-1991-1-4-wind-actions",
+  "fact": "Peak velocity pressure formula qp(z)",
+  "value": "qp(z) = [1 + 7*Iv(z)] * 0.5 * rho * vm(z)^2",
+  "clause": "EN 1991-1-4 Eq 4.8",
+  "source": "SkyCiv; JRC"
+ },
+ {
+  "module": "en-1991-1-4-wind-actions",
+  "fact": "Turbulence intensity factor kI (recommended)",
+  "value": "1.0",
+  "clause": "EN 1991-1-4 §4.4 (note)",
+  "source": "engineering references"
+ },
+ {
+  "module": "en-1991-1-4-wind-actions",
+  "fact": "Maximum height of applicability zmax",
+  "value": "200 m",
+  "clause": "EN 1991-1-4 §1.1 / §4.3",
+  "source": "engineering references"
+ },
+ {
+  "module": "en-1991-1-4-wind-actions",
+  "fact": "Directional and seasonal factors (recommended)",
+  "value": "cdir = 1.0; cseason = 1.0",
+  "clause": "EN 1991-1-4 §4.2 (notes)",
+  "source": "SkyCiv"
+ },
+ {
+  "module": "en-1991-1-4-wind-actions",
+  "fact": "Probability factor cprob constants",
+  "value": "cprob = [(1-K*ln(-ln(1-p)))/(1-K*ln(-ln(0.98)))]^n; K=0.2, n=0.5",
+  "clause": "EN 1991-1-4 §4.2, Eq 4.2",
+  "source": "sigmundcarlo.net EU_029.pdf"
+ },
+ {
+  "module": "en-1991-1-4-wind-actions",
+  "fact": "Internal pressure coefficient cpi (no dominant opening info)",
+  "value": "more onerous of +0.2 and -0.3",
+  "clause": "EN 1991-1-4 §7.2.9 (note)",
+  "source": "Dlubal; eng references"
+ },
+ {
+  "module": "en-1991-1-4-wind-actions",
+  "fact": "External pressure coefficient reference areas",
+  "value": "cpe,10 for Aref >= 10 m2; cpe,1 for Aref <= 1 m2",
+  "clause": "EN 1991-1-4 §7.2.1",
+  "source": "engineering references"
+ },
+ {
+  "module": "en-1991-1-4-wind-actions",
+  "fact": "Circular cylinder force coefficient",
+  "value": "cf = cf,0 * psi_lambda (cf,0 f(Re, k/b))",
+  "clause": "EN 1991-1-4 §7.9, Eq 7.19",
+  "source": "Dlubal cylinder examples"
+ },
+ {
+  "module": "en-1991-1-4-wind-actions",
+  "fact": "Net wind force on structure",
+  "value": "Fw = cscd * cf * qp(ze) * Aref",
+  "clause": "EN 1991-1-4 §5.3",
+  "source": "fppengineering; eng references"
+ },
+ {
+  "module": "en-1991-1-4-wind-actions",
+  "fact": "Structural factor cscd = 1.0 permitted",
+  "value": "buildings < 15 m height (and other cases per §6.2)",
+  "clause": "EN 1991-1-4 §6.2(1)",
+  "source": "fppengineering"
+ },
+ {
+  "module": "en-1991-1-4-wind-actions",
+  "fact": "Current edition",
+  "value": "EN 1991-1-4:2005 + A1:2010 (with 2010 corrigenda)",
+  "clause": "CEN publication status",
+  "source": "CEN/JRC"
+ },
+ {
+  "module": "en-1991-1-4-wind-actions",
+  "fact": "Governing wind standard in Israel",
+  "value": "SI 414 (ת\"י 414), 2008 + A4 (2020/2022) — not the Eurocode",
+  "clause": "SI 414",
+  "source": "Dlubal SI 414 load zone tool"
+ },
+ {
+  "module": "ec1-thermal-execution-accidental-en1991-1-5-1-6-1-7",
+  "fact": "פלדה מבנית — מקדם התפשטות תרמית לינארי αT",
+  "value": "12×10⁻⁶ K⁻¹",
+  "clause": "EN 1991-1-5:2003 Annex C, Table C.1",
+  "source": "JRC EN1991_5 Holický (Linear expansion coefficients: structural steel 12)"
+ },
+ {
+  "module": "ec1-thermal-execution-accidental-en1991-1-5-1-6-1-7",
+  "fact": "בטון — מקדם התפשטות תרמית αT",
+  "value": "10×10⁻⁶ K⁻¹",
+  "clause": "EN 1991-1-5:2003 Annex C, Table C.1",
+  "source": "JRC EN1991_5 Holický"
+ },
+ {
+  "module": "ec1-thermal-execution-accidental-en1991-1-5-1-6-1-7",
+  "fact": "נירוסטה / אלומיניום — αT",
+  "value": "16 / 24 ×10⁻⁶ K⁻¹",
+  "clause": "EN 1991-1-5:2003 Annex C, Table C.1",
+  "source": "JRC EN1991_5 Holický"
+ },
+ {
+  "module": "ec1-thermal-execution-accidental-en1991-1-5-1-6-1-7",
+  "fact": "ערך אופייני של פעולה תרמית — הסתברות שנתית להיחרגות / תקופת חזרה",
+  "value": "p = 0.02 / 50 שנה",
+  "clause": "EN 1991-1-5:2003 §5.3",
+  "source": "JRC EN1991_5 Holický (Basic principles: 0.02, return period 50 years)"
+ },
+ {
+  "module": "ec1-thermal-execution-accidental-en1991-1-5-1-6-1-7",
+  "fact": "טמפרטורה אפקטיבית גשר Type 1 (פלדה)",
+  "value": "Te,max=Tmax+16°C ; Te,min=Tmin−3°C",
+  "clause": "EN 1991-1-5:2003 §6.1.3.1, Fig 6.1",
+  "source": "JRC EN1991_5 Holický (Uniform effective temperatures)"
+ },
+ {
+  "module": "ec1-thermal-execution-accidental-en1991-1-5-1-6-1-7",
+  "fact": "טמפרטורה אפקטיבית גשר Type 3 (בטון)",
+  "value": "Te,max=Tmax+1.5°C ; Te,min=Tmin+8°C",
+  "clause": "EN 1991-1-5:2003 §6.1.3.1, Fig 6.1",
+  "source": "JRC EN1991_5 Holický"
+ },
+ {
+  "module": "ec1-thermal-execution-accidental-en1991-1-5-1-6-1-7",
+  "fact": "הפרש טמפרטורה לינארי אנכי (Approach 1) — פלדה heat/cool",
+  "value": "18 / 13 °C",
+  "clause": "EN 1991-1-5:2003 Table 6.1",
+  "source": "JRC EN1991_5 Holický (Approach 1: Type 1 steel 18/13)"
+ },
+ {
+  "module": "ec1-thermal-execution-accidental-en1991-1-5-1-6-1-7",
+  "fact": "מקדמי שילוב רכיב אחיד+הפרשי בגשרים",
+  "value": "ωN=0.35 ; ωM=0.75",
+  "clause": "EN 1991-1-5:2003 §6.1.5",
+  "source": "JRC EN1991_5 Holický (Simultaneous temperature components)"
+ },
+ {
+  "module": "ec1-thermal-execution-accidental-en1991-1-5-1-6-1-7",
+  "fact": "עומס ביצוע — צוות וכלי-יד qca,k",
+  "value": "1.0 kN/m²",
+  "clause": "EN 1991-1-6:2005 §4.11.2 / Table 4.1",
+  "source": "JRC EN1991_6 Formichi (recommended value qca,k=1.0 kN/m²)"
+ },
+ {
+  "module": "ec1-thermal-execution-accidental-en1991-1-5-1-6-1-7",
+  "fact": "עומס ביצוע — אחסון פריטים ניידים (גשרים)",
+  "value": "qcb,k=0.2 kN/m² ; Fcb,k=100 kN",
+  "clause": "EN 1991-1-6:2005 §4.11",
+  "source": "JRC EN1991_6 Formichi"
+ },
+ {
+  "module": "ec1-thermal-execution-accidental-en1991-1-5-1-6-1-7",
+  "fact": "עומס ביצוע — ציוד לא-קבוע qcc,k",
+  "value": "0.5 kN/m²",
+  "clause": "EN 1991-1-6:2005 §4.11",
+  "source": "JRC EN1991_6 Formichi (qcc,k=0.5 kN/m²)"
+ },
+ {
+  "module": "ec1-thermal-execution-accidental-en1991-1-5-1-6-1-7",
+  "fact": "יציקת בטון — עומס בתוך אזור עבודה 3×3 m",
+  "value": "10% ממשקל הבטון, אך 0.75–1.5 kN/m²",
+  "clause": "EN 1991-1-6:2005 Table 4.2",
+  "source": "JRC EN1991_6 Formichi (Table 4.2)"
+ },
+ {
+  "module": "ec1-thermal-execution-accidental-en1991-1-5-1-6-1-7",
+  "fact": "תקופות חזרה לעומסי אקלים בביצוע",
+  "value": "≤3d→2yr; ≤3mo→5yr; ≤1yr→10yr; >1yr→50yr",
+  "clause": "EN 1991-1-6:2005 Table 3.1",
+  "source": "JRC EN1991_6 Formichi (Table 3.1)"
+ },
+ {
+  "module": "ec1-thermal-execution-accidental-en1991-1-5-1-6-1-7",
+  "fact": "מהירות רוח מינ' מומלצת בביצוע (≤3 חודשים)",
+  "value": "20 m/s",
+  "clause": "EN 1991-1-6:2005 §4.7",
+  "source": "JRC EN1991_6 Formichi"
+ },
+ {
+  "module": "ec1-thermal-execution-accidental-en1991-1-5-1-6-1-7",
+  "fact": "מקדם הגברה דינמי מומלץ לפעולות מקריות בביצוע",
+  "value": "2",
+  "clause": "EN 1991-1-6:2005 §4.12",
+  "source": "JRC EN1991_6 Formichi"
+ },
+ {
+  "module": "ec1-thermal-execution-accidental-en1991-1-5-1-6-1-7",
+  "fact": "דחיפה מדורגת גשרים — מקדמי חיכוך ומינימום כוח אופקי",
+  "value": "μmin=0, μmax=0.04 ; ≥10% מהעומס האנכי",
+  "clause": "EN 1991-1-6:2005 Annex A2",
+  "source": "JRC EN1991_6 Formichi"
+ },
+ {
+  "module": "ec1-thermal-execution-accidental-en1991-1-5-1-6-1-7",
+  "fact": "פעולת key element מומלצת (בכל כיוון)",
+  "value": "Ad = 34 kN/m²",
+  "clause": "EN 1991-1-7:2006 Annex A.8",
+  "source": "WebSearch BS EN 1991-1-7:2006 / SteelConstruction.info (34 kN/m²)"
+ },
+ {
+  "module": "ec1-thermal-execution-accidental-en1991-1-5-1-6-1-7",
+  "fact": "גבול נזק מקומי מותר ב-notional removal של עמוד/קיר",
+  "value": "≤100 m² או 15% משטח הקומה, בשתי קומות סמוכות",
+  "clause": "EN 1991-1-7:2006 Annex A.4",
+  "source": "WebSearch BS EN 1991-1-7:2006"
+ },
+ {
+  "module": "ec1-thermal-execution-accidental-en1991-1-5-1-6-1-7",
+  "fact": "כוח impact סטטי-שקול Fdx (כיוון נסיעה)",
+  "value": "כביש מהיר 1000 / בין-עירוני 750 / עירוני 500 / חניון-משאית 150 / רכב 50 kN",
+  "clause": "EN 1991-1-7:2006 §4 Table 4.1",
+  "source": "JRC EN1991_7 Vrouwenvelder"
+ },
+ {
+  "module": "ec1-thermal-execution-accidental-en1991-1-5-1-6-1-7",
+  "fact": "כוח עיגון בסיסי Ft",
+  "value": "Ft = 20 + 4·ns ≤ 60 kN/m",
+  "clause": "EN 1991-1-7:2006 Annex A",
+  "source": "JRC EN1991_7 Vrouwenvelder (Ft=20+4ns kN/m < 60)"
+ },
+ {
+  "module": "ec1-thermal-execution-accidental-en1991-1-5-1-6-1-7",
+  "fact": "עיגון אנכי לקירות נושאים",
+  "value": "T = 34·A/8000·(H/t)² ≥ 100 kN/m",
+  "clause": "EN 1991-1-7:2006 Annex A",
+  "source": "JRC EN1991_7 Vrouwenvelder"
+ },
+ {
+  "module": "ec1-thermal-execution-accidental-en1991-1-5-1-6-1-7",
+  "fact": "לחץ שקול לפיצוץ גז פנימי",
+  "value": "pd = max{3+pv ; 3+0.5·pv+0.04/(Av/V)²} kN/m²",
+  "clause": "EN 1991-1-7:2006 Annex D",
+  "source": "JRC EN1991_7 Vrouwenvelder (Internal natural gas explosions)"
+ },
+ {
+  "module": "ec1-thermal-execution-accidental-en1991-1-5-1-6-1-7",
+  "fact": "תחום תקפות נוסחת פיצוץ גז",
+  "value": "V<1000 m³ ; 0.05 ≤ Av/V ≤ 0.15 m⁻¹",
+  "clause": "EN 1991-1-7:2006 Annex D",
+  "source": "JRC EN1991_7 Vrouwenvelder"
+ },
+ {
+  "module": "ec1-thermal-execution-accidental-en1991-1-5-1-6-1-7",
+  "fact": "מחלקות תוצאה (Consequences Classes)",
+  "value": "CC1 / CC2a (≤4 קומות) / CC2b (≤15 קומות) / CC3",
+  "clause": "EN 1991-1-7:2006 Annex A",
+  "source": "JRC EN1991_7 Vrouwenvelder (Annex A classification)"
+ },
+ {
+  "module": "ti-412-414-413-israeli-loads",
+  "fact": "משקל מרחבי פלדה (ת\"י 412 חלק 1.1)",
+  "value": "7850 kg/m³ ≈ 77.0 kN/m³",
+  "clause": "ת\"י 412 חלק 1.1, טבלת densities",
+  "source": "SII / ידע הנדסי מקובל"
+ },
+ {
+  "module": "ti-412-414-413-israeli-loads",
+  "fact": "מקדמי בטיחות חלקיים ULS",
+  "value": "γG ≈ 1.35, γQ ≈ 1.5",
+  "clause": "ת\"י 412 חלק 2 / EN 1990 §6.4.3",
+  "source": "EN 1990 / SII"
+ },
+ {
+  "module": "ti-412-414-413-israeli-loads",
+  "fact": "מהירות רוח בסיסית vb,0 בישראל",
+  "value": "≈ 22 עד >38 m/s בגובה 10 m",
+  "clause": "ת\"י 414 §6 + גיליון תיקון A4 (2022)",
+  "source": "dlubal SI 414/A4:2022; מפת רוח SII"
+ },
+ {
+  "module": "ti-412-414-413-israeli-loads",
+  "fact": "לחץ מהירות בסיסי",
+  "value": "qb = ½·ρ·vb², ρ ≈ 1.25 kg/m³",
+  "clause": "ת\"י 414 §6 / EN 1991-1-4",
+  "source": "EN 1991-1-4"
+ },
+ {
+  "module": "ti-412-414-413-israeli-loads",
+  "fact": "פרמטר תאוצת קרקע Z (הגדרה)",
+  "value": "תאוצה אופקית אפקטיבית, 10% חריגה ב-50 שנה (≈475 שנה)",
+  "clause": "ת\"י 413 §2",
+  "source": "SII / barlev, shlomi-atun"
+ },
+ {
+  "module": "ti-412-414-413-israeli-loads",
+  "fact": "פרמטרי ספקטרום סייסמי",
+  "value": "Ss = 2.5·Z, S1 = 1.25·Z; Fa = 1.52, Fv = 2.09",
+  "clause": "ת\"י 413:2009 §2 (שיטת שתי-נקודות)",
+  "source": "מסמך הוועדה הלאומית להיערכות לרעש (gov.il g.pdf); academia.edu"
+ },
+ {
+  "module": "ti-412-414-413-israeli-loads",
+  "fact": "טווח Ss / S1 בישראל (שירות SI 413:2009)",
+  "value": "Ss ≈ 0.10–0.55 g, S1 ≈ 0.025–0.125 g",
+  "clause": "ת\"י 413:2009, שירות PGA מקוון",
+  "source": "dlubal SI 413"
+ },
+ {
+  "module": "ti-412-414-413-israeli-loads",
+  "fact": "סיווג קרקע סייסמי",
+  "value": "S1 (סלע קשה) עד S6 (קרקע רכה מאוד), מקדם הגברה S",
+  "clause": "ת\"י 413 §2",
+  "source": "shlomi-atun / SII"
+ },
+ {
+  "module": "ti-412-414-413-israeli-loads",
+  "fact": "מקדם התנהגות/הקטנת-כוח K לפלדה",
+  "value": "תלוי-מערכת; מופיע בטבלה 6 של התקן",
+  "clause": "ת\"י 413 טבלה 6",
+  "source": "shlomi-atun (מצטט טבלה 6)"
+ },
+ {
+  "module": "ti-412-414-413-israeli-loads",
+  "fact": "בסיס מתודולוגי של 413",
+  "value": "IBC / ASCE 7 (לא EN 1998)",
+  "clause": "ת\"י 413:2009 מבנה כללי",
+  "source": "scribd SI 413 2009; dlubal"
+ },
+ {
+  "module": "ti-412-414-413-israeli-loads",
+  "fact": "מהדורה נוכחית 412 חלק 1.1",
+  "value": "פורסם ברשומות יוני 2023, תוקף 3 שנים",
+  "clause": "דף תקן SII",
+  "source": "sii.org.il"
+ },
+ {
+  "module": "ti-412-414-413-israeli-loads",
+  "fact": "מהדורות סייסמי 413",
+  "value": "1995, 1998, 2009 (מפות Ss/S1), תיקונים עד 2023",
+  "clause": "דף תקן SII",
+  "source": "sii.org.il / iisee.kenken"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "מקדם בטיחות חלקי γM0 (עמידות חתכים)",
+  "value": "1.00",
+  "clause": "EN 1993-1-1 §6.1 (recommended NDP)",
+  "source": "eurocodeapplied.com; SkyCiv EC3 guide"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "מקדם בטיחות חלקי γM1 (עמידות אלמנט ליציבות/קריסה)",
+  "value": "1.00",
+  "clause": "EN 1993-1-1 §6.1 (recommended NDP)",
+  "source": "eurocodeapplied.com; SkyCiv EC3 guide"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "מקדם בטיחות חלקי γM2 (שבר במתיחה של חתך נטו/חיבורים)",
+  "value": "1.25",
+  "clause": "EN 1993-1-1 §6.1 (recommended NDP)",
+  "source": "eurocodeapplied.com; SkyCiv EC3 guide"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "מודול אלסטיות E",
+  "value": "210000 MPa",
+  "clause": "EN 1993-1-1 §3.2.6",
+  "source": "EN 1993-1-1 §3.2.6 (common engineering value)"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "מודול גזירה G",
+  "value": "≈81000 MPa",
+  "clause": "EN 1993-1-1 §3.2.6",
+  "source": "EN 1993-1-1 §3.2.6"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "צפיפות פלדה ρ",
+  "value": "7850 kg/m³",
+  "clause": "EN 1993-1-1 §3.2.6",
+  "source": "EN 1993-1-1 §3.2.6"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "מקדם התפשטות תרמית α",
+  "value": "12×10⁻⁶ /°C",
+  "clause": "EN 1993-1-1 §3.2.6",
+  "source": "EN 1993-1-1 §3.2.6"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "נוסחת ε לסיווג חתך",
+  "value": "ε = √(235/fy)",
+  "clause": "EN 1993-1-1 Table 5.2",
+  "source": "structolution; fppengineering; SkyCiv"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "S235 fy / fu (t ≤ 40 mm)",
+  "value": "235 / 360 MPa",
+  "clause": "EN 1993-1-1 Table 3.1 (EN 10025-2)",
+  "source": "eurocodeapplied.com; RoyMech"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "S275 fy / fu (t ≤ 40 mm)",
+  "value": "275 / 430 MPa",
+  "clause": "EN 1993-1-1 Table 3.1 (EN 10025-2)",
+  "source": "eurocodeapplied.com (EC3 nominal; EN 10025-2 min fu=410)"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "S355 fy / fu (t ≤ 40 mm)",
+  "value": "355 / 490 MPa",
+  "clause": "EN 1993-1-1 Table 3.1 (EN 10025-2)",
+  "source": "eurocodeapplied.com (EC3 nominal; EN 10025-2 min fu=470)"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "מגבלת c/t דופן פנימית לחוצה — Class 1 / 2 / 3",
+  "value": "33ε / 38ε / 42ε",
+  "clause": "EN 1993-1-1 Table 5.2",
+  "source": "SkyCiv EC3 guide; structolution"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "מגבלת c/t דופן פנימית בכפיפה — Class 1 / 2 / 3",
+  "value": "72ε / 83ε / 124ε",
+  "clause": "EN 1993-1-1 Table 5.2",
+  "source": "SkyCiv EC3 guide; structolution"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "מגבלת c/t פלנג' חופשי (outstand) לחוץ — Class 1 / 2 / 3",
+  "value": "9ε / 10ε / 14ε",
+  "clause": "EN 1993-1-1 Table 5.2",
+  "source": "SkyCiv EC3 guide"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "מקדמי פגם α לעקומות קריסה a0/a/b/c/d",
+  "value": "0.13 / 0.21 / 0.34 / 0.49 / 0.76",
+  "clause": "EN 1993-1-1 Table 6.1",
+  "source": "sdcverifier; dlubal; scribd (מאושר בשני מקורות ומעלה)"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "נוסחת מקדם הפחתה לקריסה χ",
+  "value": "χ = 1/(Φ+√(Φ²−λ̄²)) ≤ 1.0 ; Φ = 0.5[1+α(λ̄−0.2)+λ̄²]",
+  "clause": "EN 1993-1-1 §6.3.1.2",
+  "source": "steeldesign.structural-analyser.com; SDC Verifier"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "תלילות יחוס λ1 = π√(E/fy)",
+  "value": "93.9ε",
+  "clause": "EN 1993-1-1 §6.3.1.3",
+  "source": "masesoft EC3 training; SDC Verifier"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "עמידות מתיחה Nt,Rd",
+  "value": "min(A·fy/γM0 ; 0.9·Anet·fu/γM2)",
+  "clause": "EN 1993-1-1 §6.2.3",
+  "source": "SkyCiv EC3 guide"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "עמידות גזירה פלסטית Vpl,Rd",
+  "value": "Av·(fy/√3)/γM0",
+  "clause": "EN 1993-1-1 §6.2.6",
+  "source": "SkyCiv EC3 guide"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "מגבלת בדיקת shear buckling בנפש",
+  "value": "hw/tw > 72ε/η",
+  "clause": "EN 1993-1-1 §6.2.6(6) / EN 1993-1-5",
+  "source": "EN 1993-1-1 §6.2.6 (η≈1.0-1.2)"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "פרמטרי LTB לחתכים מגולגלים (שיטת 6.3.2.3)",
+  "value": "λ̄LT,0 = 0.4 (max) ; β = 0.75",
+  "clause": "EN 1993-1-1 §6.3.2.3",
+  "source": "steeldesign.structural-analyser.com; SCI P362"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "פגם צד גלובלי בסיסי φ0",
+  "value": "1/200",
+  "clause": "EN 1993-1-1 §5.3.2",
+  "source": "EN 1993-1-1 §5.3.2"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "סף αcr לאנליזה מסדר ראשון (אלסטי)",
+  "value": "αcr = Fcr/FEd ≥ 10",
+  "clause": "EN 1993-1-1 §5.2.1",
+  "source": "EN 1993-1-1 §5.2.1"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "מהדורה בתוקף לתכן (יולי 2026)",
+  "value": "EN 1993-1-1:2005+A1:2014 (הדור הראשון)",
+  "clause": "CEN publication status",
+  "source": "BSI knowledge; NBS; eurocode-online.de"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "מהדורת דור שני",
+  "value": "EN 1993-1-1:2022 (DoW הדור הראשון ~30/3/2028)",
+  "clause": "CEN / M/515",
+  "source": "iteh.ai; JRC Eurocodes 2nd generation; NBS"
+ },
+ {
+  "module": "en-1993-1-1-design-of-steel-structures",
+  "fact": "אימוץ ישראלי של EN 1993-1-1",
+  "value": "ת\"י 1225 חלק 1.1 (יוני 2023) + Israeli NA",
+  "clause": "SII SI 1225 part 1.1",
+  "source": "sii.org.il; shlomi-atun.co.il"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "Partial safety factor for bolts/welds/net-section resistance (γM2)",
+  "value": "1.25",
+  "source": "EN 1993-1-8:2005, Table 2.1",
+  "clause": "Table 2.1 / §2.2"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "Partial safety factor for slip resistance at ULS (Category C), γM3",
+  "value": "1.25",
+  "source": "EN 1993-1-8:2005, Table 2.1",
+  "clause": "Table 2.1"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "Partial safety factor for slip resistance at SLS (Category B), γM3,ser",
+  "value": "1.10",
+  "source": "EN 1993-1-8:2005, Table 2.1",
+  "clause": "Table 2.1"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "Bolt shear resistance Fv,Rd",
+  "value": "αv·fub·A/γM2",
+  "source": "EN 1993-1-8:2005, Table 3.4",
+  "clause": "§3.6 / Table 3.4"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "αv for grades 4.6, 5.6, 8.8 (and shear plane in shank)",
+  "value": "0.6",
+  "source": "EN 1993-1-8:2005, Table 3.4",
+  "clause": "Table 3.4"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "αv for grades 4.8, 5.8, 6.8, 10.9",
+  "value": "0.5",
+  "source": "EN 1993-1-8:2005, Table 3.4",
+  "clause": "Table 3.4"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "Bolt bearing resistance Fb,Rd",
+  "value": "k1·αb·fu·d·t/γM2",
+  "source": "EN 1993-1-8:2005, Table 3.4",
+  "clause": "Table 3.4"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "Bolt tension resistance Ft,Rd",
+  "value": "k2·fub·As/γM2 (k2=0.9 normal, 0.63 countersunk)",
+  "source": "EN 1993-1-8:2005, Table 3.4",
+  "clause": "Table 3.4"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "Punching shear resistance Bp,Rd",
+  "value": "0.6·π·dm·tp·fu/γM2",
+  "source": "EN 1993-1-8:2005, Table 3.4",
+  "clause": "Table 3.4"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "Combined shear + tension interaction",
+  "value": "Fv,Ed/Fv,Rd + Ft,Ed/(1.4·Ft,Rd) ≤ 1.0",
+  "source": "EN 1993-1-8:2005, Table 3.4",
+  "clause": "Table 3.4"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "Slip resistance Fs,Rd (Category C)",
+  "value": "ks·n·μ·Fp,C/γM3",
+  "source": "EN 1993-1-8:2005, Eq. 3.8",
+  "clause": "§3.9 / Eq.3.8"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "Preload force Fp,C",
+  "value": "0.7·fub·As",
+  "source": "EN 1993-1-8:2005, §3.6.1",
+  "clause": "§3.6.1 / Eq.3.7"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "ks for normal round holes",
+  "value": "1.0",
+  "source": "EN 1993-1-8:2005, Table 3.6",
+  "clause": "Table 3.6"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "ks for long slotted holes",
+  "value": "0.63",
+  "source": "EN 1993-1-8:2005, Table 3.6",
+  "clause": "Table 3.6"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "Slip factor μ Class A (blasted)",
+  "value": "0.50",
+  "source": "EN 1993-1-8:2005, Table 3.7",
+  "clause": "Table 3.7"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "Slip factor μ Class B (alkali-zinc silicate)",
+  "value": "0.40",
+  "source": "EN 1993-1-8:2005, Table 3.7",
+  "clause": "Table 3.7"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "Slip factor μ Class C (wire-brushed)",
+  "value": "0.30",
+  "source": "EN 1993-1-8:2005, Table 3.7",
+  "clause": "Table 3.7"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "Slip factor μ Class D (untreated)",
+  "value": "0.20",
+  "source": "EN 1993-1-8:2005, Table 3.7",
+  "clause": "Table 3.7"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "Fillet weld directional method criterion",
+  "value": "√(σ⊥²+3(τ⊥²+τ∥²)) ≤ fu/(βw·γM2) and σ⊥ ≤ 0.9·fu/γM2",
+  "source": "EN 1993-1-8:2005, §4.5.3.2",
+  "clause": "§4.5.3.2"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "Fillet weld simplified method design shear strength fvw,d",
+  "value": "(fu/√3)/(βw·γM2)",
+  "source": "EN 1993-1-8:2005, §4.5.3.3",
+  "clause": "§4.5.3.3"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "Correlation factor βw: S235 / S275 / S355 / S420 / S460",
+  "value": "0.80 / 0.85 / 0.90 / 1.00 / 1.00",
+  "source": "EN 1993-1-8:2005, Table 4.1",
+  "clause": "Table 4.1"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "Minimum fillet weld throat thickness a",
+  "value": "≥ 3 mm",
+  "source": "EN 1993-1-8:2005, §4.5.2",
+  "clause": "§4.5.2"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "Minimum effective fillet weld length",
+  "value": "max(30 mm, 6a)",
+  "source": "EN 1993-1-8:2005, §4.5.1",
+  "clause": "§4.5.1"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "Bolt grades fyb/fub [MPa] 4.6/4.8/5.6/5.8/6.8/8.8/10.9",
+  "value": "240/400, 320/400, 300/500, 400/500, 480/600, 640/800, 900/1000",
+  "source": "EN 1993-1-8:2005, Table 3.1",
+  "clause": "Table 3.1"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "Bolt grades permitted for preloaded (slip-resistant) connections",
+  "value": "8.8 and 10.9 only",
+  "source": "EN 1993-1-8:2005, §3.4 / §3.9",
+  "clause": "§3.9"
+ },
+ {
+  "module": "en-1993-1-8-connections-design",
+  "fact": "Second-generation edition of the standard",
+  "value": "EN 1993-1-8:2024 (published March 2024, covers up to S700)",
+  "source": "CEN / iTeh standards catalogue",
+  "clause": "EN 1993-1-8:2024"
+ },
+ {
+  "module": "en-1993-1-2-fire-design",
+  "fact": "מקדם ביטחון חלקי לחומר במצב אש",
+  "value": "γ_M,fi = 1.0 (ערך מומלץ)",
+  "clause": "EN 1993-1-2:2005 §2.3",
+  "source": "EN 1993-1-2:2005; ResearchGate/newsteelconstruction summaries"
+ },
+ {
+  "module": "en-1993-1-2-fire-design",
+  "fact": "מקדם הפחתה של גבול הכניעה k_y,θ ב-500°C",
+  "value": "0.78",
+  "clause": "Table 3.1",
+  "source": "BS EN 1993-1-2:2005 (library.um.edu.mo); dlubal KB 001496"
+ },
+ {
+  "module": "en-1993-1-2-fire-design",
+  "fact": "מקדם הפחתה k_y,θ ב-600°C",
+  "value": "0.47",
+  "clause": "Table 3.1",
+  "source": "BS EN 1993-1-2:2005; dlubal KB 001496"
+ },
+ {
+  "module": "en-1993-1-2-fire-design",
+  "fact": "מקדם הפחתה k_y,θ ב-700°C",
+  "value": "0.23",
+  "clause": "Table 3.1",
+  "source": "BS EN 1993-1-2:2005; dlubal KB 001496"
+ },
+ {
+  "module": "en-1993-1-2-fire-design",
+  "fact": "מקדם הפחתת מודול אלסטיות k_E,θ ב-600°C",
+  "value": "0.31",
+  "clause": "Table 3.1",
+  "source": "BS EN 1993-1-2:2005; dlubal KB 001496"
+ },
+ {
+  "module": "en-1993-1-2-fire-design",
+  "fact": "נוסחת טמפרטורה קריטית",
+  "value": "θ_a,cr = 39.19·ln[1/(0.9674·μ0^3.833) − 1] + 482 ; μ0 ≥ 0.013",
+  "clause": "§4.2.4",
+  "source": "EN 1993-1-2; dlubal KB; ResearchGate"
+ },
+ {
+  "module": "en-1993-1-2-fire-design",
+  "fact": "צפיפות פלדה מבנית (בלתי תלויה בטמפ')",
+  "value": "ρ_a = 7850 kg/m³",
+  "clause": "§3.4.1.3",
+  "source": "EN 1993-1-2; steelconstruction.info"
+ },
+ {
+  "module": "en-1993-1-2-fire-design",
+  "fact": "חום סגולי ייצוגי / מוליכות פשוטה",
+  "value": "c_a ≈ 600 J/kg·K ; λ_a = 45 W/m·K",
+  "clause": "§3.4.1.2",
+  "source": "EN 1993-1-2 summaries; websearch cross-check"
+ },
+ {
+  "module": "en-1993-1-2-fire-design",
+  "fact": "מקדם קונבקציה לאש נומינלית ISO 834",
+  "value": "α_c = 25 W/m²·K",
+  "clause": "EN 1991-1-2 §3.2.1",
+  "source": "EN 1991-1-2; spiral.imperial.ac.uk"
+ },
+ {
+  "module": "en-1993-1-2-fire-design",
+  "fact": "פליטות פני הפלדה / פליטות האש",
+  "value": "ε_m = 0.7 (carbon steel) ; ε_f = 1.0",
+  "clause": "§4.2.5.1",
+  "source": "EN 1993-1-2; websearch cross-check"
+ },
+ {
+  "module": "en-1993-1-2-fire-design",
+  "fact": "עקומת אש תקנית ISO 834",
+  "value": "θ_g = 20 + 345·log10(8t+1) [°C, t דקות]",
+  "clause": "EN 1991-1-2",
+  "source": "ISO 834 / EN 1991-1-2"
+ },
+ {
+  "module": "en-1993-1-2-fire-design",
+  "fact": "התחממות חתך לא מוגן (צעד זמן)",
+  "value": "Δθ_a,t = k_sh·(A_m/V)/(c_a·ρ_a)·ḣ_net·Δt ; Δt ≤ 5 s",
+  "clause": "§4.2.5.1 eq.4.25",
+  "source": "EN 1993-1-2; steelconstruction.info"
+ },
+ {
+  "module": "en-1993-1-2-fire-design",
+  "fact": "shadow factor לחתכי I תחת אש נומינלית",
+  "value": "k_sh = 0.9·[A_m/V]_b/[A_m/V]",
+  "clause": "§4.2.5.1",
+  "source": "EN 1993-1-2; websearch cross-check"
+ },
+ {
+  "module": "en-1993-1-2-fire-design",
+  "fact": "סיווג חתך במצב אש (מקדם מופחת)",
+  "value": "ε = 0.85·(235/f_y)^0.5",
+  "clause": "§4.2.2",
+  "source": "EN 1993-1-2; Structville"
+ },
+ {
+  "module": "en-1993-1-2-fire-design",
+  "fact": "פרמטר קריסת עמוד באש",
+  "value": "λ̄_θ = λ̄·(k_y,θ/k_E,θ)^0.5 ; α = 0.65·(235/f_y)^0.5",
+  "clause": "§4.2.3.2",
+  "source": "EN 1993-1-2 summaries"
+ },
+ {
+  "module": "en-1993-1-2-fire-design",
+  "fact": "דרגות פלדה נפוצות f_y (t≤40mm)",
+  "value": "S235=235, S275=275, S355=355, S420=420, S460=460 N/mm²",
+  "clause": "EN 1993-1-1 Table 3.1",
+  "source": "eurocodeapplied.com"
+ },
+ {
+  "module": "en-1993-1-2-fire-design",
+  "fact": "מהדורה בתוקף נכון ליולי 2026",
+  "value": "EN 1993-1-2:2005 + AC:2009; prEN 2024 טרם מחליף",
+  "clause": "—",
+  "source": "CEN; אימוץ ת\"י 1225"
+ },
+ {
+  "module": "en-1993-1-5-plated-elements",
+  "fact": "מקדם התרומה של strain-hardening η לבדיקת גזירה (recommended NDP)",
+  "value": "η = 1.20 לפלדות עד וכולל S460; η = 1.00 מעל S460",
+  "source": "EN 1993-1-5:2006 §5.1(2)",
+  "clause": "§5.1(2)"
+ },
+ {
+  "module": "en-1993-1-5-plated-elements",
+  "fact": "קיבולת גזירה של הנפש",
+  "value": "Vbw,Rd = χw·fyw·hw·tw/(√3·γM1)",
+  "source": "EN 1993-1-5:2006 §5.2/§5.3",
+  "clause": "§5.2(1)"
+ },
+ {
+  "module": "en-1993-1-5-plated-elements",
+  "fact": "תקרת קיבולת הגזירה הכוללת",
+  "value": "Vb,Rd = Vbw,Rd + Vbf,Rd ≤ η·fyw·hw·tw/(√3·γM1)",
+  "source": "EN 1993-1-5:2006 §5.2(1)",
+  "clause": "§5.2(1)"
+ },
+ {
+  "module": "en-1993-1-5-plated-elements",
+  "fact": "χw למקשיח קצה נוקש (rigid end post)",
+  "value": "λ̄w<0.83/η → χw=η; 0.83/η≤λ̄w<1.08 → χw=0.83/λ̄w; λ̄w≥1.08 → χw=1.37/(0.7+λ̄w)",
+  "source": "EN 1993-1-5:2006 Table 5.1",
+  "clause": "Table 5.1"
+ },
+ {
+  "module": "en-1993-1-5-plated-elements",
+  "fact": "χw למקשיח קצה לא-נוקש (non-rigid end post)",
+  "value": "λ̄w<0.83/η → χw=η; λ̄w≥0.83/η → χw=0.83/λ̄w",
+  "source": "EN 1993-1-5:2006 Table 5.1",
+  "clause": "Table 5.1"
+ },
+ {
+  "module": "en-1993-1-5-plated-elements",
+  "fact": "סף בדיקת קריסת גזירה בנפש לא-מקושחת",
+  "value": "נדרש כאשר hw/tw > 72·ε/η",
+  "source": "EN 1993-1-5:2006 §5.1(2)",
+  "clause": "§5.1(2)"
+ },
+ {
+  "module": "en-1993-1-5-plated-elements",
+  "fact": "גמישות יחסית של הנפש בגזירה",
+  "value": "λ̄w = 0.76·√(fyw/τcr) ≈ hw/(37.4·tw·ε·√kτ)",
+  "source": "EN 1993-1-5:2006 §5.3",
+  "clause": "§5.3(3)"
+ },
+ {
+  "module": "en-1993-1-5-plated-elements",
+  "fact": "מקדם קריסת גזירה kτ (מקשיחים רוחביים בלבד)",
+  "value": "a/hw≥1: kτ=5.34+4.00(hw/a)²; a/hw<1: kτ=4.00+5.34(hw/a)²",
+  "source": "EN 1993-1-5:2006 Annex A.3",
+  "clause": "Annex A.3(1)"
+ },
+ {
+  "module": "en-1993-1-5-plated-elements",
+  "fact": "מקדם הפחתה ρ לרוחב יעיל — internal compression element",
+  "value": "ρ=(λ̄p−0.055(3+ψ))/λ̄p² ≤ 1.0 (ρ=1 אם λ̄p ≤ 0.5+√(0.085−0.055ψ))",
+  "source": "EN 1993-1-5:2006 §4.4(2)",
+  "clause": "§4.4(2)"
+ },
+ {
+  "module": "en-1993-1-5-plated-elements",
+  "fact": "מקדם הפחתה ρ לרוחב יעיל — outstand compression element",
+  "value": "ρ=(λ̄p−0.188)/λ̄p² ≤ 1.0 (ρ=1 אם λ̄p ≤ 0.748)",
+  "source": "EN 1993-1-5:2006 §4.4(2)",
+  "clause": "§4.4(2)"
+ },
+ {
+  "module": "en-1993-1-5-plated-elements",
+  "fact": "גמישות לוח",
+  "value": "λ̄p = (b̄/t)/(28.4·ε·√kσ), ε=√(235/fy)",
+  "source": "EN 1993-1-5:2006 §4.4(2)",
+  "clause": "§4.4(2)"
+ },
+ {
+  "module": "en-1993-1-5-plated-elements",
+  "fact": "מקדם קריסה kσ למאמצים ישרים (internal, Table 4.1)",
+  "value": "ψ=1 → 4.0; ψ=0 → 7.81; ψ=−1 (pure bending) → 23.9",
+  "source": "EN 1993-1-5:2006 Table 4.1",
+  "clause": "Table 4.1"
+ },
+ {
+  "module": "en-1993-1-5-plated-elements",
+  "fact": "קיבולת לעומס רוחבי מרוכז (patch loading)",
+  "value": "FRd = fyw·Leff·tw/γM1, Leff = χF·ly, χF = 0.5/λ̄F ≤ 1.0",
+  "source": "EN 1993-1-5:2006 §6.2",
+  "clause": "§6.2(1)"
+ },
+ {
+  "module": "en-1993-1-5-plated-elements",
+  "fact": "עומס קריטי לעומס מרוכז",
+  "value": "Fcr = 0.9·kF·E·tw³/hw",
+  "source": "EN 1993-1-5:2006 §6.4",
+  "clause": "§6.4(1)"
+ },
+ {
+  "module": "en-1993-1-5-plated-elements",
+  "fact": "אינטראקציה כפיפה+גזירה",
+  "value": "אם η̄3=VEd/Vbw,Rd>0.5: η̄1+(1−Mf,Rd/Mpl,Rd)(2η̄3−1)² ≤ 1.0",
+  "source": "EN 1993-1-5:2006 §7.1",
+  "clause": "§7.1(1)"
+ },
+ {
+  "module": "en-1993-1-5-plated-elements",
+  "fact": "אינטראקציה עומס מרוכז+כפיפה",
+  "value": "η2 + 0.8·η1 ≤ 1.4",
+  "source": "EN 1993-1-5:2006 §7.2",
+  "clause": "§7.2(1)"
+ },
+ {
+  "module": "en-1993-1-5-plated-elements",
+  "fact": "מגבלת flange-induced buckling",
+  "value": "hw/tw ≤ k·(E/fyf)·√(Aw/Afc), k=0.55/0.40/0.30 (מומנט אלסטי/פלסטי/רוטציה פלסטית)",
+  "source": "EN 1993-1-5:2006 §8",
+  "clause": "§8(1)"
+ },
+ {
+  "module": "en-1993-1-5-plated-elements",
+  "fact": "תנאי הפעלת בדיקת shear lag בפלנג'",
+  "value": "נדרש כאשר b0 > Le/50",
+  "source": "EN 1993-1-5:2006 §3.1(1)",
+  "clause": "§3.1(1)"
+ },
+ {
+  "module": "en-1993-1-5-plated-elements",
+  "fact": "מהדורה עדכנית של CEN",
+  "value": "EN 1993-1-5:2024 פורסם 20/03/2024 (דור שני); הדור הראשון EN 1993-1-5:2006 +A1:2017 +A2:2019 עודנו הבסיס לרוב ה-NA",
+  "source": "CEN / iteh / genorma",
+  "clause": "edition status"
+ },
+ {
+  "module": "materials-en-10025-10210-10219-10164",
+  "fact": "S235 חוזק כניעה נומינלי לתכן, t≤40mm",
+  "value": "f_y=235 MPa, f_u=360 MPa",
+  "source": "EN 1993-1-1 Table 3.1",
+  "clause": "§3.2.1 / Table 3.1"
+ },
+ {
+  "module": "materials-en-10025-10210-10219-10164",
+  "fact": "S275 חוזק נומינלי, t≤40mm",
+  "value": "f_y=275 MPa, f_u=430 MPa",
+  "source": "EN 1993-1-1 Table 3.1",
+  "clause": "Table 3.1"
+ },
+ {
+  "module": "materials-en-10025-10210-10219-10164",
+  "fact": "S355 חוזק נומינלי, t≤40mm",
+  "value": "f_y=355 MPa, f_u=490 MPa",
+  "source": "EN 1993-1-1 Table 3.1",
+  "clause": "Table 3.1"
+ },
+ {
+  "module": "materials-en-10025-10210-10219-10164",
+  "fact": "S355 חוזק נומינלי, 40<t≤80mm",
+  "value": "f_y=335 MPa, f_u=470 MPa",
+  "source": "EN 1993-1-1 Table 3.1",
+  "clause": "Table 3.1"
+ },
+ {
+  "module": "materials-en-10025-10210-10219-10164",
+  "fact": "S235 חוזק נומינלי, 40<t≤80mm",
+  "value": "f_y=215 MPa, f_u=360 MPa",
+  "source": "EN 1993-1-1 Table 3.1",
+  "clause": "Table 3.1"
+ },
+ {
+  "module": "materials-en-10025-10210-10219-10164",
+  "fact": "S275 חוזק נומינלי, 40<t≤80mm",
+  "value": "f_y=255 MPa, f_u=410 MPa",
+  "source": "EN 1993-1-1 Table 3.1",
+  "clause": "Table 3.1"
+ },
+ {
+  "module": "materials-en-10025-10210-10219-10164",
+  "fact": "S460 חוזק נומינלי (fine-grain), t≤40mm",
+  "value": "f_y=460 MPa, f_u=540 MPa",
+  "source": "EN 1993-1-1 Table 3.1 / EN 10025-3",
+  "clause": "Table 3.1"
+ },
+ {
+  "module": "materials-en-10025-10210-10219-10164",
+  "fact": "חתך חלול S355H נומינלי, t≤40mm",
+  "value": "f_y=355 MPa, f_u=510 MPa",
+  "source": "EN 1993-1-1 Table 3.1 (EN 10210/10219)",
+  "clause": "Table 3.1"
+ },
+ {
+  "module": "materials-en-10025-10210-10219-10164",
+  "fact": "מודול יאנג ומקדמי חומר לפלדה",
+  "value": "E=210000 MPa, G≈81000 MPa, ν=0.30, ρ=7850 kg/m³",
+  "source": "EN 1993-1-1 §3.2.6",
+  "clause": "§3.2.6"
+ },
+ {
+  "module": "materials-en-10025-10210-10219-10164",
+  "fact": "מקדמי בטיחות חלקיים מומלצים",
+  "value": "γM0=1.00, γM1=1.00, γM2=1.25",
+  "source": "EN 1993-1-1 §6.1",
+  "clause": "§6.1"
+ },
+ {
+  "module": "materials-en-10025-10210-10219-10164",
+  "fact": "דרגות אימפקט Charpy מינימום 27J",
+  "value": "JR=+20°C, J0=0°C, J2=−20°C",
+  "source": "EN 10025-2:2019",
+  "clause": "§7.3.2 Table"
+ },
+ {
+  "module": "materials-en-10025-10210-10219-10164",
+  "fact": "דרגת אימפקט K2",
+  "value": "40 J ב−20°C",
+  "source": "EN 10025-2:2019",
+  "clause": "§7.3.2"
+ },
+ {
+  "module": "materials-en-10025-10210-10219-10164",
+  "fact": "Z-quality צמצום שטח ממוצע (בודד)",
+  "value": "Z15≥15%(10%), Z25≥25%(15%), Z35≥35%(25%)",
+  "source": "EN 10164:2018",
+  "clause": "Requirements/Testing"
+ },
+ {
+  "module": "materials-en-10025-10210-10219-10164",
+  "fact": "תחולת עובי EN 10164",
+  "value": "15–400 mm",
+  "source": "EN 10164:2018",
+  "clause": "Scope"
+ },
+ {
+  "module": "materials-en-10025-10210-10219-10164",
+  "fact": "מקדמי אי-שלמות עקומי קריסה α",
+  "value": "a0=0.13, a=0.21, b=0.34, c=0.49, d=0.76",
+  "source": "EN 1993-1-1 Table 6.1",
+  "clause": "§6.3.1"
+ },
+ {
+  "module": "materials-en-10025-10210-10219-10164",
+  "fact": "עקום קריסה לחתך חלול מוגמר-חם מול מקופל-בקר",
+  "value": "מוגמר-חם→a (a0 ל-S460); מקופל-בקר→c",
+  "source": "EN 1993-1-1 Table 6.2",
+  "clause": "§6.3.1.2"
+ },
+ {
+  "module": "materials-en-10025-10210-10219-10164",
+  "fact": "גבול סיווג Class1/2/3 בכפיפה, רכיב פנימי, מכפלת ε",
+  "value": "72ε / 83ε / 124ε",
+  "source": "EN 1993-1-1 Table 5.2",
+  "clause": "§5.5"
+ },
+ {
+  "module": "materials-en-10025-10210-10219-10164",
+  "fact": "פרמטר ε לפי דרגה",
+  "value": "S235=1.00, S275≈0.92, S355≈0.81, S460≈0.72",
+  "source": "EN 1993-1-1 Table 5.2 (ε=√(235/fy))",
+  "clause": "§5.5"
+ },
+ {
+  "module": "materials-en-10025-10210-10219-10164",
+  "fact": "סוגי תעודות EN 10204",
+  "value": "2.1 הצהרה; 2.2 דוח לא-ספציפי; 3.1 פיקוח ספציפי; 3.2 אימות צד ג'",
+  "source": "EN 10204:2004",
+  "clause": "Types"
+ },
+ {
+  "module": "materials-en-10025-10210-10219-10164",
+  "fact": "מהדורות תקפות נכון ליולי 2026",
+  "value": "EN 10025-2:2019, EN 10210/10219:2019, EN 10164:2018, EN 10029:2010, EN 10204:2004",
+  "source": "CEN catalogue",
+  "clause": "—"
+ }
+]

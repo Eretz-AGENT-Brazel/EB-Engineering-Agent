@@ -1,0 +1,296 @@
+[
+ {
+  "module": "detailer-workflow-plan-to-model",
+  "claim": "Typical fit-up gap between member and plate = 2–3 mm, for shear connections and fin plates",
+  "verdict": "REFUTED",
+  "correctValue": "Fin plates (SCI/BCSA 'Green Book' P358): nominal gap gh = 10 mm between beam end and supporting face for beams up to ~610 mm deep (larger, ~25 mm, sometimes used for deeper beams)",
+  "note": "steelconstruction.info/Simple_connections and SCI fin-plate design examples all use 10 mm. 2–3 mm is a welding/root-gap or shim figure, not a fin-plate fit-up gap. Feeding 2–3 mm to a detailing agent would produce fin plates that cannot be erected. Also note EN 1090-2 Annex B does not define a 'fit-up gap' as claimed."
+ },
+ {
+  "module": "detailer-workflow-plan-to-model",
+  "claim": "Mill straightness tolerance for rolled profiles = L/1000 (camber and sweep), 'ASTM A6, parallel in EN 10034 / EN 10210-2'",
+  "verdict": "REFUTED",
+  "correctValue": "ASTM A6: camber ≈ 1/8 in per 10 ft ≈ L/960, but SWEEP for sections with narrow flanges is 1/4 in per 10 ft ≈ L/480. EN sections are much looser: EN 10034 straightness = 0.30% L (L/333) for h ≤ 180 mm, 0.15% L for 180 < h ≤ 360, 0.10% L for h > 360; EN 10210-2/10219-2 hollow sections = 0.2% L (L/500), plus 3 mm over any 1 m",
+  "note": "Steel for Life Blue Book 'Rolling tolerances to BS EN 10034'; BS EN 10210-2 Table 2. The 'parallel in EN' claim is the real problem: Amir's stock is European/British Celsius sections (RHS, SHS, CHS, U140, EA60x60x6) where the permitted bow is 2–3× larger than L/1000. Quoting a US mill standard as if it governed EN material is a country-dependent error."
+ },
+ {
+  "module": "detailer-workflow-plan-to-model",
+  "claim": "Fabricated length tolerance ±3 mm up to 10 m; ±6 mm over 10 m (AISC 303)",
+  "verdict": "REFUTED",
+  "correctValue": "AISC 303: members FRAMING to other structural steel — ±1/16 in (1.6 mm) for length ≤ 30 ft, ±1/8 in (3.2 mm) for > 30 ft. Members NOT framing to other steel — ±1/8 in and ±1/4 in (6 mm). Threshold is 30 ft = 9.14 m, not 10 m",
+  "note": "AISC 303 detailed-length clause (303-16 §6.4.1 / 303-22 §11.2.1). The module quotes the loose 'non-framing' pair as if it applied to everything; for a beam that must bolt into a fin plate the allowance is ±1.6 mm, i.e. roughly half of what the module tells the agent. Also wrong standard family for an EN 1090 job."
+ },
+ {
+  "module": "detailer-workflow-plan-to-model",
+  "claim": "Maximum gap under a base plate before grouting ≤ 3 mm (AISC 303)",
+  "verdict": "REFUTED",
+  "correctValue": "No such rule in AISC 303. The bearing-fit rule is AISC 360 §M4.4: lack of contact up to 1/16 in (2 mm) is permitted; gaps > 1/16 in and ≤ 1/4 in (6 mm) must be packed with non-tapered steel shims. Designed grout space under a base plate is normally 25–50 mm (AISC Design Guide 1)",
+  "note": "As written the rule confuses contact-bearing fit with grout thickness and would make the agent flag every normal grouted base plate as an error."
+ },
+ {
+  "module": "detailer-workflow-plan-to-model",
+  "claim": "Galvanizing vent hole area ≥ 25% of the profile's cross-sectional area",
+  "verdict": "REFUTED",
+  "correctValue": "GAA / Galvanizers Association: at least one vent and one drain hole per hollow section, each with a DIAMETER equivalent to ≥ 25% of the diagonal cross-section dimension (or multiple holes of equivalent total area). For RHS150×100 (diagonal ≈ 180 mm) that means ≈ 45 mm — not '25% of the section area'",
+  "note": "gaa.com.au Venting & Draining Guide states 25% of the diagonal cross-section LENGTH. The module's wording is also ambiguous (steel area vs enclosed area) — for RHS150×100×4 it yields anything from ~24 mm to ~64 mm. Country/galvanizer-dependent: the bath operator's own requirements govern and must be agreed."
+ },
+ {
+  "module": "detailer-workflow-plan-to-model",
+  "claim": "Minimum vent hole diameter: 12 mm preferred, not less than 8 mm",
+  "verdict": "REFUTED",
+  "correctValue": "Ideal minimum 12 mm; NO vent hole smaller than 10 mm unless agreed with the galvanizer (Galvanizers Association UK; GAA baseline 10 mm, up to 50 mm for large enclosed volumes)",
+  "note": "The 8 mm floor is below every published minimum found. 12 mm 'preferred' is right; replace 8 mm with 10 mm."
+ },
+ {
+  "module": "precision-axes-work-points-tolerances",
+  "claim": "d0 = d+1 (M12,M14); d+2 (M16–M24); d+3 (≥M27), source 'EN 1993-1-8 Table 3.1'",
+  "verdict": "REFUTED",
+  "correctValue": "Values are right, the source is wrong: these clearances are EN 1090-2:2018 Table 11, not EN 1993-1-8 Table 3.1 (which is bolt fyb/fub for classes 4.6–10.9).",
+  "note": "Verified against the primary text of BS EN 1090-2:2018 Table 11: normal round holes = 1 mm for d=12 and 14; 2 mm for 16, 18, 20, 22, 24; 3 mm for 27–36. Three footnotes the module drops and that change the number in practice: (e) M12/M14 and countersunk bolts MAY use 2 mm clearance if specified — UK/SCI practice routinely uses 2 mm from M12 up (M20→22, M24→26); (c) for towers and masts reduce clearance by 0,5 mm; (d) for coated (e.g. hot-dip galvanized) fasteners the 1 mm clearance may be increased by the coating thickness. So d0 is a specification decision, not a silent default — the module's worked example (M12→d0=13→e1≥15.6) would become d0=14→e1≥16.8 under common UK practice."
+ },
+ {
+  "module": "precision-axes-work-points-tolerances",
+  "claim": "Typical fit-up gap between assembled parts 2–3 mm; agent may default to a declared 2 mm gap",
+  "verdict": "REFUTED",
+  "correctValue": "For fillet-welded light steelwork a declared 2–3 mm gap already exceeds the ISO 5817 fit-up limit for normal throats: quality level C allows h ≤ 0,5 + 0,2a (max 3 mm) and level B h ≤ 0,5 + 0,1a (max 2 mm) for t > 3 mm — i.e. ~1,5 mm for a 5 mm fillet at level C, ~1,0 mm at level B.",
+  "note": "Primary text, ISO 5817:2014 imperfection 617 'Incorrect root gap for fillet welds', t > 3 mm: D h ≤ 1 + 0,3a max 4 mm; C h ≤ 0,5 + 0,2a max 3 mm; B h ≤ 0,5 + 0,1a max 2 mm. A blanket 2 mm 'safe default' is therefore only conforming if the throat is increased per EN 1090-2 §7.5.8.1(b). This is the most dangerous item in the module because it is listed under 'what the agent may decide alone'."
+ },
+ {
+  "module": "precision-axes-work-points-tolerances",
+  "claim": "Maximum root gap for fillet welds is 3 mm before the throat must be increased (EN 1090-2 §7.5.8)",
+  "verdict": "REFUTED",
+  "correctValue": "EN 1090-2:2018 §7.5.8.1(b) states no 3 mm cap. It says: if a gap h exceeds the imperfection limit it may be compensated by increasing the throat, a = a_nom + 0,7h. The numeric gap limit comes from EN ISO 5817 imperfection 617 and is throat- and quality-level dependent (level C max 3 mm, level B max 2 mm).",
+  "note": "Quoted verbatim from BS EN 1090-2:2018 §7.5.8.1 'Fillet welds — General', item b). The module cites the right clause but invents the number and omits the one formula an agent actually needs (a = a_nom + 0,7h). Note also AWS D1.1 (US) uses a different rule (leg increased by the amount of the root opening above 1/16 in, max 3/16 in) — so '3 mm' is not from either code."
+ },
+ {
+  "module": "precision-axes-work-points-tolerances",
+  "claim": "Member straightness tolerance L/750 to L/1000, minimum 2 mm",
+  "verdict": "REFUTED",
+  "correctValue": "EN 1090-2:2018 Table B.6 item 3 (manufacturing): straightness Δ = ±L/1000 but |Δ| ≥ 5 mm (class 1) / ≥ 3 mm (class 2) — the floor is 5 mm or 3 mm, not 2 mm. L/750 is a different thing: Table B.25, an ESSENTIAL ERECTION tolerance for beams in bending and components in compression that are unrestrained ('no functional tolerance specified').",
+  "note": "Both values verified in the primary text of BS EN 1090-2:2018. The module conflates a manufacturing tolerance with an erection tolerance and states a floor that is 2,5× too tight. ASTM A6 mill camber/sweep for W-shapes (1/8 in per 10 ft ≈ L/960) does support 'about L/1000' as the mill figure."
+ },
+ {
+  "module": "precision-axes-work-points-tolerances",
+  "claim": "Column plumb: 1:500 of distance between working points; max 25 mm per storey, 50 mm total (AISC 303 §7.13.1.1)",
+  "verdict": "REFUTED",
+  "correctValue": "1:500 for an individual piece is correct. The 25/50 mm envelope is misdescribed: AISC 303 limits EXTERIOR columns to within 1 in (25 mm) TOWARD and 2 in (50 mm) AWAY FROM THE BUILDING LINE over the first 20 stories, increasing 1/32 in per additional story to a maximum of 2 in toward / 3 in away; interior columns 1 in either way. It is a cumulative envelope about a plan line, not 'per storey' + 'total'.",
+  "note": "Bigger flag: 1:500 is a US figure. For a fabricator working to EN 1090-2 the governing erection tolerance is Table B.18 — inclination of a column between adjacent storeys Δ = ±h/300 (essential, and class 1 also h/300; class 2 h/500), with straightness between storeys ±h/1000. Presenting 1:500 as 'the' plumb rule is standard-dependent and materially tighter than what an EN 1090-2 class-1 job must achieve."
+ },
+ {
+  "module": "precision-axes-work-points-tolerances",
+  "claim": "Fabricated member length tolerance ±3 mm for L ≤ 10 m; ±6 mm for L > 10 m (AISC 303 §6.4.1)",
+  "verdict": "REFUTED",
+  "correctValue": "AISC: ±1/16 in (1,6 mm) for members ≤ 30 ft and ±1/8 in (3,2 mm) for members > 30 ft — the module's figures are roughly double. Under EN 1090-2:2018 Table B.6 item 1: cut length on the centreline = ±(L/5000 + 2) mm class 1 and ±(L/10000 + 2) mm class 2 (so ±4 mm / ±3 mm at 10 m), and ±1 mm where ends are prepared for full contact bearing; item 2 allows ±50 mm where an adjacent component can compensate.",
+  "note": "AISC values from two independent reproductions of AISC 303; EN values from the primary BS EN 1090-2:2018 text. Also note AISC 303-22/-27 moved fabrication and erection tolerances into Section 11, so '§6.4.1' is edition-specific at best."
+ },
+ {
+  "module": "precision-axes-work-points-tolerances",
+  "claim": "Cut-to-cut dimension and hole position tolerance ±1.5 mm (1/16 in) (AISC 303 §6.4.1/§6.4.2)",
+  "verdict": "REFUTED",
+  "correctValue": "For a European job use EN 1090-2:2018 Table B.8: individual hole within a group ±2 mm (class 1) / ±1 mm (class 2); position of hole group ±2 / ±1 mm; spacing between hole groups ±5 / ±2 mm (±2 / ±1 mm where one piece is connected by two groups); ovalisation ±1 / ±0,5 mm; notch depth and length −0 / +3 mm (class 1), −0 / +2 mm (class 2).",
+  "note": "±1,5 mm is not an EN value, and the cited AISC clause is wrong — in AISC 303-16 §6.4 is 'Fabrication Tolerances' and §6.4.2 addresses curved members, not holes. Note also EN 1090-2 Table B.14 item 3: back mark for angles (heel to hole centre) ±1 mm — which directly supports the module's correct advice to dimension angles from the heel."
+ },
+ {
+  "module": "precision-axes-work-points-tolerances",
+  "claim": "Maximum contact/bearing gap 3 mm for base plates and beam-to-column contact (AISC 303 §7.5.3/§7.13.4)",
+  "verdict": "REFUTED",
+  "correctValue": "AISC 360 §M4.4: lack of contact bearing up to a gap of 1/16 in (2 mm) is permitted regardless of splice type; if the gap exceeds 2 mm but is ≤ 1/4 in (6 mm) and investigation shows insufficient contact area, it shall be packed with non-tapered steel shims. EN 1090-2 Table B.6 item 5 is far tighter for surfaces FINISHED for full contact bearing: gap 0,5 mm (class 1) / 0,25 mm (class 2), with no high spot proud by more than that.",
+  "note": "'3 mm' sits between the two real thresholds and belongs to neither standard; it appears to come from a secondary aggregator site (steelcalculator.app) whose clause numbers (§7.5.3, §7.13.4) I could not corroborate in AISC 303."
+ },
+ {
+  "module": "precision-axes-work-points-tolerances",
+  "claim": "ISO 13920 linear tolerance, class B / C: 400–1000 ±4/±6; 1000–2000 ±5/±8; 2000–4000 ±6/±10",
+  "verdict": "REFUTED",
+  "correctValue": "EN ISO 13920 Table 1: 400–1000 → B ±3, C ±6; 1000–2000 → B ±4, C ±8; 2000–4000 → B ±6, C ±11. (Class A: ±2/±3/±4; class D: ±9/±12/±16.)",
+  "note": "Verified against a fabricator's controlled reproduction of the EN ISO 13920 tables (Groupe TMA INS-033.1, which reproduces all four classes across all eleven size bands). The module's class-B column is shifted one band too coarse and its class-C value at 2000–4000 is 10 instead of 11. Relevant because EN 1090-2 §11.3.3 offers ISO 13920 as the alternative criterion, so these numbers can end up as contractual acceptance limits."
+ },
+ {
+  "module": "precision-axes-work-points-tolerances",
+  "claim": "ISO 13920 angular tolerance, class B / C: leg >400 mm ±10′/±20′; leg 120–400 mm ±20′/±30′",
+  "verdict": "REFUTED",
+  "correctValue": "EN ISO 13920 Table 2, by length of the SHORTER leg — up to 400: A ±20′, B ±45′, C ±1°, D ±1°30′; >400 to 1000: A ±15′, B ±30′, C ±45′, D ±1°15′; >1000: A ±10′, B ±20′, C ±30′, D ±1°. There is no 120–400 mm band for angles.",
+  "note": "The module's numbers are the class A/B column mislabelled as B/C, i.e. 2–3× tighter than the standard, and the size bands are invented. Same source as above; the standard also gives the equivalent mm/m values (C: ±18 / ±13 / ±9 mm per m of shorter leg)."
+ },
+ {
+  "module": "precision-axes-work-points-tolerances",
+  "claim": "ISO 13920 form tolerance over 1000 mm: class A 3 mm, B 6 mm, C 12 mm, D 24 mm",
+  "verdict": "REFUTED",
+  "correctValue": "Straightness/flatness/parallelism in EN ISO 13920 uses a SEPARATE class set E/F/G/H (not A–D). Table 3: >400–1000 → E 1,5, F 3, G 5,5, H 9 mm; >1000–2000 → E 2, F 4,5, G 9, H 14 mm.",
+  "note": "Independently corroborated by the primary text of BS EN 1090-2:2018 §11.3.3, which names the alternative criteria as 'class C for length and angular dimensions' and 'class G for straightness, flatness and parallelism' — proving the E–H set exists. The module's 3/6/12/24 doubling sequence matches a low-quality blog reproduction, not the standard. Its rule-of-thumb 9 ('B 6 mm, C 12 mm' for flatness) is therefore wrong twice over: wrong class letters and wrong values."
+ },
+ {
+  "module": "precision-axes-work-points-tolerances",
+  "claim": "Vent/drain holes for hot-dip galvanizing: minimum 12 mm diameter (10 mm absolute min); single opening 25%–30% of cross-sectional area (ASTM A385 §12.4)",
+  "verdict": "REFUTED",
+  "correctValue": "For the sections this module actually names, EN ISO 14713-2:2020 Table 1 requires far larger holes: SHS/round 40 → 14 mm (one hole) or 12 mm (two holes); 50 → 16/12 mm; 80 or RHS100×60 → 25/16 mm; SHS100 or RHS120×80 → 30 mm single, 20 mm for two holes, ~14–15 mm for four; RHS160×80 → 35/25 mm. 10 mm is only the absolute health-and-safety minimum. ASTM A385's 25–30% of cross-sectional area applies only where full-open venting is impossible AND the section is large: per A385 Fig. 9, H+W ≥ 24 in → 25%, 16–24 in → 30%, 8–16 in → 40%, and H+W under 8 in (203 mm) must be LEFT COMPLETELY OPEN with no end plates or internal gussets — which covers SHS100×100 (H+W = 200 mm), while RHS150×100 (250 mm ≈ 9,8 in) falls in the 40% band.",
+  "note": "Verified from the primary ASTM A385/A385M-11 text (§12.3, §12.4) and from EN ISO 14713-2:2020 Table 1 as reproduced by the UK Galvanizers Association (HDG Datasheet 18). Two further items the module misses and that bite on its own handrail example: A385 §12.3 requires pipe handrail to be vented FULL OPEN internally, plus one 3/8 in (9,5 mm) minimum external hole at every intersection within 12 mm of the weld bead, and where internal venting is impossible the vent must be the larger of 3/8 in and 25% of the pipe diameter (so 10,6 mm for 42,4 CHS). Also flag the standard-dependence: for an Israeli/European fabricator the governing document is EN ISO 1461 / EN ISO 14713-2, not ASTM A385, and their rules differ in kind (linear % of diagonal vs % of area)."
+ },
+ {
+  "module": "connections-types-detailing-rules-engineering-logic",
+  "claim": "d0 = d + 2mm ל-M12–M24",
+  "verdict": "REFUTED",
+  "correctValue": "EN 1090-2:2018 Table 11: 1mm ל-M12 ו-M14 (2mm רק אם צוין במפרט); 2mm ל-M16–M24; 3mm ל-M27–M36",
+  "note": "טקסט Table 11 המקורי + הערות: הערה c — במבנים כמו תרנים מפחיתים 0,5mm; הערה d — לברגים מצופים (מגולוונים) מותר להגדיל את מרווח ה-1mm בעובי הציפוי; הערה e — M12/M14 מותרים גם ב-2mm 'if specified'. זו שגיאה מעשית כי ברירת המחדל של המודול היא M12/M16 עם d0=d+2."
+ },
+ {
+  "module": "connections-types-detailing-rules-engineering-logic",
+  "claim": "Oversize = d + 4mm",
+  "verdict": "REFUTED",
+  "correctValue": "EN 1090-2:2018 Table 11: oversize = 3mm (M12), 4mm (M14–M22), 6mm (M24), 8mm (M27–M36)",
+  "note": "'d+4' נכון רק לטווח M14–M22. ל-M24 זו טעות של 2mm וזו בדיוק הקטגוריה שבה נדרש plate washer."
+ },
+ {
+  "module": "connections-types-detailing-rules-engineering-logic",
+  "claim": "מרווח fit-up טיפוסי 2–3mm; root gap 1–3mm בקצה חד של צינור",
+  "verdict": "REFUTED",
+  "correctValue": "EN 1090-2:2018 Annex E: בפרטי fillet של brace-to-chord (CHS ו-RHS) b = max 2mm; בפרטי butt עם הכנת קצה b = 2–4mm עם root face c = 1–2mm. EN 1090-2 §7.5.8.1(b): פער h מעל גבול האי-שלמות מחייב הגדלת גרון a = a_nom + 0,7h",
+  "note": "הפער אינו 'מרווח מתוכנן' אלא אי-שלמות שיש לפצות. 'תמיד 2-3mm' + 'fit-up gap=0 בלתי ניתן להרכבה' מבלבל בין מרווח הרכבה מבורג לבין root gap של ריתוך; ב-fillet הדרישה היא מגע קרוב כמה שאפשר."
+ },
+ {
+  "module": "connections-types-detailing-rules-engineering-logic",
+  "claim": "טעות נפוצה #5: fillet 6mm על RHS בעובי 4mm — 'המקסימום 2mm'",
+  "verdict": "REFUTED",
+  "correctValue": "עבור t < 6,4mm המקסימום לפי AISC J2.2b הוא t עצמו, כלומר 4mm (וכלל 0,7t של המודול נותן 3mm)",
+  "note": "סתירה פנימית: הכלל שהמודול מנסח (t−2 רק ל-t≥6) לא חל על 4mm, אך רשימת הטעויות מיישמת אותו בכל זאת. בסוכן אוטומטי זו שגיאה שתיצור ריתוכים תת-מידיים על כל ה-RHS 4mm."
+ },
+ {
+  "module": "connections-types-detailing-rules-engineering-logic",
+  "claim": "a ≈ 0.7·t_thinner נותן full-strength (t4→a3, t6→a4, t12→a8)",
+  "verdict": "REFUTED",
+  "correctValue": "תלוי דרגת פלדה: ל-S275 full strength מתקבל כשסך הגרונות = עובי האלמנט (זוג fillets, leg≈0,7t לכל צד); ל-S355 נדרש leg ≈ 1,0·t לכל צד (סך גרונות ≈1,1t). ל-fin plates SCI דורש leg ≥ 0,8·t. ריתוך fillet חד-צדדי לא יכול להיות full-strength",
+  "note": "steelconstruction.info (Welding): 'In S275 steels full strength is also developed in fillet welds ... provided ... the sum of the weld throats is equal to the thickness of the element'. חישוב EN 1993-1-8 §4.5.3.3 עם βw=0,9 ו-fu=470 ל-S355 נותן a≥0,74t לזוג → leg≈1,04t. RHS מגולגל-קר מסופק לרוב ב-S355 — כלומר בדיוק המקרה שבו 0,7t חסר."
+ },
+ {
+  "module": "connections-types-detailing-rules-engineering-logic",
+  "claim": "חור ל-anchor bolt בפלטת בסיס ≤ d + 6mm (מצוטט AISC DG1 / AS 4100 / NZS 3404)",
+  "verdict": "REFUTED",
+  "correctValue": "d+6mm הוא פרקטיקה בריטית/אירופית (SCI P212: 'Clearance holes in the base plate should be 6mm larger than the bolt diameter', ולבסיסים עבים מ-60mm יותר). AISC Design Guide 1 Table 2.3 ממליץ הרבה יותר: מוט 3/4in → חור 1-5/16in (≈d+14mm); 1in → 1-13/16in (≈d+21mm); 1-1/2in → 2-5/16in",
+  "note": "זה כלל תלוי-מדינה שמוצג כאוניברסלי, ועם מקור שגוי. אם עובדים לפי AISC — d+6 יגרום בדיוק לבעיית ההרכבה שה-DG נכתב למנוע."
+ },
+ {
+  "module": "connections-types-detailing-rules-engineering-logic",
+  "claim": "Plate washer נדרש אם החור > d + 3mm; עובי ≥ 6mm (מינימום 4mm)",
+  "verdict": "REFUTED",
+  "correctValue": "EN 1090-2:2018 §8.2.4: plate washers חייבים בחורים oversize ומוארכים (ללא 'סף d+3'), ולא דקים מ-4mm; ל-anchor rods AISC DG1 Table 2.3 נותן עובי ≈ d/3 — מ-1/4in (6,4mm) למוט 3/4in ועד 7/8in (≈22mm) למוט 2-1/2in",
+  "note": "גם EN 1090-2 §8.2.4: לברגים לא-מהודקים בחורים עגילים רגילים דיסקיות אינן נדרשות אלא אם צוין; דיסקיות taper נדרשות כשהמשטח משופע (מאשר את קטע ה-taper washer במודול). 'עובי ≥6mm' תת-שמרני לעוגנים גדולים."
+ },
+ {
+  "module": "connections-types-detailing-rules-engineering-logic",
+  "claim": "שטח חורי vent כולל ≥ 25% משטח החתך",
+  "verdict": "REFUTED",
+  "correctValue": "קוטר החור ≥ 25% מאורך האלכסון הפנימי של החתך (או מספר חורים בשטח חתך שקול לאותו חור). לדוגמה SHS100×100 → אלכסון ≈141mm → חור ≈35mm",
+  "note": "APGGA/GAA: 'Hole size to be a minimum of 25% of the internal diagonal' / 'each with a diameter equivalent to at least 25% of their diagonal cross section length or multiple holes ... of equivalent minimum cross sectional area'. 25% משטח החתך היה דורש למשל Ø56mm ב-SHS100 — כלל שאינו קיים ואינו ניתן לביצוע במצבים רבים."
+ },
+ {
+  "module": "connections-types-detailing-rules-engineering-logic",
+  "claim": "ישרות אלמנט מיוצר: L/1000, מינימום 2mm (EN 1090-2 Annex B); לבדוק גם L/750",
+  "verdict": "REFUTED",
+  "correctValue": "EN 1090-2:2018 Annex B: הישרות היא ±L/1000 עם תקרה מוחלטת (לא רצפה) המשתנה לפי הטבלה והמעמד — למשל חתכים מרותכים/כפופים: L/1000 but |Δ| ≤ 5mm (essential) / ≤3mm (Class 2); אלמנטי bracing (Table B.12): ±Li/1000 but ≤4mm (essential/Class 1) / ≤3mm (Class 2); 'component to be used unrestrained': ±L/1000 essential בלבד",
+  "note": "'מינימום 2mm' הוא היפוך משמעות של הערכים בטבלאות — הם גבולות עליונים. L/750 אינו קריטריון ישרות של אלמנט ב-EN 1090-2 (b/750 מופיע לישרות ניצבת של מקשחי web; L/500 לקמבר מסבכים). Annex B — הייחוס נכון למהדורת 2018."
+ },
+ {
+  "module": "connections-types-detailing-rules-engineering-logic",
+  "claim": "flattened end (ריסוק קצה צינור) כפתרון זול לצינורות קטנים",
+  "verdict": "REFUTED",
+  "correctValue": "EN 1993-1-8 §7.1.2(4): 'The ends of members that meet at a joint should be prepared in such a way that their cross-sectional shape is not modified. Flattened end connections and cropped end connections are not covered in this section'",
+  "note": "לא רק 'מגבלה לדופן דקה וכוח צירי' — אין שיטת תכנון בתקן. מותר לייצור אך דורש בסיס אחר (בדיקות/ספרות/אישור מהנדס). על סוכן אסור להציע זאת כברירת מחדל למעקות מבלי לסמן שאין כיסוי תקני."
+ },
+ {
+  "module": "connections-types-detailing-rules-engineering-logic",
+  "claim": "כללי §7 חלים על החתכים החלולים שבמודל (RHS150X100X4, BSC21.3X2.5 וכו')",
+  "verdict": "REFUTED",
+  "correctValue": "EN 1993-1-8 §4.1: פרק הריתוכים חל על t ≥ 4mm (דק מזה → EN 1993-1-3); חתכים חלולים מ-2,5mm ומעלה → פרק 7. Table 7.1 (כורד CHS): 10 ≤ d0/t0 ≤ 50 → BSC21.3X2.5 עם d/t=8,5 מחוץ לתחום. Table 7.8 (כורד RHS): b0/t0 ו-h0/t0 ≤ 35 → RHS150X100X4 עם 37,5 מחוץ לתחום",
+  "note": "זו החמצה מהותית במודול שכל הפואנטה שלו היא 'הלב הוא חלול': חלק גדול מהחתכים בפועל נופל מחוץ לתחומי התקפות, ואז §7.2.2 מחייב לבדוק את כל מודי הכשל ולהתחשב במומנטים משניים מקשיחות הצומת. הסוכן חייב לבדוק b0/t0, d0/t0 ו-Class לפני שהוא מסתמך על 'הכללים של פרק 7'."
+ },
+ {
+  "module": "prosteel-modeling-methodology",
+  "claim": "פער fit-up מעשי 2–3mm בין פלטת קצה לפרופיל (פרקטיקת בית מלאכה)",
+  "verdict": "REFUTED",
+  "correctValue": "BCSA NSSS 52/10 §6.2.1: 'Connected parts shall be firmly drawn together. If there is an unacceptable residual gap it shall be taken apart and a pack of not less than 2mm thickness inserted. Residual gaps are unacceptable in general if they exceed 2mm' — ובפלייז עבים מ-8mm מותר עד 4mm בקצוות בלבד, ובתנאי נשיאה במרכז החיבור, ולא יותר משלושה פקים",
+  "note": "פער מכוון של 2–3mm הוא בדיוק מה שהמפרט אוסר להשאיר, לא 'פרקטיקה מקובלת'. בנוסף הניסוח גיאומטרית שגוי: בחיבור end plate ממוסמר הפלטה מרותכת לפרופיל במפעל — הפער הרלוונטי הוא בין שתי פלטות/בין פלטה לאוגן העמוד. הפער המכוון האמיתי בדיטיילינג הוא clearance מתוכנן: SCI P358 מפרט 'nominal 10 mm gap' בפרטי fin plate (ובחישובים אף 20mm). להחליף את הכלל ב: (א) fin plate — פער נומינלי 10mm; (ב) end plate/נשיאה — 'firmly drawn together', שארית ≤2mm ומעליה pack ≥2mm."
+ },
+ {
+  "module": "prosteel-modeling-methodology",
+  "claim": "גלוון חם: שטח פתחי אוורור ≥ 25% מ'החתך האלכסוני' (ASTM A385: 25–30%)",
+  "verdict": "REFUTED",
+  "correctValue": "ASTM A385/A385M-11 §12.4: 'A minimum vent opening of 25 to 30 % of the cross-sectional area of tubular structure shall be specified where full-open venting is not possible' — אחוז משטח החתך של הפרופיל, לא 'חתך אלכסוני'; ולחתכים קטנים מומלצים אחוזים גדולים יותר. העדיפות הראשונה היא full-open venting",
+  "note": "מספר הסעיף (§12.4) והאחוזים (25–30%) נכונים — הטעות היא במונח 'חתך אלכסוני' שאין לו מקבילה בתקן ויוביל לחישוב שטח שגוי (ולסוכן שמייצר פתחים קטנים מדי)."
+ },
+ {
+  "module": "hebrew-english-steel-glossary",
+  "claim": "גרון מעשי a ≈ 0.7·t_min ⇒ ב-RHS150X100X4 (t=4) a=3mm, כברירת מחדל מוצהרת",
+  "verdict": "REFUTED",
+  "correctValue": "לאלכסוני מסבך בפרופיל חלול הריתוך חייב לפתח את חתך האלכסון: EN 1993-1-8 §7.3.1(4) — עמידות הריתוך ליחידת אורך היקף ≥ עמידות חתך המוט ליחידת אורך היקף. ל-t=4mm ב-S355 זה כ-a ≥ 1.1·t ≈ 4.4mm (לפי המודל הפשוט אף יותר); a=3mm מותר רק אם מוצדק בחישוב לפי §7.3.1(6)",
+  "note": "זו הסכנה הממשית ביותר במודול: a=3mm מופיע ברשימת 'ברירות מחדל מותרות' דווקא עבור RHS דק-דופן, שהוא בדיוק המקרה שבו §7.3.1(4) דורש ריתוך גדול יותר. 0.7·t הוא כלל אצבע לגרון מול שוק z=t ואינו דרישת תקן."
+ },
+ {
+  "module": "hebrew-english-steel-glossary",
+  "claim": "פער התאמה 2–3 mm טיפוסי; פער > 2 mm בפילה מחייב הגדלת a (EN 1090-2 §7.5)",
+  "verdict": "REFUTED",
+  "correctValue": "EN 1090-2:2018 §7.5.8.1(b): אם הפער h חורג מגבול הפגם לפי EN ISO 5817:2014, מפצים בהגדלת הגרון לפי a = a_nom + 0.7·h. גבול הפער תלוי ברמת האיכות (ולכן ב-EXC), ולא 2mm אוניברסלי. EN 1011-2 §8.2 קובע תקרה מוחלטת של 3mm לפער שורש בפילה",
+  "note": "הנוסחה a = a_nom + 0.7h היא הערך הפעולתי שחסר במודול לגמרי. ה-2mm תקף בקירוב לרמת איכות B (EXC3, t>3mm) — כלומר תלוי מחלקת ביצוע. אומת מול טקסט EN 1090-2:2018 §7.5.8.1 ומול SCI Guidance Note 5.01."
+ },
+ {
+  "module": "hebrew-english-steel-glossary",
+  "claim": "חורי אוורור לגילוון: שטח חורים ≥ 25% מהחתך האלכסוני; מינ' Ø10mm, Ø25mm מועדף (EN ISO 14713-2 + ASTM A385 §12.4)",
+  "verdict": "REFUTED",
+  "correctValue": "שני כללים שונים עורבבו: (1) GAA/Galvanizers Association — קוטר החור ≥ 25% מאורך האלכסון של החתך (לא שטח), במינימום 10mm; (2) ASTM A385 §12.4 — פתח בודד בפינה בשטח 25–30% משטח החתך. EN ISO 14713-2:2020 בכלל לא נותן אחוז אלא טבלת קטרים לפי גודל החתך (למשל חתך 300mm → חור בודד Ø60mm או 2×Ø45mm; חתך 600mm → עד Ø170mm)",
+  "note": "ההשלכה חמורה: לפי כל אחד מהכללים RHS150X100 דורש חור בסדר גודל של Ø45 (25% מאלכסון 180mm) ולא Ø10–25mm. הצגת 'שטח ≥ 25% מהחתך האלכסוני' מערבבת יחידות (שטח מול קוטר) ותייצר חורים קטנים בסדר גודל. גם התלות בתקן היא לאומית: 25/30% הוא ASTM (ארה\"ב), הטבלה היא ISO/אירופה."
+ },
+ {
+  "module": "hebrew-english-steel-glossary",
+  "claim": "מסגור הכלל כ'אקסצנטריות מותרת' בצומת",
+  "verdict": "REFUTED",
+  "correctValue": "אלה אינם גבולות אקסצנטריות מותרת אלא הטווח שבו מותר להזניח את המומנטים המשניים — ורק בתכנון חבורת המתיחה, האלכסונים והחיבור. חבורת הלחיצה חייבת לקחת את המומנט מהאקסצנטריות בכל מקרה (§5.1.5(6))",
+  "note": "הבחנה קריטית לסוכן: e=0.2·h0 אינו 'תקין', הוא 'מותר להזניח בחלק מהבדיקות'. חבורת לחיצה עם e בתוך הטווח עדיין נבדקת למומנט."
+ },
+ {
+  "module": "hebrew-english-steel-glossary",
+  "claim": "רמת קבלת ריתוך: EXC1→D · EXC2→C · EXC3→B · EXC4→B+ (EN 1090-2 Table 17 / ISO 5817:2023)",
+  "verdict": "REFUTED",
+  "correctValue": "ב-EN 1090-2:2018 המפתח נמצא בסעיף 7.6 (לא ב-Table 17 — Table 17 שם הוא סיווג משטחי חיכוך/מקדמי החלקה), בהתייחסות ל-EN ISO 5817:2014 (לא 2023): EXC1 = D למעט C ל-'Insufficient throat' (5213); EXC2 = C למעט D ל-'Overlap' (506), 'Stray arc' (601), 'End crater pipe' (2025) ו-B ל-'Insufficient throat' (5213); EXC3 = B; EXC4 = מבוסס EXC3 עם דרישות פרויקטליות נוספות (§4.1.2, 7.6.1, 12.4.2.3/4) — אין רמה בשם 'B+' בטקסט. שני פגמים — 'Incorrect toe' (505) ו-'Micro lack of fusion' (401) — כלל לא נלקחים בחשבון",
+  "note": "אומת מול טקסט BS EN 1090-2:2018. 'Table 17' ו-'B+' הם ציטוט של המהדורה המבוטלת EN 1090-2:2008 — שגיאת ציטוט שיש לתקן לפני הטמעה."
+ },
+ {
+  "module": "fabrication-driven-modeling",
+  "claim": "ASTM A385 §12.4 = \"25–30% בפינה\"",
+  "verdict": "REFUTED",
+  "correctValue": "A385 §12.4: פתח אוורור מינימלי של 25–30% משטח החתך (cross-sectional area), לא מהאלכסון ולא \"בפינה\"; ולחתכי קופסה: H+W ≥ 610mm → 25%; H+W בין 384–610mm → 30%; H+W בין 192–384mm → 40%; H+W < 192mm → להשאיר פתוח לגמרי",
+  "note": "קראתי את נוסח ASTM A385/A385M-11. זו מחמירות אחרת לגמרי מכלל ה-GAA: ל-RHS150X100 (H+W=250mm) A385 דורש 40% משטח 15,000mm² ≈ 6,000mm², בעוד שכלל 25%-מהאלכסון נותן חור Ø45 ≈ 1,590mm² — כ-10.6% בלבד. ל-50X3.0SHS (H+W=100mm) A385 אומר \"leave completely open; no end plates or internal gussets\". המודול מציג שני מקורות סותרים כאילו הם כלל אחד."
+ },
+ {
+  "module": "fabrication-driven-modeling",
+  "claim": "דוגמה: RHS150X100X4 → \"2×Ø32mm בקצוות נגדיים\"",
+  "verdict": "REFUTED",
+  "correctValue": "2×Ø35mm (או 1×Ø45, או 4×Ø25) לפי GAA Table 3",
+  "note": "טבלת ה-GAA עצמה ל-RHS 150×100 נותנת: חור אחד Ø45, שני חורים Ø35, ארבעה חורים Ø25. המודול חישב שקילות שטח (2×32≈1×45) והגיע ל-32mm — קטן מהטבלה. כנ\"ל RHS200X100: GAA נותן Ø60 לחור בודד ולא 56mm שיוצא מנוסחת האלכסון. ההנחיה לסוכן צריכה להיות: לעבוד מטבלאות GAA 1–3, לא מהנוסחה."
+ },
+ {
+  "module": "fabrication-driven-modeling",
+  "claim": "BSC21.3X2.5: \"כאן אין מקום ל-25%\"",
+  "verdict": "REFUTED",
+  "correctValue": "25% מ-21.3mm = 5.3mm — קטן בהרבה מהמינימום; מה שקובע הוא רצפת ה-10mm (GAA CHS: NB20/OD26.9 → Ø10 ל-1, 2 ו-4 חורים)",
+  "note": "ההיגיון במודול הפוך: הבעיה אינה שה-25% גדול מדי אלא שהוא קטן מהמינימום המוחלט, ולכן חור 10mm על צינור 21.3mm הוא ~47% מהקוטר. המסקנה המעשית (קצוות פתוחים או Ø10–12 סמוך לצומת) נכונה — הנימוק שגוי, ולסוכן שילמד את הנימוק תהיה תשובה שגויה על חתכים אחרים."
+ },
+ {
+  "module": "fabrication-driven-modeling",
+  "claim": "\"leg ≤ עובי הדופן הדק (4mm ב-RHS150X100X4, 3mm ב-50X3.0SHS)\"",
+  "verdict": "REFUTED",
+  "correctValue": "לחלולים בסבכה: throat מוקדם-כשירות a ≥ 1.11·ti ל-S355 (Tata Steel / CIDECT) — כלומר leg ≈ 1.57·t, יותר מעובי הדופן. הכלל \"leg ≤ t\" הוא AISC J2.2b וחל רק על ריתוך לאורך קצה חומר דק מ-6.4mm",
+  "note": "שלוש בעיות. (1) סתירה פנימית: a=3mm ⇒ leg = 3·√2 = 4.24mm > 4mm — אי-אפשר לקיים את שני חצאי הכלל על RHS בדופן 4mm. (2) Tata Steel \"Design of Welded Joints\" Figure 9 (בסיס CIDECT) קובע prequalified minimum throat a = 1.11×ti ל-Celsius/Hybox 355; ל-ti=4mm ⇒ a≥4.44mm ⇒ leg≈6.3mm. כלל המודול היה מייצר ריתוכים תת-חזקים באופן שיטתי בכל האלכסונים. (3) AISC J2.2b מדבר על קצה חומר, לא על פני צינור. זו הטעות המסוכנת ביותר במודול."
+ },
+ {
+  "module": "fabrication-driven-modeling",
+  "claim": "דוגמת nesting: \"RHS150X100X4 באורך 3050mm → 2 יח' מ-6m עם 100mm שאריות\"",
+  "verdict": "REFUTED",
+  "correctValue": "2×3050 = 6100mm > 6000mm. ממוט 6m יוצאת יחידה אחת בלבד (2950mm פסולת). שתי יחידות נכנסות רק ב-6.1m — וגם אז בדיוק 6100 בלי שום מקום ל-kerf של המסור (~3–5mm לחיתוך). ממוט 12m: 3 יח' + 2850mm שארית",
+  "note": "שגיאת סימן אריתמטית. זו הדוגמה הראשונה שהסוכן יראה על nesting, והיא מלמדת חישוב הפוך. חסרה גם התייחסות ל-kerf ולסבולת אורך."
+ },
+ {
+  "module": "fabrication-driven-modeling",
+  "claim": "עקיבות: HEAT number + תעודת EN 10204 type 3.1 לכל פלטה/פרופיל",
+  "verdict": "REFUTED",
+  "correctValue": "EN 1090-2:2018 Table 1: פלדה קונסטרוקטיבית בדרגה ≤ S275 → מסמך בדיקה 2.2; דרגה > S275 → 3.1 (הערה a: 3.1 גם ל-S275 אם נדרשת אנרגיית קרימה בטמפ' מתחת ל-0°C)",
+  "note": "3.1 אינו גורף. ל-S355 (הדרגה הרגילה של ארץ ברזל) 3.1 אכן נדרש — אבל ל-S235/S275 די ב-2.2, ולברגים לפי EN 15048 די ב-2.1 (רק EN 14399 דורש 3.1). ייחוס ה-§5.2 נכון (\"Identification, inspection documents and traceability\") וגם §6.2 (\"Identification\") רלוונטי. הוסף: העקיבות יכולה להתבסס על רשומות מגזרות (batches) אלא אם נדרשה עקיבות פרטנית, ו-EXC2/3/4 מוסיפים דרישות כשמסתובבות דרגות שונות במפעל."
+ }
+]

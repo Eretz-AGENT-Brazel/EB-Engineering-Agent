@@ -1,0 +1,304 @@
+{
+"anchor": [
+"at",
+"dia",
+"dir",
+"embed",
+"grout",
+"kind",
+"layer",
+"plate",
+"proud",
+"style",
+"thread"
+],
+"beam": [
+"ax",
+"ay",
+"catalog",
+"layer",
+"mirror",
+"name",
+"offx",
+"offy",
+"p1",
+"p2",
+"rot"
+],
+"bolt": [
+"dia",
+"hosts",
+"layer",
+"len",
+"p1",
+"p2",
+"style"
+],
+"boltfield": [
+"center",
+"dia",
+"gap",
+"hosts",
+"nx",
+"ny",
+"style",
+"sx",
+"sy"
+],
+"boltprobe": [
+"p1",
+"p2"
+],
+"chamfer": [
+"at",
+"d1",
+"d2",
+"edge",
+"handle",
+"list",
+"type"
+],
+"clonemodel": [
+"dx",
+"maxx"
+],
+"cmd": [
+"args",
+"list",
+"name",
+"select"
+],
+"conn": [
+"at",
+"beam",
+"cope",
+"dh",
+"dv",
+"group",
+"holedia",
+"kind",
+"nh",
+"nv",
+"play",
+"support",
+"t",
+"template"
+],
+"conn_bolted": [
+"at",
+"dia",
+"gap",
+"nx",
+"ny",
+"pl",
+"pt",
+"pw",
+"style",
+"sx",
+"sy"
+],
+"connbase": [
+"anchordetail",
+"anchordia",
+"anchordrill",
+"anchorgrip",
+"anchorgripdia",
+"anchorkey",
+"anchoroutside",
+"anchors",
+"dts",
+"handle",
+"holedia",
+"hx",
+"hy",
+"l",
+"shorten",
+"t",
+"template",
+"w"
+],
+"connremove": [
+"delparts",
+"handle"
+],
+"connscan": [
+"handle",
+"maxx",
+"out"
+],
+"connsplice": [
+"at",
+"gap",
+"handle",
+"holedia",
+"nhweb",
+"nvweb",
+"support",
+"tfl",
+"tweb"
+],
+"connstiff": [
+"at",
+"fldist",
+"handle",
+"len",
+"r",
+"shape",
+"t",
+"template",
+"webdist"
+],
+"conntemplates": [],
+"copy": [
+"about",
+"axis",
+"handle",
+"handles",
+"rot",
+"to"
+],
+"drill": [
+"at",
+"bolttype",
+"dia",
+"flange",
+"handle",
+"hosts",
+"htype",
+"innercontour",
+"n",
+"play",
+"rotslot",
+"slot"
+],
+"drillfield": [
+"at",
+"dia",
+"handle",
+"hosts",
+"innercontour",
+"n",
+"play",
+"slot",
+"x",
+"y"
+],
+"dumpcat": [
+"catalog"
+],
+"dumpfull": [
+"out"
+],
+"dumpfull2": [
+"out"
+],
+"dumpholes": [
+"lhm",
+"maxx",
+"out"
+],
+"dumpmodel": [
+"out"
+],
+"dumppoly": [
+"maxx",
+"out"
+],
+"enumdump": [
+"types"
+],
+"group": [
+"kind",
+"main",
+"name",
+"parts",
+"query"
+],
+"hilite": [
+"clear",
+"handle"
+],
+"holes": [
+"handle",
+"lhm"
+],
+"mirror": [
+"handle",
+"handles",
+"p1",
+"p2",
+"p3"
+],
+"miter": [
+"cut",
+"other",
+"type"
+],
+"plate": [
+"center",
+"ex",
+"ey",
+"ez",
+"l",
+"layer",
+"normal",
+"t",
+"w"
+],
+"platepoly": [
+"handle"
+],
+"polyplate": [
+"layer",
+"pts",
+"t"
+],
+"posnum": [
+"out"
+],
+"props": [
+"handle"
+],
+"replicate": [
+"about",
+"axis",
+"box",
+"handles",
+"rot",
+"to"
+],
+"rotate": [
+"about",
+"axis",
+"box",
+"class",
+"handles",
+"layer",
+"name",
+"rot"
+],
+"sections": [
+"filter"
+],
+"setlayer": [
+"handle",
+"layer"
+],
+"setpoly": [
+"handle",
+"pts"
+],
+"styles": [],
+"view": [
+"dir"
+],
+"workframe": [
+"at",
+"x",
+"y"
+],
+"zoom": [
+"handle",
+"margin"
+]
+}

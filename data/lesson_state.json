@@ -1,0 +1,43 @@
+{
+ "num": "5",
+ "topic": "פתרון סוגיה בפרט העיגון - צפייה בתיקון של אמיר",
+ "folder": "C:\\Users\\User\\Desktop\\EB PROSTEEL AGENT\\projects\\שיעור-5",
+ "logpath": "C:\\Users\\User\\Desktop\\EB PROSTEEL AGENT\\projects\\שיעור-5\\learning\\session_20260802_101005_part2.jsonl",
+ "started": "2026-08-02 10:10:05",
+ "before": {
+  "full": "EB_OK dumpfull2 shapes=2 plates=3 bolts=0 other=34 err=0 -> eb_full_L5p2_before.txt reqid=e663e8d3",
+  "holes": "EB_OK dumpholes objs=29 withholes=4 holes=24 slotted=0 err=0 -> eb_holes_L5p2_before.txt reqid=8af40ca0",
+  "poly": "EB_OK dumppoly plates=3 nonrect=0 verts>4=3 err=0 -> eb_poly_L5p2_before.txt reqid=73558ca6",
+  "conn": "EB_OK connscan scanned=29 withlinks=2 links=2 err=0 | t13/BASEPLATE/RIB/SPLICE/SHEARPLATE/WEBANGLE/COPE=1 t10/BASEPLATE/RIB/SPLICE/SHEARPLATE/WEBANGLE/COPE=1 -> eb_conn_L5p2_before.txt reqid=da082cf1"
+ },
+ "seen": 0,
+ "part": 2,
+ "parts": [
+  {
+   "part": 1,
+   "topic": "מידול עמוד פלדה שמעוגן לקיר ולרצפה",
+   "logpath": "C:\\Users\\User\\Desktop\\EB PROSTEEL AGENT\\projects\\שיעור-5\\learning\\session_20260731_170223.jsonl",
+   "before": {
+    "full": "EB_OK dumpfull2 shapes=0 plates=0 bolts=0 other=1 err=0 -> eb_full_L5_before.txt reqid=50176e23",
+    "holes": "EB_OK dumpholes objs=0 withholes=0 holes=0 slotted=0 err=0 -> eb_holes_L5_before.txt reqid=bc52c84e",
+    "poly": "EB_OK dumppoly plates=0 nonrect=0 verts>4=0 err=0 -> eb_poly_L5_before.txt reqid=429cc29b",
+    "conn": "EB_OK connscan scanned=0 withlinks=0 links=0 err=0 | -> eb_conn_L5_before.txt reqid=b9f5f1d6"
+   },
+   "after": {
+    "full": "EB_OK dumpfull2 shapes=2 plates=4 bolts=0 other=23 err=0 -> eb_full_L5_after.txt reqid=ffdcdab8",
+    "holes": "EB_OK dumpholes objs=26 withholes=5 holes=20 slotted=0 err=0 -> eb_holes_L5_after.txt reqid=eaee9b9b",
+    "poly": "EB_OK dumppoly plates=4 nonrect=4 verts>4=4 err=0 -> eb_poly_L5_after.txt reqid=b4f31006",
+    "conn": "EB_OK connscan scanned=26 withlinks=2 links=2 err=0 | t13/BASEPLATE/RIB/SPLICE/SHEARPLATE/WEBANGLE/COPE=1 t10/BASEPLATE/RIB/SPLICE/SHEARPLATE/WEBANGLE/COPE=1 -> eb_conn_L5_after.txt reqid=b5f03376"
+   },
+   "started": "2026-07-31 17:02:23",
+   "stopped": "2026-07-31 17:39:10"
+  }
+ ],
+ "after": {
+  "full": "EB_OK dumpfull2 shapes=4 plates=3 bolts=0 other=38 err=0 -> eb_full_L5p2_after.txt reqid=4421a926",
+  "holes": "EB_OK dumpholes objs=35 withholes=5 holes=28 slotted=0 err=0 -> eb_holes_L5p2_after.txt reqid=e4c9ee16",
+  "poly": "EB_OK dumppoly plates=3 nonrect=0 verts>4=3 err=0 -> eb_poly_L5p2_after.txt reqid=476b5de4",
+  "conn": "EB_OK connscan scanned=35 withlinks=4 links=4 err=0 | t13/BASEPLATE/RIB/SPLICE/SHEARPLATE/WEBANGLE/COPE=2 t10/BASEPLATE/RIB/SPLICE/SHEARPLATE/WEBANGLE/COPE=2 -> eb_conn_L5p2_after.txt reqid=408f99c9"
+ },
+ "stopped": "2026-08-02 10:11:53"
+}

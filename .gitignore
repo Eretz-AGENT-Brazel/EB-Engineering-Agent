@@ -1,0 +1,33 @@
+# AutoCAD lock and autosave files — regenerated every session, never content
+*.dwl
+*.dwl2
+*.sv$
+*.ac$
+*.err
+*.log
+
+# AutoCAD's own rolling backup of the previous save (the *-backup-*.dwg files ARE kept —
+# they are deliberate, timestamped snapshots; these .bak ones are automatic and redundant)
+*.bak
+
+# Python
+__pycache__/
+*.pyc
+
+# the plugin's scratch I/O files — written and overwritten on every single op
+app/plugin/eb_cmd.txt
+app/plugin/eb_result.txt
+app/plugin/eb_expect_dwg.txt
+app/plugin/eb_holes.txt
+app/plugin/eb_list.txt
+app/plugin/eb_posnum.txt
+app/plugin/eb_posauto.txt
+app/plugin/eb_groupauto.txt
+app/plugin/eb_conndump.txt
+app/plugin/eb_basedump.txt
+app/plugin/eb_purlin.txt
+app/plugin/eb_cat.txt
+app/plugin/eb_sections.txt
+app/plugin/eb_styles.txt
+app/plugin/eb_enums.txt
+app/plugin/eb_catalog.txt

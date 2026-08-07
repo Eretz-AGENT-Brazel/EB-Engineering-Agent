@@ -1,0 +1,24 @@
+﻿{"t":"10:10:05","ev":"learn_start"}
+{"t":"10:10:37","ev":"cmd_start","name":"COPY"}
+{"t":"10:10:39","ev":"obj_add","class":"Ks_Shape","handle":"E7C","cmd":"COPY"}
+{"t":"10:10:39","ev":"obj_add","class":"AcDbDictionary","handle":"E7D","cmd":"COPY"}
+{"t":"10:10:39","ev":"obj_add","class":"Ks_GroupData","handle":"E7E","cmd":"COPY"}
+{"t":"10:10:39","ev":"obj_add","class":"AcDbGroup","handle":"E7F","cmd":"COPY"}
+{"t":"10:10:40","ev":"cmd_cancel","name":"COPY"}
+{"t":"10:10:54","ev":"cmd_start","name":"PS_GROUNDPL"}
+{"t":"10:10:55","ev":"cmd_start","name":"UNDO"}
+{"t":"10:10:56","ev":"cmd_end","name":"UNDO"}
+{"t":"10:10:56","ev":"obj_add","class":"Ks_Shape","handle":"E80","cmd":""}
+{"t":"10:10:56","ev":"obj_add","class":"Ks_VolBody","handle":"E81","cmd":""}
+{"t":"10:10:56","ev":"obj_add","class":"Ks_VolBody","handle":"E82","cmd":""}
+{"t":"10:10:56","ev":"obj_add","class":"Ks_VolBody","handle":"E83","cmd":""}
+{"t":"10:10:56","ev":"obj_add","class":"Ks_VolBody","handle":"E84","cmd":""}
+{"t":"10:10:56","ev":"obj_detail","handle":"E80","class":"Ks_Shape","layer":"PS_Shape","cmd":"UNDO","profile":"300X20","catalog":"DIN.DIN_FLACH","len":810,"p1":"-4658.07,-8780.85,80","p2":"-5468.07,-8780.85,80","holes":4,"conn":"Brace Plate(t10,p0,b0)"}
+{"t":"10:10:56","ev":"obj_detail","handle":"E81","class":"Ks_VolBody","layer":"0","cmd":"UNDO","min":"-4928.07,-8898.17,-42","max":"-4898.07,-8863.53,115"}
+{"t":"10:10:56","ev":"obj_detail","handle":"E82","class":"Ks_VolBody","layer":"0","cmd":"UNDO","min":"-4928.07,-8698.17,-42","max":"-4898.07,-8663.53,115"}
+{"t":"10:10:56","ev":"obj_detail","handle":"E83","class":"Ks_VolBody","layer":"0","cmd":"UNDO","min":"-5228.07,-8898.17,-42","max":"-5198.07,-8863.53,115"}
+{"t":"10:10:56","ev":"obj_detail","handle":"E84","class":"Ks_VolBody","layer":"0","cmd":"UNDO","min":"-5228.07,-8698.17,-42","max":"-5198.07,-8663.53,115"}
+{"t":"10:10:56","ev":"cmd_start","name":"UNDO"}
+{"t":"10:10:56","ev":"cmd_end","name":"UNDO"}
+{"t":"10:10:56","ev":"cmd_end","name":"PS_GROUNDPL"}
+{"t":"10:11:53","ev":"learn_stop"}

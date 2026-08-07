@@ -1,0 +1,11 @@
+﻿POS	1AA	PsShape	HE 300 B			465.66	DIN 1025-2
+POS	1AC	PsShape	BRFL 300x20			14.13	
+POS	1B6	BlockReference	Tie Bolt 			0	
+POS	1C0	BlockReference	Tie Bolt 			0	
+POS	1CA	BlockReference	Tie Bolt 			0	
+POS	1D4	BlockReference	Tie Bolt 			0	
+POS	1E7	PsShape	IPE 300			204.248	DIN 1025-5
+POS	1E8	PsShape	Plate 210x10			1.154	
+POS	1E9	PsBolt	M 16x45 Mu DIN7969			0.144	
+POS	1EA	PsBolt	M 16x45 Mu DIN7969			0.144	
+POS	1EB	PsBolt	M 16x45 Mu DIN7969			0.144	

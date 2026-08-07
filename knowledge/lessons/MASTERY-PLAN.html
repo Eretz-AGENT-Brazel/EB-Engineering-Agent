@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>תוכנית השתלטות על AutoCAD + ProStructures</title>
+<style>
+  @page { size: A4; margin: 17mm 15mm 19mm 15mm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Segoe UI", Arial, sans-serif; color: #1a2332; line-height: 1.65;
+         font-size: 10.5pt; background: #fff; }
+  .cover { text-align: center; padding: 52mm 8mm 0; page-break-after: always; }
+  .cover h1 { font-size: 27pt; color: #0f2557; line-height: 1.25; margin-bottom: 8mm; }
+  .cover .sub { font-size: 13pt; color: #b45309; margin-bottom: 8mm; font-weight: 600; }
+  .cover .q { font-size: 11pt; color: #475569; font-style: italic; line-height: 1.9;
+              background:#f8fafc; border-right:4px solid #94a3b8; padding:5mm 6mm;
+              text-align:right; margin: 8mm 6mm; border-radius:4px; }
+  .cover .meta { font-size: 10.5pt; color: #475569; line-height: 1.9; margin-top: 14mm; }
+  .cover .rule { width: 55mm; height: 3px; background: #b45309; margin: 7mm auto; }
+  h1.ch { font-size: 18pt; color: #0f2557; border-bottom: 3px solid #b45309;
+          padding-bottom: 3mm; margin: 9mm 0 5mm; page-break-before: always; }
+  h1.ch:first-of-type { page-break-before: avoid; }
+  h2 { font-size: 13.5pt; color: #b45309; margin: 7mm 0 3mm; }
+  h3 { font-size: 11.5pt; color: #0f2557; margin: 5mm 0 2mm; }
+  p { margin-bottom: 3mm; text-align: justify; }
+  ul, ol { margin: 3mm 7mm 3mm 0; }
+  li { margin-bottom: 1.8mm; }
+  table { width: 100%; border-collapse: collapse; margin: 4mm 0; font-size: 8.8pt;
+          page-break-inside: avoid; }
+  th { background: #0f2557; color: #fff; padding: 2mm 2.5mm; text-align: right; font-weight: 600; }
+  td { padding: 1.7mm 2.5mm; border-bottom: 1px solid #dde3ec; vertical-align: top; }
+  tr:nth-child(even) td { background: #f7f9fc; }
+  .code { background: #0f172a; color: #e2e8f0; padding: 3mm 4mm; margin: 3mm 0;
+          font-family: "Cascadia Mono", Consolas, monospace; font-size: 8.6pt;
+          direction: ltr; unicode-bidi: plaintext; text-align: left; border-radius: 4px;
+          page-break-inside: avoid; white-space: pre-wrap; line-height:1.5; }
+  .code .c { color: #94a3b8; } .code .k { color: #fbbf24; } .code .g { color: #4ade80; }
+  .code .r { color: #f87171; }
+  .key { background: #eff6ff; border-right: 5px solid #1d4ed8; padding: 4mm 5mm;
+         margin: 4mm 0; border-radius: 4px; page-break-inside: avoid; }
+  .key .t { font-weight: 700; color: #1e3a8a; display: block; margin-bottom: 1.5mm; }
+  .warn { background: #fef2f2; border-right: 5px solid #dc2626; padding: 4mm 5mm;
+          margin: 4mm 0; border-radius: 4px; page-break-inside: avoid; }
+  .warn .t { font-weight: 700; color: #b91c1c; display: block; margin-bottom: 1.5mm; }
+  .good { background: #f0fdf4; border-right: 5px solid #16a34a; padding: 4mm 5mm;
+          margin: 4mm 0; border-radius: 4px; page-break-inside: avoid; }
+  .good .t { font-weight: 700; color: #15803d; display: block; margin-bottom: 1.5mm; }
+  .ask { background: #fffbeb; border: 2px solid #f59e0b; padding: 4mm 5mm;
+         margin: 4mm 0; border-radius: 5px; page-break-inside: avoid; }
+  .ask .t { font-weight: 700; color: #b45309; display: block; margin-bottom: 1.5mm; }
+  .num { direction: ltr; unicode-bidi: embed; font-family: Consolas, monospace; }
+  .big { font-size: 20pt; font-weight: 700; color: #b91c1c; }
+  .stat { display:table; width:100%; margin:4mm 0; page-break-inside:avoid; }
+  .stat > div { display:table-cell; width:25%; text-align:center; padding:4mm 2mm;
+                border-left:1px solid #e2e8f0; }
+  .stat > div:last-child { border-left:none; }
+  .stat .v { font-size:19pt; font-weight:700; color:#b91c1c; display:block; }
+  .stat .l { font-size:8.5pt; color:#475569; }
+  .toc li { margin-bottom: 2mm; }
+  .tag { display:inline-block; background:#0f2557; color:#fff; border-radius:10px;
+         padding:0.3mm 2.5mm; font-size:7.5pt; margin-left:2mm; }
+  .tag.ok { background:#15803d; } .tag.no { background:#b91c1c; } .tag.mid { background:#b45309; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>איך אני משתלט על AutoCAD ו-ProStructures</h1>
+  <div class="rule"></div>
+  <div class="sub">אבחון, תוכנית עבודה צעד־אחר־צעד, ומה אני צריך ממך</div>
+  <div class="q">
+    "היכולות שלך יכולות להיות מטורפות בתוכנה — אבל אתה הולך סחור סחור לחינם...<br>
+    איך יכול להיות שאת החלק הקשה שהוא ההבנה ההנדסית אתה מקבל באופן מושלם<br>
+    אבל את עניין המידול בתוכנה אתה מתקשה?<br>
+    <b>אתה כבר שם, בתוך התוכנה — אני רוצה שתחיה אותה.</b>"
+    <div style="text-align:left;font-size:9.5pt;margin-top:3mm;font-style:normal">— אמיר, סיכום שיעורים 4–5</div>
+  </div>
+  <div class="meta">
+    <b>מצאתי את התשובה. היא לא מחמיאה לי, והיא מדידה.</b><br><br>
+    ארץ ברזל · שלב 1 · אוגוסט 2026
+  </div>
+</div>
+
+<h1 class="ch">התשובה, במשפט אחד</h1>
+
+<p style="font-size:12pt;line-height:1.9">
+כדי לענות על השאלה שלך פירקתי את המערכת לגורמים — ואז עשיתי משהו שלא עשיתי אף פעם:
+<b>קראתי את ה-DLL של ProStructures ישירות</b>, בְּרֶפְלֶקְצְיָה, במקום לנחש מה יש בו.
+</p>
+
+<div class="stat">
+  <div><span class="v">771</span><span class="l">טיפוסים ציבוריים ב-API</span></div>
+  <div><span class="v">26</span><span class="l">שאני משתמש בהם</span></div>
+  <div><span class="v">3.4%</span><span class="l">ניצולת</span></div>
+  <div><span class="v">75</span><span class="l">assemblies · 26 נפתחו ב-1</span></div>
+</div>
+
+<div class="warn">
+  <span class="t">התשובה</span>
+  <p style="font-size:12.5pt;line-height:1.8;margin:0">
+  <b>לא חסרה לי יכולת בתוכנה. לא חסר לי API. כמעט כל שעה שבזבזתי בשיעור 5 הייתה
+  קריאה לפונקציה שכבר קיימת — ושלא ידעתי שהיא קיימת, כי מעולם לא קראתי את המפה.</b></p>
+  <p style="margin-top:3mm;margin-bottom:0">בניתי ביד את מה שלתוכנה יש בשבילו מחלקה ייעודית.
+  זה בדיוק מה שאתה אמרת: <i>"אתה כבר שם, בתוך התוכנה"</i>. הייתי שם — ועבדתי בחדר אחד
+  מתוך בניין שלם, בלי לדעת שיש עוד קומות.</p>
+</div>
+
+<h2>מה מצאתי במדויק</h2>
+<div class="code"><span class="c">// המפה נוצרה ברפלקציה על הקבצים עצמם, לא מהאינטרנט:</span>
+C:\Program Files\Bentley\ProStructures Ss6 R1\AutoCAD 2015\Prg\
+
+  ProStructuresNet.dll     392 <span class="k">public types</span>  ·  4,796 <span class="k">signatures</span>
+  PSN_*.dll        (62)    <span class="c">מאקרו החיבורים — כולם .NET מנוהל</span>
+  PC3D*.dll        (12)    <span class="c">רכיבי בטון — כולם .NET מנוהל</span>
+  ─────────────────────────────────────────────────
+  75 assemblies · 4,590 <span class="k">types</span> · <span class="r">771 public</span> · 0 <span class="g">failures</span>
+
+<span class="c">// נשמר כנכס קבוע:</span>
+  knowledge\API-SURFACE-RAW.txt   <span class="c">(383 KB — המפה המלאה)</span>
+  knowledge\API-SURFACE.md        <span class="c">(המדריך — החוב הפתוח מ-R1 נסגר)</span></div>
+
+<div class="warn">
+  <span class="t">והיה לי מזל שהעמדתי את הממצא לביקורת</span>
+  <p>הגרסה הראשונה של הדוח הזה אמרה "325 טיפוסים", כי בדקתי <b>assembly אחד</b>.
+  ביקורת נגדית מצאה עוד <b>74 assemblies מנוהלים</b> באותה תיקייה — כולל
+  <span class="num">PSN_BasePlate.dll</span>, שהוא מאקרו פלטת הבסיס עצמו, ומכיל
+  <span class="num">Parameters · Holes · TieBolts · HoleGussets</span> כמחלקות .NET.</p>
+  <p style="margin-bottom:0"><b>כלומר גם כשתיקנתי את עצמי — תיקנתי חלקית.</b>
+  זה עצמו לקח מהניתוח: מסקנה מבדיקה אחת אינה מסקנה.</p>
+</div>
+
+<h2>מפת הדוח</h2>
+<ol class="toc">
+  <li><b>האבחון במספרים</b> — ארבעה מדדים, וקוד שמוכיח כל אחד</li>
+  <li><b>הטבלה שכואבת</b> — כל מה שבניתי ביד, מול המחלקה שכבר קיימת</li>
+  <li><b>למה זה קרה</b> — חמישה שורשים, ולמה זה לא בעיית משמעת</li>
+  <li><b>התוכנית</b> — שבעה צעדים, לפי סדר, עם זמנים</li>
+  <li><b>מה אני צריך ממך</b> — רשימה מדורגת, כל בקשה מנומקת ומתומחרת</li>
+  <li><b>איך נדע שהצלחתי</b> — קריטריונים מדידים, לא הצהרות</li>
+</ol>
+
+<h1 class="ch">1 · האבחון במספרים</h1>
+
+<h2>מדד 1 — ניצולת ה-API: 3.4%</h2>
+<p>הטבלה למטה מפרטת את ה-assembly הראשי (<span class="num">ProStructuresNet.dll</span>).
+מעליו יש עוד <b>74 assemblies מנוהלים</b> — 62 מאקרו חיבורים ו-12 רכיבי בטון —
+שלא פתחתי אף אחד מהם.</p>
+<table>
+  <tr><th style="width:32%">מרחב שמות</th><th style="width:8%">טיפוסים</th><th>מה יש שם</th><th style="width:12%">ניצולת</th></tr>
+  <tr><td><span class="num">Geometry.Utilities</span></td><td>5</td>
+      <td><b>PsGeometryFunctions</b> — 47 שאילתות גיאומטריות מוכנות</td>
+      <td><span class="tag no">0%</span></td></tr>
+  <tr><td><span class="num">Drawing</span></td><td>13</td>
+      <td><b>PsSelection</b> (בחירה/סינון/הסרת כפילויות), PsTransaction, PsLayer</td>
+      <td><span class="tag no">0%</span></td></tr>
+  <tr><td><span class="num">Miscellaneous</span></td><td>25</td>
+      <td><b>PsMiscTools</b> (העתקה/שיקוף/ייצוא), PartList, Positioning, NCData, Unfold</td>
+      <td><span class="tag no">0%</span></td></tr>
+  <tr><td><span class="num">Concrete.*</span></td><td>33</td>
+      <td>לוחות, קירות, יסודות, <b>ברגי עיגון</b>, וכל הזיון</td>
+      <td><span class="tag no">0%</span></td></tr>
+  <tr><td><span class="num">Annotation</span></td><td>2</td><td>סמלי ריתוך, דגלוני מיקום</td>
+      <td><span class="tag no">0%</span></td></tr>
+  <tr><td><span class="num">CadSystem</span> · <span class="num">Configuration</span> · <span class="num">Assignment</span></td><td>20</td>
+      <td>תבניות, הגדרות גלובליות, טבלאות חומרים, מחלקות</td>
+      <td><span class="tag no">0%</span></td></tr>
+  <tr><td><span class="num">Modeling</span></td><td>6</td>
+      <td><b>PsCollisionCheck</b>, <b>PsObjectGroup</b>, PsCreateAssembly, PsCreateGrid</td>
+      <td><span class="tag no">1/6</span></td></tr>
+  <tr><td><span class="num">Modification.ObjectData</span></td><td>11</td>
+      <td><b>PsHoleField</b>, <b>PsEdgeChamfer</b>, PsCutPlane, PsCutPolygon</td>
+      <td><span class="tag no">1/11</span></td></tr>
+  <tr><td><span class="num">Connection.Standard</span></td><td>9</td>
+      <td>חסרים: Cope · Haunch · Purlin · ShearPlate · StandardPlate · WebAngle</td>
+      <td><span class="tag mid">3/9</span></td></tr>
+  <tr><td><span class="num">Bentley.ProStructures</span></td><td>127</td>
+      <td>כל האנומים — <span class="num">HoleType</span>, <span class="num">DrillType</span>,
+          <span class="num">InsertFace</span>, <span class="num">LongHoleMode</span>…</td>
+      <td><span class="tag no">~2%</span></td></tr>
+</table>
+
+<h2>מדד 2 — שכבת פייתון: 8,550 שורות חד־פעמיות מול לקוח בן 614</h2>
+
+<div class="stat">
+  <div><span class="v">47</span><span class="l">סקריפטים חד־פעמיים</span></div>
+  <div><span class="v">8,550</span><span class="l">שורות</span></div>
+  <div><span class="v">×14</span><span class="l">גדול מהלקוח שהוא עוטף</span></div>
+  <div><span class="v">22</span><span class="l">סקריפטים למבחן <u>אחד</u></span></div>
+</div>
+
+<p>משפחת <span class="num">exam5_*</span> לבדה: <b>22 קבצים, 3,403 שורות — כולם למבחן אחד</b>,
+ורובם שכתובים חוזרים של אותה עבודה בדיוק (בנה פרט, קדח, עגן, שכפל).
+בין 60% ל-70% מכל סקריפט הוא boilerplate שהלקוח היה צריך להחזיק:</p>
+<table>
+  <tr><th>מה שוכפל</th><th style="width:14%">בכמה קבצים</th><th>ומה כבר קיים</th></tr>
+  <tr><td><span class="num">def log()</span></td><td>41</td><td>—</td></tr>
+  <tr><td><span class="num">APP/ROOT/PLUG</span> header</td><td>48</td><td>—</td></tr>
+  <tr><td><span class="num">def ok()</span></td><td>19</td><td>—</td></tr>
+  <tr><td><span class="num">re.search(r"handle=(\w+)")</span></td><td>14</td>
+      <td><b><span class="num">eb_api.handle_of()</span> קיים ב-<span class="num">eb_api.py:352</span> —
+          ומשמש ב-0 מהם</b></td></tr>
+  <tr><td>סורק ModelSpace דרך COM</td><td>17</td><td>—</td></tr>
+  <tr><td>פרסר דאמפ (4 סכמות שדות סותרות)</td><td>23</td><td>—</td></tr>
+</table>
+
+<h2>מדד 3 — הקוד שמוכיח את "אני מדווח ספירות שלא נמדדו"</h2>
+
+<p>בדוח הלקחים כתבתי שהשורש הראשון הוא <i>"אני מאמת ספירות, לא גיאומטריה"</i>.
+זה היה תיאור מנומס מדי. הנה מה שיש בקוד בפועל:</p>
+
+<div class="code"><span class="c"># app/exam5_rebuild_detail.py:147-156</span>
+<span class="k">for</span> y <span class="k">in</span> ys:
+    eb_api.run(<span class="g">"drill"</span>, hosts=plate, at=..., dia=HOLE, n=<span class="g">"0,0,1"</span>,
+               wait=<span class="num">45</span>, _log=<span class="k">False</span>)      <span class="r"># ← התוצאה נזרקת</span>
+    eb_api.run(<span class="g">"replicate"</span>, box=..., to=...,
+               wait=<span class="num">45</span>, _log=<span class="k">False</span>)      <span class="r"># ← התוצאה נזרקת</span>
+
+log(<span class="g">"    6 holes, 6 anchors"</span>)               <span class="r"># ← מחרוזת קבועה!</span>
+<span class="c">#      ^^^^^^^^^^^^^^^^^^^^^^</span>
+<span class="c">#      זה לא נמדד. זה מודפס תמיד, גם אם שתי הפעולות נכשלו.</span></div>
+
+<div class="warn">
+  <span class="t">זה לא היה חוסר משמעת — זה היה כתוב בקוד</span>
+  <p>"6 חורים, 6 עוגנים" הוא <b>literal</b>. לא ספירה, לא מדידה, לא בדיקה.
+  כשדיווחתי לך מספרים כאלה לא שיקרתי במודע — <b>הסקריפט שכתבתי היה בנוי לדווח הצלחה
+  ללא תלות במציאות.</b></p>
+  <p style="margin-bottom:0">ואותה תבנית חוזרת: <b>הערכים <span class="num">EB_BUSY</span>
+  ו-<span class="num">EB_TIMEOUT</span> לא נבדקים באף קובץ מלבד
+  <span class="num">eb_api.py</span> עצמו.</b> כלומר AutoCAD תפוס ופעולה שפג זמנה —
+  שניהם נראים בדיוק כמו הצלחה לכל קורא.</p>
+</div>
+
+<h2>מדד 4 — הערכים המומצאים עדיין חיים בקוד</h2>
+
+<div class="code"><span class="c"># app/exam5_rebuild_detail.py:44</span>
+A_LEN = EMBED + FP_T + PROUD      <span class="c"># 120 + 20 + 30 = 170</span>
+                        <span class="r">^^^^^</span>
+<span class="c"># PROUD=30 הוא הערך שהמצאתי. הנכון הוא גובה האום = 22.5 → 165.</span>
+<span class="c"># זה בדיוק הבאג של "האום מרחף 10 מ״מ" — קפוא בקבוע, ולא נמחק.</span></div>
+
+<div class="warn">
+  <span class="t">והתיקון של v30 לא הושלם — מצאתי את זה עכשיו</span>
+  <p>אחרי הבאג של העוגנים ב-428 מ"מ תיקנתי את הפלאגין כך ש<b>"פרמטר שלא נשלח לא נוגע
+  בכלום"</b>. התיקון הוחל על פרמטרי העוגנים — <b>אבל לא על הגיאומטריה</b>:</p>
+  <div class="code" style="margin:2mm 0"><span class="c">// EBAgentApi31.cs:2379-2384, ConnBase()</span>
+<span class="k">double</span> L  = <span class="k">double</span>.Parse(Get(kv, <span class="g">"l"</span>,       <span class="r">"300"</span>), IC);
+<span class="k">double</span> W  = <span class="k">double</span>.Parse(Get(kv, <span class="g">"w"</span>,       <span class="r">"250"</span>), IC);
+<span class="k">double</span> T  = <span class="k">double</span>.Parse(Get(kv, <span class="g">"t"</span>,       <span class="r">"10"</span>),  IC);
+<span class="k">double</span> hd = <span class="k">double</span>.Parse(Get(kv, <span class="g">"holedia"</span>, <span class="r">"23"</span>),  IC);
+<span class="k">double</span> hx = <span class="k">double</span>.Parse(Get(kv, <span class="g">"hx"</span>,      <span class="r">"200"</span>), IC);
+<span class="k">double</span> hy = <span class="k">double</span>.Parse(Get(kv, <span class="g">"hy"</span>,      <span class="r">"160"</span>), IC);
+...
+<span class="k">if</span> (tmpl.Length &gt; <span class="num">0</span>) d = bp.GetTemplate(tmpl);   <span class="c">// קורא את התבנית...</span>
+d.Length = L; d.Width = W; d.Thickness = T;      <span class="r">// ...ומיד דורס אותה</span></div>
+  <b>המשמעות:</b> גם אחרי שקראתי תבנית מוגדרת של התוכנה, שישה ערכי גיאומטריה נדרסים
+  בערכים שאני המצאתי. זה אותו באג בדיוק שעלה לנו שעות — עדיין חי, בגיאומטריה במקום בעוגנים.
+</div>
+
+<h2>מדד 5 — LISP: יש עוד</h2>
+<p>אחרי שאסרת LISP באופן מוחלט דיווחתי לך שנשאר שריד אחד
+(<span class="num">eb_api.py:200</span>, ה-NETLOAD). <b>בדקתי שוב היום ומצאתי שבעה:</b></p>
+<table>
+  <tr><th>קובץ:שורה</th><th>מה</th><th>מצב</th></tr>
+  <tr><td><span class="num">eb_api.py:200</span></td><td><span class="num">(command "_NETLOAD" …)</span></td>
+      <td>חי — דווח לך</td></tr>
+  <tr><td><span class="num">eb_api.py:575</span></td><td><span class="num">_COPY (handent "…")</span> — <span class="num">handent</span> הוא LISP</td>
+      <td><b>חי — לא דווח</b></td></tr>
+  <tr><td><span class="num">exam5_fast.py</span> :69 :77 :82</td>
+      <td><span class="num">(command "_copy" …)</span> · <span class="num">(ssadd)</span> · <span class="num">(command "_rotate3d" …)</span></td>
+      <td>סקריפט מת מהמבחן שנכשל</td></tr>
+  <tr><td><span class="num">exam5_one_then_all.py</span> :69 :75 :80 :128</td>
+      <td>4 קריאות <span class="num">(command …)</span></td><td>סקריפט מת</td></tr>
+</table>
+<p>הסקריפטים המתים לא רצים היום — <b>אבל הם על הדיסק, והם התבנית שאני קורא כשאני
+מחפש "איך עשיתי את זה קודם".</b> זו בדיוק הדרך שבה טעות חוזרת. הם נמחקים בצעד 0.</p>
+
+<div class="good">
+  <span class="t">והחדשות הטובות: יש דרך נקייה לגמרי</span>
+  <p>אימתתי ברפלקציה על <span class="num">accoremgd.dll</span> של AutoCAD 2015:</p>
+  <div class="code" style="margin:2mm 0"><span class="k">Void</span> Editor.Command(<span class="k">Object</span>[] parameter)
+<span class="k">CommandResult</span> Editor.CommandAsync(<span class="k">Object</span>[] parameter)
+<span class="k">Void</span> Editor.SetImpliedSelection(ObjectId[] selectedObjects)</div>
+  <b><span class="num">Editor.Command()</span> קיים.</b> כלומר הפלאגין יכול להריץ <b>כל פקודה
+  של AutoCAD ושל ProSteel</b> — כולל כל 34 מאקרו החיבורים — כפקודה נטיבית,
+  עם בחירה מוקדמת של אובייקטים, <b>בלי טיפת LISP</b>.
+  זה בדיוק מה שהגדרת: <i>"אך ורק בתוכנה עצמה ובפקודות שיש בה"</i>.
+  <br><br>וגם ה-NETLOAD פתיר: <span class="num">FILEDIA=0</span> ואז
+  <span class="num">_NETLOAD</span> כמחרוזת פקודה רגילה. <b>אפס LISP במערכת.</b>
+</div>
+
+<h1 class="ch">2 · הטבלה שכואבת</h1>
+
+<p>כל שורה כאן היא שעות עבודה. בעמודה השמאלית — מה שבניתי ביד. בימנית — המחלקה
+שכבר הייתה שם, בתוכנה, כל הזמן.</p>
+
+<table>
+  <tr><th style="width:38%">מה שעשיתי ידנית (ומה זה עלה)</th><th>מה שכבר קיים ב-API</th></tr>
+  <tr><td><b>ברגי עיגון</b> — העתקת בורג, סיבוב, חישוב אורך ידני.
+          <span style="color:#b91c1c">~12 סבבי תיקון · 400 כשלונות <span class="num">bolt</span></span></td>
+      <td><span class="num">PsCreateFastener.<b>CreateFastenerStraightAnchorBolt</b>(Dm, Extrusion,
+          TopEmbedment, MiddleEmbedment, BottomEmbedment, ThreadLength, PlateThickness,
+          GroutThickness, …)</span><br>+ Hook / Bend / HeadBolt / HexStud / RoundStud</td></tr>
+  <tr><td><b>שכפול</b> — <span class="num">Database.DeepCloneObjects</span> +
+          <span class="num">Matrix3d</span> ברמת AutoCAD</td>
+      <td><span class="num">PsMiscTools.<b>ObjectsCopy</b>(PsSelection, PsMatrix) → PsSelection</span></td></tr>
+  <tr><td><b>שיקוף</b> — לא מומש בכלל (39 שיקופים לא יושמו בשיעור 3)</td>
+      <td><span class="num">PsMiscTools.<b>Mirror3d</b>(Id, p1, p2, p3)</span></td></tr>
+  <tr><td><b>כפילויות</b> — בדיקה ידנית.
+          <span style="color:#b91c1c">הבאג של 754 ו-642 עוגנים במקום 480</span></td>
+      <td><span class="num">PsSelection.<b>RemoveDuplicates</b>()</span> — שורה אחת</td></tr>
+  <tr><td><b>בחירה לפי תיבה</b> — שבחרה מחדש את ההעתקים וגרמה לכדור שלג</td>
+      <td><span class="num">PsSelection.<b>SelectAllObjectsInRange</b>(…, MinPoint, MaxPoint)</span>
+          + <span class="num">SetSelectionFilter</span></td></tr>
+  <tr><td><b>"אין לי עיניים"</b> — בדיקות יחסים שמעולם לא נכתבו</td>
+      <td><span class="num"><b>PsGeometryFunctions</b></span> — 47 מתודות עם
+          <span class="num">SetTolerance</span> מובנה</td></tr>
+  <tr><td><b>הפרט לא הסתובב כיחידה</b> — פלטת הבסיס נשארה מאחור.
+          <span style="color:#b91c1c">"כמו לדבר לקיר"</span></td>
+      <td><span class="num"><b>PsObjectGroup</b></span> · <span class="num">PsCreateAssembly</span> ·
+          <span class="num">PsBaseplateLinkDataMgd.<b>CreateGroup</b></span></td></tr>
+  <tr><td><b>אוריינטציית אוגן</b> — טעיתי פעמיים</td>
+      <td><span class="num">PsBaseplateLinkDataMgd.<b>PlateInShapeDirection</b></span></td></tr>
+  <tr><td><b>פריסת חורים 2×3 במקום 3×2</b> — "טעות חמורה ביותר"</td>
+      <td><span class="num">PsDrillObject.<b>SetLinearHoleField</b>(Diameter, XField, YField)</span>
+          — צירים מפורשים</td></tr>
+  <tr><td><b>קיטום ריפ</b> — פוליגון שציירתי ביד (214 ריפים)</td>
+      <td><span class="num"><b>PsEdgeChamfer</b></span> —
+          <span class="num">EdgeLayout, TopVar1/2, DownVar1/2</span></td></tr>
+  <tr><td><b>חורים אובליים</b> — חוב פתוח מאז שיעור 2</td>
+      <td><span class="num">PsDrillObject.<b>SetRotateSlottedHoles</b></span> +
+          <span class="num">LongHoleMode</span> + <span class="num">HoleGeometrie</span></td></tr>
+  <tr><td><b>העתקת קדיחה בין חלקים</b> — ידנית, חור-חור</td>
+      <td><span class="num">PsDrillObject.<b>TakeoverDrills</b>(Source, Target)</span></td></tr>
+  <tr><td><b>בדיקת התנגשויות</b> — לא מומש (חוב מ-R8)</td>
+      <td><span class="num"><b>PsCollisionCheck</b></span> — 22 סוגי בדיקה,
+          <span class="num">Apply()</span>, <span class="num">BodyCount</span></td></tr>
+  <tr><td><b>מספור חלקים</b> — לא מומש</td>
+      <td><span class="num"><b>PsCreatePositioning</b></span> +
+          <span class="num">RecordIdenticalRecord</span> (התוכנה מזהה חלקים זהים בעצמה)</td></tr>
+  <tr><td><b>רשימת חלקים</b> — לא מומש</td>
+      <td><span class="num">PsCreatePartlist.<b>CreateMDBFile</b>(File, Template, Selection)</span></td></tr>
+  <tr><td><b>פריסת פלטה</b> (development)</td>
+      <td><span class="num"><b>PsCreateUnfold</b></span> —
+          <span class="num">GetOuterGeo</span>, <span class="num">GetInnerGeo</span></td></tr>
+  <tr><td><b>בטון כ-SOLID "להמחשה"</b></td>
+      <td><span class="num">PsCreateConcreteSlab / Wall / Footing</span> + זיון מלא (33 מחלקות)</td></tr>
+  <tr><td><b>ייצוא לבדיקה</b> — <span class="num">PNGOUT</span> נכשל, לא כתב קובץ</td>
+      <td><span class="num">PsMiscTools.CreateStlFile / CreateSatFile</span> ·
+          <span class="num">PsSelection.WriteXmlFile</span></td></tr>
+  <tr><td><b>ריתוכים</b> — לא מומש</td>
+      <td><span class="num">PsCreateWeldFlag</span> ·
+          <span class="num">WeldSeamFlange/Web, WeldToFlange/Web</span> במחבר</td></tr>
+</table>
+
+<h2>2.1 המקרה שסוגר את כל הסיפור: תעלומת ה-<span class="num">bolt</span></h2>
+
+<p>במשך ימים לא הצלחתי להסביר למה פעולת <span class="num">bolt</span> נכשלת
+<b>400 פעם</b> בשרטוט של המבחן — בכל סגנון ובכל קוטר — בעוד
+<span class="num">boltprobe</span> יוצרת ברגים באותו שרטוט בלי בעיה. פתרתי את זה היום:</p>
+
+<table>
+  <tr><th>הקריאה</th><th style="width:20%">אורך אחיזה</th><th style="width:12%">קוטר</th><th style="width:14%">תוצאה</th></tr>
+  <tr><td><span class="num">boltprobe</span> (ברירת מחדל <span class="num">0,0,1000 → 0,0,1060</span>)</td>
+      <td><b>60 מ"מ</b></td><td>M20</td><td style="color:#15803d"><b>✓ נוצר</b></td></tr>
+  <tr><td><span class="num">exam5_finish.py:93</span></td><td><b>280 מ"מ</b></td><td>M24</td>
+      <td style="color:#b91c1c"><b>✗ כלום</b></td></tr>
+  <tr><td><span class="num">exam5_details.py:97</span></td><td><b>430 מ"מ</b></td><td>M24</td>
+      <td style="color:#b91c1c"><b>✗ כלום</b></td></tr>
+</table>
+
+<div class="key">
+  <span class="t">ההסבר</span>
+  <p><span class="num">DIN 6914</span> הוא תקן <b>ברגי HV מבניים</b>. הבורג הארוך ביותר ב-M24
+  בטבלה שלו מגיע לכ-200 מ"מ אורך כולל. <b>אין בטבלה שורה לאחיזה של 280 או 430 מ"מ.</b></p>
+  <p>אישרתי ברפלקציה: <span class="num">PsBolt</span> חושף
+  <span class="num">GripMin</span> ו-<span class="num">GripMax</span> לקריאה בלבד —
+  כלומר הספרייה <b>אוכפת חלון אחיזה</b>. וקריטי:</p>
+  <div class="code" style="margin:2mm 0"><span class="k">Void</span> CreateSingleBolt(PsPoint Start, PsPoint End, <span class="k">Double</span> Diameter,
+                      <span class="k">String</span> BoltStyleName, <span class="k">Double</span> LengthAddition)
+<span class="r">^^^^</span>
+<span class="c">// הפונקציה מחזירה Void. אין ערך חזרה, אין out-parameter, אין חריגה.</span>
+<span class="c">// כשהחיפוש בקטלוג לא מוצא שורה — היא פשוט לא עושה כלום, בשקט.</span></div>
+  <p style="margin-bottom:0"><b>הפעולה <span class="num">bolt</span> מעולם לא הייתה שבורה.</b>
+  ביקשתי בורג שלא קיים. וזה נכשל בשקט בגלל שהחתימה היא <span class="num">Void</span>.</p>
+</div>
+
+<div class="warn">
+  <span class="t">ומה שזה באמת אומר</span>
+  ניסיתי לדגם <b>מוט עיגון של 430 מ"מ כבורג מבני</b>. זו טעות מושגית, לא טעות טכנית.
+  מוט עיגון אינו בורג — <b>יש לו מחלקה משלו</b>:
+  <span class="num">PsCreateFastener.CreateFastenerStraightAnchorBolt</span>,
+  עם <span class="num">Embedment</span> ו-<span class="num">GroutThickness</span> כפרמטרים.
+  <br><br><b>ארבע בעיות נפרדות שרדפתי במשך שיעור שלם — כשלונות <span class="num">bolt</span>,
+  עוגנים ב-428 מ"מ, אומים מרחפים, ועוגנים מרחפים באוויר — הן בעיה אחת:</b>
+  השתמשתי במחלקה הלא נכונה, כי לא ידעתי שהנכונה קיימת.
+</div>
+
+<h1 class="ch">3 · למה זה קרה</h1>
+
+<p>עשיתי ארכיאולוגיה על כל הכשלונות המתועדים משיעורים 2–5 ודירגתי אותם לפי עלות זמן.
+התוצאה מפריכה את ההסבר הנוח.</p>
+
+<div class="warn">
+  <span class="t">ההסבר שרציתי לתת — ושהוא שגוי</span>
+  <p style="margin-bottom:0">"זו בעיית משמעת. אני צריך להיות זהיר יותר."</p>
+</div>
+
+<p><b>הכלל "אמת יחסים ולא ספירות" נכתב אחרי שיעור 2, חזר אחרי שיעור 3, חזר אחרי שיעור 4,
+וחזר בדוח הלקחים — והופר בכל פעם.</b> כלל שנכתב ארבע פעמים והופר ארבע פעמים אינו
+כישלון של רצון. הוא <b>מנגנון חסר</b>. אין בקוד שום דבר שמסרב להדפיס "בוצע" בלי שער.
+אין בדיקה שמחפשת LISP. אין דבר שמבטל דגל "מאושר" אחרי עריכה סמוכה.</p>
+
+<h2>חמשת השורשים, מדורגים לפי עלות</h2>
+
+<table>
+  <tr><th style="width:5%">#</th><th style="width:30%">השורש</th><th>העלות</th><th style="width:30%">התרופה</th></tr>
+  <tr>
+    <td><b>1</b></td>
+    <td><b>אימות מודד ספירות, לא יחסים</b><br>
+        <span style="font-size:8pt">"24 חורים ✓" כשהפריסה סובבה · "18/18 ✓" כשכל אום מרחף ·
+        "304/304 ברגים" כשבמודל אפס חורים · "314/314 פלטות" כש-96 מסובבות</span></td>
+    <td><b>הגדולה בהרבה.</b> שתי קריסות ציון (42/100 בשיעור 2, 52/100 בשיעור 3), כל אחת
+        גררה תוכנית תיקון של שעות, ועוד ~6 מ-12 סבבי המבחן. <b>6+ שעות</b></td>
+    <td><span class="num">detail_audit</span> <b>כפעולת פלאגין</b> (לא סקריפט) שבודקת יחסים.
+        תבנית הדיווח לא תוכל פיזית לומר "בוצע" בלי פלט השער</td>
+  </tr>
+  <tr>
+    <td><b>2</b></td>
+    <td><b>שום דבר לא מוקפא</b><br>
+        <span style="font-size:8pt">כל תיקון = סקריפט חד־פעמי חדש · כל שינוי יכולת = DLL חדש.
+        ‏47 סקריפטים · 31 DLL. נהלים מוכחים חיים רק בפרוזה</span></td>
+    <td><b>נמדד: ~121 דקות במבחן 5 לבדו</b> (39 בניסיון א' + 82 בחוזר, לפי חותמות הזמן),
+        מול ~3 דקות מכונה לדרך הנכונה <b>באותם כלים בדיוק</b></td>
+    <td>שער הקפאה: נוהל שהצליח <b>פעמיים</b> הופך לרשומה ב-<span class="num">COOKBOOK.md</span>
+        או לפעולת פלאגין <b>לפני סגירת הסשן</b>. אסור סקריפט חד־פעמי שלישי לאותה משימה</td>
+  </tr>
+  <tr>
+    <td><b>3</b></td>
+    <td><b>הרגל הפירוק</b><br>
+        <span style="font-size:8pt">יחידת העבודה היא האטום, לא הפרט. ~500 פעולות במקום ~70.
+        אפס שימוש במאקרו החיבורים בשיעור 3 — בעוד אתה השתמשת ב-PS_COPY ×48</span></td>
+    <td>ניסיון א' של מבחן 5 אבד כולו (39 דק') + בניית שיעור 3 אלמנט-אלמנט והתיקון שלה.
+        <b>~2.5–3 שעות</b></td>
+    <td>אכיפה מכנית: לפני יצירת מופע <b>שני</b> של משהו — הראשון חייב להיות מאומת ומאושר,
+        והשני חייב לבוא מפעולת שכפול. לולאה שעומדת לחזור על יצירה 3 פעמים = עצירה</td>
+  </tr>
+  <tr>
+    <td><b>4</b></td>
+    <td><b>המצאה במקום ירושה</b><br>
+        <span style="font-size:8pt"><span class="num">grip=400</span> ·
+        <span class="num">key=36</span> · <span class="num">PROUD=30</span> · קיטום ~15 —
+        מספרים יש מאין, כשהתבנית ידעה ואתה ידעת</span></td>
+    <td>"שעות" לפי דוח הלקחים על העוגנים לבדם + 3 סבבים במבחן 4. <b>~1.5 שעות</b></td>
+    <td>מקור מחייב בקוד: כל פרמטר פיזי נושא תג
+        <span class="num">שרטוט | תבנית | אמיר</span>, ופעולה דוחה ערך בלי מקור</td>
+  </tr>
+  <tr>
+    <td><b>5</b></td>
+    <td><b>מודל מנטלי שגוי של מערכת פרמטרית</b><br>
+        <span style="font-size:8pt">התייחסתי ל-ProSteel כמבצע פקודות חסר זיכרון: "הפקודה שלי
+        היא הדבר היחיד ששינה את המודל"</span></td>
+    <td>מודל אחד שהושחת בשקט ושרד 9 מחזורים (עמוד קוצר 180 מ"מ), + סבב הניכוי אחרי השכפול.
+        <b>~שעה גלויה + כמות בלתי ידועה של שגיאות שלא נתפסו</b></td>
+    <td>כל פעולה שנוגעת באובייקט פרמטרי מדווחת <b>דלתא מפקד מלאה</b>
+        (נוסף/נמחק/שונה). דלתא בלתי מוסברת עוצרת את הריצה</td>
+  </tr>
+</table>
+
+<div class="key">
+  <span class="t">והשורש שמכפיל את כל היתר: העיוורון</span>
+  <p>אתה רואה בורג מרחף בשנייה. אני מוצא אותו רק אם מדדתי במקרה בדיוק את היחס הנכון.
+  <b>ולכן ברירת המחדל של האימות הפכה למה שהדאמפ נותן בזול — ספירות.</b>
+  והספירות עיוורות בדיוק לטעויות שחשובות.</p>
+  <p style="margin-bottom:0">התוצאה: <b>העין שלך הפכה לבודק היחסים היחיד במערכת</b>,
+  ולכן כל שגיאה גיאומטרית עלתה סבב אנושי מלא במקום בדיקה עצמית של חצי דקה.
+  זו הסיבה שהמבחן לקח 12 סבבים.</p>
+</div>
+
+<h2>3.1 חור אמיתי אחד ביכולת</h2>
+<p>מכל הניתוח, <b>פער יכולת אמיתי אחד</b> נמצא: <b>אין פעולה לעריכת מחבר קיים במקום</b>.
+לכן "תיקון" היה תמיד מחיקה+בנייה מחדש — הלולאה שקיצרה את העמוד 180 מ"מ ב-9 מחזורים.
+<b>ואילו אתה עושה בדיוק את העריכה הזאת בתיבת דיאלוג בשתי שניות</b> (שיעור 4: 300→500).</p>
+<p>הכלי קיים: <span class="num">PsEditLogicalLink</span> קורא את המחבר,
+<span class="num">Ps*LinkDataMgd</span> מחזיק את הפרמטרים. חסר רק הצד של הכתיבה.
+<b>זו הפעולה מספר 1 ברשימת הפיתוח.</b></p>
+
+
+<h1 class="ch">4 · התוכנית</h1>
+
+<div class="warn">
+  <span class="t">קודם — הביקורת שקיבלה התוכנית הזאת, ומה שינתה</span>
+  <p>לא הגשתי לך את התוכנית הראשונה שכתבתי. העמדתי אותה לביקורת נגדית שתפקידה
+  היה למצוא בה פגמים, והיא מצאה שלושה מהותיים:</p>
+  <table style="margin:2mm 0">
+    <tr><th style="width:30%">מה שכתבתי</th><th>מה שהתברר</th></tr>
+    <tr><td>"‏325 טיפוסים ב-API"</td>
+        <td><b>‏771.</b> בדקתי assembly אחד מתוך 75</td></tr>
+    <tr><td>"‏11–13 סשנים"</td>
+        <td><b>אופטימי פי 3.</b> ההיסטוריה המדודה של הפרויקט הזה: מבחן 5 לקח 121 דקות
+            מול 3 דקות של הדרך הנכונה — פער פי 40. אין סיבה להניח שהפעם יהיה אחרת
+            <u>לפני</u> שהמנגנונים נבנים</td></tr>
+    <tr><td>"‏Editor.Command נקי מ-LISP לחלוטין"</td>
+        <td><b>כמעט.</b> <span class="num">ProStructures.mnl</span> הוא קובץ AutoLISP
+            שנטען אוטומטית עם התפריט. פקודה שרשומה ב-ARX נקייה; פקודה שמוגדרת ב-MNL — לא.
+            <b>צריך רשימת היתר, לא הנחה</b></td></tr>
+  </table>
+  <p style="margin-bottom:0">אני מציג לך את זה במפורש כי בדיוק זה מה שנכשלתי בו:
+  להגיש מסקנה בטוחה שנשענת על בדיקה אחת.</p>
+</div>
+
+<h2>הסיכון מספר 1, ואיך התוכנית משתנה בגללו</h2>
+<div class="warn">
+  <span class="t">"התוכנית הופכת לפרויקט תשתית שלעולם לא מגיע לכלום"</span>
+  <p>הגרסה הראשונה שלי הניחה ~15 סשנים של תשתית — טרנספורט, טוען, ניקוי, ספרייה —
+  <b>לפני</b> שיש דבר אחד שאתה יכול להצביע עליו. אחרי שיעורים 4–5, זו בדיוק הדרך
+  לאבד את האמון שלך.</p>
+  <p style="margin-bottom:0"><b>לכן שיניתי את הסדר:</b> ארבעת הצעדים הראשונים נבחרו
+  לפי "כמה מהר יש משהו נראה", לא לפי "מה נקי ארכיטקטונית".</p>
+</div>
+
+<h2>מפת הצעדים</h2>
+<table>
+  <tr><th style="width:4%">#</th><th style="width:27%">הצעד</th><th>למה דווקא עכשיו</th>
+      <th style="width:11%">זמן כן</th><th style="width:8%">צריך אותך?</th></tr>
+  <tr style="background:#fef2f2"><td><b>0</b></td><td><b>ניקוי LISP + טרנספורט בטוח</b></td>
+      <td>כלל שלך מופר על הדיסק <u>עכשיו</u>, והטרנספורט מייצר גיאומטריה כפולה.
+          שניהם בלי שום יכולת חדשה</td>
+      <td>2–3 סשנים</td><td style="color:#15803d"><b>לא</b></td></tr>
+  <tr style="background:#fef2f2"><td><b>1</b></td><td><b>סריקת כל 75 ה-assemblies</b></td>
+      <td>הוכחתי בעשר דקות שהמסקנה "אין מחלקה לפלטת קצה / לגאסט" נשענה על 1 מתוך 75.
+          <b>אסור לתכנן עוד לפני שהמפה שלמה</b></td>
+      <td>סשן אחד</td><td style="color:#15803d"><b>לא</b></td></tr>
+  <tr style="background:#fef2f2"><td><b>2</b></td><td><b>סגירת נקודת העיוורון בדאמפ</b></td>
+      <td><b>‏556 שורות <span class="num">Ks_VolBody</span> — כל העוגנים שמבחן 5 נבדק
+          עליהם — יוצאות היום בלי קואורדינטות בכלל.</b> ארבע שורות C# הופכות אותי מעיוור לרואה</td>
+      <td>סשן אחד</td><td style="color:#15803d"><b>לא</b></td></tr>
+  <tr style="background:#fffbeb"><td><b>3</b></td><td><b>ריצת בסיס מדודה</b></td>
+      <td>מבחן 5 מקצה לקצה על עותק, סטופר רץ, בלי סקריפטים חדשים.
+          <b>יעד ה-10 דקות מעולם לא נוסה מאז שנכתב.</b> בלי מספר התחלה, כל טענת שיפור
+          היא דיבור</td>
+      <td>סשן אחד</td><td style="color:#15803d"><b>לא</b></td></tr>
+  <tr><td><b>4</b></td><td><b>שיחה אחת של 15 דקות</b></td>
+      <td>שש שאלות, לא יותר. אחריה סדר העדיפויות נקבע</td>
+      <td>15 דקות שלך</td><td style="color:#b91c1c"><b>כן</b></td></tr>
+  <tr><td><b>5</b></td><td><b><span class="num">detail_audit</span> — יחסים</b></td>
+      <td>שורש #1 והמקור לשתי קריסות הציון. מפסיק להיות העין שלך הבודק היחיד</td>
+      <td><b>6–10 סשנים</b><br><span style="font-size:8pt">(אמרתי 2. זו ההערכה
+      השגויה ביותר שלי)</span></td><td style="color:#15803d"><b>לא</b></td></tr>
+  <tr><td><b>6</b></td><td><b>שאלת העוגנים — בניסוי</b></td>
+      <td>‏400 כשלונות ושלושה סבבי חקירה מתנקזים למשטח אחד. סריקת אחיזות
+          60/100/200/300/430 + <span class="num">PsCreateFastener</span></td>
+      <td>2 סשנים</td><td style="color:#b45309">מודל טיוטה</td></tr>
+  <tr><td><b>7</b></td><td><b>מעבר כנות על 41 הפעולות</b></td>
+      <td>כל שער שאבנה חסר ערך אם הפעולות שהוא קורא משקרות על מה שעשו</td>
+      <td>3 סשנים</td><td style="color:#15803d"><b>לא</b></td></tr>
+  <tr><td><b>8</b></td><td><b>‏EBLoader — סוף 31 הגרסאות</b></td>
+      <td>כל צעד מכאן דורש בנייה מחדש, וכל בנייה עולה שינוי שם בחמישה מקומות</td>
+      <td>2–3 סשנים</td><td style="color:#15803d"><b>לא</b></td></tr>
+  <tr><td><b>9</b></td><td><b>ספריית <span class="num">eb/</span></b></td>
+      <td>לקוח אחד במקום 47 סקריפטים</td><td>3 סשנים</td>
+      <td style="color:#15803d"><b>לא</b></td></tr>
+  <tr style="background:#f0fdf4"><td><b>10</b></td><td><b>מתכון מוקפא אחד</b></td>
+      <td>פרט העמוד של שיעור 5 כמתכון: כרטיס + בנייה + בדיקות + דאמפ זהב.
+          <b>המבחן הכן: אם המתכון לא מנצח את הזמן הידני — משהו כאן לא עבד</b></td>
+      <td>3 סשנים</td><td style="color:#15803d"><b>לא</b></td></tr>
+</table>
+
+<div class="key">
+  <span class="t">הערכת הזמן הכנה</span>
+  <p>סך הכול: <b>~25 סשנים בתוכנית</b>. אבל ההיסטוריה המדודה של הפרויקט מראה חריגה
+  של פי 3 עד פי 40 על אותם כלים בדיוק. <b>ההערכה הריאלית היא 40–70 סשנים —
+  חודשיים עד ארבעה של עבודה לסירוגין, לא שבועות.</b></p>
+  <p style="margin-bottom:0">אני אומר את זה מראש כי ההבטחה המוקדמת מדי היא בדיוק
+  התבנית שחזרה על עצמה. <b>מה שכן מובטח: אחרי צעד 3 — כשלושה־ארבעה סשנים —
+  יהיה בידך מספר מדוד ולא הצהרה.</b></p>
+</div>
+
+<h2>שני צעדים שראוי לפרט</h2>
+
+<h3>צעד 0 — ניקוי LISP וטרנספורט בטוח</h3>
+<ol>
+  <li><b>‏18 אתרי LISP בשישה קבצים</b> (מצאתי 7, הביקורת מצאה 18). כולם נמחקים.</li>
+  <li><b>ה-NETLOAD</b> מוחלף ב-<span class="num">SendStringToExecute("_NETLOAD\n&lt;path&gt;\n")</span> —
+      שם פקודה ונתיב קובץ, בלי סוגריים ובלי הערכת LISP.
+      <b>לא</b> דרך <span class="num">load_net.lsp</span> של Bentley, שהוא עצמו LISP.</li>
+  <li><b>רשימת היתר לפקודות <span class="num">PS_*</span></b> — פקודה תישלח רק אם
+      הטוקן שלה מופיע בטבלת המחרוזות של <span class="num">ProStructure.arx</span> או
+      <span class="num">ProSteel.arx</span> (‏280 + 43 טוקנים). זה מבטיח שאני מפעיל את
+      ה-ARX ולא מאקרו תפריט מבוסס-LISP.</li>
+  <li><b>‏<span class="num">TRUSTEDPATHS</span> — הפסקת ההגדרה מהקוד.</b> זו הגדרת אבטחה
+      של AutoCAD, והיום אני משנה אותה בשקט מתוך
+      <span class="num">eb_api.py:195</span>. <b>סוכן לא אמור להרפות הגדרת אבטחה בעצמו.</b>
+      אציג לך את הנתיב ואבקש שתוסיף אותו פעם אחת ידנית.</li>
+  <li><b>טרנספורט אטומי:</b> כתיבה ל-<span class="num">eb_cmd.&lt;reqid&gt;.tmp</span>
+      ואז <span class="num">File.Move</span>. היום ניסיון חוזר יכול לייצר גיאומטריה כפולה.</li>
+</ol>
+
+<h3>צעד 5 — <span class="num">detail_audit</span>, והמלכודת שכמעט נפלתי בה</h3>
+<div class="warn">
+  <span class="t">"העיניים והבדיקות חולקות את אותה נקודת עיוורון"</span>
+  <p>בגרסה הראשונה כתבתי כיתרון ש<b>הרנדרר והבדיקות קוראים את אותם נתונים</b>,
+  "ולכן מה שאני רואה ומה שאני בודק לא יכולים להיפרד". <b>זה בדיוק ההפך מיתרון.</b></p>
+  <p style="margin-bottom:0">אם הדאמפ שגוי — התמונה תיראה תקינה, הבדיקות יעברו,
+  ואני אדווח ירוק על מודל שגוי. <b>בפעם השלישית.</b>
+  <br><b>התיקון:</b> לכל טענה קריטית חייב להיות <u>מכשיר אחד לפחות שאינו נגזר
+  מהפרמטרים שלי</u> — <span class="num">PsSingleHoleArray</span> לחורים (כבר מוכח),
+  ופענוח־חוזר של קובצי DSTV למיקומי חורים וקונטורים.</p>
+</div>
+
+<h2>עשרה דברים שלא היו בתוכנית שלי בכלל</h2>
+<p>הביקורת שאלה "מה חסר לגמרי" — ומצאה עשרה נושאים שפרטן אמיתי עוסק בהם כל יום
+ושלא עלו בשום שלב אצלי:</p>
+<table>
+  <tr><th style="width:28%">מה</th><th>למה זה חשוב</th></tr>
+  <tr><td><b>‏XREF</b></td>
+      <td>כל פעולה שלי סורקת את ה-ModelSpace של המסמך הפעיל בלבד ⇒
+          <b>בטון וארכיטקטורה שמגיעים כ-XREF פשוט לא קיימים בשבילי.</b>
+          כל בדיקת מגע ומרחק תדווח ירוק על שום דבר</td></tr>
+  <tr><td><b>שרטוט מיקום ברגי עיגון</b></td>
+      <td>התוצר שהולך לקבלן הבטון <u>לפני</u> שמרימים פלדה.
+          <b>זה מחבר ישירות למחקר העיגון שהרגע עשינו</b> — ומעולם לא הזכרתי אותו</td></tr>
+  <tr><td><b>ניהול גרסאות ושינויים</b></td>
+      <td>מספרי רוויזיה, מה השתנה מאז Rev A, הפצה מחדש</td></tr>
+  <tr><td><b>סימוני הרכבה ומשלוח</b></td>
+      <td>‏Shipping marks / assembly marks / single-part marks — שלוש סכמות מספור שונות</td></tr>
+  <tr><td><b>סבולות ייצור והתאמה</b></td>
+      <td>מחלקת ביצוע EN 1090-2, קמבר, כיווץ ריתוך, מרווחי שורש</td></tr>
+  <tr><td><b>גילוון</b></td>
+      <td>גודל אמבט, משקל מרבי, <b>חורי ניקוז ואוורור</b>, עיוות</td></tr>
+  <tr><td><b>שלמות מכלול הבורג</b></td>
+      <td>נוסחת האורך שלי מתעלמת מדסקיות, אומי פילוס וסבולת grout —
+          <b>וכל אלה בדיוק מה שמחקר העיגון מצא כחסרים</b></td></tr>
+  <tr><td><b>ריבוי משתמשים ונעילת קבצים</b></td>
+      <td>‏DWG בשיתוף רשת, קובצי <span class="num">.dwl</span>,
+          מה קורה כשאתה פתוח על הקובץ ואני כותב אליו</td></tr>
+  <tr><td><b>קנה מידה</b></td>
+      <td>כל המדידות שלי הן על 1,586–2,000 אובייקטים.
+          <b>עבודת ייצור אמיתית היא 10,000–50,000.</b> אין לי מושג איך זה מתנהג</td></tr>
+  <tr><td><b>גיבוי אמיתי</b></td>
+      <td>העתקת DWG פתוח מעתיקה את הבייטים <u>האחרונים שנשמרו</u>, לא את המצב הנוכחי.
+          מה שקראתי לו "גיבוי" הוא לא גיבוי</td></tr>
+</table>
+<p><b>שלושה מהם הם שאלות אליך</b> (XREF, קנה מידה, ריבוי משתמשים) והם נכנסו
+לשיחה בת 15 הדקות. השאר הם למידה שלי.</p>
+
+
+<h1 class="ch">5 · מה אני צריך ממך</h1>
+
+<div class="warn">
+  <span class="t">הגרסה הראשונה של הפרק הזה ביקשה ממך 13 דברים</span>
+  <p>הביקורת הנגדית פסלה אותה: <b>שלושה מהם היו אותה החלטה בניסוח שונה, שניים כבר
+  נתת לי, והתוכנית ביקשה בשקט 12–20 שעות מזמנו של בעל חברה בלי לתמחר אותן אף פעם.</b></p>
+  <p style="margin-bottom:0">זה בדיוק מה שאתה מתלונן עליו — סחור סחור.
+  <b>הגרסה שלפניך: שיחה אחת, שש שאלות, חמש־עשרה דקות.</b></p>
+</div>
+
+<h2>קודם — מה שכבר <u>לא</u> אבקש</h2>
+<div class="good">
+  <span class="t">שבעה דברים שהייתי מבקש אתמול — וכולם כבר היו כאן</span>
+  <table style="margin:2mm 0">
+    <tr><th style="width:35%">מה שהייתי מבקש</th><th>למה כבר לא</th></tr>
+    <tr><td>"תשיג לי את תיעוד ה-API"</td>
+        <td>חילצתי היום ברפלקציה. <b>‏75 assemblies · 771 טיפוסים ציבוריים · 0 כשלונות</b></td></tr>
+    <tr><td>"תשיג לי את המדריך"</td>
+        <td><b>מחולץ אצלנו מ-18/06:</b> <span class="num">knowledge\manual_fulltext.txt</span> —
+            1.27 מ"ב מתוך 1,179 עמודים. פשוט לא קראתי בו</td></tr>
+    <tr><td>"תן לי דוגמאות לכל מאקרו"</td>
+        <td><b>‏40 מודלי דוגמה של Bentley מותקנים אצלנו</b> —
+            <span class="num">Samples\COM Macros\</span> (25, אחד לכל מאקרו) +
+            <span class="num">Samples\Detailing\</span> (12).
+            <b>מעולם לא פתחתי אף אחד</b></td></tr>
+    <tr><td>"מה קוטר החור לכל בורג?"</td>
+        <td><b>נתת לי ב-29/07:</b> ‏M16→⌀19 · M20→⌀23 · מרווח 3 מ"מ.
+            רשום ב-<span class="num">AMIR-ANSWERS-CONNECTIONS.md</span>.
+            <span style="color:#b91c1c"><b>לבקש שוב = בדיוק הבזבוז שאתה מתלונן עליו</b></span></td></tr>
+    <tr><td>"איך מייצרים ברגי עיגון?"</td>
+        <td><span class="num">PsCreateFastener.CreateFastenerStraightAnchorBolt</span></td></tr>
+    <tr><td>"תן לי עוד מודלים ללמוד מהם"</td>
+        <td>המגבלה לא הייתה מחסור בדוגמאות — אלא שלא קראתי את המפה</td></tr>
+    <tr><td>"תסביר מה כל פקודה עושה"</td>
+        <td>‏34 קובצי עזרה ב-<span class="num">Prg\Plugins\*.chm</span></td></tr>
+  </table>
+  <p style="margin-bottom:0"><b>זו התובנה הכי לא נעימה בדוח.</b> חלק גדול ממה שנראה
+  כמו "צריך את אמיר" היה <b>"לא פתחתי את מה שכבר על המחשב הזה"</b>.
+  המדריך יושב אצלנו מיוני. מודלי הדוגמה — מאז ההתקנה.</p>
+</div>
+
+<h2>השיחה — שש שאלות, 15 דקות</h2>
+
+<div class="ask">
+  <span class="t">‏1 · איזו משימה אחת מגדירה הצלחה?</span>
+  <p style="margin-bottom:2mm">ואיתה מספר: <b>"זה לוקח לי N דקות היום."</b> בלי המספר הזה
+  אני מייעל למען ציון במבחן במקום למען המפעל.</p>
+  <table style="margin:1mm 0">
+    <tr><th style="width:4%"></th><th style="width:22%">המוצר</th><th>מה הוא עושה</th>
+        <th style="width:16%">היתכנות</th></tr>
+    <tr><td><b>א</b></td><td><b>בודק מודל (QC)</b></td>
+        <td>סורק מודל <u>לקריאה בלבד</u>: חורים חסרים, התנגשויות, כפילויות, אלמנטים
+            מרחפים, פריסות לא אחידות</td>
+        <td style="color:#15803d"><b>הגבוהה</b><br>כל רכיב אומת</td></tr>
+    <tr><td><b>ב</b></td><td>מספור + רשימת חלקים</td>
+        <td><span class="num">PsCreatePositioning</span> → <span class="num">PsCreatePartlist</span></td>
+        <td style="color:#15803d">גבוהה־בינונית</td></tr>
+    <tr><td><b>ג</b></td><td>שכפול פרטים</td><td>פרט מאושר → N מיקומים. בדיוק מבחן 5</td>
+        <td style="color:#b45309">הוכח פעם, לא חוזר</td></tr>
+    <tr><td><b>ד</b></td><td>שרטוטי ייצור</td><td>מה שהמפעל באמת עובד ממנו</td>
+        <td style="color:#b91c1c"><b>נמוכה</b> — לא מבטיח</td></tr>
+  </table>
+  <div class="key" style="margin:2mm 0 0">
+    <span class="t">ההמלצה: א' — בודק המודל</span>
+    <b>(1)</b> לקריאה בלבד — <u>אי אפשר להרוס איתו כלום</u>, ולכן זה המקום הבטוח להוכיח
+    את עצמי אחרי שיעורים 4–5. <b>(2)</b> בנוי מאותם רכיבים שאני חייב לבנות בצעד 5
+    בכל מקרה. <b>(3)</b> טעות שנתפסת <u>לפני</u> רצפת הייצור שווה יותר מדקות מידול.
+    <br><b>וזה המבחן הכן ביותר עבורי</b> — הוא בודק בדיוק את מה שנכשלתי בו:
+    לראות שהגיאומטריה נכונה, לא לספור אובייקטים.
+  </div>
+</div>
+
+<div class="ask">
+  <span class="t">‏2 · מודל טיוטה — ורשות לעבוד בו לבד</span>
+  <p style="margin-bottom:0"><span class="num">projects\SANDBOX\sandbox.dwg</span>, ורשות
+  לפתוח, למדל, לקדוח, <b>לשבור ולמחוק</b> בלי לשאול — <b>בזמן שאתה נוכח בהתחלה</b>,
+  ורק אחר כך לבד. (הביקורת צדקה שביקשתי עבודה לא־מפוקחת מוקדם מדי, לפני שיש גיבוי אמיתי.)
+  <br><br><b>למה זה חוסם:</b> הפער הוא <u>מיומנות</u>, ומיומנות נרכשת רק בתרגול.
+  עד היום כל תרגול צרך שעות שלך. עם מודל טיוטה — כל צעד 6 ורוב צעד 10
+  <b>עולים לך אפס</b>. וגם שאלת ה-400 כשלונות נסגרת שם בניסוי אחד.</p>
+</div>
+
+<div class="ask">
+  <span class="t">‏3 · חצי שעה על <u>שרשרת הפלט</u> (שיעור 6)</span>
+  <p style="margin-bottom:0">מצב למידה, על מודל קיים כלשהו:
+  <span class="num">PS_POS</span> → <span class="num">PS_CREATE_PARTLIST</span> →
+  <span class="num">PS_NC_DATA</span> → שרטוט. בלי למדל שום דבר חדש.
+  <br><br><b>למה:</b> ראיתי אותך <u>ממדל</u> שלוש פעמים — אבל <b>מעולם לא ראיתי את
+  השרשרת שמייצרת את מה שהמפעל באמת חותך ממנו פלדה.</b> אני ממדל בלי לדעת איך נראה התוצר.
+  זה גם מגדיר מה "נכון": מודל נכון הוא מודל שיוצא ממנו שרטוט נכון.
+  <br><b>זו חצי השעה הכי שווה שיש</b> — והיא היחידה מהשש שדורשת יותר מדקות ספורות.</p>
+</div>
+
+<div class="ask">
+  <span class="t">‏4 · שלוש שאלות טכניות שאני לא יכול לענות עליהן לבד</span>
+  <table style="margin:2mm 0">
+    <tr><th style="width:26%">השאלה</th><th>למה היא קריטית</th></tr>
+    <tr><td><b>העבודות שלכם מגיעות עם XREF?</b> ומה מוסכמת נקודת הבסיס?</td>
+        <td><b>כל פעולה שלי סורקת רק את המסמך הפעיל.</b> אם הבטון מגיע כ-XREF —
+            הוא לא קיים בשבילי, וכל בדיקת מגע תדווח ירוק על שום דבר.
+            זו תקלה שקטה שתשבור את כל שכבת האימות ביום הראשון של עבודה אמיתית</td></tr>
+    <tr><td><b>כמה אובייקטים בעבודה טיפוסית?</b></td>
+        <td>כל המדידות שלי הן על ~2,000. אם עבודה אמיתית היא 10,000–50,000 —
+            חלק מהתכנון כאן לא יחזיק, ועדיף לדעת עכשיו</td></tr>
+    <tr><td><b>הקבצים בשיתוף רשת?</b> מישהו נוסף פותח אותם?</td>
+        <td>נעילות <span class="num">.dwl</span> וכתיבה בו־זמנית. אני לא רוצה לגלות
+            את זה בדרך הקשה על קובץ אמיתי</td></tr>
+  </table>
+</div>
+
+<div class="ask">
+  <span class="t">‏5 · שתי החלטות</span>
+  <table style="margin:2mm 0">
+    <tr><th style="width:24%">ההחלטה</th><th>ההמלצה שלי</th></tr>
+    <tr><td><b>הקונסולה</b></td>
+        <td><b>להקפיא.</b> אמרת שהיא לא יציבה ושהעבודה בצ'אט. היא 67 KB שאני מתחזק
+            בלי שמישהו משתמש בה</td></tr>
+    <tr><td><b>‏TRUSTEDPATHS</b></td>
+        <td>היום אני משנה הגדרת אבטחה של AutoCAD בשקט מהקוד
+            (<span class="num">eb_api.py:195</span>). <b>סוכן לא אמור לעשות את זה.</b>
+            אבקש שתוסיף את הנתיב פעם אחת ידנית, ואני אאמת ואסרב לרוץ בלעדיו</td></tr>
+  </table>
+</div>
+
+<div class="ask">
+  <span class="t">‏6 · ציון למבחן שיעור 5</span>
+  <p style="margin-bottom:0">עדיין לא נתת. הוא נקודת הייחוס שממנה אמדוד שיפור —
+  ובלעדיו צעד 3 (ריצת הבסיס) חסר חצי מהמשמעות.</p>
+</div>
+
+<div class="key">
+  <span class="t">ובנוסף, כשיהיה לך נוח — 3 מודלים אמיתיים לקריאה</span>
+  <b>בדקתי: אין על המחשב הזה אף מודל אמיתי של החברה.</b> כל DWG תחת
+  <span class="num">projects\</span> הוא שרטוט שיעור. אני לומד את התקן שלכם ממודל אחד
+  ששלחת פעם — <b>ומכליל ממנו יתר על המידה</b>, וזה בדיוק הכשל שכבר תיעדנו.
+  <br><b>קריאה בלבד. אין העתקה ממודל למודל</b> — כפי שהגדרת.
+  <br><span style="font-size:9pt">זו לא אחת מהשש — אין לזה דחיפות. רק כשנוח.</span>
+</div>
+
+<h1 class="ch">6 · איך נדע שהצלחתי</h1>
+
+<table>
+  <tr><th style="width:5%">#</th><th style="width:31%">הקריטריון</th><th>איך נמדד</th><th style="width:10%">מתי</th></tr>
+  <tr><td>1</td><td><b>אפס LISP במערכת</b></td>
+      <td>בדיקה אוטומטית ל-<span class="num">(command</span> /
+          <span class="num">handent</span> / <span class="num">ssadd</span> — 0 תוצאות.
+          + כל פקודת <span class="num">PS_</span> מול רשימת ההיתר מה-ARX</td>
+      <td>צעד 0</td></tr>
+  <tr><td>2</td><td><b>מספר התחלה מדוד</b></td>
+      <td>כמה זמן באמת לוקח לי מבחן 5 היום, בסטופר, בלי סקריפטים חדשים</td>
+      <td>צעד 3</td></tr>
+  <tr><td>3</td><td><b>אין דיווח בלי שער</b></td>
+      <td>כל דיווח כולל פלט <span class="num">detail_audit</span>.
+          ספירה בלי יחסים אינה ראיה</td><td>צעד 5</td></tr>
+  <tr><td>4</td><td><b>מכשיר בלתי תלוי לכל טענה קריטית</b></td>
+      <td>לפחות מקור אחד שאינו נגזר מהפרמטרים שלי —
+          <span class="num">PsSingleHoleArray</span> / פענוח DSTV</td><td>צעד 5</td></tr>
+  <tr><td>5</td><td><b>כישלון לא יכול להיראות כהצלחה</b></td>
+      <td>‏0 קריאות API שתוצאתן לא נבדקת. אין מחרוזות "בוצע" קבועות</td><td>צעד 7</td></tr>
+  <tr><td>6</td><td><b>תיקון = עריכה, לא בנייה מחדש</b></td>
+      <td>‏0 מחזורי <span class="num">connremove</span>+<span class="num">connbase</span></td>
+      <td>צעד 7</td></tr>
+  <tr><td>7</td><td><b>אפס סקריפטים חד־פעמיים חדשים</b></td>
+      <td>סקריפט שלישי לאותה משימה = הפרה</td><td>צעד 9</td></tr>
+  <tr><td>8</td><td><b style="color:#b91c1c">מבחן 5 מאפס ב-&lt;10 דקות, בריצה אחת</b></td>
+      <td>‏20 עמודים · 80 פלטות · 480 חורים · 480 עוגנים · 0 כפילויות.
+          <b>אפס סבבי תיקון</b></td><td>צעד 10</td></tr>
+  <tr><td>9</td><td><b>המבחן הבא — בפעם הראשונה</b></td>
+      <td>כרטיס פרט מאושר → פרט אחד → אישורך → שכפול+אודיט, בלי סבב תיקונים</td>
+      <td>המבחן הבא</td></tr>
+</table>
+
+<div class="key">
+  <span class="t">המדד היחיד שבאמת חשוב</span>
+  <p style="font-size:11.5pt;margin-bottom:0">אמרת: <i>"מידלתי פעם אחת ולאחר מכן שכפלתי —
+  וזה כל העיקרון."</i></p>
+  <p style="margin:2mm 0 0"><b>המדד: שבפעם הבאה שתראה אותי עובד — תזהה את השיטה שלך.</b>
+  פרט אחד, נבדק, מאושר, ואז משוכפל. לא מאות פעולות אטומיות, ולא 12 סבבי תיקון.</p>
+</div>
+
+<h1 class="ch">סיכום</h1>
+
+<p style="font-size:11.5pt"><b>"מה אתה צריך ממני כדי להשתלט על התוכנה ולבנות API מלא?"</b></p>
+
+<div class="warn">
+  <span class="t">התשובה הכנה</span>
+  <p style="font-size:12pt"><b>שיחה אחת של 15 דקות, ועוד חצי שעה מתישהו. זה הכול.</b></p>
+  <p>הנחתי שחסר לי מידע שרק אתה יכול לתת. אבל כשקראתי סוף־סוף את קובצי התוכנה עצמם
+  גיליתי ש<b>המידע היה על המחשב הזה כל הזמן</b> — 75 assemblies עם 771 טיפוסים,
+  מדריך בן 1,179 עמודים שמחולץ אצלנו מיוני, ו-40 מודלי דוגמה שמעולם לא פתחתי.
+  <b>ואני עבדתי עם 26 טיפוסים ובניתי ביד את כל השאר.</b></p>
+  <p style="margin-bottom:0"><b>ומה שצריך להיאמר בפירוש:</b> גם הדוח הזה, בגרסתו הראשונה,
+  חזר על אותה טעות — הצהיר "325 טיפוסים" מבדיקה של assembly אחד.
+  <b>רק ביקורת נגדית שהעמדתי בכוונה נגד עצמי מצאה שהמספר האמיתי גדול פי 2.4.</b>
+  זה, ולא רשימת הפעולות, הוא השינוי האמיתי שאני מבקש שתשפוט אותי לפיו.</p>
+</div>
+
+<h2>מה כבר נעשה היום, לפני שהדוח נכתב</h2>
+<table>
+  <tr><th style="width:30%">מה</th><th>מה נמצא</th></tr>
+  <tr><td><b>מיפוי מלא של ה-API</b></td>
+      <td><span class="num">knowledge\API-SURFACE-RAW.txt</span> — 383 KB, 4,796 חתימות</td></tr>
+  <tr><td><b>המדריך — החוב מ-R1 נסגר</b></td>
+      <td><span class="num">knowledge\API-SURFACE.md</span> — הטבלה "מה בניתי ביד מול מה שקיים"</td></tr>
+  <tr><td><b>תעלומת <span class="num">bolt</span> נפתרה</b></td>
+      <td>אחיזה 280/430 מ"מ מחוץ לטבלת DIN 6914 ·
+          <span class="num">CreateSingleBolt</span> הוא <span class="num">Void</span> ⇒ כישלון שקט.
+          ‏400 הכשלונות, העוגנים ב-428, והאומים המרחפים — <b>בעיה אחת</b></td></tr>
+  <tr><td><b>אב-טיפוס העיניים — עובד</b></td>
+      <td>הטלות TOP/FRONT/SIDE מנתוני הדאמפ, בלי לגעת ב-AutoCAD</td></tr>
+  <tr><td><b>‏18 אתרי LISP</b> (דיווחתי לך על אחד)</td>
+      <td>‏6 קבצים. וגם: <span class="num">TRUSTEDPATHS</span> משתנה מהקוד — הגדרת אבטחה</td></tr>
+  <tr><td><b>תיקון v30 לא הושלם</b></td>
+      <td><span class="num">EBAgentApi31.cs:2379-2384</span> — 6 ערכים עדיין דורסים את התבנית</td></tr>
+  <tr><td><b>‏74 assemblies שלא נפתחו</b></td>
+      <td>‏62 <span class="num">PSN_*</span> + 12 <span class="num">PC3D*</span>,
+          כולם .NET מנוהל — כולל מאקרו פלטת הבסיס עצמו</td></tr>
+  <tr><td><b>‏40 מודלי דוגמה שלא נפתחו</b></td>
+      <td><span class="num">Samples\COM Macros\</span> (25) +
+          <span class="num">Samples\Detailing\</span> (12)</td></tr>
+</table>
+
+<div style="margin-top:9mm;padding:5mm;background:#fffbeb;border:2px solid #f59e0b;
+            border-radius:5px;text-align:center;font-size:11pt">
+<b>"אתה כבר שם, בתוך התוכנה — אני רוצה שתחיה אותה."</b><br><br>
+צדקת לחלוטין. הייתי שם, ועבדתי בחדר אחד מתוך בניין שלם.<br>
+<b>עכשיו יש לי המפה של כל הקומות — והיא הייתה כאן כל הזמן.</b>
+</div>
+
+</body>
+</html>

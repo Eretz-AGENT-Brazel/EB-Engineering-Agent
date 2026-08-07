@@ -1,0 +1,18 @@
+﻿OBJ	4C5	Ks_Shape	PS_Shape	0
+OBJ	4CA	Ks_Shape	PS_Shape	4
+HOLE	4CA	Ks_Shape	PS_Shape	0	342.387,569.851,14	342.387,569.851,0	23	0	0
+HOLE	4CA	Ks_Shape	PS_Shape	1	142.387,569.851,14	142.387,569.851,0	23	0	0
+HOLE	4CA	Ks_Shape	PS_Shape	2	342.387,424.851,14	342.387,424.851,0	23	0	0
+HOLE	4CA	Ks_Shape	PS_Shape	3	142.387,424.851,14	142.387,424.851,0	23	0	0
+OBJ	537	Ks_VolBody	PS_Bolt	0
+OBJ	538	Ks_VolBody	PS_Bolt	0
+OBJ	539	Ks_VolBody	PS_Bolt	0
+OBJ	53A	Ks_VolBody	PS_Bolt	0
+OBJ	544	Ks_Plate	PS_Plate	0
+OBJ	548	Ks_Plate	PS_Plate	0
+OBJ	54D	Ks_Plate	PS_Plate	0
+OBJ	54E	Ks_Plate	PS_Plate	0
+OBJ	54F	Ks_Plate	PS_Plate	0
+OBJ	550	Ks_Plate	PS_Plate	0
+OBJ	551	Ks_Plate	PS_Plate	0
+OBJ	552	Ks_Plate	PS_Plate	0

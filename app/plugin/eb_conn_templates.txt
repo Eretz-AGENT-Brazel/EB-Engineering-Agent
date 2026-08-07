@@ -1,0 +1,43 @@
+﻿BASEPLATE templates: 3
+  [0] AutoConnect Metric v 18/450x450x25  L=450 W=450 t=25 holeDia=20 hx=100 hy=0 anchors=0
+  [1] AutoConnect Metric v 18/600x600x25  L=600 W=600 t=25 holeDia=20 hx=100 hy=0 anchors=0
+  [2] default/Standard  L=200 W=200 t=10 holeDia=20 hx=100 hy=0 anchors=1
+RIB (stiffener) templates: 7
+  [0] default/half convex  t=10 len=0 shape=1 r=0 flDist=1
+  [1] default/half rounded  t=10 len=0 shape=2 r=0 flDist=1
+  [2] default/full rounded  t=10 len=0 shape=2 r=0 flDist=1
+  [3] default/full convex  t=10 len=0 shape=1 r=0 flDist=1
+  [4] default/full champfered  t=10 len=0 shape=0 r=0 flDist=1
+  [5] default/half chamfered  t=10 len=0 shape=0 r=0 flDist=1
+  [6] default/Standard  t=10 len=0 shape=0 r=0 flDist=1
+SPLICE templates: 2
+  [0] default/example2
+  [1] default/Standard
+
+---- BEAM CONNECTIONS (v33) ----
+SHEARPLATE templates: 3
+  [0] default/Standard  t=10 holeDia=16 nH=2 nV=2 dH=60 dV=50 play=2 cope=False group=True
+  [1] AutoConnect Metric v 18/3 Bolt  t=10 holeDia=16 nH=1 nV=3 dH=60 dV=75 play=2 cope=True group=True
+  [2] AutoConnect Metric v 18/2 Bolt  t=10 holeDia=16 nH=1 nV=2 dH=60 dV=75 play=2 cope=True group=True
+WEBANGLE templates: 3
+  [0] default/Standard  holeDia=16 play=2 flat=False cope=False group=False
+  [1] AutoConnect Metric v 18/3 Bolt  holeDia=16 play=2 flat=False cope=True group=True
+  [2] AutoConnect Metric v 18/2 Bolt  holeDia=16 play=2 flat=False cope=True group=True
+ENDPLATE/STANDARDPLATE templates: 7
+  [0] default/Standard  L=200 W=200 t=10 holeDia=16 nH=2 nV=2 play=2 stiff=False group=True
+  [1] example/example1  L=310 W=150 t=30 holeDia=20 nH=2 nV=2 play=2 stiff=False group=True
+  [2] example/example2  L=310 W=150 t=30 holeDia=20 nH=2 nV=2 play=2 stiff=True group=True
+  [3] example/example3  L=0 W=150 t=20 holeDia=20 nH=2 nV=3 play=2 stiff=True group=True
+  [4] example/example4  L=340 W=150 t=30 holeDia=20 nH=2 nV=2 play=2 stiff=False group=True
+  [5] AutoConnect Metric v 18/152x152x13  L=152 W=152 t=13 holeDia=10 nH=2 nV=2 play=4 stiff=False group=True
+  [6] AutoConnect Metric v 18/204x204x13  L=204 W=204 t=13 holeDia=12 nH=2 nV=2 play=6 stiff=False group=True
+COPE templates: 3
+  [0] default/Standard  radius=8.5 rathole1=0 rathole2=0 webDist=5
+  [1] AutoConnect Metric v 18/10mm Cope  radius=0 rathole1=0 rathole2=0 webDist=10
+  [2] AutoConnect Metric v 18/20mm Cope  radius=0 rathole1=0 rathole2=0 webDist=20
+HAUNCH templates: 1
+  [0] Default/Standard  L=1000 topH=0 baseH=500 web=8 group=False
+PURLIN templates: 3
+  [0] Default/Example-Purlinshape  L=120 W=100 H=100 t=10 holeDia=12 group=False
+  [1] Default/Example-Purlinshoe  L=100 W=130 H=130 t=10 holeDia=16 group=False
+  [2] Default/Standard  L=100 W=100 H=100 t=10 holeDia=12 group=False
