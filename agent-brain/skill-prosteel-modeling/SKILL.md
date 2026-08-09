@@ -345,6 +345,40 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 >   When the dump and the compiler disagree, the compiler wins. It is the dependency tree:
 >   `-1` = attached to the base plate, otherwise the parent segment's index.
 
+> ## 📏 BOLT GROUPS THAT CONVERGE ON ONE NODE MUST BE SPACED (measured 09/08)
+> Three members bolted to one gusset, inner rows at 100 mm along each: the hole groups came
+> within **11 mm** of each other, ProSteel **merged them**, and `boltparts` produced **14 bolts at
+> 10 positions** — two positions carrying three bolts. `create=True` and the counts looked
+> plausible; only listing bolt centres exposed it.
+> ⇒ Keep hole centres **≥ ~40 mm apart for Ø18** (≈2.5 d). Moving the rows out to 170/260 and
+> 290/380 gave a closest spacing of **65.4 mm** and a clean 4+4+4.
+> ⛔ **A hole cannot be removed once drilled.** Fixing a bad hole layout means **deleting and
+> rebuilding the parts**, not editing them. Plan the pattern before drilling.
+>
+> **Members converging on a node collide unless one is set back.** A 45° diagonal leaving the same
+> point as a 160-deep horizontal has its lower corner 80 mm perpendicular below its axis, i.e. at
+> `(axis+56.6, axis−56.6)` — inside the horizontal. Setting that corner on the horizontal's face
+> gives the setback: here **t ≥ 193**, so the diagonals start at t = 200 and the gusset lengthens
+> along them to keep the bolts on plate.
+> ⇒ **Prove it, do not assume it:** `collision box='x,y,z;x,y,z'` (a box, **not** handles) →
+> `parts=17 collisions=0`.
+
+> ## 🔩 CHANNEL ORIENTATION — where a UPN's web actually is (measured 09/08)
+> Viewed **along its own axis**, a `U160` from `DIN_U` opens its C towards **+Y**, so the **web
+> sits on the LOW-Y edge** of the 65 mm envelope. To seat that web on a gusset face at `y = G`,
+> put the member axis at **`G + 32.5`** (half the flange width). Verified: all three channels came
+> back at `y 20006..20071` against a gusset face at 20006.
+> ⇒ A section's envelope tells you the size, never which side the web is on. **Look along the
+> axis once** — one `view dir=right` + zoom settles it for the whole family.
+
+> ## ✂️ A SHAPED GUSSET IS JUST A POLYGON (measured 09/08)
+> Amir: *"את הפלטה האנכית תעשה אותה מקומטת, לא מלבנית… שייראה יותר אסטתי המחבר."*
+> `plate9 mode=poly` with 8 points, cut square across the end of each member and tapering between
+> them. The corners come straight from the geometry: for a member with unit axis **u**, unit
+> perpendicular **p** and connection reach **L**, its two end corners are **`L·u ± (d/2)·p`**.
+> ⚠️ Polygon points are in the **insertion frame**, not WCS — set `ex`/`ey`/`ez` and give local
+> `(u, v, 0)`.
+
 > ## 🔧 BUILDING A BRACING CONNECTION BY HAND — the parts that work (measured 09/08)
 > Amir's detail, built and verified four times: a **plate welded to the column WEB** (not the
 > flange — he corrected this) sitting between the flanges, a **gusset perpendicular to it**

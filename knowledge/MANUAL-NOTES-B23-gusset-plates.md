@@ -158,3 +158,41 @@ back identical: gusset 6 holes, each angle 2, six bolts.
   by-product. Amir: *"זה בסדר - לא קריטי לי הריתוכים בנתיים"* — left open deliberately.
 
 ⇒ The pattern of the whole day, once more: **connection classes work, standalone creators do not.**
+
+
+## Second connection — SHS column, UPN beams, shaped gusset (09/08)
+
+Amir asked for the same principle on a **hollow section** with **channels** instead of angles, a
+**shaped** gusset instead of a rectangle, and **4 bolts per beam**.
+
+| part | measured |
+|---|---|
+| column | `RQ200x6` (SHS 200/200/6), wall face at **x = 170100** |
+| backing plate | 12 mm, `x 170100..170112`, **200 wide** to match the tube, 640 tall |
+| gusset | 12 mm, an **8-vertex polygon**, cut square across the end of each member |
+| three `U160` | web flat on the gusset, all three read back at `y 20006..20071` |
+| bolts | **4 per beam** = 12, M16 in Ø18, `DIN7990`, 12 distinct positions |
+
+⭐ **Channel orientation, measured not assumed:** viewed along its own axis a `U160` opens its C
+towards **+Y**, so the **web is on the LOW-Y edge** of the 65 mm envelope. Axis = gusset face
+**+ 32.5**.
+
+⭐ **The gusset outline comes from the members.** For a member with unit axis **u**, unit
+perpendicular **p** and reach **L**, its end corners are **`L·u ± (d/2)·p`**. Eight such points,
+joined, give a gusset cut square at each member and tapered between them.
+⚠️ `plate9 mode=poly` takes points in the **insertion frame**, not WCS.
+
+### Two mistakes, both caught by measuring
+
+1. **Bolt groups merged.** Inner rows at 100 mm along each member put holes **11 mm** apart at the
+   node; ProSteel merged the groups and `boltparts` made **14 bolts at 10 positions**, two of them
+   carrying three bolts. `create=True` throughout. Rows moved out to 170/260 and 290/380 →
+   closest spacing **65.4 mm**, and a clean 4+4+4 at 12 distinct positions.
+   ⛔ **Holes cannot be removed once drilled** — the fix required deleting and rebuilding the
+   gusset and all three channels.
+2. **The channels collided.** Amir: *"אני לא רוצה שתהיה התנגשות בין ה-UPN."* A 45° diagonal
+   leaving the same node as a 160-deep horizontal has its lower corner at `(axis+56.6, axis−56.6)`
+   — inside it. Setting that corner on the horizontal's face gives **t ≥ 193**, so the diagonals
+   now start at **t = 200** and the gusset lengthens along them.
+   ⇒ Proven, not assumed: `collision box='169800,19800,1500;171500,20200,3600'` →
+   **`parts=17 collisions=0`**. ⚠️ The op takes a **box**, not handles.
