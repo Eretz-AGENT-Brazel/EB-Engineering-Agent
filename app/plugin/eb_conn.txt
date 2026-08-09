@@ -1,0 +1,2 @@
+﻿LINK	CAC	Ks_Shape	PS_Shape	0	type=27 name=Purlin ident= desc= modi=0 parts=0 bolts=0 extra=0 BASEPLATE[L=0 W=0 t=0 holeDia=0 hx=0 hy=0 anchors=0 anchorDia=0 grip=0 gripDia=0 drillLen=0 key=0 lining=0 detailed=0 outside=0 dts=0 shorten=0 poly=0 weldFl=0 weldWeb=0] RIB[t=0 len=0 shape=0 lenType=0 r=0 flDist=0 webDist=0 ang=0 weldFl=0 weldWeb=0] SPLICE[gap=0 holeDia=0 play=0 tWeb=0 tFl=0 nH_web=0 nV_web=0 nH_fl=0 nV_fl=0 sideLap=0 topLap=0] SHEARPLATE[present] WEBANGLE[present] COPE[present]
+MEMB	CAC	0	parts=	bolts=

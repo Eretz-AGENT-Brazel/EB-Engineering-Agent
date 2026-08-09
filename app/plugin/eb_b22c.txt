@@ -1,0 +1,601 @@
+﻿OTHER	2A8	PcRebarManager	0			1/0/0;0/1/0;0/0/1
+SHAPE	2C6	HE300B	DIN.DIN_HEB	0,0,0	2000,0,0	2000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	2C9	HE300B	DIN.DIN_HEB	0,1000,0	2000,1000,0	2000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	2CA	HE300B	DIN.DIN_HEB	0,2150,0	2000,2150,0	2000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	2CB	HE300B	DIN.DIN_HEB	0,2850,0	2000,2850,0	2000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	2CC	HE300B	DIN.DIN_HEB	0,4000,-150	2000,4000,-150	2000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	2CD	HE300B	DIN.DIN_HEB	0,5000,150	2000,5000,150	2000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	2D2	IPE300	DIN.DIN_IPE	0,8000,0	2000,8000,0	2000	ByLayer	IPE 300	Ks_Shape
+SHAPE	2D3	IPE300	DIN.DIN_IPE	300,8900,0	2000,8900,0	1700	ByLayer	IPE 300	Ks_Shape
+SHAPE	2D4	IPE300	DIN.DIN_IPE	0,9800,0	2400,9800,0	2400	ByLayer	IPE 300	Ks_Shape
+SHAPE	2D5	IPE300	DIN.DIN_IPE	200,10700,0	1800,10700,0	1600	ByLayer	IPE 300	Ks_Shape
+SHAPE	2D6	IPE300	DIN.DIN_IPE	0,11600,0	2000,11600,0	2000	ByLayer	IPE 300	Ks_Shape
+SHAPE	2D7	IPE300	DIN.DIN_IPE	0,12500,0	2000,12500,0	2000	ByLayer	IPE 300	Ks_Shape
+SHAPE	2D8	IPE300	DIN.DIN_IPE	0,13400,0	2000,13400,0	2000	ByLayer	IPE 300	Ks_Shape
+SHAPE	2D9	IPE300	DIN.DIN_IPE	0,14300,0	1234,14300,0	1234	ByLayer	IPE 300	Ks_Shape
+SHAPE	2DF	137X9	DIN.DIN_FLACH	0,20000,0	1500,20000,0	1500	ByLayer	Plate 137x9	Ks_Shape
+SHAPE	2E1	250X12	DIN.DIN_FLACH	0,20900,0	1500,20900,0	1500	ByLayer	BRFL 250x12	Ks_Shape
+SHAPE	2E3	83X6	DIN.DIN_FLACH	0,21800,0	1500,21800,0	1500	ByLayer	Plate 83x6	Ks_Shape
+OTHER	2E8	Ks_WorkFrame	PS_Workfram	0,30000,0	-1.5,29999,0;1.5,30001,0	1/0/0;0/1/0;0/0/1
+OTHER	2F1	Ks_Grid	PS_Object	7500.3,51999.974,0	-1.158,39997.447,0;15001.758,64002.5,0	1/0/0;0/1/0;0/0/1
+SHAPE	2F3	HE300B	DIN.DIN_HEB	0,40000,0	0,40000,7000	7000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	2F4	HE300B	DIN.DIN_HEB	5000,40000,0	5000,40000,7000	7000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	2F5	HE300B	DIN.DIN_HEB	10000,40000,0	10000,40000,7000	7000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	2F6	HE300B	DIN.DIN_HEB	15000,40000,0	15000,40000,7000	7000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	2F7	HE300B	DIN.DIN_HEB	0,46000,0	0,46000,7000	7000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	2F8	HE300B	DIN.DIN_HEB	5000,46000,0	5000,46000,7000	7000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	2F9	HE300B	DIN.DIN_HEB	10000,46000,0	10000,46000,7000	7000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	2FA	HE300B	DIN.DIN_HEB	15000,46000,0	15000,46000,7000	7000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	2FB	HE300B	DIN.DIN_HEB	0,52000,0	0,52000,7000	7000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	2FC	HE300B	DIN.DIN_HEB	5000,52000,0	5000,52000,7000	7000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	2FD	HE300B	DIN.DIN_HEB	10000,52000,0	10000,52000,7000	7000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	2FE	HE300B	DIN.DIN_HEB	15000,52000,0	15000,52000,7000	7000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	2FF	HE300B	DIN.DIN_HEB	0,58000,0	0,58000,7000	7000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	300	HE300B	DIN.DIN_HEB	5000,58000,0	5000,58000,7000	7000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	301	HE300B	DIN.DIN_HEB	10000,58000,0	10000,58000,7000	7000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	302	HE300B	DIN.DIN_HEB	15000,58000,0	15000,58000,7000	7000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	303	HE300B	DIN.DIN_HEB	0,64000,0	0,64000,7000	7000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	304	HE300B	DIN.DIN_HEB	5000,64000,0	5000,64000,7000	7000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	305	HE300B	DIN.DIN_HEB	10000,64000,0	10000,64000,7000	7000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	306	HE300B	DIN.DIN_HEB	15000,64000,0	15000,64000,7000	7000	ByLayer	HE 300 B	Ks_Shape
+OTHER	32A	Ks_WorkFrame	PS_Workfram	45000,0,3750	40000,0,0;50000,0,7500	1/0/0;0/1/0;0/0/1
+OTHER	32C	Ks_WorkFrame	PS_Workfram	45000,19500,3750	40000,19500,0;50000,19500,7500	1/0/0;0/1/0;0/0/1
+OTHER	32E	Ks_WorkFrame	PS_Workfram	45000,9750,7500	40000,0,7500;50000,19500,7500	1/0/0;0/1/0;0/0/1
+OTHER	330	Ks_WorkFrame	PS_Workfram	45000,9750,0	40000,0,0;50000,19500,0	1/0/0;0/1/0;0/0/1
+OTHER	332	Ks_WorkFrame	PS_Workfram	50000,9750,3750	50000,0,0;50000,19500,7500	1/0/0;0/1/0;0/0/1
+OTHER	334	Ks_WorkFrame	PS_Workfram	40000,9750,3750	40000,0,0;40000,19500,7500	1/0/0;0/1/0;0/0/1
+OTHER	336	Ks_WorkFrame	PS_Workfram	45000,9750,3750	40000,9750,0;50000,9750,7500	1/0/0;0/1/0;0/0/1
+OTHER	338	Ks_Grid	PS_Object	45000.3,9750.021,3750	39998.842,-2.51,0;50001.758,19502.553,7500	1/0/0;0/1/0;0/0/1
+SHAPE	343	HD260X68,15	DIN.PEINER_HD	40000,0,0	40000,0,4000	4000	ByLayer	HD 260x68,15	Ks_Shape
+SHAPE	345	HE200M	DIN.DIN_HEM	40000,6000,0	40000,6000,4000	4000	ByLayer	HE 200 M	Ks_Shape
+SHAPE	346	HE200M	DIN.DIN_HEM	40000,13500,0	40000,13500,4000	4000	ByLayer	HE 200 M	Ks_Shape
+SHAPE	347	HD260X68,15	DIN.PEINER_HD	40000,19500,0	40000,19500,4000	4000	ByLayer	HD 260x68,15	Ks_Shape
+SHAPE	348	HE200M	DIN.DIN_HEM	45000,0,0	45000,0,4000	4000	ByLayer	HE 200 M	Ks_Shape
+SHAPE	34A	RQ200X8	DIN.DIN_QUADROHR	45000,6000,0	45000,6000,4000	4000	ByLayer	RQ 200x8	Ks_Shape
+SHAPE	34B	RQ200X8	DIN.DIN_QUADROHR	45000,13500,0	45000,13500,4000	4000	ByLayer	RQ 200x8	Ks_Shape
+SHAPE	34C	HE200M	DIN.DIN_HEM	45000,19500,0	45000,19500,4000	4000	ByLayer	HE 200 M	Ks_Shape
+SHAPE	34D	HD260X68,15	DIN.PEINER_HD	50000,0,0	50000,0,4000	4000	ByLayer	HD 260x68,15	Ks_Shape
+SHAPE	34E	HE200M	DIN.DIN_HEM	50000,6000,0	50000,6000,4000	4000	ByLayer	HE 200 M	Ks_Shape
+SHAPE	34F	HE200M	DIN.DIN_HEM	50000,13500,0	50000,13500,4000	4000	ByLayer	HE 200 M	Ks_Shape
+SHAPE	350	HD260X68,15	DIN.PEINER_HD	50000,19500,0	50000,19500,4000	4000	ByLayer	HD 260x68,15	Ks_Shape
+SHAPE	352	I300	DIN.DIN_I	40000,0,4000	40000,6000,4000	6000	ByLayer	I 300	Ks_Shape
+SHAPE	353	I300	DIN.DIN_I	40000,6000,4000	40000,13500,4000	7500	ByLayer	I 300	Ks_Shape
+SHAPE	354	I300	DIN.DIN_I	40000,13500,4000	40000,19500,4000	6000	ByLayer	I 300	Ks_Shape
+SHAPE	355	I300	DIN.DIN_I	45000,0,4000	45000,6000,4000	6000	ByLayer	I 300	Ks_Shape
+SHAPE	356	I300	DIN.DIN_I	45000,6000,4000	45000,13500,4000	7500	ByLayer	I 300	Ks_Shape
+SHAPE	357	I300	DIN.DIN_I	45000,13500,4000	45000,19500,4000	6000	ByLayer	I 300	Ks_Shape
+SHAPE	358	I300	DIN.DIN_I	50000,0,4000	50000,6000,4000	6000	ByLayer	I 300	Ks_Shape
+SHAPE	359	I300	DIN.DIN_I	50000,6000,4000	50000,13500,4000	7500	ByLayer	I 300	Ks_Shape
+SHAPE	35A	I300	DIN.DIN_I	50000,13500,4000	50000,19500,4000	6000	ByLayer	I 300	Ks_Shape
+SHAPE	35C	UPE200	DIN.DIN_UPE	40000,0,4000	45000,0,4000	5000	ByLayer	UPE 200	Ks_Shape
+SHAPE	35D	UPE200	DIN.DIN_UPE	45000,0,4000	50000,0,4000	5000	ByLayer	UPE 200	Ks_Shape
+SHAPE	35E	UPE200	DIN.DIN_UPE	40000,6000,4000	45000,6000,4000	5000	ByLayer	UPE 200	Ks_Shape
+SHAPE	35F	UPE200	DIN.DIN_UPE	45000,6000,4000	50000,6000,4000	5000	ByLayer	UPE 200	Ks_Shape
+SHAPE	360	UPE200	DIN.DIN_UPE	40000,13500,4000	45000,13500,4000	5000	ByLayer	UPE 200	Ks_Shape
+SHAPE	361	UPE200	DIN.DIN_UPE	45000,13500,4000	50000,13500,4000	5000	ByLayer	UPE 200	Ks_Shape
+SHAPE	362	UPE200	DIN.DIN_UPE	40000,19500,4000	45000,19500,4000	5000	ByLayer	UPE 200	Ks_Shape
+SHAPE	363	UPE200	DIN.DIN_UPE	45000,19500,4000	50000,19500,4000	5000	ByLayer	UPE 200	Ks_Shape
+SHAPE	365	RO 219.1X8	DIN.DIN_RUNDROHR	40000,0,4000	40000,0,7500	3500	ByLayer	RO 219.1x8	Ks_Shape
+SHAPE	366	RO 219.1X8	DIN.DIN_RUNDROHR	50000,0,4000	50000,0,7500	3500	ByLayer	RO 219.1x8	Ks_Shape
+SHAPE	367	RO 219.1X8	DIN.DIN_RUNDROHR	40000,19500,4000	40000,19500,7500	3500	ByLayer	RO 219.1x8	Ks_Shape
+SHAPE	368	RO 219.1X8	DIN.DIN_RUNDROHR	50000,19500,4000	50000,19500,7500	3500	ByLayer	RO 219.1x8	Ks_Shape
+SHAPE	36A	HIPE300	DIN.DIN_HIPE	40000,0,7500	50000,0,7500	10000	ByLayer	HIPE 300	Ks_Shape
+SHAPE	36B	HIPE300	DIN.DIN_HIPE	40000,19500,7500	50000,19500,7500	10000	ByLayer	HIPE 300	Ks_Shape
+SHAPE	36D	RR200X100X8	DIN.DIN_RECHROHR	40000,0,7500	40000,19500,7500	19500	ByLayer	RR 200x100x8	Ks_Shape
+SHAPE	36E	RR200X100X8	DIN.DIN_RECHROHR	50000,0,7500	50000,19500,7500	19500	ByLayer	RR 200x100x8	Ks_Shape
+SHAPE	370	Z160	DIN.DIN_Z	40000,3000,7500	50000,3000,7500	10000	ByLayer	Z 160	Ks_Shape
+SHAPE	371	Z160	DIN.DIN_Z	40000,7500,7500	50000,7500,7500	10000	ByLayer	Z 160	Ks_Shape
+SHAPE	372	Z160	DIN.DIN_Z	40000,10000,7500	50000,10000,7500	10000	ByLayer	Z 160	Ks_Shape
+SHAPE	373	Z160	DIN.DIN_Z	40000,12000,7500	50000,12000,7500	10000	ByLayer	Z 160	Ks_Shape
+SHAPE	374	Z160	DIN.DIN_Z	40000,16500,7500	50000,16500,7500	10000	ByLayer	Z 160	Ks_Shape
+SHAPE	376	L100X10	DIN.DIN_WINK_GL	40000,0,0	40000,6000,4000	7211.103	ByLayer	L 100x10	Ks_Shape
+SHAPE	377	L100X10	DIN.DIN_WINK_GL	40000,6000,0	40000,0,4000	7211.103	ByLayer	L 100x10	Ks_Shape
+SHAPE	379	L80X8	DIN.DIN_WINK_GL_VD	50000,13500,0	50000,19500,4000	7211.103	ByLayer	L 80x8	Ks_Shape
+SHAPE	37A	L80X8	DIN.DIN_WINK_GL_VD	50000,19500,0	50000,13500,4000	7211.103	ByLayer	L 80x8	Ks_Shape
+SHAPE	37C	RD30	DIN.DIN_RUNDSTAH	40000,0,7500	50000,6000,7500	11661.904	ByLayer	RD 30	Ks_Shape
+SHAPE	37D	RD30	DIN.DIN_RUNDSTAH	50000,0,7500	40000,6000,7500	11661.904	ByLayer	RD 30	Ks_Shape
+SHAPE	37F	100X10	DIN.DIN_FLACH	45000,0,7500	45000,19500,7500	19500	ByLayer	FL 100x10	Ks_Shape
+SHAPE	381	T80	DIN.DIN_T	45000,0,4000	45000,0,4600	600	ByLayer	T 80	Ks_Shape
+SHAPE	382	T80	DIN.DIN_T	45000,6000,4000	45000,6000,4600	600	ByLayer	T 80	Ks_Shape
+SHAPE	383	T80	DIN.DIN_T	45000,13500,4000	45000,13500,4600	600	ByLayer	T 80	Ks_Shape
+OTHER	3EF	Ks_WorkFrame	PS_Workfram	45000,25000,2000	40000,25000,0;50000,25000,4000	1/0/0;0/1/0;0/0/1
+OTHER	3F0	Ks_WorkFrame	PS_Workfram	45000,37000,2000	40000,37000,0;50000,37000,4000	1/0/0;0/1/0;0/0/1
+OTHER	3F1	Ks_WorkFrame	PS_Workfram	45000,31000,4000	40000,25000,4000;50000,37000,4000	1/0/0;0/1/0;0/0/1
+OTHER	3F2	Ks_WorkFrame	PS_Workfram	45000,31000,0	40000,25000,0;50000,37000,0	1/0/0;0/1/0;0/0/1
+OTHER	3F3	Ks_WorkFrame	PS_Workfram	50000,31000,2000	50000,25000,0;50000,37000,4000	1/0/0;0/1/0;0/0/1
+OTHER	3F4	Ks_WorkFrame	PS_Workfram	40000,31000,2000	40000,25000,0;40000,37000,4000	1/0/0;0/1/0;0/0/1
+OTHER	3F5	Ks_WorkFrame	PS_Workfram	45900,31000,4241.154	41800,25000,4000;50000,37000,4482.309	1/0/0;0/1/0;0/0/1
+OTHER	3F6	Ks_WorkFrame	PS_Workfram	40900,31000,4241.154	40000,25000,4000;41800,37000,4482.309	1/0/0;0/1/0;0/0/1
+OTHER	3F7	Ks_Grid	PS_Object	45499.263,30499.263,2000	39638.527,23638.527,0;51360,37360,4000	1/0/0;0/1/0;0/0/1
+OTHER	3F8	Ks_WorkFrame	PS_Workfram	40000,52000,0	39999.995,51999.995,0;40000.005,52000.005,0	1/0/0;0/1/0;0/0/1
+OTHER	3F9	Ks_WorkFrame	PS_Workfram	40000,52000,6000	40000,52000,6000;40000,52000,6000	1/0/0;0/1/0;0/0/1
+OTHER	3FA	Ks_WorkFrame	PS_Workfram	45732.051,54000,3000	43464.102,52000,0;48000,56000,6000	1/0/0;0/1/0;0/0/1
+OTHER	3FC	Ks_WorkFrame	PS_Workfram	44464.102,56464.102,3000	42000,54000,0;46928.203,58928.203,6000	1/0/0;0/1/0;0/0/1
+OTHER	3FE	Ks_WorkFrame	PS_Workfram	42000,57732.051,3000	40000,55464.102,0;44000,60000,6000	1/0/0;0/1/0;0/0/1
+OTHER	400	Ks_WorkFrame	PS_Workfram	38000,57732.051,3000	36000,55464.102,0;40000,60000,6000	1/0/0;0/1/0;0/0/1
+OTHER	402	Ks_WorkFrame	PS_Workfram	35535.898,56464.102,3000	33071.797,54000,0;38000,58928.203,6000	1/0/0;0/1/0;0/0/1
+OTHER	404	Ks_WorkFrame	PS_Workfram	34267.949,54000,3000	32000,52000,0;36535.898,56000,6000	1/0/0;0/1/0;0/0/1
+OTHER	406	Ks_WorkFrame	PS_Workfram	34267.949,50000,3000	32000,48000,0;36535.898,52000,6000	1/0/0;0/1/0;0/0/1
+OTHER	408	Ks_WorkFrame	PS_Workfram	35535.898,47535.898,3000	33071.797,45071.797,0;38000,50000,6000	1/0/0;0/1/0;0/0/1
+OTHER	40A	Ks_WorkFrame	PS_Workfram	38000,46267.949,3000	36000,44000,0;40000,48535.898,6000	1/0/0;0/1/0;0/0/1
+OTHER	40C	Ks_WorkFrame	PS_Workfram	42000,46267.949,3000	40000,44000,0;44000,48535.898,6000	1/0/0;0/1/0;0/0/1
+OTHER	40E	Ks_WorkFrame	PS_Workfram	44464.102,47535.898,3000	42000,45071.797,0;46928.203,50000,6000	1/0/0;0/1/0;0/0/1
+OTHER	410	Ks_WorkFrame	PS_Workfram	45732.051,50000,3000	43464.102,48000,0;48000,52000,6000	1/0/0;0/1/0;0/0/1
+OTHER	412	Ks_Grid	PS_Object	40000,52000,3000	32000,44000,0;48000,60000,6000	1/0/0;0/1/0;0/0/1
+OTHER	413	Ks_WorkFrame	PS_Workfram	45000,81875,2000	40000,80000,0;50000,83750,4000	1/0/0;0/1/0;0/0/1
+OTHER	414	Ks_WorkFrame	PS_Workfram	48125,85000,2000	46250,80000,0;50000,90000,4000	1/0/0;0/1/0;0/0/1
+OTHER	415	Ks_WorkFrame	PS_Workfram	41875,85000,2000	40000,80000,0;43750,90000,4000	1/0/0;0/1/0;0/0/1
+OTHER	416	Ks_WorkFrame	PS_Workfram	45000,88125,2000	40000,86250,0;50000,90000,4000	1/0/0;0/1/0;0/0/1
+OTHER	417	Ks_WorkFrame	PS_Workfram	45000,85000,4000	43750,83750,4000;46250,86250,4000	1/0/0;0/1/0;0/0/1
+OTHER	418	Ks_WorkFrame	PS_Workfram	45000,85000,0	40000,80000,0;50000,90000,0	1/0/0;0/1/0;0/0/1
+OTHER	419	Ks_Grid	PS_Object	45499.263,84499.263,2000	39638.527,78638.527,0;51360,90360,4000	1/0/0;0/1/0;0/0/1
+OTHER	41A	Ks_WorkFrame	PS_Workfram	45000,100000,2000	40000,100000,0;50000,100000,4000	1/0/0;0/1/0;0/0/1
+OTHER	41B	Ks_WorkFrame	PS_Workfram	45000,103000,4000	40000,100000,4000;50000,106000,4000	1/0/0;0/1/0;0/0/1
+OTHER	41C	Ks_WorkFrame	PS_Workfram	45000,103000,0	40000,100000,0;50000,106000,0	1/0/0;0/1/0;0/0/1
+OTHER	41D	Ks_WorkFrame	PS_Workfram	50000,103000,2000	50000,100000,0;50000,106000,4000	1/0/0;0/1/0;0/0/1
+OTHER	41E	Ks_WorkFrame	PS_Workfram	40000,103000,2000	40000,100000,0;40000,106000,4000	1/0/0;0/1/0;0/0/1
+OTHER	41F	Ks_Grid	PS_Object	45499.263,102499.263,2000	39638.527,98638.527,0;51360,106360,4000	1/0/0;0/1/0;0/0/1
+ERR	456	Ks_Plate	Object reference not set to an instance of an object.
+ERR	457	Ks_Plate	Object reference not set to an instance of an object.
+ERR	458	Ks_Plate	Object reference not set to an instance of an object.
+ERR	459	Ks_Plate	Object reference not set to an instance of an object.
+ERR	45A	Ks_Plate	Object reference not set to an instance of an object.
+ERR	45B	Ks_Plate	Object reference not set to an instance of an object.
+ERR	45C	Ks_Plate	Object reference not set to an instance of an object.
+ERR	45D	Ks_Plate	Object reference not set to an instance of an object.
+OTHER	4C2	Ks_BendPlate	0	76658.69,0,54.205	76300,-200,-4;77017.38,200,112.409	1/0/0;0/1/0;0/0/1
+OTHER	4D8	Ks_BendPlate	0	76650.69,41.012,79	76284,-200,-4;77017.38,282.024,162	1/0/0;0/1/0;0/0/1
+OTHER	4FE	Ks_BendPlate	0	78200,2,148	78000,-150,-4;78400,154,300	1/0/0;0/1/0;0/0/1
+OTHER	4FF	Ks_ArcPlate	0	79949.999,350,-3	79599.997,0,-6;80300,700,0	1/0/0;0/1/0;0/0/1
+OTHER	500	Ks_ArcPlate	0	81000,0,3	80300,-700,0;81700,700,6	1/0/0;0/1/0;0/0/1
+ERR	501	Ks_Plate	Object reference not set to an instance of an object.
+ERR	502	Ks_Plate	Object reference not set to an instance of an object.
+SHAPE	53C	HE300B	DIN.DIN_HEB	90000,0,0	93000,0,0	3000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	53E	IPE400	DIN.DIN_IPE	90000,2000,0	93000,2000,0	3000	ByLayer	IPE 400	Ks_Shape
+SHAPE	53F	HE300B	DIN.DIN_HEB	90000,4000,0	93000,4000,0	3000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	541	UB457X152X60	BRITAIN.BS_UNIBEAM	90000,6000,0	93000,6000,0	3000	ByLayer	UB 457X152X60	Ks_Shape
+SHAPE	542	HE300B	DIN.DIN_HEB	90000,8000,0	93000,8000,0	3000	ByLayer	HE 300 B	Ks_Shape
+ERR	558	Ks_Plate	Object reference not set to an instance of an object.
+ERR	559	Ks_Plate	Object reference not set to an instance of an object.
+ERR	55E	Ks_Plate	Object reference not set to an instance of an object.
+ERR	55F	Ks_Plate	Object reference not set to an instance of an object.
+ERR	560	Ks_Plate	Object reference not set to an instance of an object.
+ERR	561	Ks_Plate	Object reference not set to an instance of an object.
+ERR	597	Ks_Plate	Object reference not set to an instance of an object.
+ERR	598	Ks_Plate	Object reference not set to an instance of an object.
+ERR	59C	Ks_Plate	Object reference not set to an instance of an object.
+ERR	59D	Ks_Plate	Object reference not set to an instance of an object.
+ERR	59E	Ks_Plate	Object reference not set to an instance of an object.
+ERR	59F	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5A0	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5A1	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5A2	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5A3	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5A4	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5A5	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5A9	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5AA	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5AB	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5AC	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5AD	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5AE	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5AF	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5B0	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5B4	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5B5	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5B6	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5B7	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5B8	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5B9	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5CE	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5CF	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5D3	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5D4	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5D5	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5D6	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5E1	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5E2	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5E3	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5E4	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5E5	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5E6	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5E7	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5E8	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5E9	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5EA	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5EB	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5EC	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5ED	Ks_Plate	Object reference not set to an instance of an object.
+ERR	5EE	Ks_Plate	Object reference not set to an instance of an object.
+ERR	603	Ks_Plate	Object reference not set to an instance of an object.
+ERR	604	Ks_Plate	Object reference not set to an instance of an object.
+ERR	605	Ks_Plate	Object reference not set to an instance of an object.
+ERR	606	Ks_Plate	Object reference not set to an instance of an object.
+ERR	607	Ks_Plate	Object reference not set to an instance of an object.
+ERR	608	Ks_Plate	Object reference not set to an instance of an object.
+ERR	609	Ks_Plate	Object reference not set to an instance of an object.
+ERR	60A	Ks_Plate	Object reference not set to an instance of an object.
+ERR	60B	Ks_Plate	Object reference not set to an instance of an object.
+ERR	60C	Ks_Plate	Object reference not set to an instance of an object.
+ERR	60D	Ks_Plate	Object reference not set to an instance of an object.
+ERR	60E	Ks_Plate	Object reference not set to an instance of an object.
+ERR	623	Ks_Plate	Object reference not set to an instance of an object.
+ERR	624	Ks_Plate	Object reference not set to an instance of an object.
+SHAPE	648	HE300B	DIN.DIN_HEB	110000,0,0	110000,0,3000	3000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	649	IPE400	DIN.DIN_IPE	110015.5,0,2000	114000,0,2000	3984.5	ByLayer	IPE 400	Ks_Shape
+SHAPE	64A	HE300B	DIN.DIN_HEB	110000,3000,0	110000,3000,3000	3000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	64B	IPE400	DIN.DIN_IPE	110015.5,3000,2000	114000,3000,2000	3984.5	ByLayer	IPE 400	Ks_Shape
+SHAPE	64C	HE300B	DIN.DIN_HEB	110000,6000,0	110000,6000,3000	3000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	64D	IPE400	DIN.DIN_IPE	110015.5,6000,2000	114000,6000,2000	3984.5	ByLayer	IPE 400	Ks_Shape
+SHAPE	64E	HE300B	DIN.DIN_HEB	110000,9000,0	110000,9000,3000	3000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	64F	IPE400	DIN.DIN_IPE	110015.5,9000,2000	114000,9000,2000	3984.5	ByLayer	IPE 400	Ks_Shape
+SHAPE	665	L90X9	DIN.DIN_WINK_GL	110051.5,-49.3,2020	110051.5,-49.3,2155	135	ByLayer	L 90x9	Ks_Shape
+SHAPE	666	L90X9	DIN.DIN_WINK_GL	110051.5,49.3,2155	110051.5,49.3,2020	135	ByLayer	L 90x9	Ks_Shape
+ERR	667	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	668	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	669	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	66A	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	66B	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	66C	Ks_Bolt	Object reference not set to an instance of an object.
+SHAPE	670	L90X9	DIN.DIN_WINK_GL	110051.5,2950.7,1945	110051.5,2950.7,2155	210	ByLayer	L 90x9	Ks_Shape
+SHAPE	671	L90X9	DIN.DIN_WINK_GL	110051.5,3049.3,2155	110051.5,3049.3,1945	210	ByLayer	L 90x9	Ks_Shape
+ERR	672	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	673	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	674	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	675	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	676	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	677	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	678	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	679	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	67A	Ks_Bolt	Object reference not set to an instance of an object.
+OTHER	67F	Ks_BendShape	PS_Shape	110051.5,8950.7,2087.5	110006.5,8905.7,2020;110096.5,8995.7,2155	1/0/0;0/1/0;0/0/1
+OTHER	680	Ks_BendShape	PS_Shape	110051.5,9049.3,2087.5	110006.5,9004.3,2020;110096.5,9094.3,2155	1/0/0;0/1/0;0/0/1
+ERR	681	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	682	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	683	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	684	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	685	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	686	Ks_Bolt	Object reference not set to an instance of an object.
+SHAPE	6A8	L90X9	DIN.DIN_WINK_GL	110051.5,5950.7,1945	110051.5,5950.7,2155	210	ByLayer	L 90x9	Ks_Shape
+SHAPE	6A9	L90X9	DIN.DIN_WINK_GL	110051.5,6049.3,2155	110051.5,6049.3,1945	210	ByLayer	L 90x9	Ks_Shape
+ERR	6AA	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	6AB	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	6AC	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	6AD	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	6AE	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	6AF	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	6B0	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	6B1	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	6B2	Ks_Bolt	Object reference not set to an instance of an object.
+SHAPE	705	HE300B	DIN.DIN_HEB	130000,0,0	130000,0,3000	3000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	706	IPE400	DIN.DIN_IPE	130015.5,0,2000	134000,0,2000	3984.5	ByLayer	IPE 400	Ks_Shape
+SHAPE	707	HE300B	DIN.DIN_HEB	130000,3000,0	130000,3000,3000	3000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	708	IPE400	DIN.DIN_IPE	130015.5,3000,2000	134000,3000,2000	3984.5	ByLayer	IPE 400	Ks_Shape
+SHAPE	709	HE300B	DIN.DIN_HEB	130000,6000,0	130000,6000,3000	3000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	70A	IPE400	DIN.DIN_IPE	130015.5,6000,2000	134000,6000,2000	3984.5	ByLayer	IPE 400	Ks_Shape
+SHAPE	70B	HE300B	DIN.DIN_HEB	130000,9000,0	130000,9000,3000	3000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	70C	IPE400	DIN.DIN_IPE	130160,9000,2000	134000,9000,2000	3840	ByLayer	IPE 400	Ks_Shape
+SHAPE	717	135X10	DIN.DIN_FLACH	130005.5,9.3,2087.5	130075.5,9.3,2087.5	70	ByLayer	Plate 135x10	Ks_Shape
+ERR	718	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	719	Ks_Bolt	Object reference not set to an instance of an object.
+SHAPE	71E	210X10	DIN.DIN_FLACH	130005.5,3009.3,2050	130075.5,3009.3,2050	70	ByLayer	Plate 210x10	Ks_Shape
+ERR	71F	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	720	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	721	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	725	Ks_Plate	Object reference not set to an instance of an object.
+ERR	726	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	727	Ks_Bolt	Object reference not set to an instance of an object.
+SHAPE	72C	160X15	DIN.DIN_FLACH	130005.5,9011.8,2000	130280,9011.8,2000	274.5	ByLayer	BRFL 160x15	Ks_Shape
+ERR	72D	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	72E	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	72F	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	730	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	731	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	732	Ks_Bolt	Object reference not set to an instance of an object.
+SHAPE	74A	HE300B	DIN.DIN_HEB	110000,12000,0	110000,12000,3000	3000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	74B	IPE400	DIN.DIN_IPE	110015.5,12000,2000	114000,12000,2000	3984.5	ByLayer	IPE 400	Ks_Shape
+SHAPE	74C	L90X9	DIN.DIN_WINK_GL	110051.5,11950.7,1945	110051.5,11950.7,2155	210	ByLayer	L 90x9	Ks_Shape
+SHAPE	74D	L90X9	DIN.DIN_WINK_GL	110051.5,12049.3,2155	110051.5,12049.3,1945	210	ByLayer	L 90x9	Ks_Shape
+ERR	74E	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	74F	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	750	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	751	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	752	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	753	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	754	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	755	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	756	Ks_Bolt	Object reference not set to an instance of an object.
+SHAPE	77E	IPE400	DIN.DIN_IPE	150000,0,0	152995,0,0	2995	ByLayer	IPE 400	Ks_Shape
+SHAPE	77F	IPE400	DIN.DIN_IPE	153005,0,0	156000,0,0	2995	ByLayer	IPE 400	Ks_Shape
+SHAPE	780	IPE400	DIN.DIN_IPE	150000,3000,0	152995,3000,0	2995	ByLayer	IPE 400	Ks_Shape
+SHAPE	781	IPE400	DIN.DIN_IPE	153005,3000,0	156000,3000,0	2995	ByLayer	IPE 400	Ks_Shape
+SHAPE	782	IPE400	DIN.DIN_IPE	150000,6000,0	152995,6000,0	2995	ByLayer	IPE 400	Ks_Shape
+SHAPE	783	IPE400	DIN.DIN_IPE	153005,6000,0	156000,6000,0	2995	ByLayer	IPE 400	Ks_Shape
+SHAPE	784	IPE400	DIN.DIN_IPE	150000,9000,0	152995,9000,0	2995	ByLayer	IPE 400	Ks_Shape
+SHAPE	785	IPE400	DIN.DIN_IPE	153005,9000,0	156000,9000,0	2995	ByLayer	IPE 400	Ks_Shape
+SHAPE	79B	150X10	DIN.DIN_FLACH	152851,0,205	153149,0,205	298	ByLayer	FL 150x10	Ks_Shape
+SHAPE	79C	150X10	DIN.DIN_FLACH	152851,0,-205	153149,0,-205	298	ByLayer	FL 150x10	Ks_Shape
+SHAPE	79E	128X10	DIN.DIN_FLACH	152867,9.3,0	153133,9.3,0	266	ByLayer	Plate 128x10	Ks_Shape
+SHAPE	79F	128X10	DIN.DIN_FLACH	152867,-9.3,0	153133,-9.3,0	266	ByLayer	Plate 128x10	Ks_Shape
+SHAPE	7A6	128X10	DIN.DIN_FLACH	152851,3000,205	153149,3000,205	298	ByLayer	Plate 128x10	Ks_Shape
+SHAPE	7A8	39X10	DIN.DIN_FLACH	152851,2955.35,181.5	153149,2955.35,181.5	298	ByLayer	Plate 39x10	Ks_Shape
+SHAPE	7A9	39X10	DIN.DIN_FLACH	152851,3044.65,181.5	153149,3044.65,181.5	298	ByLayer	Plate 39x10	Ks_Shape
+SHAPE	7AA	128X10	DIN.DIN_FLACH	152851,3000,-205	153149,3000,-205	298	ByLayer	Plate 128x10	Ks_Shape
+SHAPE	7AB	39X10	DIN.DIN_FLACH	152851,2955.35,-181.5	153149,2955.35,-181.5	298	ByLayer	Plate 39x10	Ks_Shape
+SHAPE	7AC	39X10	DIN.DIN_FLACH	152851,3044.65,-181.5	153149,3044.65,-181.5	298	ByLayer	Plate 39x10	Ks_Shape
+SHAPE	7AD	128X10	DIN.DIN_FLACH	152867,3009.3,0	153133,3009.3,0	266	ByLayer	Plate 128x10	Ks_Shape
+SHAPE	7AE	128X10	DIN.DIN_FLACH	152867,2990.7,0	153133,2990.7,0	266	ByLayer	Plate 128x10	Ks_Shape
+SHAPE	7B5	128X10	DIN.DIN_FLACH	152867,6009.3,0	153133,6009.3,0	266	ByLayer	Plate 128x10	Ks_Shape
+SHAPE	7B6	128X10	DIN.DIN_FLACH	152867,5990.7,0	153133,5990.7,0	266	ByLayer	Plate 128x10	Ks_Shape
+SHAPE	7BD	150X10	DIN.DIN_FLACH	152856,9000,205	153144,9000,205	288	ByLayer	FL 150x10	Ks_Shape
+OTHER	7BE	Ks_WeldFlag	PS_Weld	153074.5,9075,200	153005,9074.391,198.772;153144,9075.609,201.228	1/0/0;0/1/0;0/0/1
+OTHER	7BF	Ks_WeldFlag	PS_Weld	153005,9000,200	153004.391,8925,199.391;153005.609,9075,200.609	1/0/0;0/1/0;0/0/1
+OTHER	7C0	Ks_WeldFlag	PS_Weld	153074.5,8925,200	153005,8924.391,198.772;153144,8925.609,201.228	1/0/0;0/1/0;0/0/1
+OTHER	7C1	Ks_WeldFlag	PS_Weld	153144,9000,200	153143.391,8925,199.391;153144.609,9075,200.609	1/0/0;0/1/0;0/0/1
+OTHER	7C2	Ks_WeldFlag	PS_Weld	152925.5,9075,200	152856,9074.391,198.772;152995,9075.609,201.228	1/0/0;0/1/0;0/0/1
+OTHER	7C3	Ks_WeldFlag	PS_Weld	152995,9000,200	152994.391,8925,199.391;152995.609,9075,200.609	1/0/0;0/1/0;0/0/1
+OTHER	7C4	Ks_WeldFlag	PS_Weld	152925.5,8925,200	152856,8924.391,198.772;152995,8925.609,201.228	1/0/0;0/1/0;0/0/1
+OTHER	7C5	Ks_WeldFlag	PS_Weld	152856,9000,200	152855.391,8925,199.391;152856.609,9075,200.609	1/0/0;0/1/0;0/0/1
+SHAPE	7C6	150X10	DIN.DIN_FLACH	152856,9000,-205	153144,9000,-205	288	ByLayer	FL 150x10	Ks_Shape
+OTHER	7C7	Ks_WeldFlag	PS_Weld	153074.5,9075,-200	153005,9074.391,-201.228;153144,9075.609,-198.772	1/0/0;0/1/0;0/0/1
+OTHER	7C8	Ks_WeldFlag	PS_Weld	153005,9000,-200	153004.391,8925,-200.609;153005.609,9075,-199.391	1/0/0;0/1/0;0/0/1
+OTHER	7C9	Ks_WeldFlag	PS_Weld	153074.5,8925,-200	153005,8924.391,-201.228;153144,8925.609,-198.772	1/0/0;0/1/0;0/0/1
+OTHER	7CA	Ks_WeldFlag	PS_Weld	153144,9000,-200	153143.391,8925,-200.609;153144.609,9075,-199.391	1/0/0;0/1/0;0/0/1
+OTHER	7CB	Ks_WeldFlag	PS_Weld	152925.5,9075,-200	152856,9074.391,-201.228;152995,9075.609,-198.772	1/0/0;0/1/0;0/0/1
+OTHER	7CC	Ks_WeldFlag	PS_Weld	152995,9000,-200	152994.391,8925,-200.609;152995.609,9075,-199.391	1/0/0;0/1/0;0/0/1
+OTHER	7CD	Ks_WeldFlag	PS_Weld	152925.5,8925,-200	152856,8924.391,-201.228;152995,8925.609,-198.772	1/0/0;0/1/0;0/0/1
+OTHER	7CE	Ks_WeldFlag	PS_Weld	152856,9000,-200	152855.391,8925,-200.609;152856.609,9075,-199.391	1/0/0;0/1/0;0/0/1
+SHAPE	7CF	128X10	DIN.DIN_FLACH	152872,9009.3,0	153128,9009.3,0	256	ByLayer	Plate 128x10	Ks_Shape
+SHAPE	7D0	128X10	DIN.DIN_FLACH	152872,8990.7,0	153128,8990.7,0	256	ByLayer	Plate 128x10	Ks_Shape
+OTHER	7D1	Ks_WeldFlag	PS_Weld	153066.5,9004.3,-64	153005,9003.691,-65.228;153128,9004.909,-62.772	1/0/0;0/1/0;0/0/1
+OTHER	7D2	Ks_WeldFlag	PS_Weld	153005,9004.3,0	153003.772,9003.691,-64;153006.228,9004.909,64	1/0/0;0/1/0;0/0/1
+OTHER	7D3	Ks_WeldFlag	PS_Weld	153066.5,9004.3,64	153005,9003.691,62.772;153128,9004.909,65.228	1/0/0;0/1/0;0/0/1
+OTHER	7D4	Ks_WeldFlag	PS_Weld	153128,9004.3,0	153126.772,9003.691,-64;153129.228,9004.909,64	1/0/0;0/1/0;0/0/1
+OTHER	7D5	Ks_WeldFlag	PS_Weld	152933.5,9004.3,-64	152872,9003.691,-65.228;152995,9004.909,-62.772	1/0/0;0/1/0;0/0/1
+OTHER	7D6	Ks_WeldFlag	PS_Weld	152995,9004.3,0	152993.772,9003.691,-64;152996.228,9004.909,64	1/0/0;0/1/0;0/0/1
+OTHER	7D7	Ks_WeldFlag	PS_Weld	152933.5,9004.3,64	152872,9003.691,62.772;152995,9004.909,65.228	1/0/0;0/1/0;0/0/1
+OTHER	7D8	Ks_WeldFlag	PS_Weld	152872,9004.3,0	152870.772,9003.691,-64;152873.228,9004.909,64	1/0/0;0/1/0;0/0/1
+OTHER	7D9	Ks_WeldFlag	PS_Weld	153066.5,8995.7,-64	153005,8995.091,-65.228;153128,8996.309,-62.772	1/0/0;0/1/0;0/0/1
+OTHER	7DA	Ks_WeldFlag	PS_Weld	153005,8995.7,0	153003.772,8995.091,-64;153006.228,8996.309,64	1/0/0;0/1/0;0/0/1
+OTHER	7DB	Ks_WeldFlag	PS_Weld	153066.5,8995.7,64	153005,8995.091,62.772;153128,8996.309,65.228	1/0/0;0/1/0;0/0/1
+OTHER	7DC	Ks_WeldFlag	PS_Weld	153128,8995.7,0	153126.772,8995.091,-64;153129.228,8996.309,64	1/0/0;0/1/0;0/0/1
+OTHER	7DD	Ks_WeldFlag	PS_Weld	152933.5,8995.7,-64	152872,8995.091,-65.228;152995,8996.309,-62.772	1/0/0;0/1/0;0/0/1
+OTHER	7DE	Ks_WeldFlag	PS_Weld	152995,8995.7,0	152993.772,8995.091,-64;152996.228,8996.309,64	1/0/0;0/1/0;0/0/1
+OTHER	7DF	Ks_WeldFlag	PS_Weld	152933.5,8995.7,64	152872,8995.091,62.772;152995,8996.309,65.228	1/0/0;0/1/0;0/0/1
+OTHER	7E0	Ks_WeldFlag	PS_Weld	152872,8995.7,0	152870.772,8995.091,-64;152873.228,8996.309,64	1/0/0;0/1/0;0/0/1
+SHAPE	801	HE300B	DIN.DIN_HEB	170000,0,0	170000,0,4000	4000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	80C	L90X9	DIN.DIN_WINK_GL	170200,500,2500	171200,500,2500	1000	ByLayer	L 90x9	Ks_Shape
+SHAPE	817	HE300B	DIN.DIN_HEB	110000,15000,0	110000,15000,3000	3000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	818	IPE400	DIN.DIN_IPE	110015.5,15000,2000	113000,15000,2000	2984.5	ByLayer	IPE 400	Ks_Shape
+SHAPE	819	L90X9	DIN.DIN_WINK_GL	110051.5,14950.7,2020	110051.5,14950.7,2155	135	ByLayer	L 90x9	Ks_Shape
+SHAPE	81A	L90X9	DIN.DIN_WINK_GL	110051.5,15049.3,2155	110051.5,15049.3,2020	135	ByLayer	L 90x9	Ks_Shape
+ERR	81B	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	81C	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	81D	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	81E	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	81F	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	820	Ks_Bolt	Object reference not set to an instance of an object.
+SHAPE	824	HE300B	DIN.DIN_HEB	110000,18000,0	110000,18000,3000	3000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	825	IPE400	DIN.DIN_IPE	110015.5,18000,2000	113000,18000,2000	2984.5	ByLayer	IPE 400	Ks_Shape
+SHAPE	826	L90X9	DIN.DIN_WINK_GL	110051.5,17950.7,2020	110051.5,17950.7,2155	135	ByLayer	L 90x9	Ks_Shape
+SHAPE	827	L90X9	DIN.DIN_WINK_GL	110051.5,18049.3,2155	110051.5,18049.3,2020	135	ByLayer	L 90x9	Ks_Shape
+ERR	828	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	829	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	82A	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	82B	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	82C	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	82D	Ks_Bolt	Object reference not set to an instance of an object.
+SHAPE	831	HE300B	DIN.DIN_HEB	110000,21000,0	110000,21000,3000	3000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	832	IPE400	DIN.DIN_IPE	110015.5,21000,2000	113000,21000,2000	2984.5	ByLayer	IPE 400	Ks_Shape
+SHAPE	833	L90X9	DIN.DIN_WINK_GL	110051.5,20950.7,2020	110051.5,20950.7,2155	135	ByLayer	L 90x9	Ks_Shape
+SHAPE	834	L90X9	DIN.DIN_WINK_GL	110051.5,21049.3,2155	110051.5,21049.3,2020	135	ByLayer	L 90x9	Ks_Shape
+ERR	835	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	836	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	837	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	838	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	839	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	83A	Ks_Bolt	Object reference not set to an instance of an object.
+SHAPE	83E	HE300B	DIN.DIN_HEB	110000,24000,0	110000,24000,3000	3000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	83F	IPE400	DIN.DIN_IPE	110015.5,24000,2000	113000,24000,2000	2984.5	ByLayer	IPE 400	Ks_Shape
+SHAPE	840	L90X9	DIN.DIN_WINK_GL	110051.5,23950.7,2020	110051.5,23950.7,2155	135	ByLayer	L 90x9	Ks_Shape
+SHAPE	841	L90X9	DIN.DIN_WINK_GL	110051.5,24049.3,2155	110051.5,24049.3,2020	135	ByLayer	L 90x9	Ks_Shape
+ERR	842	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	843	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	844	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	845	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	846	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	847	Ks_Bolt	Object reference not set to an instance of an object.
+SHAPE	85F	L90X9	DIN.DIN_WINK_GL	170160,0,2500	172600,0,2500	2440	ByLayer	L 90x9	Ks_Shape
+SHAPE	860	L90X9	DIN.DIN_WINK_GL	170160,0,2560	171600,0,4000	2036.468	ByLayer	L 90x9	Ks_Shape
+SHAPE	861	L90X9	DIN.DIN_WINK_GL	170160,0,2440	171600,0,1000	2036.468	ByLayer	L 90x9	Ks_Shape
+SHAPE	88C	HE300B	DIN.DIN_HEB	170000,6000,0	170000,6000,4000	4000	ByLayer	HE 300 B	Ks_Shape
+ERR	88D	Ks_Plate	Object reference not set to an instance of an object.
+ERR	88E	Ks_Plate	Object reference not set to an instance of an object.
+SHAPE	899	L90X9	DIN.DIN_WINK_GL	170160,6051,2500	172600,6051,2500	2440	ByLayer	L 90x9	Ks_Shape
+SHAPE	89A	L90X9	DIN.DIN_WINK_GL	170160,6051,2560	171600,6051,4000	2036.468	ByLayer	L 90x9	Ks_Shape
+SHAPE	89B	L90X9	DIN.DIN_WINK_GL	170160,6051,2440	171600,6051,1000	2036.468	ByLayer	L 90x9	Ks_Shape
+ERR	8D8	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	8D9	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	8E8	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	8E9	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	8EA	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	8EB	Ks_Bolt	Object reference not set to an instance of an object.
+SHAPE	900	HE300B	DIN.DIN_HEB	170000,9000,0	170000,9000,4000	4000	ByLayer	HE 300 B	Ks_Shape
+ERR	901	Ks_Plate	Object reference not set to an instance of an object.
+ERR	902	Ks_Plate	Object reference not set to an instance of an object.
+SHAPE	903	L90X9	DIN.DIN_WINK_GL	170160,9051,2500	172600,9051,2500	2440	ByLayer	L 90x9	Ks_Shape
+SHAPE	904	L90X9	DIN.DIN_WINK_GL	170160,9051,2560	171600,9051,4000	2036.468	ByLayer	L 90x9	Ks_Shape
+SHAPE	905	L90X9	DIN.DIN_WINK_GL	170160,9051,2440	171600,9051,1000	2036.468	ByLayer	L 90x9	Ks_Shape
+ERR	906	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	907	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	908	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	909	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	90A	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	90B	Ks_Bolt	Object reference not set to an instance of an object.
+SHAPE	90C	HE300B	DIN.DIN_HEB	170000,12000,0	170000,12000,4000	4000	ByLayer	HE 300 B	Ks_Shape
+ERR	90D	Ks_Plate	Object reference not set to an instance of an object.
+ERR	90E	Ks_Plate	Object reference not set to an instance of an object.
+SHAPE	90F	L90X9	DIN.DIN_WINK_GL	170160,12051,2500	172600,12051,2500	2440	ByLayer	L 90x9	Ks_Shape
+SHAPE	910	L90X9	DIN.DIN_WINK_GL	170160,12051,2560	171600,12051,4000	2036.468	ByLayer	L 90x9	Ks_Shape
+SHAPE	911	L90X9	DIN.DIN_WINK_GL	170160,12051,2440	171600,12051,1000	2036.468	ByLayer	L 90x9	Ks_Shape
+ERR	912	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	913	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	914	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	915	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	916	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	917	Ks_Bolt	Object reference not set to an instance of an object.
+SHAPE	918	HE300B	DIN.DIN_HEB	170000,15000,0	170000,15000,4000	4000	ByLayer	HE 300 B	Ks_Shape
+ERR	919	Ks_Plate	Object reference not set to an instance of an object.
+ERR	91A	Ks_Plate	Object reference not set to an instance of an object.
+SHAPE	91B	L90X9	DIN.DIN_WINK_GL	170160,15051,2500	172600,15051,2500	2440	ByLayer	L 90x9	Ks_Shape
+SHAPE	91C	L90X9	DIN.DIN_WINK_GL	170160,15051,2560	171600,15051,4000	2036.468	ByLayer	L 90x9	Ks_Shape
+SHAPE	91D	L90X9	DIN.DIN_WINK_GL	170160,15051,2440	171600,15051,1000	2036.468	ByLayer	L 90x9	Ks_Shape
+ERR	91E	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	91F	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	920	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	921	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	922	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	923	Ks_Bolt	Object reference not set to an instance of an object.
+SHAPE	954	RQ200X6	DIN.DIN_QUADROHR	170000,20000,0	170000,20000,4000	4000	ByLayer	RQ 200x6	Ks_Shape
+ERR	96B	Ks_Plate	Object reference not set to an instance of an object.
+ERR	9EE	Ks_Plate	Object reference not set to an instance of an object.
+SHAPE	9EF	U160	DIN.DIN_U	170120,20038.5,2500	171820,20038.5,2500	1700	ByLayer	U 160	Ks_Shape
+SHAPE	9F0	U160	DIN.DIN_U	170253,20038.5,2641.42	171102,20038.5,3489.95	1200.335	ByLayer	U 160	Ks_Shape
+SHAPE	9F1	U160	DIN.DIN_U	170253,20038.5,2358.58	171102,20038.5,1510.05	1200.335	ByLayer	U 160	Ks_Shape
+ERR	9FC	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	9FD	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	9FE	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	9FF	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	A00	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	A01	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	A02	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	A03	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	A04	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	A05	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	A06	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	A07	Ks_Bolt	Object reference not set to an instance of an object.
+SHAPE	A43	HE300B	DIN.DIN_HEB	190000,0,0	190000,0,4000	4000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	A44	HE300B	DIN.DIN_HEB	194000,0,0	194000,0,4000	4000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	A45	IPE400	DIN.DIN_IPE	190000,0,4000	194000,0,4000	4000	ByLayer	IPE 400	Ks_Shape
+SHAPE	AA6	HE200B	DIN.DIN_HEB	190000,8000,0	190000,8000,4000	4000	ByLayer	HE 200 B	Ks_Shape
+SHAPE	AA7	HE200B	DIN.DIN_HEB	190000,12000,0	190000,12000,4000	4000	ByLayer	HE 200 B	Ks_Shape
+SHAPE	AA8	IPE300	DIN.DIN_IPE	190000,8100,3500	190000,11900,3500	3800	ByLayer	IPE 300	Ks_Shape
+ERR	ABD	Ks_Plate	Object reference not set to an instance of an object.
+ERR	ABE	Ks_Plate	Object reference not set to an instance of an object.
+ERR	AC2	Ks_Plate	Object reference not set to an instance of an object.
+ERR	AC3	Ks_Plate	Object reference not set to an instance of an object.
+ERR	AC4	Ks_Plate	Object reference not set to an instance of an object.
+ERR	AC5	Ks_Plate	Object reference not set to an instance of an object.
+ERR	AC9	Ks_Plate	Object reference not set to an instance of an object.
+ERR	ACA	Ks_Plate	Object reference not set to an instance of an object.
+SHAPE	AE2	UC203X203X46	BRITAIN.BS_UNICOL	194000,8000,0	194000,8000,4000	4000	ByLayer	UC 203X203X46	Ks_Shape
+SHAPE	AE4	UB305X165X40	BRITAIN.BS_UNIBEAM	194000,8121.6,3500	194000,11878.4,3500	3756.8	ByLayer	UB 305X165X40	Ks_Shape
+ERR	AE5	Ks_Plate	Object reference not set to an instance of an object.
+ERR	AE6	Ks_Plate	Object reference not set to an instance of an object.
+ERR	B05	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	B06	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	B07	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	B08	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	B09	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	B0A	Ks_Bolt	Object reference not set to an instance of an object.
+SHAPE	B33	UC203X203X46	BRITAIN.BS_UNICOL	194000,12000,0	194000,12000,4000	4000	ByLayer	UC 203X203X46	Ks_Shape
+ERR	B34	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	B35	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	B36	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	B37	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	B38	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	B39	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	B6E	Ks_Plate	Object reference not set to an instance of an object.
+ERR	B6F	Ks_Plate	Object reference not set to an instance of an object.
+ERR	B70	Ks_Plate	Object reference not set to an instance of an object.
+ERR	B71	Ks_Plate	Object reference not set to an instance of an object.
+ERR	B72	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	B73	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	B74	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	B75	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	B76	Ks_Bolt	Object reference not set to an instance of an object.
+SHAPE	BB2	IPE240	DIN.DIN_IPE	230010.5,0,0	233000,0,0	2989.5	ByLayer	IPE 240	Ks_Shape
+SHAPE	BB3	IPE240	DIN.DIN_IPE	230010.5,1200,0	233000,1200,0	2989.5	ByLayer	IPE 240	Ks_Shape
+SHAPE	BB4	IPE240	DIN.DIN_IPE	230015.5,2400,0	233000,2400,0	2984.5	ByLayer	IPE 240	Ks_Shape
+SHAPE	BC9	HE300B	DIN.DIN_HEB	230000,-800,0	230000,3200,0	4000	ByLayer	HE 300 B	Ks_Shape
+SHAPE	BF2	IPE240	DIN.DIN_IPE	230000,3600,0	233000,3600,0	3000	ByLayer	IPE 240	Ks_Shape
+SHAPE	BFD	IPE300	DIN.DIN_IPE	231000,5000,0	231000,7000,0	2000	ByLayer	IPE 300	Ks_Shape
+SHAPE	BFE	IPE300	DIN.DIN_IPE	235000,5000,0	235000,7000,0	2000	ByLayer	IPE 300	Ks_Shape
+SHAPE	C00	IPE200	DIN.DIN_IPE	229000,6000,0	235000,6000,0	6000	ByLayer	IPE 200	Ks_Shape
+SHAPE	C0D	IPE160	DIN.DIN_IPE	228950,8000,0	232350,8000,0	3400	ByLayer	IPE 160	Ks_Shape
+SHAPE	C0E	IPE200	DIN.DIN_IPE	230000,10000,0	232050,10000,0	2050	ByLayer	IPE 200	Ks_Shape
+SHAPE	C0F	IPE160	DIN.DIN_IPE	232000,9959,0	232000,11500,0	1541	ByLayer	IPE 160	Ks_Shape
+SHAPE	C10	IPE200	DIN.DIN_IPE	230000,12000,0	232041,12000,0	2041	ByLayer	IPE 200	Ks_Shape
+SHAPE	C11	IPE160	DIN.DIN_IPE	232000,11950,0	232000,13500,0	1550	ByLayer	IPE 160	Ks_Shape
+ERR	C1C	Ks_Plate	Object reference not set to an instance of an object.
+ERR	C1D	Ks_Plate	Object reference not set to an instance of an object.
+ERR	C1E	Ks_Plate	Object reference not set to an instance of an object.
+ERR	C1F	Ks_Plate	Object reference not set to an instance of an object.
+ERR	C20	Ks_Plate	Object reference not set to an instance of an object.
+ERR	C21	Ks_Plate	Object reference not set to an instance of an object.
+SHAPE	C2C	IPE200	DIN.DIN_IPE	235000,6000,0	237000,6000,0	2000	ByLayer	IPE 200	Ks_Shape
+SHAPE	C37	IPE200	DIN.DIN_IPE	230000,20000,0	232050,20000,0	2050	ByLayer	IPE 200	Ks_Shape
+SHAPE	C38	IPE160	DIN.DIN_IPE	232000,19959,0	232000,21500,0	1541	ByLayer	IPE 160	Ks_Shape
+ERR	C39	Ks_Plate	Object reference not set to an instance of an object.
+ERR	C3A	Ks_Plate	Object reference not set to an instance of an object.
+ERR	C3B	Ks_Plate	Object reference not set to an instance of an object.
+ERR	C46	Ks_Plate	Object reference not set to an instance of an object.
+ERR	C47	Ks_Plate	Object reference not set to an instance of an object.
+SHAPE	C52	IPE300	DIN.DIN_IPE	230000,26000,0	233000,26000,0	3000	ByLayer	IPE 300	Ks_Shape
+SHAPE	C7A	IPE400	DIN.DIN_IPE	250000,0,0	250000,11000,0	11000	ByLayer	IPE 400	Ks_Shape
+SHAPE	C7B	U160	DIN.DIN_U	247500,1500,280	250000,1500,280	2500	ByLayer	U 160	Ks_Shape
+SHAPE	C7C	U160	DIN.DIN_U	250000,1500,280	252500,1500,280	2500	ByLayer	U 160	Ks_Shape
+SHAPE	C7D	U160	DIN.DIN_U	247500,3500,280	250000,3500,280	2500	ByLayer	U 160	Ks_Shape
+SHAPE	C7E	U160	DIN.DIN_U	250000,3500,280	252500,3500,280	2500	ByLayer	U 160	Ks_Shape
+SHAPE	C7F	U160	DIN.DIN_U	247500,5500,280	250000,5500,280	2500	ByLayer	U 160	Ks_Shape
+SHAPE	C80	U160	DIN.DIN_U	250000,5500,280	252500,5500,280	2500	ByLayer	U 160	Ks_Shape
+SHAPE	C81	U160	DIN.DIN_U	247500,7500,280	250000,7500,280	2500	ByLayer	U 160	Ks_Shape
+SHAPE	C82	U160	DIN.DIN_U	250000,7500,280	252500,7500,280	2500	ByLayer	U 160	Ks_Shape
+SHAPE	C83	U160	DIN.DIN_U	247500,9500,280	250000,9500,280	2500	ByLayer	U 160	Ks_Shape
+ERR	C8E	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	C8F	Ks_Bolt	Object reference not set to an instance of an object.
+OTHER	C9A	Ks_BendShape	PS_Shape	250000,3402.5,265	249950,3337.5,200;250050,3467.5,330	1/0/0;0/1/0;0/0/1
+ERR	C9B	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	C9C	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	C9D	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	C9E	Ks_Bolt	Object reference not set to an instance of an object.
+SHAPE	CAC	100X10	DIN.DIN_FLACH	250000,5462.5,200	250000,5462.5,300	100	ByLayer	FL 100x10	Ks_Shape
+ERR	CAD	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	CAE	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	CAF	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	CB0	Ks_Bolt	Object reference not set to an instance of an object.
+SHAPE	CBC	L120X80X8	DIN.DIN_WINK_UGL	249950,7407.5,240	250050,7407.5,240	100	ByLayer	L 120x80x8	Ks_Shape
+ERR	CBD	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	CBE	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	CBF	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	CC0	Ks_Bolt	Object reference not set to an instance of an object.
+SHAPE	CDF	IPE400	DIN.DIN_IPE	254000,0,0	254000,7000,0	7000	ByLayer	IPE 400	Ks_Shape
+SHAPE	CE0	U160	DIN.DIN_U	251500,1500,280	254000,1500,280	2500	ByLayer	U 160	Ks_Shape
+ERR	CE1	Ks_Bolt	Object reference not set to an instance of an object.
+SHAPE	CEC	U160	DIN.DIN_U	251500,3500,280	254000,3500,280	2500	ByLayer	U 160	Ks_Shape
+SHAPE	CED	U160	DIN.DIN_U	254000,3500,280	256500,3500,280	2500	ByLayer	U 160	Ks_Shape
+SHAPE	CEE	100X10	DIN.DIN_FLACH	254000,3462.5,200	254000,3462.5,300	100	ByLayer	FL 100x10	Ks_Shape
+OTHER	CEF	Ks_WeldFlag	PS_Weld	254000,3467.5,200	253950,3466.891,198.772;254050,3468.109,201.228	1/0/0;0/1/0;0/0/1
+OTHER	CF0	Ks_WeldFlag	PS_Weld	254000,3457.5,200	253950,3456.891,198.772;254050,3458.109,201.228	1/0/0;0/1/0;0/0/1
+OTHER	CF1	Ks_WeldFlag	PS_Weld	254050,3462.5,200	254049.391,3457.5,199.391;254050.609,3467.5,200.609	1/0/0;0/1/0;0/0/1
+OTHER	CF2	Ks_WeldFlag	PS_Weld	253950,3462.5,200	253949.391,3457.5,199.391;253950.609,3467.5,200.609	1/0/0;0/1/0;0/0/1
+ERR	CF3	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	CF4	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	CF5	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	CF6	Ks_Bolt	Object reference not set to an instance of an object.
+SHAPE	D04	U160	DIN.DIN_U	251500,5500,280	254000,5500,280	2500	ByLayer	U 160	Ks_Shape
+SHAPE	D05	U160	DIN.DIN_U	254000,5500,280	256500,5500,280	2500	ByLayer	U 160	Ks_Shape
+SHAPE	D06	100X10	DIN.DIN_FLACH	254000,5462.5,200	254000,5462.5,300	100	ByLayer	FL 100x10	Ks_Shape
+OTHER	D07	Ks_WeldFlag	PS_Weld	253950,5462.5,200	253950,5457.5,200;253950,5467.5,200	1/0/0;0/1/0;0/0/1
+OTHER	D08	Ks_WeldFlag	PS_Weld	254000,5457.5,200	253950,5456.485,197.954;254050,5458.515,202.046	1/0/0;0/1/0;0/0/1
+OTHER	D09	Ks_WeldFlag	PS_Weld	254000,5467.5,200	253950,5466.485,197.954;254050,5468.515,202.046	1/0/0;0/1/0;0/0/1
+OTHER	D0A	Ks_WeldFlag	PS_Weld	254050,5462.5,200	254050,5457.5,200;254050,5467.5,200	1/0/0;0/1/0;0/0/1
+ERR	D0B	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	D0C	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	D0D	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	D0E	Ks_Bolt	Object reference not set to an instance of an object.
+SHAPE	D23	IPE400	DIN.DIN_IPE	258000,0,0	258000,6000,0	6000	ByLayer	IPE 400	Ks_Shape
+SHAPE	D24	U160	DIN.DIN_U	255500,2972,280	258300,2972,280	2800	ByLayer	U 160	Ks_Shape
+SHAPE	D25	U160	DIN.DIN_U	257700,3028,280	260500,3028,280	2800	ByLayer	U 160	Ks_Shape
+ERR	D26	Ks_Bolt	Object reference not set to an instance of an object.
+ERR	D27	Ks_Bolt	Object reference not set to an instance of an object.

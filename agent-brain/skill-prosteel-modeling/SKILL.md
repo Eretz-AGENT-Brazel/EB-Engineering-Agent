@@ -594,6 +594,9 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > ⭐⭐ **2. `Create()` lies in BOTH directions here.** Template + support → `create=False` **and it
 > succeeded**. Hand-built data → `create=True` **and nothing was made**. `Check()` is the usable
 > pre-flight *for this class* (1 = will create, 0 = won't) — but only a read-back is proof.
+> ⇒ **`PsPurlinConnection` then did the same on all seven of its connections.** Three classes now:
+> `PsCreateBendPlate`, `PsCopeConnection`, `PsPurlinConnection`. **Treat `Create()` as carrying no
+> information at all** and judge every connection by reading the parts back.
 >
 > ⛔ **The support object is mandatory.** The manual's ESC route — *"just enter ESC instead of
 > selecting a second shape"*, a notch at the shape end — gives `Check()=0` and creates nothing,
@@ -628,6 +631,39 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > uses the Architectural Desktop modeller, not ACIS, so *"there will be **no errors, but nothing
 > will happen**"*. Use `PS_ADD` / `PS_SUB` (or `PsCutObjects`), never `UNION`/`SUBTRACT`.
 > `PS_ADD` takes the parts-list data of the **first** part clicked; `PS_SUB` **deletes** the tools.
+
+> ## 🏠 PURLINS (B.22, measured 09/08)
+> `PsPurlinConnection` — `SetSupportObjectId` (girder) + `SetConnectionObjectId` (purlin) +
+> optionally `SetPurlin2Id` + `SetConnectionPoint` + `Create()`. Four kinds, via **`PurlinType`**
+> (measured: `kBoltet=0 kShoe=1 kCleat=2 kShapeBased=3`), and each builds a different part:
+> `kShoe` → **`Ks_BendShape`** (a bent flat steel) · `kCleat` → `FL 100x10` · `kShapeBased` →
+> `L 120x80x8` · `kBoltet` → no part, the purlin bolts straight down.
+>
+> ⚠️ **The template NAME does not set the type.** `Default/Example-Purlinshape` carries
+> **`kBoltet`**, not `kShapeBased`. `kCleat` has no shipped template at all. Take a template and
+> set `PurlinType` yourself. ⚠️ Purlin templates are **`Default/`**, cope templates **`default/`** —
+> copy the string, never type it.
+>
+> ⭐ **A second purlin is NOT required** — a gable/end purlin works with `p2` omitted. (The plugin
+> used to refuse; that was an assumption, not a measurement.)
+>
+> ⚠️⚠️ **`WeldToSupportShape` defaults to False**, so a `kCleat` off `Default/Standard` gives a
+> plate bolted to the purlins and fixed to the girder by **nothing** — Amir's "חופש" defect. Set it
+> to 1 and four **`Ks_WeldFlag`** objects appear at the plate footprint. They are created even with
+> **`weldStyleCount = 0`**: weld objects do not need weld styles to exist.
+>
+> ⚠️⚠️ **`kBoltet` drills more holes than it bolts** — a full 2×2 girder field (4 holes) and
+> **one bolt per purlin**. The bolted positions are the flange-only passages (8.82 deep); the
+> holes drilled clean through the section (160 deep) are never filled. Ruled out: my geometry
+> (collinear *and* lapped behave the same) and grip length (U160/U100/U80 identical). The other
+> three types are balanced. ⇒ **Audit hole count against bolt count after every purlin connection.**
+
+> ## ⚠️ `dumpmodel` IS BLIND TO BOLTS AND PLATES — USE COM
+> It reports `plates=0 bolts=0` with hundreds of `ERR … Object reference not set` rows. A
+> conclusion drawn from it ("no bolts here") was wrong. `doc.HandleToObject(h).InsertPoint` bound
+> **152 of 152** `Ks_Bolt` with zero failures.
+> ⇒ **An instrument that reports zero must be shown to report non-zero somewhere before its zero
+> is believed.** Run it against a region where the thing is known to exist.
 
 > ## ⚠️ NEVER ASSEMBLE A SECTION KEY — SEARCH FOR IT
 > `name="HEB300"` → `create=False`, census unchanged, **no exception**. The real DIN key is
