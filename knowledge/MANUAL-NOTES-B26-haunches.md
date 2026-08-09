@@ -119,3 +119,64 @@ instantly which way a member is turned.
 *"Reach for the connection class before building a detail out of B.14/B.15 primitives."*
 The eaves was hand-rolled three times — plate + drill + bolt — and produced 0 bolts every time.
 `conn kind=endplate` produced the whole corner, correctly drilled and bolted, on the first call.
+
+---
+
+# AMIR'S THREE CORRECTIONS — and what each one taught
+
+*"1. המסגרת ריתוך לא עשתה טוב בכלל… 2. הפלטה בין 2 הקורות צריכה להיות ממורכזת יותר… לא אמורים
+להיות חורים בפלאנגים של העמודים שאין בהם מפגש חיבור… וגם נדרש לרווח יותר את הברגים."*
+
+## 1. The welded eaves was never a connection at all
+
+The rafter's **sloped** end met the column's **vertical** face along a line, and the column stopped
+at 5000 while the rafter reaches 5250 there — so the top flange overhung into thin air.
+
+**Fixed:** columns run to **5250** (the rafter's top at the face); the rafter is drawn *into* the
+column and then `cutat` trims the surplus, so its end butts **flat** on the flange —
+B.12's *"the shorter section is always cut off"*, measured **3228.944 → 3137.497**. Stiffeners
+opposite both rafter flanges, welded.
+
+## 2. Stray holes in flanges with no connection — and why they could not be erased
+
+Each frame-B column carried **8** holes: 4 real Ø18 on the inner flange from the end-plate
+connection, and **4 Ø22 on the OUTER flange** left by a failed blind-drill probe.
+⚠️ **Holes cannot be removed once drilled**, so a probe that misses leaves permanent damage.
+⇒ **Probe on a throwaway member, never on the real one** — and if a probe does land on a real part,
+the part must be rebuilt.
+
+## 3. Bolt spacing — and a template that fixes it
+
+The end-plate connection put its two rows **50 mm** apart. ⚠️ `nv` / `dv` / `nh` / `dh` **do not
+land** — the connection uses its **template's** layout, the same "values that never arrive" seen on
+the base plate and the purlin. So the fix is to choose the right template, not to pass numbers.
+
+Measured across the seven shipped end-plate templates:
+
+| template | result |
+|---|---|
+| `default/Standard` (200 tall, 2 rows) | rows **50 mm** apart — too tight |
+| `example/example4` (340 tall) | 6 parts, **no holes in the column** |
+| ⭐ **`example/example3`** (nV=3, `stiff=True`) | **16 parts**, 3 rows at z = 4595.8 / 5042.5 / 5222.5 — **spread 627 mm**, and it brings its own stiffeners |
+
+⇒ **A real moment eaves: rows near the bottom flange, at mid-height and near the top flange.**
+The apex plate was re-centred **on** the ridge (it had sat 120 below) with its bolts **260** apart.
+
+## ⚠️⚠️ Deleting a connection's PARTS does not delete the CONNECTION
+
+After purging the orphaned plates and bolts, re-running the eaves reported **`parts +0`**: the
+**logical link survived** its own products, so ProSteel believed the joint was still there.
+⇒ **To rebuild a connection, rebuild the members** — or remove the link explicitly. Clearing the
+geometry alone leaves an invisible joint that blocks the next attempt.
+
+⚠️ And the source of those orphans: a template comparison built connections on a throwaway column
+and rafter **at the same coordinates**, then deleted only the column and rafter. **A connection's
+products outlive the members they were made for.**
+
+## Final state
+
+| | FRAME A — welded, x=330000 | FRAME B — bolted, x=346000 |
+|---|---|---|
+| apex | mitred on the bisector, one call cuts both | plates centred on the ridge, 4/4 holes, **4 bolts**, 260 apart |
+| eaves | rafter trimmed flat to the flange, 8 stiffeners welded | `example/example3` — 16 parts/side, **3 bolt rows spread 627 mm** |
+| columns | to 5250, `rot=90` (strong axis in the frame plane) | same, and **0 stray holes** |
