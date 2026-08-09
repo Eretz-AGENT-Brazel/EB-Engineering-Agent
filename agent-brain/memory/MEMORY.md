@@ -26,3 +26,4 @@
 - [Consult before widening](consult-before-widening.md) — ⚡ יוזמה מבורכת, הרחבת גבולות המשימה בלי אישור לא. לשאול בשורה אחת לפני שיוצאים לדרך
 - [Rolled plates — parked](rolled-plates-parked.md) — ⏸️ לייצר פלטות מגולגלות ב-ProSteel, פיתוח נפרד ביחד עם אמיר. מה שכבר ידוע מה-API (לא נמדד)
 - [Self-drilling screws](self-drilling-screws.md) — ⚡ בורג בלי חור לגיטימי רק כ"בורג קודח", ורק כשאמיר מצהיר. לעולם לא ביוזמתי
+- [PSN macro assemblies](psn-macro-assemblies.md) — ⚡ 62 assemblies של Connection Center מעבר ל-ProStructuresNet (ייצוב, גאסטים, מדרגות, מעקות) · כולן אינטראקטיביות · שחזור מסשן תקוע = ENTER ולא ESC
