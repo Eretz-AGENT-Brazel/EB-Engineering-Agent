@@ -735,6 +735,42 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > ⇒ **An instrument that reports zero must be shown to report non-zero somewhere before its zero
 > is believed.** Run it against a region where the thing is known to exist.
 
+> ## ⚠️⚠️ A HOLE'S DEPTH TELLS YOU WHERE IT REALLY WENT (B.26, measured 09/08)
+> **The drill places holes by the HOST'S geometry, not at the point you pass.** Aiming at an
+> HE300B's flange three different ways gave: an **11 mm** hole on the column **axis** (that is the
+> *web*), a **300 mm** hole clean through both flanges after `rot=90`, and — via
+> `drillspecial kind=blind` — a 19 mm hole on the **far** flange. Each time the mating plate's holes
+> ended 160–310 mm away, so `boltparts` created nothing **and its Gap-distance message was right**.
+> ⇒ **Always read hole coordinates and DEPTH back before bolting.** Depth is also a free
+> section-orientation probe: web thickness vs flange thickness says instantly which way a member
+> is turned — that is how a portal whose columns were bending about their **weak axis** was caught
+> (`rot=90` fixed it).
+> ⇒ And grip: a 300 mm through-hole + 20 mm plate asks for a **320 mm** grip, outside every style's
+> window (B.15). Zero bolts, silently.
+>
+> ⭐⭐ **The lesson underneath: use the connection class.** The eaves of a bolted portal was
+> hand-rolled three times from plate+drill+bolt and gave **0 bolts every time**.
+> `conn kind=endplate` (`PsStandardPlateConnection`) built the whole corner — end plate, 4 holes in
+> the column, **4 bolts at a 55 mm grip** — on the first call. This file already said *"reach for
+> the connection class before building a detail out of B.14/B.15 primitives"*; it cost three
+> rebuilds to relearn it.
+
+> ## 🏗 HAUNCHES (B.26, measured 09/08)
+> `PsHaunchConnection` + `PsHaunchLinkDataMgd`: `Length` · `TopHeight` · `BaseHeight` ·
+> `WebThickness` · `Slope` · `IsConical`/`ConicalWidth` · **`IsBottomTrain`** (the frame-corner
+> case: no top flange) · `IsCopedShape`/`CopedHeight` · `SizeDependsToConnected` ·
+> `StiffenerAtSupport`/`StiffenerAtConnected` (⭐ these take **B.16 stiffener templates**) ·
+> **`XAxis`/`YAxis`/`InsertPoint`**.
+>
+> ⛔⛔ **The shipped template carries a ZERO PLANE** (`X=0,0,0 Y=0,0,0`). Passing it through
+> **stretched both rafters of a portal to ~317,000 mm**, across the whole drawing into another
+> band 300 m away — `create=True`, no error. **Always set `XAxis`/`YAxis` explicitly.** With the
+> frame's real plane the rafter was untouched (3162.278 → 3162.278).
+> ⇒ **Any op that can resize an existing member needs a blast guard**: measure the length before
+> and after and shout. A destructive operation must never fail quietly.
+> ⛔ Even with the plane right, the haunch's parts build at the **support's origin**, not at the
+> connection point — `SetConnectionPoint`/`InsertPoint` do not move them.
+
 > ## 🔺 BRACING: ONE CLASS, TWO CHAPTERS, THIRTEEN REFUSALS (B.24 + B.25, measured 09/08)
 > `PsBracing` serves **both** — it carries **`setDynamicStatus(bool)`**, and that flag *is* the
 > difference between B.24 (dynamic, reacts to changes) and B.25 (static, doesn't). There is no

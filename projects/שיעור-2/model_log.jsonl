@@ -1182,3 +1182,6 @@
 {"op": "miter", "args": {"cut": "C10", "other": "C11", "type": "1", "dwg": "B08-insert-shapes.dwg"}, "handle": null, "ts": "13:35:38"}
 {"op": "miter", "args": {"cut": "C11", "other": "C10", "type": "1", "dwg": "B08-insert-shapes.dwg"}, "handle": null, "ts": "13:35:38"}
 {"op": "miter", "args": {"cut": "C37", "other": "C38", "type": "0", "dwg": "B08-insert-shapes.dwg"}, "handle": null, "ts": "13:37:03"}
+{"op": "miter", "args": {"cut": "FE8", "other": "FE9", "type": "1", "dwg": "B08-insert-shapes.dwg"}, "handle": null, "ts": "16:23:28"}
+{"op": "miter", "args": {"cut": "1030", "other": "1031", "type": "1", "dwg": "B08-insert-shapes.dwg"}, "handle": null, "ts": "16:25:31"}
+{"op": "miter", "args": {"cut": "104C", "other": "104D", "type": "1", "dwg": "B08-insert-shapes.dwg"}, "handle": null, "ts": "16:25:34"}
