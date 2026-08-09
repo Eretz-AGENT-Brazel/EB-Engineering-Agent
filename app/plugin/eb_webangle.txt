@@ -1,0 +1,6 @@
+﻿templateCount=3
+[0] default/Standard  pos=0 turn=False flat=False nVert=2 nConn=2 nSup=1 dia=16 workloose=2 boltStyle='8.8S' boltCRC=-401163854 gap=0 sideOff=0 vertOff=0 fromEdge=False fromDown=False fromHole=False cope=False group=False eachAngle=False shear=0/0/0 moment=0/0/0
+[1] AutoConnect Metric v 18/3 Bolt  pos=0 turn=False flat=False nVert=3 nConn=1 nSup=1 dia=16 workloose=2 boltStyle='DIN7990' boltCRC=-1614854285 gap=0 sideOff=0 vertOff=75 fromEdge=True fromDown=False fromHole=True cope=True group=True eachAngle=False shear=0/0/0 moment=0/0/0
+[2] AutoConnect Metric v 18/2 Bolt  pos=0 turn=False flat=False nVert=2 nConn=1 nSup=1 dia=16 workloose=2 boltStyle='DIN7990' boltCRC=-1614854285 gap=0 sideOff=0 vertOff=75 fromEdge=True fromDown=False fromHole=True cope=True group=True eachAngle=False shear=0/0/0 moment=0/0/0
+
+DAST plateDataCount=0
