@@ -735,6 +735,35 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > ⇒ **An instrument that reports zero must be shown to report non-zero somewhere before its zero
 > is believed.** Run it against a region where the thing is known to exist.
 
+> ## 🔺 BRACING: ONE CLASS, TWO CHAPTERS, THIRTEEN REFUSALS (B.24 + B.25, measured 09/08)
+> `PsBracing` serves **both** — it carries **`setDynamicStatus(bool)`**, and that flag *is* the
+> difference between B.24 (dynamic, reacts to changes) and B.25 (static, doesn't). There is no
+> separate static class.
+> ⭐ **`insert(Origin, X_axis, Y_axis)` takes the plane AS ARGUMENTS** — it does not read the active
+> UCS. That is why setting the UCS never helped: the plane was already a parameter.
+> ⛔ **Thirteen configurations now refuse** — six in B.24 (shape type, two catalogue spellings,
+> `recalcPoints`, minimal, UCS) and seven in B.25 (static, static+layout, static+welded,
+> static+no-gussets, static+shorten, dynamic control, wrong-plane control). `insert()` = False,
+> census unchanged, every time. **The integrated command is interactive. Stop trying.**
+>
+> ✅ **Build it by composition instead — the manual explicitly permits it:** *"it is possible as
+> well to generate single components such as gusset plates, etc. individually."* SINGLE ROD → a
+> shape · DRILL ROD → `PsDrillObject` · PLATE AUTO → a gusset plate · bolts → **drill, then bolt the
+> pair**. A full braced bay built this way at x=310000: 2/2/2 holes-and-bolts at all four ends.
+>
+> ⭐ **Two details only the dialog knows.** `Bracing Rod` (`setShapeShorting`) — *"the value by which
+> the rod is **shortened** after insertion. **Thus the rod will be kept in tension**"*: cut it short
+> on purpose. And `Rod Position` **Front / Rear** (`setLayout`: `kAtFront, kAtBack, kCrossed,
+> kCentered, kDoubled, kButterFly, kQuatro`) staggers crossing rods so they do not collide.
+> ⭐ `Weld Bracing` (`setWeldStatus`) suppresses **all** drilling because there are **no bolts** —
+> the gussets are still sized *as if* there were. Not an iron-rule exception; a joint with nothing
+> to bolt.
+>
+> ⚠️ **Place bracing holes INWARD from the rod end, never symmetrically about the work point.**
+> Spreading them ±70 about the corner put one of each pair past the end of the rod: gusset 2 holes,
+> rod 1, **1 bolt — an unfilled hole**. The Edge Distance page is the recipe: `Edge–1st Hole`, then
+> `Hole–Hole` along the rod. (And holes cannot be removed — fixing it meant rebuilding the parts.)
+
 > ## ⭐⭐ THERE ARE 62 `PSN_*` MACRO ASSEMBLIES — THE CONNECTION CENTER'S OWN (found 09/08)
 > `…\ProStructures Ss6 R1\AutoCAD 2015\Prg\PSN_*.dll` — a whole surface beyond `ProStructuresNet.dll`,
 > and it holds exactly what has been blocking this project: **`PSN_HollowShapeBracing`** (B.24),
