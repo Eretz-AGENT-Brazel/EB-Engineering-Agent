@@ -75,6 +75,10 @@ plus `app\eb_shot.py` (screenshots) and `app\eb_log.py` (the command-line channe
 
 | op | what it does | verified |
 |---|---|---|
+| **`boltinfo`** | B.15 — the bolt style/type tables via **`get_BoltStyleName(int)`**, the indexer the dump hides | ✅ 27 styles, 27 types |
+| **`boltsingle`** | B.15.1 manual insertion **by grip length**: `from`/`to`/`dia`/`style`/`addlen` | ✅ 40 mm grip → a 65 mm bolt |
+| **`nutonly`** | B.15.1 — a nut/washer with **no bolt**: `from`/`to`/`dia`/`style` | ✅ |
+| **`threadedrod`** | B.15.3 — `from`/`to`/`dia`/**`offset`**/`style`. Offset projects at **both** ends | ✅ 600 + 2×30 = 660 |
 | **`bracing`** | **B.24 `PS_VERBAND`.** `p1`/`p2` the system line · **`host1`/`host2`** the two shapes (`setBorderObjects`) · `type=NormBracing\|RodBracing\|PipeBracing` · `layout=` the manual's *Shape Position* · `cat`/`size`/`shapetype` · `platethick`/`platewide`/`plateside` · `cross` `sym` `welded` `nogussets` `group` `dynamic` `centerhole` `divideall` · `nprof`/`ncross`/`holeedge`/`holehole`/`holecross`/`dm`/`play`. Prints a **read-back before `insert()`** so a config failure is told apart from a creation failure | ⛔ **`insert()` false** in 5 configurations; setters verified working |
 | **`weldstyles`** | Lists `PsCreateWeldFlag`'s style table. ⚠️ returns **0** while the object-style probe reports **4** weld styles | ⚠️ reads empty |
 | **`weld`** | `from=`/`to=` the seam line · `style` `thick` `sign` `len` `roundabout` `onsite` `row` · **`makeweld=1`** asks for the weld and not only the flag | ⛔ **`Create()` returns false** in every variant tried — welds appear only as a by-product of a connection class (B.21 splice → 32 `Ks_WeldFlag`) |

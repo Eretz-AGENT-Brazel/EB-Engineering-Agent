@@ -376,6 +376,44 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > has no creator because it is not a standalone object — it is something a bracing *has*. But that
 > route is not reachable from code either, so a gusset stays dialog-only for now.
 
+> ## 🪛 A BOLT WITH NO HOLE IS A SELF-DRILLING SCREW — AND ONLY AMIR DECLARES IT
+> Amir, 09/08: *"זה נקרא **בורג קודח**… בורג שקודחים אותו לתוך הפרופיל מבלי לקדוח חור בטרם
+> ההחדרה… חיבור שמתבצע בדרך כלל **בשטח**… ממדלים אותו **על מנת להבין כמה ברגים אנחנו צריכים
+> להזמין** וכדי שהפרט הזה **לא יחמוק מאיתנו**."*
+> A self-drilling screw cuts its own hole, so its missing hole is **correct**, not an omission.
+> ⚠️ **In the model the two cases look identical** — a bolt with no hole. Only the intent differs.
+> ⇒ The standing rule (a bolt through steel without a modelled hole is a **critical error**) still
+> holds for ordinary bolts. The self-drilling case is the single exception, and
+> **"אני רוצה שנגדיר את זה רק באישור של מי שממדל איתך — כלומר הממדל האנושי."**
+> **Never create one on your own initiative, and never use one to paper over a failed bolting.**
+> If a situation looks like it wants a self-drilling screw — **ask in one line.**
+
+> ## 🔩 B.15 SETTLES THE BOLTING SEQUENCE (measured 09/08)
+> The manual says components no longer have to be drilled first. **Not from this API.** Two
+> overlapping plates with zero holes → `boltparts` gives `holesOnParts=0 create=False`. The same
+> pair drilled first gives 2 holes and 2 bolts.
+> ⇒ **`PsCreateBolt.AddObject + Create()` requires existing holes.** Amir's sequence — DRILL,
+> then pick the two parts — is not merely his habit, it is **the only route available to code**.
+>
+> Three routes worth knowing, all working, all taking the style **by name**:
+> `CreateSingleBolt(start,end,dia,style,addLen)` — by **grip length** ·
+> `CreateSingleNut(...)` — a nut/washer with **no bolt** ·
+> `CreateThreadedRod(start,end,dia,offset,style)` — offset projects at **both** ends
+> (600 span + 2×30 measured as 660).
+>
+> ⚠️ **`BoltStyle`, `BoltType`, `Diameter` are WRITE-ONLY** — the dump shows plain properties,
+> the compiler says no getter. And **`BoltStyleName` is INDEXED**: `get_BoltStyleName(int)`, the
+> enumeration route, invisible in the dump. Third case today after `get_ParentFlangeIndex(int)`
+> and `get_WeldStyleName(int)`. ⭐ **When a `String`/`Int32` property looks like it should be a
+> list, try the indexer.**
+>
+> ⭐ And the two numbers that decide whether a bolt forms at all:
+> **`MaxObjectDistance` = the dialog's `Gap distance`** — *"the maximum distance between two holes
+> assumed to belong to the bolting; if exceeded the holes cannot be bolted"* — and
+> **`MaxDeclination` = `Angle difference`** — *"if exceeded, the holes don't align"*.
+> ⚠️ One error message, two causes: a missing style and out-of-range holes read the same. Check
+> the geometry, not the last thing that broke.
+
 > ## 🕳️ THE DRILL PICKS A FLANGE BY PARAMETER, NOT BY YOUR POINT (measured 09/08)
 > Two identical end-plate connections, one at each end of the same beam. One bolted, one refused
 > — while **both reported 6 holes on the plate and 6 on the column**. Reading the hole

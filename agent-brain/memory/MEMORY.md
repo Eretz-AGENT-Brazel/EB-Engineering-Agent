@@ -25,3 +25,4 @@
 - [Section variety](section-variety.md) — ⚡ הרגל עבודה מ-07/08: לגוון פרופילים מתוך 357 הקטלוגים; מפתח חתך = מחרוזת אטומה, לחפש ולא להרכיב
 - [Consult before widening](consult-before-widening.md) — ⚡ יוזמה מבורכת, הרחבת גבולות המשימה בלי אישור לא. לשאול בשורה אחת לפני שיוצאים לדרך
 - [Rolled plates — parked](rolled-plates-parked.md) — ⏸️ לייצר פלטות מגולגלות ב-ProSteel, פיתוח נפרד ביחד עם אמיר. מה שכבר ידוע מה-API (לא נמדד)
+- [Self-drilling screws](self-drilling-screws.md) — ⚡ בורג בלי חור לגיטימי רק כ"בורג קודח", ורק כשאמיר מצהיר. לעולם לא ביוזמתי
