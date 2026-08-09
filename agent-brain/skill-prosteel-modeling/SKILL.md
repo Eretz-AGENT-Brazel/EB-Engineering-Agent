@@ -735,6 +735,27 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > ⇒ **An instrument that reports zero must be shown to report non-zero somewhere before its zero
 > is believed.** Run it against a region where the thing is known to exist.
 
+> ## 🧊 SOLIDS ARE REAL PARTS (B.10, measured 09/08)
+> **`Bentley.ProStructures.Steel.Primitive.PsCreatePrimitive`** — the whole chapter in one class:
+> `CreateBox` · `CreateSphere` · `CreateCylinder` · `CreateCone(startR,endR,H)` ·
+> `CreateTorus(outer,inner,length)` · ⭐ **`CreateConicPipe`** · ⭐⭐ **`CreateRect2Circle`** ·
+> `CreateRotation` · `CreateHull` · ⭐ `CreateExtrusion(height, **taper**, **twist**)` — taper and
+> twist are undocumented. Plus `SetInsertPoint` · `SetNormal` · **`SetXYPlane(X,Y)`** · `SetPolygon`
+> · `SetPoints` · `ObjectId`. Every creator returns **Void**: read `ObjectId` and the census.
+> ⇒ **`RECT2CIRCLE` and `CONICPIPE` are EB's own trade** — round-to-square transitions and conical
+> pipes are hoppers, chutes and tank outlets. Both build, at exact sizes.
+> ✅ **A solid is a real ProSteel object**: the box drilled cleanly, 0 → 1 hole, and the manual says
+> they detail as normal component parts.
+>
+> ⭐ **`CreateTorus`'s third argument (`length`) is undocumented AND mandatory** — `length = 0`
+> creates nothing, silently; any positive value works.
+> ⭐⭐ **`SetPolygon` takes LOCAL 2D coordinates, not world.** A polygon fed in world coordinates
+> (x ≈ 370000) produced a **5120 × 5552** extrusion instead of 600 × 400; the same shape as
+> `-300,-200 … 300,200` measured **600 × 400 × 700** exactly. This is very likely why
+> `CreateRotation` refuses too — it also takes a polygon.
+> ⭐ And B.10 gives the REASON behind B.12.7's silent-failure warning: ProSteel's modeller is not
+> ACIS because its own *"works faster and produces smaller graph files"*.
+
 > ## 🔗 THE CONNECTION EDITOR (B.27, measured 09/08)
 > ✅ **`PsEditLogicalLink.RemoveLogicalLinkByNumber(n, DeleteParts)` — this is how you delete a
 > connection.** B.26 cost several rebuilds because deleting a connection's *parts* leaves the
