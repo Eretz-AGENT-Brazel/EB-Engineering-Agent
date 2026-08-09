@@ -388,12 +388,11 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > default and it is absolute.
 >
 > Amir reinforced it the same day, and it gets **stricter**, not looser:
-> *"**קל וחומר כשמדובר על מחברים קונסטרוקטיביים.** אין כאן משחקים — **בורג מגיע רק עם חומר
+> *"**קל וחומר כשמדובר על מחברים קונסטרוקטיביים.** אין כאן משחקים — **בורג מגיע רק עם חור
 > באלמנטים שהוא עובר ומחבר דרכם**. **אך ורק בהינתן הוראה חריגה ואישור מיוחד** ממודל בורג שאין לו
 > חור מותאם."*
-> 1. ⭐ **"with MATERIAL", not "with a hole".** The bolt's line must cross **real steel in every
->    element it joins**. A bolt hanging in air, or one whose axis misses a part, is wrong even if
->    some hole exists somewhere.
+> 1. ⭐ **A hole in EVERY element the bolt passes through** — his wording is plural. A hole in one
+>    of the parts is not enough; each part the bolt joins needs its own.
 > 2. ⭐ **In a structural connection there is no exception at all** — that one carries load.
 > 3. ⭐ The exception needs **BOTH an exceptional instruction AND special approval**, per case.
 >    Not a mention, not context, not inference from an earlier conversation.

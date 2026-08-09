@@ -24,11 +24,11 @@ count reaches the parts list and the detail is not lost.
 **A bolt through steel with no modelled hole is a CRITICAL ERROR. Full stop.**
 
 Reinforced the same day, and it tightens rather than relaxes: *"קל וחומר כשמדובר על מחברים
-קונסטרוקטיביים. אין כאן משחקים — **בורג מגיע רק עם חומר באלמנטים שהוא עובר ומחבר דרכם**. אך ורק
+קונסטרוקטיביים. אין כאן משחקים — **בורג מגיע רק עם חור באלמנטים שהוא עובר ומחבר דרכם**. אך ורק
 בהינתן **הוראה חריגה ואישור מיוחד** ממודל בורג שאין לו חור מותאם."*
-⇒ **"with material", not "with a hole"** — the bolt's line must cross real steel in every element
-it joins. **In a structural connection there is no exception at all.** And the exception needs
-**both an exceptional instruction and special approval**, per case. The two cases look
+⇒ **A hole in EVERY element the bolt passes through** — the wording is plural; one hole among the
+parts is not enough. **In a structural connection there is no exception at all.** And the
+exception needs **both an exceptional instruction and special approval**, per case. The two cases look
 **identical in the model**; only the intent differs, and the intent is not the agent's.
 **A self-drilling screw is a declaration Amir makes, not a category the agent may apply.
 Silence means critical error.** Amir's sequence — DRILL, then pick the two parts — remains the
