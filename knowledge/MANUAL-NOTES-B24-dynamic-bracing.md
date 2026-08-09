@@ -184,10 +184,26 @@ accepts and holds its configuration; only the creation step refuses.
 The system line was checked against the frame: it runs from `190150` — the left column's face — to
 `193850` — the right column's face, so both endpoints sit on their host shapes.
 
-⚠️ **Not tried, deliberately:** the manual insists the **UCS must be placed over the bracing
-plane** before the command. `UCS` is not on the plugin's command allowlist, and widening a safety
-control to test a hypothesis is not a decision to take alone. That remains the most likely
-missing precondition and is the first thing to try next.
+### The UCS hypothesis — tested and REFUTED
+
+The manual insists the **UCS must be placed over the bracing plane** before the command, which was
+the leading suspect. Amir approved the change; it was then implemented through the managed
+`Editor.CurrentUserCoordinateSystem` rather than the command line, so nothing can be left pending,
+with the restore in a `finally` block so a crash cannot leave the frame rotated.
+
+Result, in one line:
+
+```
+ucsSetToPlane   insert()=False   ucsRestored
+```
+
+⇒ **The UCS was not the missing precondition.** The frame was genuinely set on the bracing plane,
+`insert()` still refused, and the frame came back. Verified afterwards from the drawing itself:
+`UCSORG (0,0,0)`, `UCSXDIR (1,0,0)`, `UCSYDIR (0,1,0)` — **back at World**.
+
+Six configurations now tested. `PsBracing.insert()` does not create from code under any condition
+that could be constructed. `UCS` stays on the allowlist — it was approved on its merits and is
+useful elsewhere — but it did not solve this.
 
 ## The pattern this completes
 

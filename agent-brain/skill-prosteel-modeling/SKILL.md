@@ -362,9 +362,15 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > before `insert()`** returned exactly what had been written (`cat`, `size`, `shapeType`). The
 > setters work; only the creation step refuses. Without that read-back the natural guess would
 > have been a bad section key, and hours would have gone into it.
-> ⚠️ Still untried on `PsBracing`: the manual insists the **UCS must be over the bracing plane**
-> first. `UCS` is not on the plugin's command allowlist — **do not widen a safety control to test
-> a hypothesis**; ask.
+> ⛔ **The UCS hypothesis is REFUTED.** The manual insists the UCS must be over the bracing plane;
+> Amir approved adding `UCS` to the allowlist, but the fix was then implemented through the
+> managed `Editor.CurrentUserCoordinateSystem` — no command line, nothing left pending — with the
+> restore in a `finally` so a crash cannot leave the frame rotated. Result:
+> `ucsSetToPlane insert()=False ucsRestored`, and the drawing confirmed `UCSORG (0,0,0)` after.
+> **Six configurations tested; `PsBracing.insert()` never fires.**
+> ⭐ Two things worth keeping from this: **ask before widening a safety control** (Amir approved
+> in one line), and then **prefer the managed property over the command line** — it is safer than
+> what was asked for, and the `finally` makes the restore unconditional.
 >
 > ⭐ **B.24 answers B.23:** *"The entire bracing **including gusset plate** is generated."* A gusset
 > has no creator because it is not a standalone object — it is something a bracing *has*. But that
