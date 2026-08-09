@@ -18,11 +18,14 @@ A **self-drilling screw** cuts its own hole as it goes in. Its missing hole is t
 **correct**, not an omission — and it is normally a **site** connection. It is modelled so the
 count reaches the parts list and the detail is not lost.
 
-⚠️ **The two cases look identical in the model:** a bolt with no hole. Only the intent differs.
-⇒ **A boltless hole is never the agent's decision.** The standing rule that a bolt through steel
-without a modelled hole is a critical error still holds for ordinary bolts; the self-drilling case
-is the one exception and **only Amir declares it**. Amir's own sequence — DRILL, then pick the two
-parts — remains the default and is the only route the API offers anyway.
+⚠️⚠️ **The rule has not changed.** Amir, immediately after the wording above went loose:
+*"זה טעות קריטית לחלוטין **למעט מקרה אחד בודד**… **כל עוד לא נאמר — זה טעות קריטית**."*
+
+**A bolt through steel with no modelled hole is a CRITICAL ERROR. Full stop.** The two cases look
+**identical in the model**; only the intent differs, and the intent is not the agent's.
+**A self-drilling screw is a declaration Amir makes, not a category the agent may apply.
+Silence means critical error.** Amir's sequence — DRILL, then pick the two parts — remains the
+default, and is the only route the API offers anyway.
 
 ## What the command actually does
 

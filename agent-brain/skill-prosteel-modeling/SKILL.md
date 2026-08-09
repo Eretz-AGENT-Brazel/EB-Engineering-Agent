@@ -381,12 +381,16 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > ההחדרה… חיבור שמתבצע בדרך כלל **בשטח**… ממדלים אותו **על מנת להבין כמה ברגים אנחנו צריכים
 > להזמין** וכדי שהפרט הזה **לא יחמוק מאיתנו**."*
 > A self-drilling screw cuts its own hole, so its missing hole is **correct**, not an omission.
-> ⚠️ **In the model the two cases look identical** — a bolt with no hole. Only the intent differs.
-> ⇒ The standing rule (a bolt through steel without a modelled hole is a **critical error**) still
-> holds for ordinary bolts. The self-drilling case is the single exception, and
-> **"אני רוצה שנגדיר את זה רק באישור של מי שממדל איתך — כלומר הממדל האנושי."**
-> **Never create one on your own initiative, and never use one to paper over a failed bolting.**
-> If a situation looks like it wants a self-drilling screw — **ask in one line.**
+>
+> ⚠️⚠️ **THE RULE HAS NOT CHANGED.** Amir sharpened this the moment the wording went loose:
+> *"זה טעות קריטית לחלוטין **למעט מקרה אחד בודד**… **כל עוד לא נאמר — זה טעות קריטית**."*
+> **A bolt through steel with no modelled hole is a CRITICAL ERROR. Full stop.** That is the
+> default and it is absolute.
+> **A self-drilling screw is not a category the agent may apply — it is a declaration Amir makes**,
+> case by case. The two look **identical in the model**; only the intent differs, and the intent
+> is not mine. **Silence means critical error.**
+> ⇒ Never create one on my own initiative. Never use one to paper over a failed bolting. If a
+> situation looks like it wants one — **ask in one line.**
 
 > ## 🔩 B.15 SETTLES THE BOLTING SEQUENCE (measured 09/08)
 > The manual says components no longer have to be drilled first. **Not from this API.** Two
