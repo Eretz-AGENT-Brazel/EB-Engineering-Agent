@@ -735,6 +735,25 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > ⇒ **An instrument that reports zero must be shown to report non-zero somewhere before its zero
 > is believed.** Run it against a region where the thing is known to exist.
 
+> ## 🗂 FIVE INDEPENDENT WAYS TO CLASSIFY A PART (B.5, measured 09/08)
+> All four of B.5's systems are one field each on **`PsObjectProperties`**, and the layer is a
+> fifth axis on top:
+> `Visible` (Hide / Regenerate) · `DisplayClass` · `AreaClass` · `FamilyClass`
+> (+ `UpdateFamilyClass(objId, index)`, `DetailStyleId`, `DontDetailFlag`).
+> **A part sits in exactly one of each** — assigning it to another class removes it from the first.
+>
+> ⭐⭐ **Part families are already in use — by the software.** Audit of 839 parts: everything a
+> **connection class** generated carries a `FamilyClass` (banded 100s / 200s / 300s / 400s by
+> connection kind); everything built **by hand** carries **`-1`**. Family class is what drives the
+> **position-number prefix**, so hand-built parts are outside the numbering scheme until assigned.
+> ⚠️ `DisplayClass` and `AreaClass` were **0 everywhere** — nothing had ever been structured.
+>
+> ⭐ **`AreaClass` is the right home for a construction section, a delivery lot or an assembly** —
+> B.5.4 says outright it is a *selection and sorting criterion during the detailing process*.
+> Measured: 324 parts assigned across ten bands, 0 failures, all confirmed by read-back.
+> ⚠️ B.5.2's Regenerate is **not** AutoCAD's — AutoCAD's does not reactivate hidden parts, and
+> **a parts list hides every processed part on purpose**, so Regenerate is how you get them back.
+
 > ## 🎨 LAYERS: THE AUTOMATIC CONTROL FOLLOWS THE COMMAND, NOT THE OBJECT (B.1, measured 09/08)
 > ProSteel puts each object on its own layer — but only when the object is made by the shape
 > creator or a connection class. **A direct `Ps*Create*` call drops its part on whatever layer is
