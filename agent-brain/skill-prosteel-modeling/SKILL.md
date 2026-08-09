@@ -735,6 +735,36 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > ⇒ **An instrument that reports zero must be shown to report non-zero somewhere before its zero
 > is believed.** Run it against a region where the thing is known to exist.
 
+> ## ⭐⭐ THERE ARE 62 `PSN_*` MACRO ASSEMBLIES — THE CONNECTION CENTER'S OWN (found 09/08)
+> `…\ProStructures Ss6 R1\AutoCAD 2015\Prg\PSN_*.dll` — a whole surface beyond `ProStructuresNet.dll`,
+> and it holds exactly what has been blocking this project: **`PSN_HollowShapeBracing`** (B.24),
+> **`PSN_DualGusset`** / `PSN_WraparoundGusset` (B.23), `PSN_BasePlate`, **`PSN_STAIRS`** (50 types),
+> **`PSN_HANDRAIL`** (46), `PSN_Truss` (49), eight `PSN_BeamColumn*`, five `PSN_BeamBeam*`,
+> `PSN_CircularPlatform`, `PSN_CatWalk`, `PSN_RodBrace`, `PSN_PipeFlange`, …
+>
+> Their shape is nothing like the `Ps*` classes:
+> ```
+> UserConnection   Create() · InitialCall() · CreateClone(ClsParameters) · Build/BuildI ·
+>                  Draw/DrawI · Edit/EditI · GetIdentifier() · GetDescription()
+> ClsParameters    SetDefaultValues(bool metric) · ReadFrom/WriteTo Connection|Clone|Template
+>                  + every dialog field as a property
+> ```
+> They instantiate, identify themselves and give real metric defaults (bracing: M20 `DIN7968`,
+> plate 10, gap 10, clearance 20). **Compile against the specific DLL to reach them.**
+>
+> ⛔ **But every entry point is INTERACTIVE.** `InitialCall()`, `CreateClone(params)` and `Create()`
+> all print *"Choose support shape"* and park the session; all three returned 0 and created nothing,
+> even with `ConnId1`/`ConnId2` pre-set to real ids.
+> ⇒ **B.24 closed: bracing is not creatable from code, by design** — `PsBracing.insert()` refuses
+> (six configurations) and the macro asks for picks. Same reasoning closes B.23's gusset, which the
+> bracing command generates and therefore inherits the interactivity from.
+>
+> ## ⚠️⚠️ RECOVERY FROM A PARKED MACRO PROMPT: **ENTER**, NOT ESC
+> A session stuck at a `PSN_*` prompt survived `eb_escape.py` ×4, PostMessage `ESC` ×6 **and real
+> `SendInput` ESC keystrokes ×5** — `ping` returned `EB_BUSY` after every one. **One ENTER cleared
+> it instantly** (at a selection prompt ENTER = "done selecting, nothing selected", so the macro
+> aborts). Add ENTER to the recovery sequence, and **never call a `PSN_*` entry point unattended.**
+
 > ## 👁 A "VIEW" IS A WORK FRAME (B.7, measured 09/08)
 > Activating a view does three things at once: **moves the UCS** onto the work plane, **points the
 > camera perpendicular** to it, and **switches on clipping planes** so everything outside the slab

@@ -281,3 +281,79 @@ on the other.
 **counts were perfect**. Only reading the coordinates found it, and only the bolts refusing raised
 the question at all. **A count is not a position.**
 ⛔ Holes cannot be removed, so the fix was to delete and rebuild the column.
+---
+
+# CLOSED 09/08/2026 — the answer is *interactive by design*
+
+The six failed `PsBracing.insert()` configurations were not a missing precondition. There is a
+second, entirely separate route, and it fails the same way for the same reason.
+
+## ⭐⭐ ProStructures ships **62 `PSN_*` macro assemblies** — a surface this project had never touched
+
+`C:\Program Files\Bentley\ProStructures Ss6 R1\AutoCAD 2015\Prg\PSN_*.dll` — 62 of them, and they
+are the **Connection Center's own connections**, i.e. the ones Amir uses from the UI. Among them,
+exactly the things that have been blocking this project:
+
+| assembly | what it is | why it matters here |
+|---|---|---|
+| **`PSN_HollowShapeBracing`** | the bracing | **B.24's blocker** |
+| **`PSN_DualGusset`**, `PSN_WraparoundGusset` | gussets | **B.23's blocker** |
+| `PSN_BasePlate` (+Chinese) | base plates | B.18 |
+| **`PSN_STAIRS`** (50 types), `PSN_STAIRSCONN` (45) | stairs | the staircase was hand-built |
+| **`PSN_HANDRAIL`** (46 types) | railings | ditto |
+| `PSN_Truss` (49) | trusses | untouched |
+| `PSN_BeamColumn*` ×8, `PSN_BeamBeam*` ×5, `PSN_*Splice` ×5 | the standard joints | |
+| `PSN_CircularPlatform`, `PSN_SquarePlatform`, `PSN_CatWalk`, `PSN_Facade`, `PSN_PipeFlange`, `PSN_RodBrace`, … | | |
+
+**Their shape is nothing like the `Ps*` classes:**
+```
+UserConnection    Create() · InitialCall() · CreateClone(ClsParameters) · Build/BuildI ·
+                  Draw/DrawI · Edit/EditI · Clean/CleanI · GetIdentifier() · GetDescription()
+ClsParameters     SetDefaultValues(bool metric) · ReadFrom/WriteTo Connection | Clone | Template
+                  + every dialog field as a property (ConnId1, ConnId2, BoltDiameter, …)
+```
+
+Measured live for the bracing macro:
+```
+identifier  = 'HollowShapeBracing'
+description = 'Hollow Shape Bracing'
+SetDefaultValues(metric=true) -> boltDia 20, boltType 'DIN7968',
+                                 plateThickness 10, gapPlates 10, clearance 20
+```
+⇒ The class instantiates, identifies itself and yields real metric defaults. It is alive.
+
+## ⛔ But all three entry points are INTERACTIVE
+
+| call | returned | what AutoCAD did |
+|---|---|---|
+| `InitialCall()` | **0** | printed *"Initializing Hollow Shape Bracing Connection. **Choose support shape**"* and parked |
+| `CreateClone(params)` | **0** | same prompt |
+| `Create()` | **ptr 0** | same prompt |
+
+`ConnId1` / `ConnId2` were set to the two real column ids first; it made no difference. Census
+stayed 723 → 723, and nothing was created in any attempt.
+
+⇒ **B.24's verdict: bracing cannot be created from code in this product, by design.** Both routes
+lead to a pick:
+- `PsBracing.insert()` (`StructuralObject`) refuses outright — six configurations, incl. the UCS
+  hypothesis, all `false`;
+- the `PSN_HollowShapeBracing` macro *starts*, then asks the modeller to choose the shapes.
+
+**This is not a gap in the agent's knowledge. It is the product's shape.** The same reasoning now
+explains B.23: a gusset is generated *by* the bracing command (*"the entire bracing including
+gusset plate is generated"*), so it inherits the same interactivity — which is why
+`PsGussetConnection` never had a creator to begin with.
+
+## ⚠️⚠️ RECOVERY: ESC does **not** clear a PSN macro prompt — **ENTER** does
+
+The session parked at *"Choose support shape"* and stayed parked through:
+- `eb_escape.py` (PostMessage ESC ×3) — ×4 attempts
+- PostMessage ESC ×6 to the foreground window
+- **SendInput** real ESC keystrokes ×5
+
+`ping` still returned `EB_BUSY` after every one. **A single ENTER cleared it immediately** — at a
+selection prompt ENTER means *"done selecting, nothing selected"*, so the macro aborts cleanly.
+
+⇒ **Add ENTER to the recovery sequence, and never call a `PSN_*` entry point unattended.** The
+model was never at risk here (saved, 723 entities before and after), but the session was unusable
+until the right key was found.
