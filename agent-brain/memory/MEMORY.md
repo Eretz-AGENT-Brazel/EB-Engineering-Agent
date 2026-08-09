@@ -1,0 +1,27 @@
+# Memory Index
+
+- [AI Development hub](ai-development-hub.md) — G: drive master spec/roadmap folder for the whole Eretz Barzel AI program (3 threads: company agents, Phase 0 done, TankForge spec)
+- [EB portal](eb-portal.md) — local "Mission Control" portal to manage the whole AI program (plan/sessions/suggestions/decisions); planned 2026-06-17, not yet built
+- [TankForge project](tankforge-project.md) — internal 3D steel-tank design platform for ארץ ברזל, with planned AI agent
+- [TankForge shell built](tankforge-shell-built.md) — phase 1 (software shell) is done; what it contains and what's next
+- [VESSELS Stage 1](vessels-stage1.md) — spec folder (now inside TankForge\) + Opus 4.8 build brief for evolving TankForge into "EB – Steel Tank Modeling Software"; key factory rules (7850 kg/m³, courses 2015mm, PREBEND, ≤3-weld junctions, HEAT numbers)
+- [Head geometry = flat](head-geometry-flat.md) — EB heads (כיפות) are FLAT lids with a bent edge, NOT dished; flat face protrudes (bendingLength − insert) beyond the shell
+- [TankForge picking/overlays](tankforge-picking-overlays.md) — recurring "click doesn't select" bug: floating panels over the 3D canvas block picks → make them click-through except controls; also raycaster ignores visibility
+- [Seam developed layout](seam-developed-layout.md) — pro plate-development drawing accounting for I.W.S/O.W.S seams (staggered TOP/BOTTOM lines); formulas + worked example (I.D 2052 → 1438/719); precursor to openings (plates CNC-cut flat then rolled)
+- [Handoff prompts](handoff-prompts.md) — end a work package with a copy-paste prompt for the NEXT model — but NOT during continuous Opus 4.8 work in the same thread (2026-07-13 correction)
+- [Standards mastery](standards-mastery.md) — Amir's directive (2026-07-13): make the EB PROSTEEL AGENT a master of EN+ת"י steel-design & loading standards and act as the company's standards consultant; deep-research + embed a consult engine
+- [Standards agent playbook](standards-agent-playbook.md) — method (from Amir's PDF) for building a steel-standards agent: the ✓/⭑/⚠ marking system, repo structure, honest-verification discipline, key cross-check flags
+- [EB PROSTEEL AGENT](acad-agent.md) — free Claude-as-brain app that drives real AutoCAD 2015 + ProSteel via type/voice/sketch/upload; in C:\Users\User\Desktop\EB PROSTEEL AGENT (launcher: EB PROSTEEL AGENT.bat). ⚡ TRIGGER: if the user says "Let's start modeling a steel structure in Prosteel" → read this memory and run the startup procedure (launch the .bat → ProSteel + console workspace) immediately. Work is discussed ONLY in the console.
+- [Per-project not universal](per-project-not-universal.md) — findings from one model are project-specific; generalize the METHOD (read+measure each model), never the numbers
+- [No silent skipping](no-silent-skipping.md) — ⚡ אין "בוצע" בלי ארטיפקט שמוכיח · תשובה מהירה למשימה ארוכה = לא עשיתי · מיפוי אינו קריאה
+- [EB business context](eb-business-context.md) — ⚡ ארץ ברזל מייצרת ולא מתכננת עומסים; הידע ההנדסי הוא ל-value engineering (לחסוך חומר מול קונסטרוקטור שמגדיל), לא לסמכות תכנון. "פרה פרה"
+- [Two axes of authority](two-axes-authority.md) — ⚡ תפעול תוכנה = התיעוד (אמור לעבור את אמיר) · נכונות לייצור = אמיר (עבר שטח, לא לתקן). היעד: להיות הממדל שלו
+- [ProStructures API surface](prosteel-api-surface.md) — ⚡ 771 טיפוסים ב-75 assemblies, אני משתמש ב-26 · המפה ב-knowledge/API-SURFACE-RAW.txt · חפש שם לפני שאתה בונה משהו ביד
+- [Anchorage findings](anchorage-findings.md) — מחקר ביסוס עמודים: 3 פערים בפרט הסטנדרטי של EB (120מ"מ = לחיצה בלבד · אין מסלול גזירה · חסרות דסקיות פלטה)
+- [Two-phase program](two-phase-program.md) — ⚡ MASTER PLAN (2026-07-29): Phase 1 = modeling skills + console API via copy-models & learning-mode lessons (open-ended); Phase 2 = standards/design-checking — LOCKED until Amir declares Phase 1 done. Charter: EB PROSTEEL AGENT\PROGRAM.md
+- [Positioning solved](positioning-solved.md) — ‏מספור פוזיציות מהקוד עובד; ⚠️ CheckTwoPartsAreEqual הוא מבחן הזהות היחיד שרואה חיתוכים (IsEqualTo מלכודת)
+- [Bolts follow holes](bolts-follow-holes.md) — ⚡ הרצף של אמיר: DRILL ואז בחירת 2 חלקים; הברגים נגזרים מהחורים. מקור 400 כשלי הברגים = השימוש במסלול הידני
+- [Two APIs — COM wrapper](two-apis-com-wrapper.md) — ⚡ כש-.NET לא נקשר לישות קיימת, `PSCOMWRAPPERLib` כן (`doc.HandleToObject`); `PsGrid` הוא המקרה המוכח
+- [Section variety](section-variety.md) — ⚡ הרגל עבודה מ-07/08: לגוון פרופילים מתוך 357 הקטלוגים; מפתח חתך = מחרוזת אטומה, לחפש ולא להרכיב
+- [Consult before widening](consult-before-widening.md) — ⚡ יוזמה מבורכת, הרחבת גבולות המשימה בלי אישור לא. לשאול בשורה אחת לפני שיוצאים לדרך
+- [Rolled plates — parked](rolled-plates-parked.md) — ⏸️ לייצר פלטות מגולגלות ב-ProSteel, פיתוח נפרד ביחד עם אמיר. מה שכבר ידוע מה-API (לא נמדד)

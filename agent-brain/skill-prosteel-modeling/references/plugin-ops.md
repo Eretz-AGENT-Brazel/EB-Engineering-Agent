@@ -1,0 +1,1286 @@
+# The plugin's op set — what exists and what it is verified to do
+
+*Canonical build: **`EBAgentApi91.dll` / `EB_RUN91` / `ApiCmds91`**, 06/08/2026.
+Source: `EB PROSTEEL AGENT\app\plugin\EBAgentApi91.cs`. Python client: `app\eb_api.py`,
+plus `app\eb_shot.py` (screenshots) and `app\eb_log.py` (the command-line channel).
+86 ops. Every "verified" line below was measured by reading the model back.*
+
+> ⚠️ **`_netload()` now PROVES the command is live** before returning, by pinging until it
+> answers. It used to sleep one second and return `None`; on 06/08 the DLL loaded a moment
+> late and the next three ops came back `EB_TIMEOUT` with nothing pointing at the cause.
+> The same rule this file preaches, applied to the bridge itself.
+
+> ## 💾 SAVE. The drawing on disk was SEVEN HOURS stale.
+> 06/08/2026 — Amir: *"ממליץ לך לשמור את המודל, שאם המחשב ייכבה או התוכנה תקרוס שתהיה לך
+> שמירה."* The file had last been written at **10:16**; it was then **17:21**. Every op since
+> had gone into memory only. **A modelling session that cannot be recovered is a demonstration,
+> not work.**
+>
+> `eb_api.save()` — saves, then **proves it by the file's mtime and size on disk** (not by
+> `Save()`'s return), and keeps a timestamped `*-backup-YYYYMMDD-HHMM.dwg` beside it.
+> ⇒ **Call it after every chapter, and before anything experimental.**
+>
+> ⚠️ And when AutoCAD is mid-command, COM does not fail cleanly — `doc.Name` and
+> `doc.SendCommand` raise `<unknown>.<member>` while `app` still answers, and
+> `app.ActiveDocument` raises **`Call was rejected by callee`**. That is not a broken
+> dispatch: `IsQuiescent` is telling the truth. **ESC in the application clears it** — a
+> keystroke, not a COM call, because COM is the thing that is blocked.
+>
+> ### 🩸 SAVE ONLY OVER COM. The plugin-side save DESTROYED the live drawing.
+> Trying to make saving robust by moving it **into** the plugin did the opposite:
+> `Database.SaveAs(sameName)` raises `eFileSharingViolation`, and `Editor.Command("_QSAVE")`
+> wrote an **11 KB DWG while the document held 256 entities** — and that empty file replaced
+> the good one. `SaveAs` to a *different* path produced the same 10 KB. Only
+> **`doc.Save()` over COM** has ever produced a correct file (325 KB).
+>
+> ⇒ `eb_api.save()` uses COM, and **refuses any save that shrinks the drawing by more than
+> half** — reporting it as a corrupt write and declining to take a backup of it. Without that
+> guard, the corrupt write silently became the backup too.
+>
+> ⇒ **Recovery that worked:** the model was still intact *in memory* (256 entities) but could
+> not be written by any route — a damaged database. Kill AutoCAD, keep the broken file for
+> forensics rather than deleting it, restore the last good `*-backup-*.dwg`, reopen, and
+> **verify by reading the model back** (228 entities, 219 position numbers, groups intact).
+> Only the throwaway test objects made after the last good save were lost.
+>
+> ⇒ **And the reason there was anything to restore:** Amir said *"save the model, in case the
+> machine dies"* half an hour earlier. The sandbox is not the deliverable — but an unsaved
+> session is not a session.
+
+> ### 🧭 The five rules this file exists to encode
+> 1. **No return value means success.** `readFrom` → 0 is OK · `Apply()` → 1 is OK ·
+>    `Create()` → **false** on a group that exists · `CreateFastener*` → the Int64 **is** the id,
+>    0 is refusal. Same DLL, four conventions. **Read the model back, in a fresh object.**
+> 2. **When the dump and the compiler disagree, the compiler wins.** The dump hides index
+>    parameters on properties (`get_Entry(short)`, `get_Facet(int)`, `get_Groupname(long)`,
+>    `get_EdgePoint(PositionSelection, PositionSelection)`) and renders `ref` as `Type&`.
+> 3. **Enum values must be measured, never inferred from declaration order.** `FacetType`'s
+>    usable values are 1–3 with 0 rejected; `EdgeLayout`'s are 0–6 sequential. Same file.
+> 4. **ProSteel diagnoses itself on the command line** — a channel the API never returns.
+>    `eb_log.mark()` / `problems()` around anything experimental.
+> 5. **Announce before modelling, and point the camera.** Proving it to yourself and showing
+>    it to Amir are two different obligations.
+
+> **The DLL locks once NETLOADed**, so every rebuild needs a new filename + command + class.
+> That is the 40-plus-version treadmill; it is a known tax, not an accident.
+
+> **⚡ Unknown parameters are REFUSED (v48).** Each op declares the keys it reads; anything
+> else returns `EB_ERR unknown parameter(s): … -- op=X accepts: …` and executes nothing.
+> The table is **generated from the source** — regenerate it after adding or changing an op,
+> or it will start lying. `op`/`dwg`/`reqid` are global and always allowed.
+
+---
+
+## Ops built on 06/08 — second block (v45 → v48)
+
+| op | what it does | verified |
+|---|---|---|
+| **`splicetemplates`** | B.21 — the 2 shipped splice templates (`default/Standard` 4 plates, `default/example2` all six positions) | ✅ |
+| **`splice`** | **B.21 `PS_LASCHE`** — splices two **collinear** members. `handle=`+`support=` the two shapes · the six positions `topout`/`topin`/`downout`/`downin`/`webleft`/`webright` · `tflange`/`tweb` · `nflangev`/`nflangeh`/`nwebv`/`nwebh` · `gap` `dia` `workloose` `offflange` `offweb` · **`weldflange`/`weldweb`** (⭐ 0 bolts, 32 `Ks_WeldFlag` instead) · `welddiagonal` · `toplap`/`sidelap` | ✅ 4 variants; **6 checkboxes → 8 plates** |
+| **`shearplatetemplates`** | B.20 — 3 templates + the load database + a **cope-template probe**. Found the convention: **`CheckCopeTemplate('default/Standard') = True`**, everything else False | ✅ |
+| **`shearplate`** | **B.20 `PS_SCHEARPLATE`** — web plate instead of angles. Same arguments as `webangle` plus `thick` · **`poly=1`** (⚠️ product becomes **`Ks_Plate`** instead of `Ks_Shape`) · `normaltocut` · `cutconn`/`cutsup` · `nvert`/`nhoriz` · `holevert`/`holevertedge`/`holehoriz`/`holehorizin`/`holehorizout` · `slot` · `eachplate`. Validates the cope template before applying | ✅ 4 variants; **1 plate + nVert×nHoriz bolts**; beam `cutPlanes` 0→1 |
+| **`webangletemplates`** | B.19 — the 3 shipped web-angle templates plus the DAST database. ⚠️ **`plateDataCount = 0`** on this installation: the load-based selection has no data behind it | ✅ |
+| **`webangle`** | **B.19 `PS_STEGW`** — one call = the whole detail. `handle=` beam · **`support=`** column (**required**; omit it and `Create()` fails) · `at=` · `template=` · `key`+`catalog` (the angle section) · `pos` `turn` `nvert` `nconn` `nsup` `dia` `workloose` **`boltstyle`** (a plain string here) · `slotconn`/`slotsup` (turn holes into **slots**) · `flat=1`+`thick`/`longleg`/`shortleg`/`bendradius` (⚠️ produces **`Ks_BendShape`**) · `gap` `sideoff` `vertoff` `fromedge`/`fromdown`/`fromhole` · cope fields (⛔ **inert — no cope is produced**) · `group`/`boltsingroup`/`eachangle` · `shear`/`moment` (DAST, untestable while the DB is empty) | ✅ 4 bays; beam `holeFields` 0→1, `polyCuts` 0→1 |
+| **`stifftemplates`** | B.16 — dumps all **7** shipped stiffener templates with every field. ⚠️ The **names** are reliable; the exposed `LengthType` is not | ✅ 7 templates, all built and measured |
+| **`stiffener`** | **B.16 `PS_RIP`.** `handle=` the girder · `at=` the insertion centre · **`template=`** (required — creation fails without one) · `shapetype` (0 chamfered · 1 convex · 2 rounded) · `lengthtype` (0 Full · 1 Half · 2 By Length · 3 Square) · `thick` `flangedist` `webdist` `offset` (negative ⇒ projects out) `roundto` (truncates) `radius` (**0 = import the shape radius**) · `centerpunch` (1 = weld-mark holes) · `withangle`+`angle` · `creategroup`. Reports **every** new handle — one call makes **two** ribs | ✅ 33 pairs, formula verified to the mm |
+| **`plate9`** | **B.9 Insert Plates, the whole dialog.** `mode=rect\|poly\|radial\|diagonal\|edges\|fromshape` · `at=` + `ex/ey/ez` (the insertion plane) · `t=` · `xpos/ypos` (`PositionSelection`) · **`vpos=kDown\|kMiddle\|kTop`** (the manual's `Insert Edge`) · `insheight` · `xoff/yoff` · `grid=1` + `griddir` · `name/material/article/layer/family/display/area/descr/style` · `check=1` runs `checkValidPlate()` first | ✅ 9 plates built and read back |
+| **`arcplate`** | B.9.2 flat bent plate — `p1/p2/center/normal/w/t`, **`bigarc=1`** is the manual's ALT key (> 180°) | ✅ 90° and 270° measured |
+| **`bend`** | B.9.4 `ADD SEGMENT` — `handle=` `at=` (the click that picks the reference edge) `len/front/rear/radius/angle`, `convert=1` on the first call only. **Returns the NEW handle** because the conversion replaces the entity | ✅ the manual's 3-segment example rebuilt |
+| **`bendinfo`** | Reads the segment tree: per-flange length, angle (**both deg and rad**), radius, offsets, `vtx=` the base edge, `parent=`, grip points and vertices. `max=` scans **past** `FlangeCount`, which under-reports | ✅ parent[2]=0 confirmed |
+| **`bendtwo`** | B.9.4 *Combine Plates* — `h1/h2/radius/at/inner/k/delete2`. `k` is `Correction Value Unwinding` (0 inner · 1 centre · 2 outer). ⚠️ **both source plates are erased** | ✅ 2 in → 1 bent plate |
+| **`plateinfo`** | Read-back, **one named call at a time**: `probe=safe` (thickness · insertHeight · insertXY · WCS extents) or a comma list. ⛔ **never `probe=weight`** — `computeObjectWeigth` kills AutoCAD | ✅ / ⛔ crash reproduced twice |
+| **`chamfer`** | Chamfer a plate corner by **three parameters**, the manual's way — `at` picks the corner, `d1`/`d2` are the two edge lengths, `type` the shape. `list=1` reports existing facets | ✅ measured on 5 identical ribs; see the FacetType table below |
+| **`zoom`** | `handle=…` (one or many) or `all=1`, native `SetCurrentView` with a correct WCS→DCS transform so it is right in isometric too. ⚠️ **`margin` is a FRACTION, not millimetres** — the view is scaled by `1 + margin` (defaults 0.25 for a handle, 0.05 for all). `margin=900` asks for a view **901× the model** and looks exactly like a broken zoom: on a 51 m model it reported `w=46836827` and drew an empty screen | ✅ centred on 12000 as asked |
+| **`view`** | `dir=iso\|sw\|se\|ne\|nw\|top\|bottom\|front\|back\|left\|right` | ✅ |
+| **`hilite`** | Select parts so grips mark the spot; `clear=1` | ✅ |
+
+### `chamfer` — creator vs reader, the mistake worth remembering
+
+The first implementation used `PsEditModification.set_Facet(0, ch)`. It threw nothing, returned
+nothing, and created nothing: `facets 0→0`. **`PsEditModification` READS and DELETES
+modifications; it does not create them.** Creation goes through **`PsCutObjects`**, which owns
+**all ten cut types**:
+
+```csharp
+PsVertexChamfer ch = new PsVertexChamfer();
+ch.SetType((FacetType)1);        // 1 = straight chamfer -- see the table
+ch.SetDistance1(d1);             // manual B.13.2 "Radius / 1st Edge"
+ch.SetDistance2(d2);             // manual B.13.2 "2nd Edge"
+ch.SetEdgePointId(oid, corner);  // pick the corner by a point on it
+PsCutObjects cut = new PsCutObjects();
+cut.SetToDefaults();
+cut.SetObjectId(oid);
+cut.SetAsFacetCut(ch);           // <- the creator
+int rc = cut.Apply();            // rc = 1
+```
+
+**FacetType — measured, not assumed.** The reflected dump lists enum *names* with **no values**;
+assuming `0..4` from the order was wrong. Five identical 120×120×10 ribs, `d1=80 d2=40`, then
+read back with `chamfer list=1`:
+
+| sent | stored | shape measured |
+|---|---|---|
+| 0 | **1** | rejected → falls back to the straight chamfer |
+| **1** | 1 | **straight diagonal chamfer** = `kFacetTriangle` — *this is Amir's rib* |
+| **2** | 2 | convex arc (rounded corner) = `kFacetArc` |
+| **3** | 3 | concave arc = `kFacetInversArc` |
+| 4 | **1** | rejected → falls back |
+
+⇒ valid values are **1, 2, 3**; `kFacetUndefined = -1` and `kFacetRectangle = 0` are not
+usable for a facet cut. Also measured: **repeat calls STACK** — a second call on the same
+corner gave `facets 1→2` rather than replacing.
+
+⚠️ **`contourVerts` does not change** (5→5). A modification is a separate layer from the
+plate's base contour, so `GetPolygon` is the **wrong instrument** for "did the cut happen" —
+use the facet count and the picture.
+
+⚠️ **Reported weight is GROSS.** All five ribs reported **1.13 kg** = 120×120×10 uncut. The
+manual's Global Settings has *"Volume Weight — the weight of the plates is determined by the
+volume"*, and `PsObjectProperties.VolumeWeightFlag` is the per-object switch. Amir's ruling
+(06/08): *"כשאני בודק באופן ידני משקל ראשוני לחומר אני לא מתחשב בסטיות כאלו — זה הפרשים
+מינוריים, תלוי בסדר גודל של הפרויקט."* ⇒ gross is fine for preliminary take-off; the flag is
+there if net is ever needed.
+
+## 🔓 POSITIONING — the biggest blocker, opened 06/08/2026 (v49 → v51)
+
+The **engine** really is locked behind the modal `PS_POS` dialog, and that is now settled, not
+assumed: `PsCreatePositioning` has ~90 `Set*` configurators and ~60 `Internal*` step methods
+but **no** public `Perform/Run/Execute/Apply/Create` and **no** `SetToDefaults`/`Initialize`.
+There is no dash-prefixed or scripted variant — the manual's command reference lists exactly
+one token. ⚠️ Two `Internal*` members (`InternalPositioningOptions`, `InternalDisplay*Result`)
+**open dialogs** — never call them from code.
+
+**But the three primitives the engine is built from are exposed separately**, so the pass can be
+built out of ProSteel's own parts:
+
+| primitive | signature | role |
+|---|---|---|
+| write the number | `PsObjectProperties.Posnum` / `.Sendnum` + `writeTo(Int64)` | ✅ measured |
+| **decide what is identical** | `PsCompareDrawing.CheckTwoPartsAreEqual(Int64, Int64)` | ✅ measured |
+| number format | `PsCreatePositioning.ConvertNum2Posnum` / `GetNextPosnum` | available |
+
+| op | what it does | verified |
+|---|---|---|
+| **`posset`** | Write `Posnum`/`Sendnum` on one part, dialog-free | ✅ `withPosnum 0 → 5`, names preserved |
+| **`equal`** | Both equality tests side by side, so the wrong one can never be picked by accident | ✅ |
+| **`posauto`** | The whole pass: enumerate → cluster by equality → number → verify each. `dry=1` clusters without writing | ✅ 21 parts → 15 distinct, 175 comparisons, **2.6 s** |
+
+### ⚠️ `IsEqualTo` DOES NOT SEE MODIFICATIONS — use `CheckTwoPartsAreEqual`
+
+Measured on five ribs identical except for their corner cut:
+
+| pair | `CheckTwoPartsAreEqual` | `IsEqualTo` |
+|---|---|---|
+| two identical straight chamfers | EQUAL ✅ | EQUAL ✅ |
+| straight vs **arc** | **different** ✅ | EQUAL ❌ |
+| straight vs **inverse arc** | **different** ✅ | EQUAL ❌ |
+| **uncut** plate vs cut plate | **different** ✅ | EQUAL ❌ |
+| plate vs HE300B column | different ✅ | different ✅ |
+
+`IsEqualTo` compares the **nominal property block** — same root cause as the gross weight: to it
+every one of those plates is `PLATE 120x120x10, 1.13 kg`. Using it would put three genuinely
+different plates on **one position number**, and the shop would get one cutting drawing for
+three different parts. **That is precisely the kindergarten-stairs failure, manufactured
+automatically.** ⇒ For anything that decides *"is this the same part?"*, only
+`CheckTwoPartsAreEqual`.
+
+It is genuinely **geometric**, twice confirmed:
+- a plate with **two** identical chamfers on the same corner = a plate with **one** → EQUAL
+  (same material removed — correct);
+- two `RR 200x200x8` differing only in their drilling → **different**, and they were numbered
+  separately, which is what fabrication requires.
+
+**Cost:** O(n × clusters), not O(n²) — each part is compared to one representative per cluster.
+
+### B.29 completed (v75 → v76): Sendnum, groups, flags, and a 12× speed-up
+
+| added | detail |
+|---|---|
+| `posauto field=send` | writes **`Sendnum`** instead of `Posnum` |
+| `DontPositionFlag` | a part flagged *do not position* is **skipped and counted**, not numbered anyway |
+| **`groupauto`** | numbers the **groups**, in a second pass |
+
+**Group equality is a DIFFERENT rule from part equality** — manual B.29.1 *"Group Detection"*:
+*"single parts are only compared using their position number because positioning has already
+been carried out before."* ⇒ two groups match when their members' **position numbers** match;
+geometry is not re-examined. That is why singles must be numbered first, and why `groupauto`
+cannot reuse `CheckTwoPartsAreEqual`. It builds a signature from the sorted member posnums and
+**warns loudly** when any member is still unnumbered.
+
+**Measured** — four details, three identical and one with a 20 mm rib instead of 12:
+
+```
+3CA  P57+P74+P94  G9      3D6  P57+P74+P94  G9
+3D0  P57+P74+P94  G9      3DC  P57+P74+P95  G10
+```
+
+Three share a group number; the odd one gets its own, because its rib got a different part
+number. Exactly the manual's rule.
+
+### ⚡ BUCKET BEFORE YOU COMPARE — 108.8 s → 8.7 s
+
+The first `posauto` compared every part against one representative per cluster:
+**217 parts, 95 clusters → 10,030 geometric comparisons, 108.8 seconds.** At Amir's real scale
+(~2,000 objects) that is minutes — and the whole point of the op is to beat a person.
+
+**Two parts with different nominal dimensions can never be geometrically equal**, so bucket by a
+cheap signature first (class + name + L/W/H + weight) and run `CheckTwoPartsAreEqual` only
+*within* a bucket:
+
+| | before | after |
+|---|---|---|
+| comparisons | 10,030 | **1,333** |
+| time | 108.8 s | **8.7 s** |
+| **distinct parts** | **95** | **95** — unchanged, which is the proof |
+
+⚠️ This does **not** reintroduce the `IsEqualTo` trap: two plates differing only by a cut share a
+nominal signature, land in the **same** bucket, and are still separated by the geometric test.
+Bucketing can only ever skip comparisons that were guaranteed to return false.
+⇒ **An optimisation is only correct if the answer is bit-for-bit the same. Print both.**
+
+### 🔴 There is NO consistent success convention — read the model back
+
+`posset` first refused to write anything because it treated `readFrom`'s `0` as failure.
+`0` is `eOk`. Meanwhile `PsCutObjects.Apply()` returns **1** on success. Same DLL, opposite
+conventions — and `Create()` returns `false` on a group that exists.
+⇒ **Never infer success from a return value. `posset`/`posauto` verify by constructing a BRAND
+NEW property block and re-reading** — the block you wrote from still holds your value in memory
+and will happily confirm a write that never landed.
+
+⚠️ **`readFrom(id)` before every write, always.** `PsObjectProperties` is a *detached* property
+block, not a live handle: writing a fresh one pushes a blank `Name`/`Article`/`Style` over the
+object. Measured: with `readFrom` first, `PLATE 120x120x10` and `HE 300 B` survived intact.
+
+## 📋 `props` — dead for weeks, and it was hiding the richest class in the API (v57)
+
+It searched by **reflection** for a loader called `loadFrom`/`getFrom`/`SetObjectId`/`load`.
+The method is **`readFrom(Int64)`**. Every call had returned `EB_ERR ... : no-loader`.
+Written before the API was mapped — and left guessing long after guessing became unnecessary.
+⇒ **When a stub predates the knowledge, delete the stub, don't extend it.**
+
+**`PsObjectProperties` carries 100+ properties; this agent was using five.** What it gives:
+
+| | |
+|---|---|
+| **`Origin` `XAxis` `YAxis` `ZAxis` `InsertMatrix`** | the **part coordinate system** — the frame the manual's Clone warning is about. This is what made rotated/mirrored cloning possible |
+| **`PaintArea`** | painting surface in **m²** — verified: HE300B×4 m → **6.885**, a 200×200 plate → **0.09**. A real quotation quantity |
+| **`CutArea`** | cut-face area in **cm²** — verified: HE300B → **149**, exactly the catalogue section area |
+| `Length` `Wide` `Height` `Diameter` | part dimensions with no geometry maths |
+| `Mirrored` `MirrorFlag` `YMirrorFlag` | mirror state |
+| `KlemmLen` | grip length | 
+| `Key` `Katalog` `Material` `Article` | profile identity |
+| `MidLineStart/End` `GetExtents(ref,ref)` | axis and bounding box |
+| `ProcessStatus` `DontPositionFlag` `DontDetailFlag` `PartListFlag` `BoltListFlag` | the manual's per-part switches |
+
+⚠️ In the dump, **`Type&` means a `ref` parameter** — `GetExtents(PsPoint& , PsPoint&)` is
+`GetExtents(ref …, ref …)`. Reading it as pass-by-object costs a compile cycle.
+
+## 🔁 CLONE THE DRILLING — `clonedrills` (v52 → v58)
+
+Manual B.4.5 *"Clone"*: **"A prerequisite for cloning is that the parts have a position number
+and that these match … only parts with the same position number as the original part will be
+considered."** That prerequisite is why this could not exist before `posauto`.
+
+**The manual lists five transferable kinds — Cuts, Drill Holes, PolyCut, Notches, Boolean.
+Exactly ONE is exposed in the API, and it does not work from code.**
+
+### ❌ `PsDrillObject.TakeoverDrills(PsSelection, PsSelection)` — five sequences, all dead
+
+Selections were **proven correct** each time (`srcSel=1 tgtSel=3`, `Find()` true for both), and
+`Apply()` returned `0` = nothing to apply:
+
+| variant | sequence | result |
+|---|---|---|
+| 1 | `SetToDefaults` → `SetObjectId` → `TakeoverDrills` | changed=0 |
+| 2 | …+ `Apply()` | changed=0 |
+| 3 | no `SetToDefaults` | changed=0 |
+| 4 | per-target subject | changed=0 |
+| 5 | selections built from AutoCAD's **own pick set** (`SetImpliedSelection` + `GetCurrentSelections`) | changed=0 |
+
+There is **no `PS_CLONE` command token** in the manual either — only `PS_COPY`. ⇒ Clone is a
+dialog-only feature. *Recorded so this is never re-investigated from scratch.*
+
+### ✅ What works: compose two things that already do
+
+Read the source holes (`PsSingleHoleArray.getHole` → start, end, **hole** diameter), translate by
+the extents delta, and create each one on the target (`SetInsertPoint` + `SetNormal` +
+`SetHoleWorkloose(0)` + `SetSingleHoleField(dia)` + `Apply()`).
+`Workloose(0)` because `getHole` returns the **hole** diameter — adding a bolt clearance on top
+would grow the hole on every clone.
+
+**Measured:** drill one of four → `changed=3 nowMatchSrc=3`, independent re-count `4,4,4,4`, and
+`CheckTwoPartsAreEqual` says **EQUAL again** — precisely what the manual says Clone achieves:
+*"all components are identical again after the transfer has been concluded."*
+
+**v58: it now goes through the PART COORDINATE SYSTEM**, which is what the manual says the real
+Clone does — `PsObjectProperties.Origin` / `XAxis` / `YAxis` / `ZAxis` give exactly that frame.
+So **rotated and mirrored copies work** instead of being refused, and mirrored ribs are
+everywhere in real steel. Equality is checked on the part's own `Length`/`Wide`/`Height`
+(rotation-invariant), not on world extents.
+
+**Measured** — one source drilled with a deliberately asymmetric 3-hole row, cloned onto a
+90°-rotated, a 180°-rotated and an X-mirrored twin. Every hole landed where hand-calculation
+said it would, and all 12 spans came back **exactly 12.0 mm = the plate thickness**, so every
+hole passes fully through. Diameter stayed **18** on every clone — proof that
+`SetHoleWorkloose(0)` is required, otherwise each generation would add clearance again.
+*(The reported start/end face can flip between source and clone — the drill direction differs.
+Irrelevant: check the SPAN, not which face is listed first.)*
+
+⚠️ **It still REFUSES rather than guessing** when the target is a different size:
+`SIZE-DIFFERS(...)-refused`. **Proven with a deliberate impostor** — a 260-long plate given the
+same position number as eight 200-long ones was refused and left undrilled while the other
+seven got 4 holes each. A mislabelled part must never be silently drilled wrong.
+
+## 🔩 B.12 — BOOLEANS, DETAIL CUTS, DIVIDE / COMBINE (v70 → v71)
+
+### `boolean` — the only way to do a boolean on steel
+
+⚠️ Manual B.12.7 (p.225): ProSteel does **not** use the AutoCAD ACIS modeller, so AutoCAD's own
+**UNION / SUBTRACT / INTERSECT silently do nothing** on ProSteel objects — *"there will be no
+errors, but nothing will happen!"*
+
+`SetAsBooleanCut` takes an **`Int64` — the id of an EXISTING solid** (the manual's
+*"discharge-solid"*), not a constructed body. `SetSubBodyType` picks the operation:
+`kSubBody` subtract · `kAddBody` add · `kCommenBody` keep the common volume.
+
+**Measured** — a 400×400×20 plate with a second plate as the tool:
+
+| mode | evidence |
+|---|---|
+| `sub` | with the tool crossing the full width, the extents' x-max dropped **13200 → 13050**, exactly the tool's near face |
+| `add` | extents **grew to 13250**, past the plate's own edge, absorbing the tool |
+| `common` | `L/W` collapsed to **150 × 200** — precisely the overlap region |
+
+⚠️ **Weight does not move** (25.12 → 25.12 in all three) — the same gross-weight behaviour as
+everywhere else. The witnesses are `subBodies 0→1` plus the **extents**.
+
+### `detailcut` — and the reader that was blind to it
+
+A detail cut removes **no material**: it plants a 2D section marker for detailing (manual p.571).
+It reported as a failure until the instrument was fixed: **`PsEditModification` cannot see detail
+cuts at all** — they are counted by **`PsEditShapeModification.DetailCutCount`**.
+Measured: `detailCuts 0→1`. ⇒ **The op had worked all along; the instrument was wrong.**
+
+### `shapeedit` — B.12.1 Divide / Combine, an entire section that was missed
+
+These live on `PsEditShapeModification`, **not** on `PsCutObjects`, which is why sweeping the ten
+cut types never found them.
+
+| what | measured |
+|---|---|
+| `split=x,y,z` | IPE300 **3000 → 1500**, census **+1**, and it returns the new member's handle |
+| `connect=<other>` | two collinear 1500 members → **3000**, census **−1** |
+| `side=<n> len=<mm>` | trims/extends at one end — see below |
+| `lengthat=<point> len=<mm>` | trims/extends the end **nearest that point** (a point at the left end with −800 moved the left end in by exactly 800) |
+
+⚠️ **`ChangeLengthAtPoint/AtSide`'s `Length` is a DELTA, not a target length.** `len=2000` on a
+3000 member gave **5000**, not 2000. Negative shortens.
+
+⚠️ **`ObjectSide` measured** (−600 on a 3000 member, watching both ends):
+
+| value | start moved | end moved | meaning |
+|---|---|---|---|
+| **0** | +600 | 0 | the **start** end |
+| **1** | +300 | −300 | **both ends equally** |
+| **2** | 0 | −600 | the **end** end |
+
+A parameter called *Side* whose value `1` means *both sides* is not guessable — measure it.
+
+### ❌ `SetAsRoundedCutId` — unreachable, and the manual never documents it
+
+No change and **no complaint** on a plate, an IPE300, or an `RO 219.1×6.3` tube — while
+`object` cut the same tube cleanly (2000 → 1102.72, a saddle cut). The manual has no "rounded
+cut" modification anywhere; *"Straight Cut"* appears only inside the **handrail/guardrail macro**
+(Leave / Straight Cut / Complex Cut / With Rod / Boolean / Drill). ⇒ `SetAsStraightCutId` and
+`SetAsRoundedCutId` look like internal helpers of those macros; the first happens to work
+generally, the second does not.
+
+*(Aside: `dumpcat` writes **`eb_cat.txt`**, not `eb_catalog.txt` — a reading error made a working
+op look broken for four catalogues. `DIN RUNDROHR` holds 232 round sections, e.g. `RO 219.1x8`.)*
+
+## 📦 B.28 GROUPS — the chapter, closed (v68 → v69)
+
+Groups encode **fabrication intent**, not drawing convenience:
+**subgroup** = stock parts · **component part group** = ships as one piece · **assembly** =
+combined on site. Only *creation* had been implemented; everything below was missing.
+
+| op | what it gives |
+|---|---|
+| **`groupinfo`** | members · sub-parts · main part (`getMainPart` / `getMainPartOf` / `getTopMainPartOf` / `getAssemblyMainPartOf`) · **weight with and without bolts** · dimensions · centre of gravity · the group's own property block (posnum, sendnum, paint area, kind flags) |
+| **`groupedit`** | `add=` · `remove=` · `name=` · `pos=` · `send=` · `delete=1` |
+
+**Measured on a real detail** — HE300B 3 m + 500×500×20 base plate + two ribs:
+
+```
+parts=4 subParts=3 isMain=False main=<column> | members: 34E 34F 350 351
+wt=397.786 wtNoBolts=397.786  dim=3000x500x500  cog=13000,41000,1326.836
+groupProps  paint=5.909 m²  count=1/1  sub=False assembly=False weld=False
+```
+
+`groupedit` verified: rename ✅ · posnum ✅ · add **4→5** ✅ · remove **5→4** ✅ ·
+delete **3→0 with all three parts still alive** ✅ *(a group is dissolved, the steel is not)*.
+
+### Three things measured that the names do not tell you
+
+1. **`Groupname` is an internal id, not the display name.** `get_Groupname(oid)` returns the
+   main part's handle for a group, **`Sx…` for a subgroup and `Ax…` for an assembly**. The
+   editable name is `PsGroupProperties.Name` (+ `NameChangedManually`).
+2. **AN ASSEMBLY HAS NO MAIN PART — and passing one silently drops it.** `kind=assembly` with
+   `main=<column>` produced an assembly of the two plates only: **26.886 kg**, the column gone
+   without a word. Fixed by adding the main part as an ordinary member: **260.886 kg**, all
+   four members present, exactly the hand calculation.
+3. **An assembly is a real OBJECT** (`Ks_Assembly`, census **+1**); a group and a subgroup are
+   metadata on the parts (census unchanged). And `CreateAssembly(Origin, XAxis, YAxis)` puts
+   that object at `Origin` — left at 0,0,0 it landed with placeholder geometry
+   (centre 100,100,100, extents 0,0,0…200,200,200) nowhere near its members. Default it to the
+   members' centre.
+
+### "Model once, place it 40 times" — the feature does not exist; the method does
+
+There is **no** export-a-group-as-a-block, no Favorites, no template folder for 3D. The
+manual's *"deposited in a library in the form of a block"* is **DetailCenter**, i.e. 2D
+detailing output, not model reuse.
+
+**What works is what Amir said from the start: build it once, then replicate.** Verified — a
+grouped detail (column + base plate + rib + a 2×2 ⌀27 field) replicated with `replicate`:
+the **copy came out grouped (`parts=3`) and kept its 4 holes**. ⇒ group the detail *before*
+copying and the group travels with it.
+
+## 🕳️ B.14.1 — THE DRILL FIELD SYNTAX, READ AND MEASURED
+
+The manual's own definition: **`Number1*Pitch1, IntermediatePitch1, Number2*Pitch2, …`**
+`Shape/X Dir` runs along the shape (x of the UCS for plates); `Cross/Y Dir` across it.
+*"At a number = 1 you can omit the pitch."*
+
+**The manual's own worked example, reproduced exactly:**
+
+| | |
+|---|---|
+| `x = 2*60,200,1*,200,3*40` · `y = 2*100` | → **12 holes** = (2+1+3) × 2 ✅ |
+
+**Three rules measured, two of them traps:**
+
+1. ⚠️ **`y` must be `1*` — never omitted.** The dialog lets you leave the crosswise box empty;
+   **the API returns ZERO holes, silently.** `x=4*70` with `y` omitted → **0**; with `y=1*` → **4**.
+2. **Crosswise-only needs `x=1*`** — the manual says so explicitly, and it measures out: 
+   `x=1*` · `y=3*80` → **3 holes**.
+3. **`W` means the shape's own marking gauges** (`2*W`). On an **HE300B** → **4 holes**, laid out
+   on the profile's gauges. On a **plate**, which has none, it silently yields **one row** —
+   the manual says the program *"will prompt you to enter one"*; from the API there is no prompt,
+   just a quieter answer. ⇒ **`W` is for shapes only.**
+
+⚠️ **"One single drill hole field cannot cover mixed groups consisting of one and two holes in
+crosswise direction"** — the manual's own limit; two fields are needed.
+
+**Other layouts the chapter documents:** `Radial` (Number · Radius · Area · Start — implemented
+as `drillspecial kind=radial`) · `Single Holes` (each position individually) ·
+and three hole layouts: **Drill Through · Drill Blind Hole · Weld Crack** — the last being *"a
+small marking"*, which is `HoleType.kHoleWeldSign = 2`.
+`Flange` picks upper / lower / both; `Shape Centre` forces the insertion point perpendicular to
+the shape centre so the holes come out symmetrical.
+
+📌 **And the UI feature that has no working API entry point:** *"Click this button to adopt the
+drill holes of one component part into another one… drill holes from a copied connecting plate
+may be rapidly transferred to a shape."* That is `TakeoverDrills` — it exists in the dialog and
+**does nothing from code** (five call sequences, measured). `clonedrills` does the job instead.
+
+## 🏛️ B.8 INSERT SHAPES — the foundation, read and implemented (v87 → v91)
+
+*Chapter notes: `EB PROSTEEL AGENT\knowledge\MANUAL-NOTES-B08-insert-shapes.md`.
+Worked in its own drawing, `B08-insert-shapes.dwg`.*
+
+### ⭐ The orientation rule — documented all along
+
+A shape is inserted from **two 3D points**, oriented so that *"if you stood at the end point and
+looked into the direction of the starting point, the view corresponds to the depiction on the
+monitor."* Two points do not fix the rotation, so a third is used:
+**when the two points are perpendicular in the WCS, alignment follows the WCS x-axis**; when they
+are free in space, the x-axis is made as parallel as possible to the WCS xy-plane.
+
+⇒ That is exactly why a vertical HE300B came out with its web facing where it did, and why an end
+plate on the x side drilled through the **web** instead of the flange. `SetXAxis` / `SetYAxis`
+are the explicit override. **Measured the hard way before the chapter was read.**
+
+### `shape` — the whole insertion dialog
+
+| dialog field | property | measured |
+|---|---|---|
+| **insertion point** | `SetXPosition` / `SetYPosition(PositionSelection)` | see the table below |
+| Delta X / Y | `SetXOffset` / `SetYOffset` | (at the 'Free' point) |
+| **Start / End Offset** | `SetStartOffset` / `SetEndOffset` | ✅ |
+| **Turn** | `SetRotation` | ✅ |
+| **Length** (overrides the points) | `SetDirection(vector, length)` | ✅ exactly 1234 |
+| Horizontal / Vertical Dist. | `SetHorizontal/VerticalDistance` | `SHAPECLASSLAYOUT` spacings |
+| Material · Layer · Family · Detail · Display · Area · Article | the matching `Set*` | |
+| the 5 shape types | `SelectStandard/Special/RoofWall/CombinationSections` | |
+
+**Insertion point measured** — HE300B, the *same* two points every time, only the point changing:
+
+| setting | where the profile actually sits |
+|---|---|
+| default / `kCenter` | y −150…150 (centred on the line) |
+| **`xpos=kLeft`** | y **0…300** — the line is the left face |
+| `xpos=kRight` | y −300…0 |
+| **`ypos=kTop`** | z **−300…0** — the line is the **top** face |
+| `ypos=kDown` | z 0…300 |
+
+⇒ **This is how you put a beam's top flange on a level line** instead of computing offsets by
+hand. It was the single biggest gap in the old `beam` op, which always centred.
+
+**Start / End Offset measured** (two points 2000 apart):
+`startoff=300` → length **1700**, starting at 300 · `endoff=-400` → length **2400** —
+**a negative offset EXTENDS** · both 200 → **1600**, from 200 to 1800.
+
+**Turn measured**: IPE300 at `rot=0` is 150 wide × 300 deep; at **`rot=90`** it is **300 × 150**;
+at 45° the bounding box is 106 × 318 — the rotated envelope.
+
+### ⭐ Non-catalogue sections — `flat=WxT`
+
+B.8.1: *"**Key** … can be entered directly here to be able to create **non-standardised shape
+sizes** of tubes, flat steel, round iron."* `PsCreateShape.CreateFlatSteel(Wide, Thick)` is that
+route, and it needs **no catalogue entry at all**:
+
+| asked | got |
+|---|---|
+| `flat=137x9` | `Plate 137x9`, section **137 × 9** |
+| `flat=250x12` | **`BRFL 250x12`** — matched to a real catalogue name |
+| `flat=83x6` | `Plate 83x6` |
+
+⚠️ **`CreateFlatSteel` is a CREATOR, not a configurator** (it returns `Boolean`). Called before
+the insertion points are set it returns `false` and makes nothing. Set the geometry first.
+
+### `shapeinfo` — ask the database before inserting
+
+`FindKatalogFromKey` resolves an access key to its catalogue (`HE300B`→`DIN_HEB`,
+`RO 219.1x8`→`DIN_RUNDROHR`) · **`GetDatabaseDimensionSystem` → `kMetric`**, a direct check of the
+standing metric rule, from the database itself · `GetMetricSectionName` / `GetImperialSectionName`
+· **`GetSectionPolygon` → HE300B: 17 vertices, area 14 907.8 mm²** against a catalogue 149 cm².
+
+⚠️ B.8.4: *"in **all ProSteel functions** only the shape classes in the right selection list are
+offered."* ⇒ **a catalogue missing from the current list is invisible everywhere**, which is what
+makes a section "not exist" when it does.
+
+### ⭐ B.8.7 — 20 columns on a grid, in one operation
+
+> *"insert the column at the intersection point of the **work frame axes (grid)** which are
+> situated within a rectangular area."*
+
+`grid` builds a real building frame — **4 bays of 6000 × 3 bays of 5000 × 7000 high**, verified by
+its extents (24 000 × 15 000). `gridcolumns` then puts an HE300B on **every joint**:
+
+```
+gridcolumns joints=20 created=20 failed=0 section='HE300B' h=7000 secs=0.0
+```
+
+⇒ **That is the lesson-5 exam.** Twenty columns is one operation against the frame, not a
+replication loop — and the loop version is what produced 76 duplicates and an invalid model.
+
+⚠️ **The steps ARE the bay spacings.** Setting only the divisions produced a work frame **3 mm
+across**. `SetLengthSteps(i, value)` per bay, and `SetLength` to their sum.
+
+⚠️ **`PsGrid` will not bind to an existing work frame** — `readProps` leaves it at `L=0 W=0
+div=2x2`, so `getPointsInsidePoly` has nothing to search. `gridcolumns` therefore computes the
+joints from the supplied `lsteps=`/`wsteps=`, which gives the same intersections.
+**RESOLVED 07/08 in B.6 — read the frame over COM instead. See "B.6 WORK FRAMES" below.**
+
+### Still unimplemented from B.8
+
+`PsCreateArcShape` (B.8.2 bent shapes — note **`SetBigArc`**, the >180° case the manual says the
+3-point method cannot do) · `PsCreateBendShape` (B.8.5 cranked, via `SetPolygon(PsPolygon3d)`) ·
+`PsPurlinDistribution` (B.8.6 girder position — `setBorderShapes(id1, id2)`, automatic notching,
+`DiagonaleStatus`). All three have their classes located; none is built yet.
+
+## 🗺️ B.6 WORK FRAMES — `frame`, and the COM layer (v92–v94)
+
+> *"**Any ProSteel model generation is started with the creation of one or several work frames.**"*
+
+```
+op=frame at=x,y,z type=rect|cylinder|wedge|pyramid [name=<group>]
+         [xaxis=1,0,0 yaxis=0,1,0]
+         [lsteps=6000,7500,6000] [wsteps=5000,5000] [hsteps=4000,3500]
+         [roofangle= ridgeheight= ridgewidth= roofheight= rooflength=]
+         [base=<r> top=<r> segments=<n> facets=1 radiusview=1]      <- cylinder/cone
+         [views=all|none] [axnames=1 axtype=0 axtype2=1 axstart=1 axdynamic=1 ...]
+         [frontclip= backclip=] [lock=0] [d3=1]
+op=frameinfo handle=<grid>          # diagnostic only — see below
+```
+
+### ⭐⭐ `SetType(GridType)` is the shape switch — and it is easy to miss
+
+```
+Bentley.ProStructures.GridType = kRectangle | kCylinder | kWedge | kPyramid
+```
+The manual's four frame types. **Without it, every roof and radius value is stored on the entity
+and never drawn.** First cone: `BottomRadius` read back a perfect 8000 while the bounding box was
+1721 mm — pure axis-text overhang. With `SetType(kCylinder)`: 16000 × 16000 × 6000. ✅
+
+⚠️ **A different enum in another assembly is also named `GridType`**
+(`aSa.PC.Shape.Graphics.GridType` = `CrossLines, Points, None`). Reflecting by *bare name* found
+that one and produced a confident, wrong conclusion — "GridType is a display mode" — costing a
+build cycle. **Resolve enums by full type name; set them by member name, never by ordinal.**
+
+### ⭐⭐ THE COM LAYER — how to read and edit an EXISTING ProSteel object
+
+`PsGrid` is a **creation buffer, not a reader.** Proof, not inference: `PsObjectProperties
+.readFrom(id)` returns 0 *and* `getObjectId()` returns the id that was asked for — it binds to the
+right object — yet `Name` stays empty and `readProps` yields `L=0`. `writeProps` and `init()`
+first: same. Three routes, all dead.
+
+The live object is reachable over COM, from Python, with no plugin call at all:
+
+```python
+o = doc.HandleToObject("338")        # -> Ks_Grid
+o.ObjectName, o.Name, o.Length, o.Width, o.Height
+o.LengthSteps                        # 64-long array; the first LengthDivision are real
+o.GetEffectiveCoordSystem()          # origin + X/Y/Z axes
+o.LeftWedge = True; o.Update()       # WRITES too
+```
+
+⇒ **`PSCOMWRAPPERLib` is a whole parallel API** (`Ks_ComGrid`, `Ks_ComWorkFrame`,
+`Ks_ComCreateGrid`, `Ks_ComShape`, …). When a .NET `Ps*` class refuses to bind to an existing
+entity, **try the COM wrapper before concluding it is unreachable.** It also reaches options the
+.NET creator does not expose at all — `LeftWedge` / `VerticalWedge` (B.6.3 "At left") exist only
+as entity properties.
+
+COM names differ from .NET: `Wide`→**`Width`**, `LengthDiv`→**`LengthDivision`**,
+`RoofWide`→**`RoofWidth`**, `TextXPos`→**`TextXPosition`**, `TextStyle`→**`TextStyleName`**.
+
+Reading the real axis grid — measured on `B6_RECT`, `LengthSteps → [6000, 7500, 6000]`, exactly
+what was supplied, back out of the entity; X axes `[0, 6000, 13500, 19500]`, 12 joints:
+
+```python
+def axes(steps, div):
+    c, out = 0.0, [0.0]
+    for s in list(steps)[:div]:
+        c += s; out.append(c)
+    return out
+```
+
+### ⚠️ Three things that are not what they look like
+
+1. **`GetBoundingBox` ignores the roof.** Every gabled/wedge/pyramid frame reports
+   `zTop = Height`. No combination of `RoofAngle`/`RoofMiddle`/`RoofHeight`/`RoofWidth` moves it.
+   The roof is real — **measure the work planes instead**: `B6_GABLE_ROOF_L` came out tilted
+   **15.0°**, exactly the angle set. (`ROOF_R` was 3.4°: `Roof Angle` and `Centre Height` are
+   independent fields and drive the two slopes separately — which is why the dialog has both.)
+2. **`checkExistingGrids(name)` returned `True` for four brand-new, unused names.** It is not a
+   name-collision test. Do not gate on it.
+3. **`SetXViews`/`SetYViews`/`SetZViews` did not produce a view per axis** — six surface views
+   and a single `Y_1`, not the `X_1…X_4` set the manual describes.
+
+### Orientation and cleanup
+
+⚠️ Insertion is **two picks**: origin, then the frame's X-axis. Skip `SetXYPlane` and the frame
+lands on whatever UCS is current — the first frame came out silently rotated. With
+`SetXYPlane(1,0,0 / 0,1,0)`, **`Width` runs along WCS X and `Length` along WCS Y** (measured from
+the bounding box).
+
+⚠️ **Deleting a `Ks_Grid` orphans its `Ks_WorkFrame` planes** — 4 grids deleted left 30 behind.
+Clean by name prefix: the group name prefixes every view (`B6_RECT_FRONT`, `B6_GABLE_ROOF_L`),
+exactly as the manual says.
+
+`SetLeftTextSettings` / `SetRightTextSettings(Size, Scale, Distance, Type, Display, Order,
+Position, Start, DoubleLine, Dynamic, First, Last)` is the **entire B.6.6 dialog in one call**,
+one side each — so the X run can be numeric and the Y run alphabetic.
+`SetAllLengthSteps(Double[])` takes the whole bay list in one array call; no loop needed.
+
+### Still open in B.6
+
+**B.6.7 Additional Axes** — `PsGrid.addUserXaxis(Start,End)` exists but lives on the class that
+cannot bind, and `Ks_ComGrid` has no equivalent. Untried: `PsGrid.insert(Origin, Xaxis, Yaxis)`
+as an *alternative creator* (set properties + user axes on a fresh `PsGrid`, then `insert()`).
+B.6.9 user blocks (`UserBlockNameX/Y`, `UserBlockPath`, scales) are writable over COM, untested.
+
+## 🔩 B.15.1 — BOLTING PARTS: AMIR'S ACTUAL DAILY WORKFLOW (v85)
+
+Amir, 06/08/2026: *"אני מייצר חורים בהתאם למה שאני צריך בפקודת DRILL, ולאחר מכן בוחר את
+2 החלקים והתוכנה יודעת לתת אוטומטית את ברגי החיבור ביניהם."*
+Manual B.15.1 (p.249), the same sentence: *"The components are bolted automatically after part
+selection and selection of the bolt style. **The holes in the component parts are analysed** and
+the corresponding bolts are selected and inserted."*
+
+### ⚠️ THE MISTAKE THIS FIXES — and it explains ~400 failed bolts
+
+`PsCreateBolt` has **two** paths and this agent had only ever used the wrong one:
+
+| path | what it is |
+|---|---|
+| `CreateSingleBolt(start, end, dia, style)` | **MANUAL** insertion — *you* supply the grip length. `Void`, so a grip with no row in the bolt table fails **silently**. This is what every earlier bolt attempt used |
+| **`AddObject(id)` per part, then `Create()`** | **AUTOMATIC** — the software reads the **holes** and derives the bolts |
+
+⇒ **Bolts follow holes. Holes do not follow bolts.** That is the whole shape of the workflow,
+and it is why supplying a grip length was the wrong question all along.
+
+### `boltparts` — measured
+
+Two 300×200×12 plates face to face, `drillfield` 2×2 ⌀23 through **both**, then select both:
+
+```
+boltparts parts=2 holesOnParts=8 style='DIN6914' created=4 boltCount=4 create=True
+```
+
+**4 bolts — one per aligned hole pair** — real `Ks_Bolt` objects on layer `PS_Bolt`.
+
+### The dialog fields, and one correction to the obvious reading
+
+| B.15.1 field | property | measured |
+|---|---|---|
+| Bolt style | `BoltStyle` | ✅ `DIN6914` |
+| Length Addition | `AdditionalLength` | |
+| Angle difference | `MaxDeclination` | |
+| **Gap distance** | ⚠️ **`MaxObjectDistance`**, *not* `MaxCenterDistance` | see below |
+
+**Measured:** plates touching → **4 bolts**. A **30 mm gap** between them → **0 bolts**.
+Raising `MaxCenterDistance` to 20 / 60 / 200 changed **nothing**. Setting
+**`MaxObjectDistance=60` produced 4 bolts** across the same 30 mm gap.
+⇒ The manual's *"Gap distance: maximum distance between two holes which are assumed to belong to
+the bolting. If this value is exceeded the holes cannot be bolted"* is **`MaxObjectDistance`**.
+The name that reads like the answer is not the answer — measure which lever moves the result.
+
+⇒ **And this is the diagnosis when bolting produces nothing:** the parts are further apart than
+`MaxObjectDistance`, or their holes differ in angle by more than `MaxDeclination`. Not a broken
+call — a refused one.
+
+### The full joint, end to end — and the two mistakes that had to be fixed first
+
+**IPE300 beam + end plate bolted to an HE300B column flange**, built entirely from code:
+model → `drillfield` both parts → `boltparts` → **4 bolts**, `boltCount=4`.
+End-plate holes **y 217838 → 217850**, column-flange holes **y 217850 → 217869** — meeting
+exactly at the contact face.
+
+Both failures on the way were **modelling errors, not API gaps**, and both are worth keeping:
+
+1. ⚠️ **Do not assume which way a profile's web faces.** The end plate was first attached at
+   `x = 13850`, and the drill went straight through the **web** (holes at x 13994.5…14005.5,
+   11 mm apart = the HE300B web). For a column running along Z the flange faces are in the
+   **Y** direction. ⇒ **Read `props` → `ext=` and the `X=`/`Y=`/`Z=` axes; never infer the
+   orientation from the insertion points.** *(For a 300×300 HEB the extents alone cannot tell
+   you — both spans are 300. The axes can.)*
+2. ⚠️ **The drill normal picks WHICH FACE gets the hole, and `+n` drilled the FAR one.**
+   Inserting at the near flange (y = 217850) with `n=0,1,0` produced holes on the **far** flange
+   at y 214150→214131. `n=0,-1,0` put them on the near flange. ⇒ **Check where the holes landed
+   before bolting** — `holes` reports start and end, and the two parts' holes must MEET.
+
+📌 `drillfield` takes the normal as **`n=`**, while `drill` takes it as `normal=`. The strict
+parameter guard caught the mismatch (`unknown parameter(s): normal`) instead of silently drilling
+straight down — which is exactly what that guard exists for.
+
+## 🏗️ B.22 — PURLIN CONNECTION, BUILT (v84)
+
+Manual B.22 (p.318): *"connection of purlin courses to roof girders … as standard bolted
+connection, as connection with a purlin socket made out of a bent flat steel or by means of a
+splice or a shape."*
+
+**Why it was never built:** `PsPurlinConnection` needs **three** members —
+`SetSupportObjectId` (the girder) · `SetConnectionObjectId` (purlin 1) · **`SetPurlin2Id`**
+(purlin 2). A purlin connection joins **two purlin runs over** a girder, not one beam to another.
+
+**3 templates:** `Default/Standard` · `Default/Example-Purlinshoe` · `Default/Example-Purlinshape`.
+**27 properties**, mapping cleanly onto the dialog:
+
+| dialog | property |
+|---|---|
+| Number / Distance Transv. | `HoleCountSupport` · `HoleDistanceSupport` |
+| Number / Distance Length | `HoleCountPurlin` · `HoleDistancePurlin` |
+| Dia · **Dia Side** | `HoleDiameter` · **`HoleDiameterSocket`** (girder↔socket vs socket↔purlin) |
+| Workloose · Offset | `HoleWorkloose` · `InsertOffset` |
+| Backer Plates | `FillerPlateThickness` · `FillerPlateWidth` |
+| Opposite Side | `UseOppositePosition` |
+| socket geometry | `Length` `Width` `Height` `Thickness` `BaseLength` `SideLength` |
+
+**Measured, with `Default/Example-Purlinshoe`:** IPE400 girder + two IPE160 runs meeting over it
+→ **5 new objects: a `Ks_BendShape` (the socket, bent flat steel exactly as the manual says) and
+4 bolts** — 2 into the girder at z 185, 2 into the purlin at z 300 — plus **2 holes in the girder
+and 1 in each purlin run**. `Default/Standard` gives 4 objects (bolts, no socket).
+
+⚠️ **The geometry has to be real.** The first attempt put the purlins *inside* the girder
+(IPE160 centred at z=220 spans 140–300 while the IPE400 top flange is at 200) and nothing was
+created. Purlins must **sit on** the girder: centre = 200 + 80 = **280**.
+
+⚠️ **`Create()` returned `False` while creating five objects.** Fourth time today a return value
+lied. The census delta is the verdict.
+
+## ⚓ B.18 — ANCHOR BOLTS, SOLVED (v82 → v83)
+
+### The finding that unlocked it: **anchors are only created FROM A TEMPLATE**
+
+Every parameter combination on freshly constructed link data produced **zero anchors, silently**.
+The same call with `template="default/Standard"` produced them immediately. Fresh
+`new PsBaseplateLinkDataMgd()` lacks whatever internal state the anchor step needs.
+⇒ **Always start a base plate from a template.** (`basedump` lists them: `default/Standard`,
+`AutoConnect Metric v 18/450x450x25`, `…/600x600x25`.)
+
+### The measured parameter mapping
+
+Verified against **Amir's own lesson-4 detail**, read out of his model: 4 anchors, head
+34.6 × 30, 157 long, from z −118 to +39, spaced 200 × 145.
+
+| what it controls | the property | proof |
+|---|---|---|
+| **head size** | **`AnchorBoltKeySize`** | template 25 → head **28.9** (25 ÷ cos30° = 28.87); set 30 → **34.6**, exactly Amir's M20 |
+| **embedment depth below the plate** | **`AnchorBoltDrillLength`** | template 185 → bolt bottom at **z −185**; set 118 → **z −118**, exactly Amir's |
+| **count and spacing** | **`HoleDistanceHorizontal` / `Vertical`** (`hx`/`hy`) | hx only → **2 anchors**; hx=200 hy=145 → **4 anchors at 200 × 145**, exactly Amir's |
+
+⚠️ **`AnchorBoltDiameter` and `AnchorBoltGripLength` change nothing visible** — the shank
+diameter and grip do not drive the geometry. Setting `anchordia` was the wrong lever the whole
+time; **`KeySize` is the one that shows.**
+⇒ And the deeper pattern: **anchors follow the HOLES.** `hx`/`hy` are hole distances, and the
+anchors appear wherever the holes are. Amir's own workflow for ordinary bolts is the same —
+*"DRILL creates the holes, then I select the two parts and the software gives the bolts"*.
+
+**Result reproduced:** head **34.6 × 30.0** ✅ · embedment **z −118** ✅ · **4 anchors at
+200 × 145** ✅. Only the protrusion above the plate differs (143 long vs 157) — 14 mm, the
+thickness of a nut/washer/grout stack; `AnchorBoltGripLength` does **not** drive it (50/64/80 all
+gave 143). Left open, low value, needs Amir's detail.
+
+**Two other things measured here:**
+- `BasePlateIsPolyPlate=1` genuinely changes the base plate from a catalogue flat (`Ks_Shape`,
+  `300X14` from `DIN_FLACH`) into a real `Ks_Plate`. Amir's own model uses the **flat**.
+- ⚠️ **`dumpfull2` itself emits `* WARNING REQUESTED VOLUME SOLIDS CAN NOT BE PRODUCED`.** That
+  message was chased for an hour as if it came from the anchor creation. **The command line is a
+  SHARED channel — your own reading ops pollute the log you diagnose with.** Bracket a single op,
+  and check whether a plain `dumpfull2`/`list` produces the same line before believing it.
+
+## 🔗 B.17 — THE WHOLE DIALOG AS DATA, AND ONE QUARANTINED OP (v77 → v81)
+
+### `conndump` — 132 properties with their real defaults
+
+`PsStandardPlateConnection` (20 members, the creator) + `PsStandardPlateLinkData` (**136
+members: 3 methods and 133 properties** — the entire B.17 dialog). Guessing which property is
+which field is how *"Diameter"* came to mean the **bolt**. So read them all off a live template:
+`op=conndump` lists the installed templates, `template=<name>` prints every property, its type
+and its value. Full map saved at
+`EB PROSTEEL AGENT\knowledge\B17-plate-connection-properties.txt`.
+
+**7 templates installed:** `default/Standard` · `example/example1…4` ·
+`AutoConnect Metric v 18/152x152x13` · `…/204x204x13`.
+
+**Grouped:** Plate 58 · Bolt 26 · Haunch 23 · Weld 6 · other 19.
+
+Two findings that matter commercially:
+
+- ⚠️ **`BoltStyle` defaults to `8.8S` — an AUSTRALIAN bolt**, not DIN6914. Every connection
+  created without setting it explicitly comes out with a bolt from the wrong catalogue.
+  (`HoleDiameter` defaults to 16.)
+- ⚠️ **`MomentX = 6.07E-43`, `ShearZ = 2.8E-45`** — denormal doubles, i.e. **uninitialised
+  memory**. The connection carries force fields, and they hold garbage. Never read them as data.
+- `VerticalHoleListDistance` answers `<Parameter count mismatch>` — **another indexed property**
+  the dump renders as plain. That is the fifth today.
+
+`PlateIsRotated` (= the dialog's *"Rotate Connection"*, turns the whole connection 180° about the
+beam axis, for an asymmetric plate that came out the wrong way up) is confirmed present and
+**creates a valid connection when set** — measured, census +5.
+
+### ⚠️ `connset` — QUARANTINED behind `force=1`
+
+A generic reflection setter for all 133 properties looked like the unlock: one op to drive the
+whole dialog. It **crashes AutoCAD**. Reproduced four times — twice killing the process, and
+once leaving the drawing so damaged that **no save route could write it** (the plugin wrote an
+11 KB file over a 256-entity model; COM answered *"Error saving the document"*).
+
+Ruled out, each by measurement:
+
+| suspected | tested | result |
+|---|---|---|
+| a specific property | `Thickness` · `Length` · `PlateIsRotated` · `BoltStyle=DIN6914` · `WeldToFlange` each alone | all created valid connections |
+| pacing | 2 s settle + `PS_REGEN` between calls | still crashed, on the second call |
+| a stale drawing | repeated in a drawing created fresh from `acadiso.dwt` | crashed there too |
+
+⇒ **A ProSteel bug, not a usage error** (Amir: *"זה באג של התוכנה, אל תתרגש מזה"*). The op now
+refuses unless `force=1`. **`op=conn` — the six beam connections — ran all day without incident
+and remains the path for real work.**
+
+⇒ **Shipping an op that crashes on a real model is worse than not having the op.** Quarantine
+with the evidence attached, and say which path *is* safe.
+
+## 🕳️ B.14 — THE REST OF DRILLING, AND CROSS SECTIONS (v72 → v74)
+
+### `drillspecial` — three drilling features that were never used
+
+| kind | measured |
+|---|---|
+| `radial` | a **bolt circle**: `n=8 r=120` → **8 holes**; with `from=0 to=180` → **4 holes on the upper half only** |
+| `counter` | a **countersink** (`SetHoleCounter(SenkLength, Angle)`) — one hole, with the cone visible in plan |
+| `blind` | `SetHoleDepth` — depth 8 in a **20 mm** plate gave a hole whose measured **span is 8.0 mm**, i.e. it genuinely does not go through |
+
+Also available and still unused: `SetXPosition`/`SetYPosition(PositionSelection)` — place a field
+by **edge reference** (`kLeft/kRight/kDown/kTop/kCenter/kGravity/kPitch/kUser`) instead of by
+coordinate.
+
+### `section` — the outline of any part at any plane, with a real area
+
+`PsGeo.CreateSection(Id, Origin, XAxis, YAxis, Projection, ModelBuild)` — **six** arguments; the
+dump says so and a five-argument reading cost a compile cycle.
+
+**`ModelBuild` measured on an HE300B** (catalogue area **149 cm² = 14 900 mm²**):
+
+| value | elements | area | what it is |
+|---|---|---|---|
+| 0,1,3 | 0 | 0 | nothing |
+| **5** `kBuildInternalModel` | 12 lines | **14 282** | the I outline **without root fillets** — 2·300·19 + 262·11 = 14 282, exact |
+| **7** `kBuildFullInternalModel` | 46 lines | **14 922.5** | **with** the fillets — the catalogue value |
+| 22 `kUseExistingModel` | 46 lines | 14 922.5 | same as 7 |
+
+⇒ Use **7** for a true section, **5** for a simplified outline.
+⚠️ **`PsGeo.isEmpty()` LIES** — it returned `true` on a geo holding 46 lines and a 14 922 mm²
+outline. Count `lineCount + arcCount + circleCount` instead.
+
+⚠️ **And read each count ONCE.** The op reported `elements=0` in the same breath as `lines=46`:
+the message was built from the first read and the verdict from a **second** read, which returned
+**0**. These are not plain fields — treat every `PsGeo` count as **one-shot** and capture it into
+a local. *(A working section was being reported as a failure by its own verdict.)*
+
+## 🤝 "TOUCH PLANE" — SOLVED (v67 → v72)
+
+The first pass called `FindCommonPlane`, saw `normal` and `EdgePoint` come back zero, and reported
+it as half-working. **The answer was in the `PsGeo` out-parameter that pass ignored.** Reading it:
+
+```
+geo empty=False lines=4 arcs=0 circles=0 drawable=4 lineLen=800
+ext=12900,57900,6 ; 13100,58100,6
+ -> polygon verts=5 area=40000 centre=13000,58000,0
+```
+
+Two 200×200×12 plates stacked at z-centres 0 and 12: the contact face comes back as a **4-line
+closed outline**, perimeter **800**, area **40 000 mm² = 200×200 exactly**, sitting on **z = 6** —
+precisely the interface, with its centre. ⇒ *"where do the bolts go"* is now answered **by the
+software**, not by arithmetic on extents.
+
+⚠️ Still only plate-to-plate: it returns false for a shape's flange face and for a beam butting
+into a column, at tolerances 1, 5 and 20, either argument order.
+⇒ **Lesson: when an out-parameter comes back empty, check the OTHER out-parameters before
+concluding the call half-failed.**
+
+## ✂️ `polycut` and `cutat` — five more cut types closed (v65 → v66)
+
+### `polycut` — an opening of any shape
+
+`PsCutObjects.SetAsPolyCut(PsPolygon, Origin, XAxis, YAxis, Depth)`. Cable penetrations, access
+openings, service holes — everything that is not a round bolt hole. Before this, the only tool
+for a non-rectangular opening was **redrawing the plate's whole outline**, which is how lesson 3
+reshaped 214 ribs.
+
+**`PsPolygon` is a full 2D geometry library** — 120+ methods, of which three had ever been used:
+`createRectangle(L, W, CornerRadius)` · `createCircle(R)` · `createPolygon(NumSides, Size, Inside)`
+· `fillet` · `appendArc` · `setToOffset` · `getNegative` · `mirror` · `isRectangle` · `Area`.
+Use its constructors, not hand-built vertex lists.
+
+**Verified — every reported area matches the closed form exactly:**
+
+| shape | reported `Area` | closed form |
+|---|---|---|
+| rect 120×80 | 9600 | 120·80 = **9600** |
+| rect 120×80, corner R20 | 9256.637 | 9600 − 4(400 − 100π) = **9256.64** |
+| circle R45 | 6361.725 | π·45² = **6361.725** |
+| hexagon `size=60 inside=1` | 12470.766 | 2√3·60² = **12470.77** |
+
+⇒ and that last one settles the semantics: with `inside=1`, `size` is the **inradius**, not the
+circumradius. `pg.check(tol, fixIt)` before cutting catches an unclosed or self-intersecting
+outline, which would otherwise fail obscurely.
+
+### `cutat` — cut one part at another (manual B.12.1)
+
+⚠️ **Precondition, verbatim:** *"The plane actually hit by the centerline (or the extended
+centerline) of the shape to be cut will be the cut plane. **If the centerline does not meet any
+surface, no cut can be made!**"* Overlapping bodies are not enough — the **axis** must hit.
+And *"a logical link is created between the parts at these cutting commands"*, so the cut
+**updates when the other part moves**. That is the reason to do it this way instead of trimming.
+
+| mode | measured on a beam crossing a column | note |
+|---|---|---|
+| `object` | 3000 → **3289** | the manual says *"cut **or extended**"* — it extended to reach |
+| `straight` | 3000 → **1505.5** | the workhorse |
+| `miter` | ❌ on a crossing | ProSteel: *"Cut was not performed. Due to an existing cut this would be useless."* |
+| `rounded` | ❌ no change, **no complaint** | probably wants a round/hollow section |
+
+**A miter needs a true corner joint, not a crossing** — and on a real L the two variants differ
+measurably, matching the manual's two descriptions:
+
+| `type` | length | manual |
+|---|---|---|
+| **0** | 1500 → **1650** (+150 = half the 300 mm profile depth) | *"The bisecting line determines the cutting plane…"* |
+| **1** | 1500 → **1575** (+75) | *"The intersection points of outer and inner edges determine the cutting plane… even shapes of different height are correctly cut aligned"* |
+
+⇒ **A cut can lengthen a member.** Judging it by "did the length go down" would have reported
+two working modes as failures. The instrument is *changed*, not *shortened*.
+
+## ⚓ ANCHORS — two different code paths, and only one is reachable (v64)
+
+**Correction to a long-held belief: `PsCreateFastener.Create*` returns `Int64`, not `Void`.**
+The return **is** the new ObjectId and `0` means the factory refused. The op had been judging by
+census delta and reporting "created nothing", i.e. **throwing away the software's own answer and
+then complaining that the software said nothing.** It now reports `returnedId=`.
+
+Measured: `returnedId=0` for `straight` / `hook` / `bend`, with **no style, with every one of the
+27 installed style names**, and with **nothing on the command line** (`eb_log` was watching).
+`PsCreateFastener` lives in `Bentley.ProStructures.**Concrete**` and the word *Fastener* appears
+**nowhere in the ProSteel manual** ⇒ most likely a ProConcrete feature, not licensed here.
+
+**The Duebel lead was the wrong path.** Chasing `Duebel.mdb` for `PsCreateFastener` would not have
+worked: dowels belong to the **base-plate macro**, `KsxBasePlate.Parameters.Dowels` +
+`DowelFilename` with `TieBolts.Create(Parameters&, Boolean& Dowel)` — and *that* is why Amir's real
+anchors read back as `Ks_VolBody`. The files do exist:
+`…\AutoCAD 2015\Data\Bolts\Duebel.mdb` · `…\Localised\USA_Canada\UserBlocks\Dowels\MetDowel.mdb`
+(metric) and `ImpDowel.mdb`.
+
+⚠️ **But `PsBaseplateLinkDataMgd` — the managed class `connbase` drives — has NO dowel members at
+all.** It offers `AnchorBolts`, `AnchorBoltDiameter/GripLength/DrillLength/KeySize`,
+`CreateDetailedAnchorBolts`, `AnchorBoltsOutside`. The dowel path lives on the PSN_BasePlate macro
+classes, behind their own dialog form (`chkDowels`, `txtDowelFile`). **Two different code paths;
+the managed one cannot reach dowels.**
+
+What the reachable path produces, measured: `connbase … anchors=1 anchordetail=1 anchordia=24
+anchordrill=400` → `anchors_with_body=7`, **bbox 25.3 × 25.3 × 80**. So bodies appear, but the
+**length does not follow `anchordrill`** and the count is 7 rather than 4. ⇒ open question for
+Amir; anchor length and embedment are *his* axis of authority, not the documentation's.
+
+## 🎨 `styles` — 0 became 27, because `Type` was never set
+
+`PsObjectStyleList` has a `Type` property and the op never set it before `Initialize()`. Sweeping
+all five:
+
+| type | list | count |
+|---|---|---|
+| 0 | `kBoltStyleList` | **27** |
+| 1 | `kWeldStyleList` | 4 |
+| 2 | `kPosFlagStyleList` | 14 |
+| 3 | `kKoteFlagStyleList` | 2 |
+| 4 | `kUniversalStyleList` | 0 |
+
+The installed bolt catalogue: **`Australia.mdb`** (4.6S / 8.8S / 8.8TB / 8.8TF ±GALV) ·
+**`NasccBolts.mdb`** (A307 / A325 / A490, FIELD and SHOP) · **`DINBolts.mdb`** (DIN558, DIN601,
+**DIN6914**, DIN7968…DIN965). `DIN6914` is the one the working `bolt` op uses.
+
+⚠️ The dump renders `Entry` as a plain `P String Entry`, and an independent checker concluded
+`get_Entry` "does not exist". It does — **the compiler accepted `get_Entry((short)i)` and it
+returns the names.** The dump does not show index parameters on properties. **When the dump and
+the compiler disagree, the compiler is the authority.**
+
+## 🕳️ A DRILL FIELD IS CENTRED ON `at=`, AND HOLES AT THE EDGE VANISH (v63)
+
+Measured on a 300×150 plate spanning x = 12850…13150:
+
+| insert point | spec | holes produced |
+|---|---|---|
+| 13000 (plate centre) | `x=2*100` | **12950, 13050** — centred on `at`, span 100 |
+| 13000 | `x=3*40` | **12960, 13000, 13040** — centred, span 80 |
+| **12900** | `x=2*100` | **12950 only** — the hole at 12850 sits exactly on the plate edge and is **dropped** |
+
+⇒ **`at=` is the CENTRE of the field, not the first hole.**
+⇒ **A hole landing on the part boundary is deleted silently.** No exception, no `EB_ERR`, and
+**nothing on the command line either** — `eb_log` was watching and ProSteel said nothing. The op
+reported `parts_ok=1` because the delta was positive. You ask for two bolt holes, you get one,
+and every instrument says fine.
+
+**The guard:** `drillfield` now derives the declared count from the spec
+(`Number1*Pitch1, IntermediatePitch1, Number2*Pitch2` → sum the `Number` terms per axis, multiply
+the axes) and shouts when fewer appear:
+
+```
+wanted=2  *** SHORT BY 1: asked for 2 hole(s) per part, got 1 over 1 part(s).
+A hole landing ON the part boundary is dropped silently -- the field is CENTRED on at=,
+so move at= or shrink the pitch. ***
+```
+
+Losing a bolt hole without being told is a fabrication error, not a cosmetic one.
+
+## 💥 `collision` — the quality gate (v61 → v62)
+
+The check runs from code with **no dialog**. The **results do not come back through the API
+at all**: `PsCollisionCheck` exposes only `BodyCount` and a `ZoomToObject` viewport helper —
+no `GetBody(i)`, no pair list, no per-collision volume, no report file. The collision *solids*
+it leaves in the model are the only evidence, so the op recovers them by **diffing the
+drawing's handles before and after**, then reads each solid's centre to say **where**.
+
+**Verified end to end on the sandbox:**
+
+| run | result |
+|---|---|
+| whole model, 132 parts | **16 collisions**, `BodyCount` and the id-diff **agree**, 0.4 s |
+| located | **10 at `0,0,0`** + **5 at `0,0,2.5`** — the plates accidentally stacked on the origin by that morning's `at=` bug — and **1 at `14000,17000,0`**, the clash built deliberately to test it |
+| after deleting the five stacked plates | **1 collision**, exactly the deliberate one |
+
+⇒ It found a known planted clash *and* 15 real ones the agent had created without noticing.
+
+**Non-obvious things measured, not assumed:**
+- `SetToDefaults()` is **mandatory** — the class wraps the **persistent** `PS_COLLISION` dialog
+  state, so skipping it inherits whatever the last interactive run left.
+- `CreateBodys` must be **true** or the run is unreadable: `BodyCount` alone cannot say *where*.
+- **`SelectAllObjects` returns a STATUS, not a count** — measured **1** for a whole 132-entity
+  model and **0** for an empty range. The first version reported it as `parts=` and a 132-part
+  run looked like a 1-part run. **`PsSelection.ObjectCount` is the number.**
+- `CollectObjectsFromSelection` is `Void`: an empty selection yields a healthy-looking run with
+  `BodyCount 0`, **identical to a clean model**. The op refuses on an empty selection instead.
+- Cost grows with the **square** of the part count and the class has **no** box/layer/subset
+  parameter — restriction lives on `PsSelection`. `box=x1,y1,z1;x2,y2,z2` scopes it to one joint.
+
+⚠️ **`PsGeometryFunctions` is NOT "47 relation tests".** It has 48 members and 5 Boolean
+methods, all line/plane helpers (`ComputeIntersectionOf2Lines`, `GetNearestPointsBetweenTwoLines`
+…) — **not one relation test between two objects.** An earlier note claiming otherwise was
+wrong. The real "eyes" are `PsObjectProperties.GetExtents`, `PsCompareDrawing` and this op.
+
+## 🔊 READ WHAT ProSTEEL SAYS — `app/eb_log.py` (06/08/2026)
+
+**ProSteel diagnoses its own failures on a channel the API never returns.** An edge-chamfer
+call stored its record, raised nothing, and produced no geometry. The AutoCAD command line said:
+
+```
+Handle of Object Type Ks_Plate  is 2C2
+Use PS_GETOBJHANDLE to identify the Object
+* WARNING  REQUESTED VOLUME SOLIDS CAN NOT BE PRODUCED.
+```
+
+That was only ever seen because a **screenshot happened to include the command line**. Every
+silent-failure investigation so far — `CreateSingleBolt`, `PsCreateFastener`, `set_Facet`,
+`TakeoverDrills` — was run blind to this. Some of them may have been explaining themselves
+all along.
+
+`LOGFILEMODE=1` makes the channel readable:
+
+```python
+import eb_log
+eb_log.enable()                    # returns the log path
+m = eb_log.mark()                  # take BEFORE the operation
+eb.run("edgechamfer", handle=h, layout=1, v1=25)
+eb_log.problems(m)                 # -> just the complaints
+```
+
+⇒ **Bracket every experimental operation with `mark()` / `problems()`.** A silent failure that
+explains itself is a five-minute fix; one that does not is a five-rebuild investigation.
+
+## ➕ `mods`, `outlet`, `planecut`, `edgechamfer` (v59 → v60)
+
+| op | what it does | verified |
+|---|---|---|
+| **`mods`** | Full modification inventory for one part: `facets · cutPlanes · holeFields · outlets · polyCuts · subBodies` + the break-edge record | ✅ the general "did the cut happen" instrument. Until now only `FacetCount` existed — which is why a working cope once read as a failure |
+| **`planecut`** | `PsCutPlane.SetFromNormal` → `SetAsPlaneCut` | ✅ IPE300 **2000 → 1075 mm**, `cutPlanes 0→1`, no complaint |
+| **`outlet`** | Milled notch / countersunk pocket | ✅ types **0** and **1** only |
+| **`edgechamfer`** | `SetAsPlateBreakEdgeCut` | ❌ **measured dead end — see below** |
+
+**`OutletType` measured** (`angle=45` supplied): sent `0` → stored `0`; sent `1` → stored `1`;
+sent `-1` and `4` → **fall back to 0**; sent `2` and `3` → **nothing stored at all**.
+Manual: *"You can create square, wedge-type, and circular shapes."* ⇒ square (0) and wedge (1)
+work; the **circular** ones need different parameters — the manual says `Radius` there
+*"select[s] whether the outlet has to be carried out as outer circle or as inner circle"*,
+i.e. it is a **mode, not a size**, and passing a length is wrong.
+
+### ❌ `SetAsPlateBreakEdgeCut` — not drivable from the API in this build
+
+The manual's B.13.3 promises six kinds of edge processing. Evidence gathered:
+
+- **`EdgeLayout` values ARE 0..6 sequential** (7 falls back to 0) — `kUnknownEdge, kFacet,
+  kRadius, kRounded, kInverted, kFold, kNotch`. ⚠️ **Note this contradicts `FacetType`**, whose
+  usable values are 1..3 with `kFacetRectangle=0` rejected. **Every enum must be measured
+  separately; declaration order proves nothing.**
+- On a **plate**: the record is stored, and ProSteel answers
+  `* WARNING REQUESTED VOLUME SOLIDS CAN NOT BE PRODUCED` — for all 7 layouts × 5 combinations
+  of side and dimensions (down to `v1=1 v2=1` on a 12 mm plate, and `5×5` on a 30 mm plate).
+  So it is **not** a dimensions problem.
+- On a **shape**: nothing stored, no complaint, `FlangeIndex` stays `-1` for 0/1/2/-1.
+- Fetching the object's own record via `PsEditModification.PlateBreakEdge`, modifying it and
+  assigning it back: **does nothing at all.**
+- The record's own `toString` is
+  `FlangeIndex=-1 TopsideDescription= DownsideDescription= TopVar1..DownVar2` —
+  **there is no edge-range field**, while the manual's dialog has *"Selected Edge — from which
+  edge to which edge"*. The API surface for choosing the edges simply is not there.
+
+⇒ Rib chamfers use `SetAsFacetCut` (vertex chamfer), which works. Recorded so this is not
+re-investigated from scratch.
+
+### `PsCutObjects` — where the ten cut types stand
+
+| cut type | op | state |
+|---|---|---|
+| `SetAsFacetCut` | `chamfer` | ✅ corner chamfer, `FacetType` measured |
+| `SetAsPlaneCut` | `planecut` | ✅ 2000 → 1075 |
+| `SetAsPolyCut` | `polycut` | ✅ four shapes, areas exact |
+| `SetAsOutletCut` | `outlet` | ✅ types 0 (square) and 1 (wedge); circular needs other parameters |
+| `SetAsObjectCutId` | `cutat mode=object` | ✅ (can lengthen — the manual says *cut **or extended***) |
+| `SetAsStraightCutId` | `cutat mode=straight` | ✅ |
+| `SetAsMiterCutId` | `cutat mode=miter` | ✅ on a true corner; both variants measured |
+| `SetAsRoundedCutId` | `cutat mode=rounded` | ❌ **dead end** — nothing on plate, I-beam or round tube; undocumented in the manual |
+| `SetAsPlateBreakEdgeCut` | `edgechamfer` | ❌ measured dead end (above) |
+| `SetAsBooleanCut(Int64 SubBody)` | `boolean` | ✅ all three modes measured |
+| `SetAsDetailCut(Point, Depth)` | `detailcut` | ✅ `detailCuts 0→1` — counted by `PsEditShapeModification` |
+
+**Eight of the ten work. The two that do not were each proven not to, not merely left alone.**
+Still unused on the class itself: `SetOffset`, `SetAutomatic`, `CreateLogicalLink`,
+`GetNewObjectId`, `GetModifyIndex`.
+
+---
+
+## Ops built on 06/08 (v32 → v44)
+
+| op | what it does | verified |
+|---|---|---|
+| **`drillfield`** | A drill **field** in ONE call: `x=3*81 y=2*156`, the manual's syntax, explicit axes | ✅ 6 holes, pitches 81/81 and 156, ⌀23 from `dia=20 play=3` |
+| **`conn`** | ONE generic op for all six beam connections: `shear` · `webangle` · `endplate` · `cope` · `haunch` · `purlin` | ✅ 5 of 6. Purlin needs two segments + a socket |
+| **`group`** | Create group / subgroup / assembly | ✅ — full chapter in the B.28 section below |
+| **`posnum`** | Read `Posnum` · `Sendnum` · `Name` · `Weight` · `Article` for every part | ✅ the before/after instrument that never existed |
+| **`mirror`** | `PsMiscTools.Mirror3d` — **39 mirrors were missed in lesson 3 for want of this op** | built, needs a live case |
+| **`copy`** | `PsMiscTools.ObjectCopy` with a `PsMatrix` — native, steel-aware | built |
+| **`cmd`** | Run a **whitelisted** command through `Editor.Command`. Parentheses refused outright | ✅ `PS_REGEN`; both safety gates proven |
+| **`styles`** | Enumerate installed bolt/fastener styles | ⚠️ returns 0 — `PsObjectStyleList` needs a dictionary/folder |
+| **`anchor`** | `PsCreateFastener` — straight / hook / bend / head anchors | ❌ creates nothing. Lead: `Use Dowel` needs a **database file** |
+
+## Ops corrected on 06/08
+
+| op | the defect | the fix |
+|---|---|---|
+| `dumpfull2` · `dumpfull` · `dumpmodel` | `OTHER` rows carried **no coordinates** — 104 `Ks_VolBody` (every anchor) invisible | centre + extents + ECS emitted (v32) |
+| `connbase` | six geometry defaults **overwrote the template** — the v30 fix had only covered anchors | a parameter not sent touches nothing (v32) |
+| `drill` | slots used `SetHoleStep` = a **step hole**, a different feature | `SetAxisDistance` = `Rectangle Hole Axis` (v43) |
+| `holes` · `dumpholes` | `lhm=0` default ⇒ **slotted holes reported as round** | default `lhm=2`; `slotted 0 → 2` on the same model |
+| `conn` | judged by census delta ⇒ a working **cope** reported as "produced nothing" | verdict is `delta > 0` **OR** `geomChanged` (v38) |
+
+## Verification instruments — and which one to use
+
+| to check | use | never use |
+|---|---|---|
+| holes exist | `holes` / `dumpholes` (`PsSingleHoleArray`) | a census count |
+| a slot's length | `lhm=2`, distance between the two reported ends | `getMaximalLength` — returns 0 |
+| a cope / a cut | the member's **length and extents** before/after | census delta, `Create()` |
+| a group exists | `group query=<any member>` | `Create()` — returned **False** on a group that exists |
+| the model is sane | `app/audit.py` — relationships, not counts | totals |
+
+## `app/audit.py` — the geometric gate
+
+Validated against a **known-bad fixture** (`BASELINE-מבחן-5.dwg`, independently measured
+at 76 duplicate anchors and 19 plates with 4 holes instead of 6):
+
+| check | catches | status |
+|---|---|---|
+| `duplicates` | objects sharing a position | ✅ found **exactly 76** |
+| `hole_uniformity` | identical parts drilled differently | ✅ found **exactly 19** |
+| `expected` | declared counts vs actual | ✅ `442 vs 480 (-38)` |
+| `bolt_in_hole` | a bolt with no modelled hole | ✅ after the parser was fixed |
+| `hole_through` | a **hollow section drilled on one wall** | ✅ narrowed to hollow sections after a false positive on an IPE web |
+| `no_orphans` | a part touching nothing | ⚠️ geometric; the software's own `Highlight Orphans` uses **group membership**, better semantics |
+
+⚠️ **`hole_uniformity` must not crown the majority.** In the fixture, 19 parts were wrong and
+1 was right; the first version reported "1 part differs" and pointed at the correct one.
+It now reports the split and takes the expected count from the caller.
+
+## Session safety — added 06/08
+
+- **`eb_api.use("<file>.dwg")`** pins every op to one drawing; the plugin answers
+  `EB_ERR wrongdoc expected=… active=… -- refused, nothing was executed` **before executing**.
+  The pin is **persisted to disk** so it survives separate python runs.
+  *Work landed in the wrong drawing twice in one day before this existed.*
+- **`eb_api.modal_dialogs()` / `ready()`** — a ProSteel dialog leaves AutoCAD reporting
+  `quiescent=True, CMDACTIVE=0`. `run()` returns `EB_DIALOG` instead of queueing behind it.
+- **`_close_stray_docs` never discards**: it saves, or refuses to close. The first version
+  threw away `sandbox.dwg` with `Close(False)`.
+
+## Still open
+
+| item | state |
+|---|---|
+| ~~**positioning from code**~~ | ✅ **CLOSED 06/08** — see the POSITIONING section above. `posset` / `posauto`. |
+| **anchors** | `PsCreateFastener` creates nothing. Lead: `Use Dowel` reads from `Data\Bolts\Duebel.mdb`; `Ks_VolBody` matches what Amir's anchors measure as |
+| **purlin** | needs two purlin segments + a socket, per `B.22` |
+| **`EdgeLayout`** | six kinds per the manual; names known, **values still unmeasured**. `enumdump` holds a fixed list and does not resolve it — measure it the way `FacetType` was measured |
+| **`Clone Manipulations`** | not implemented — requires positioning first |
+| **`PsEdgeChamfer`** | ⬅ next: `PsCutObjects.SetAsPlateBreakEdgeCut`. The *vertex* chamfer (`SetAsFacetCut`) is **done**; the *edge* one is not |
+| ~~**`PsCollisionCheck`**~~ | ✅ **CLOSED 06/08** — `op=collision`, see above |
+| ~~**`props`**~~ | ✅ **FIXED v57** — see below |
