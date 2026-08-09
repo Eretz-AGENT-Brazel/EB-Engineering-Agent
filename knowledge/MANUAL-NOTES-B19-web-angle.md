@@ -136,8 +136,13 @@ behind. Navigate by the table of contents, never by the command index.
 
 # MEASURED 09/08/2026
 
-*Band at x ≥ 110000: four column/beam bays (HE300B + IPE400), **46 objects**. Angles from
-`BS EQUAL :: EA90x90x9`, one of Amir's production catalogues.*
+*Band at x ≥ 110000: four column/beam bays (HE300B + IPE400), **46 objects**.*
+
+> ⚠️ **CORRECTION, 09/08 (found while reading B.23).** This section first recorded the angles as
+> `BS EQUAL :: EA90x90x9`, because that is what was passed to `SetKey` / `SetKatalog`. It was
+> never read back. The angles are in fact **`L90X9` from `DIN.DIN_WINK_GL`** — and
+> **`EA90x90x9` does not exist**: `BS EQUAL` has 6, 7, 8, 10 and 12, no 9.
+> See *"`SetKey` and `SetKatalog` do nothing"* below.
 
 ## The chapter's central claim is true
 
@@ -199,3 +204,23 @@ checksum appear side by side.
 has an API and a dialog but **no data behind it here** — nothing to select from. The
 `ShearX/Y/Z` and `MomentX/Y/Z` fields exist and are settable, but with an empty database there is
 nothing for them to drive, and whether they *select* or merely *record* remains unmeasured.
+
+## ⛔ `SetKey` and `SetKatalog` do nothing — measured
+
+Four connections, identical apart from the section asked for:
+
+| asked for | got |
+|---|---|
+| `EA100x100x10` @ `BS EQUAL` *(valid)* | **`L90X9` @ `DIN.DIN_WINK_GL`** |
+| `L120x12` @ `DIN WINKEL GLEICH` *(valid)* | **`L90X9` @ `DIN.DIN_WINK_GL`** |
+| `L120x12` @ `DIN.DIN_WINK_GL` *(valid, stored form)* | **`L90X9` @ `DIN.DIN_WINK_GL`** |
+| **nothing at all** | **`L90X9` @ `DIN.DIN_WINK_GL`** |
+
+⇒ **`PsWebAngleConnection.SetKey()` and `SetKatalog()` are complete no-ops.** The angle section
+comes from the **template**, and neither an invalid key nor a valid one changes it. Both accept
+anything and report nothing. To change the section, the template must be changed.
+
+⚠️ **Two naming schemes for the same catalogue.** `dumpcat` and `PsShapeLoader` use
+`DIN WINKEL GLEICH`; the model stores `DIN.DIN_WINK_GL` — a `<library>.<catalog>` form. A key that
+reads back one way is not the string you look it up with. (Same for `DIN FLACHEISEN` ↔
+`DIN.DIN_FLACH`, which is how B.20/B.21's default "plates" show up as catalogue flat bars.)
