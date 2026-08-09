@@ -8,6 +8,28 @@ description: How to model real steel structures in AutoCAD 2015 + ProStructures 
 Working knowledge built from live lessons with **Amir (ארץ ברזל)**, who models steel professionally
 and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\EB PROSTEEL AGENT`.
 
+> ## 🧲 IRON RULE — A BOLT PASSES THROUGH **HOLES**. NO EXCEPTIONS.
+> Amir said this four separate times on 09/08 and closed with:
+> **"כלל ברזל — תורה מסיני — אין כאן משחקים, זה קריטי מאוד הכלל הזה."**
+>
+> > *"אין דבר כזה חומר. כאשר אנחנו ממדלים בורג — זה **חייב** להיות שהוא **עובר דרך חורים
+> > באלמנטים אותם הוא מחבר**."*
+>
+> **A modelled bolt must pass through a modelled HOLE in EVERY element it connects.** His wording
+> is plural: a hole in one of the parts is not enough — each part the bolt joins needs its own.
+> A bolt without that is a **CRITICAL ERROR**, not a detail to tidy up later.
+>
+> ⚠️ **This is the default, and it is absolute. Silence means critical error.** The one exception
+> is a **self-drilling screw** (בורג קודח), which cuts its own hole on site and is modelled so the
+> count reaches the parts list. But that is **a declaration Amir makes, per case — never a
+> category the agent may apply**, and it requires **an exceptional instruction AND special
+> approval**. In a **structural** connection there is no exception at all.
+>
+> ⛔ Never create a bolt without holes on my own initiative, and never use one to paper over a
+> bolting that refused. If a situation seems to want one — **ask in one line**.
+> *(Why this sits at the top: it was first recorded in a block halfway down this file, and Amir
+> had to repeat it four times. A rule this critical belongs where it cannot be missed.)*
+
 > ## ⚡ READ THIS ZEROTH — the job, the bar, and what failure means
 > Amir defined all of this on **05/08/2026**, after grading lesson 5 a **failure**.
 >
@@ -375,32 +397,6 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > ⭐ **B.24 answers B.23:** *"The entire bracing **including gusset plate** is generated."* A gusset
 > has no creator because it is not a standalone object — it is something a bracing *has*. But that
 > route is not reachable from code either, so a gusset stays dialog-only for now.
-
-> ## 🪛 A BOLT WITH NO HOLE IS A SELF-DRILLING SCREW — AND ONLY AMIR DECLARES IT
-> Amir, 09/08: *"זה נקרא **בורג קודח**… בורג שקודחים אותו לתוך הפרופיל מבלי לקדוח חור בטרם
-> ההחדרה… חיבור שמתבצע בדרך כלל **בשטח**… ממדלים אותו **על מנת להבין כמה ברגים אנחנו צריכים
-> להזמין** וכדי שהפרט הזה **לא יחמוק מאיתנו**."*
-> A self-drilling screw cuts its own hole, so its missing hole is **correct**, not an omission.
->
-> ⚠️⚠️ **THE RULE HAS NOT CHANGED.** Amir sharpened this the moment the wording went loose:
-> *"זה טעות קריטית לחלוטין **למעט מקרה אחד בודד**… **כל עוד לא נאמר — זה טעות קריטית**."*
-> **A bolt through steel with no modelled hole is a CRITICAL ERROR. Full stop.** That is the
-> default and it is absolute.
->
-> Amir reinforced it the same day, and it gets **stricter**, not looser:
-> *"**קל וחומר כשמדובר על מחברים קונסטרוקטיביים.** אין כאן משחקים — **בורג מגיע רק עם חור
-> באלמנטים שהוא עובר ומחבר דרכם**. **אך ורק בהינתן הוראה חריגה ואישור מיוחד** ממודל בורג שאין לו
-> חור מותאם."*
-> 1. ⭐ **A hole in EVERY element the bolt passes through** — his wording is plural. A hole in one
->    of the parts is not enough; each part the bolt joins needs its own.
-> 2. ⭐ **In a structural connection there is no exception at all** — that one carries load.
-> 3. ⭐ The exception needs **BOTH an exceptional instruction AND special approval**, per case.
->    Not a mention, not context, not inference from an earlier conversation.
-> **A self-drilling screw is not a category the agent may apply — it is a declaration Amir makes**,
-> case by case. The two look **identical in the model**; only the intent differs, and the intent
-> is not mine. **Silence means critical error.**
-> ⇒ Never create one on my own initiative. Never use one to paper over a failed bolting. If a
-> situation looks like it wants one — **ask in one line.**
 
 > ## 🔩 B.15 SETTLES THE BOLTING SEQUENCE (measured 09/08)
 > The manual says components no longer have to be drilled first. **Not from this API.** Two
