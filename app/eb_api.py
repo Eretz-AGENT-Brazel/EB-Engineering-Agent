@@ -19,8 +19,8 @@ ROOT = os.path.dirname(HERE)
 PLUG = os.path.join(HERE, "plugin")
 CMD = os.path.join(PLUG, "eb_cmd.txt")
 RES = os.path.join(PLUG, "eb_result.txt")
-DLL = os.path.join(PLUG, "EBAgentApi115.dll")
-RUN_CMD = "EB_RUN115"
+DLL = os.path.join(PLUG, "EBAgentApi116.dll")
+RUN_CMD = "EB_RUN116"
 # ---- which drawing every op is expected to run on -------------------------
 # Twice on 06/08/2026 work landed in the WRONG drawing: first two documents were open
 # at once (Amir spotted the two windows), then opening a Bentley sample silently became
@@ -551,14 +551,56 @@ def connect_project(dwg_path):
 
 
 
+def _acad_pids():
+    """Process ids of the running AutoCAD instances, found from their main windows.
+
+    Titles are matched the same way eb_shot.py matches them, so this never depends on
+    a process name that could differ between installs.
+    """
+    pids = set()
+    try:
+        import ctypes
+        from ctypes import wintypes
+        u = ctypes.windll.user32
+        CB = ctypes.WINFUNCTYPE(ctypes.c_bool, wintypes.HWND, wintypes.LPARAM)
+        buf = ctypes.create_unicode_buffer(512)
+
+        def cb(hwnd, _l):
+            if not u.IsWindowVisible(hwnd):
+                return True
+            u.GetWindowTextW(hwnd, buf, 512)
+            if "AutoCAD" in buf.value:
+                pid = wintypes.DWORD()
+                u.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
+                if pid.value:
+                    pids.add(pid.value)
+            return True
+
+        u.EnumWindows(CB(cb), 0)
+    except Exception:
+        pass
+    return pids
+
+
 def modal_dialogs():
-    """Every top-level dialog owned by AutoCAD, by title.
+    """Every top-level dialog owned by AUTOCAD, by title.
 
     MEASURED 06/08/2026: while ProStructures' "ProSteel Positionflags and Positioning"
     dialog was open and blocking, AutoCAD reported  quiescent=True  and  CMDACTIVE=0.
     Amir saw the dialog on screen; the API did not. So _quiescent() CANNOT be trusted to
     mean "ready" -- a ProSteel dialog is a separate window that leaves AutoCAD looking idle.
     Without this check, any dialog-driven command parks the session silently.
+
+    FIXED 09/08/2026 -- OWNERSHIP, which the docstring always claimed but the code never
+    checked. It enumerated EVERY #32770 window on the desktop, so any "Open" or "Save As"
+    box Amir had open IN ANY APPLICATION froze the agent completely. Caught live: the
+    guard reported "Sheet Information", then "Open", while AutoCAD itself was clean --
+    they were Amir's windows. Amir: "אתה רק על האוטוקאד אל תתערב".
+
+    This does NOT relax the check. A real AutoCAD or ProSteel dialog still blocks exactly
+    as before; the guard simply stops counting windows that were never AutoCAD's.
+    If the AutoCAD pid cannot be determined, it falls back to the old desktop-wide scan --
+    blocking wrongly is safer than running into a dialog.
     """
     out = []
     try:
@@ -569,6 +611,7 @@ def modal_dialogs():
         CB = ctypes.WINFUNCTYPE(ctypes.c_bool, wintypes.HWND, wintypes.LPARAM)
         buf = ctypes.create_unicode_buffer(512)
         cls = ctypes.create_unicode_buffer(256)
+        pids = _acad_pids()
 
         def cb(hwnd, _l):
             if not u.IsWindowVisible(hwnd):
@@ -576,6 +619,11 @@ def modal_dialogs():
             u.GetClassNameW(hwnd, cls, 256)
             if cls.value != "#32770":          # the standard Windows dialog class
                 return True
+            if pids:                           # only AutoCAD's own dialogs
+                pid = wintypes.DWORD()
+                u.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
+                if pid.value not in pids:
+                    return True
             u.GetWindowTextW(hwnd, buf, 512)
             t = buf.value.strip()
             if t:

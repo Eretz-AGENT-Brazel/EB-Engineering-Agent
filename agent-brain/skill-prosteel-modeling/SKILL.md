@@ -658,6 +658,38 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > (collinear *and* lapped behave the same) and grip length (U160/U100/U80 identical). The other
 > three types are balanced. ⇒ **Audit hole count against bolt count after every purlin connection.**
 
+> ## 🌀 MOVING WHAT EXISTS (B.4, measured 09/08)
+> AutoCAD's own move/copy work on ProSteel objects — the manual says so plainly. ProSteel's
+> versions exist for **the mouse**: they limit the move direction so a snap in a view cannot pick a
+> point off-plane, and they let one pick select a whole **group**. **From code neither matters** —
+> we pass an exact vector and select by handle. So `copy`/`mirror`/`rotate` already cover B.4.1–3.
+> What is *not* free is Align and the rotated distribution:
+>
+> ⭐ **`align`** (B.4.4) — one `Matrix3d.AlignCoordinateSystem`, the same call the UCS op uses.
+> Give two systems as origin + a point on X + a point on Y. *"Moved and rotated at the same time"*
+> is literal. Measured: a copy landed on a 45°/z+500 target system to **0.14 mm**, the residual
+> exactly perpendicular to the axis.
+> ⚠️ **Orthonormalise first** (`Z = X×Y`, then `Y = Z×X`). Picked axes are not guaranteed
+> perpendicular, and feeding them raw **shears** the part instead of moving it.
+>
+> ⭐ **`spiral`** (B.4.6) — rotated copy with vertical offset; the manual's own spiral-staircase
+> illustration. Two methods, and they measurably differ: `count` treats `angle` as the gap
+> **between** steps; `area` divides a **total** span by n (180 / 8 → 22.5°). Measured over 16
+> treads: exactly 24° apart, exactly 190 rise, radius constant.
+>
+> ⚠️ **The 2-point mirror depends on the CURRENT VIEW** — *"the mirror plane is perpendicular to
+> the current view"*. From code always prefer the 3-point form; it cannot be wrong for a reason
+> you cannot see.
+>
+> ⛔ **Clone (B.4.5) is dialog-only.** `PsDrillObject.TakeoverDrills` is the only manipulation
+> transfer in the API and it moves nothing from code — five call sequences, selections proven
+> correct, `changed=0` every time. ✅ Do it by **composition**: read the source's holes and drill
+> them again (`clonedrills variant=9`). The manual's position-number gate is real — only parts with
+> a **matching Posnum** are eligible.
+> ⚠️⚠️ **And cloning is relative to each part's OWN coordinate system.** The manual's warning: a
+> hole 100 from the right lands 100 **from the left** on a part whose PCS starts at the other end.
+> **A part inserted the other way round gets its holes silently mirrored.**
+
 > ## ⚠️ `dumpmodel` IS BLIND TO BOLTS AND PLATES — USE COM
 > It reports `plates=0 bolts=0` with hundreds of `ERR … Object reference not set` rows. A
 > conclusion drawn from it ("no bolts here") was wrong. `doc.HandleToObject(h).InsertPoint` bound
