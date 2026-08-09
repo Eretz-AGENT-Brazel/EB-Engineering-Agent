@@ -345,6 +345,31 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 >   When the dump and the compiler disagree, the compiler wins. It is the dependency tree:
 >   `-1` = attached to the base plate, otherwise the parent segment's index.
 
+> ## 🧭 THE DIVIDING LINE: `Connection.Standard` CREATES, the rest does not (measured 09/08)
+> Four standalone creators tested in one day, all refusing, against four connection classes that
+> all work:
+>
+> | class | namespace | result |
+> |---|---|---|
+> | `PsWebAngleConnection` · `PsShearPlateConnection` · `PsSpliceJointConnection` · `PsStiffenerConnection` | `Connection.Standard` | ✅ **create cleanly** |
+> | `PsCreateWeldFlag.Create()` | `Annotation` | ⛔ **false** — yet a splice made 32 `Ks_WeldFlag` |
+> | `PsGussetConnection` | `StructuralObject` | ⛔ **no creator at all** |
+> | `PsBracing.insert()` | `StructuralObject` | ⛔ **false** in five configurations |
+>
+> ⇒ **Reach for a connection class first.** When something in `StructuralObject` or `Annotation`
+> is needed, expect it to be dialog-only until proven otherwise, and budget for that.
+> ⭐ Diagnostic that separated cause from symptom on `PsBracing`: a **read-back taken immediately
+> before `insert()`** returned exactly what had been written (`cat`, `size`, `shapeType`). The
+> setters work; only the creation step refuses. Without that read-back the natural guess would
+> have been a bad section key, and hours would have gone into it.
+> ⚠️ Still untried on `PsBracing`: the manual insists the **UCS must be over the bracing plane**
+> first. `UCS` is not on the plugin's command allowlist — **do not widen a safety control to test
+> a hypothesis**; ask.
+>
+> ⭐ **B.24 answers B.23:** *"The entire bracing **including gusset plate** is generated."* A gusset
+> has no creator because it is not a standalone object — it is something a bracing *has*. But that
+> route is not reachable from code either, so a gusset stays dialog-only for now.
+
 > ## 📏 BOLT GROUPS THAT CONVERGE ON ONE NODE MUST BE SPACED (measured 09/08)
 > Three members bolted to one gusset, inner rows at 100 mm along each: the hole groups came
 > within **11 mm** of each other, ProSteel **merged them**, and `boltparts` produced **14 bolts at
