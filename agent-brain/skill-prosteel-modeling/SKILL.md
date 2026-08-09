@@ -735,6 +735,28 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > ⇒ **An instrument that reports zero must be shown to report non-zero somewhere before its zero
 > is believed.** Run it against a region where the thing is known to exist.
 
+> ## 📦 GETTING AN ACIS SOLID INTO THE PARTS LIST (B.11, measured 09/08)
+> An AutoCAD solid needs **no special measure** for interfering edges or 2D overviews — but for a
+> **dimensioned component-part drawing** it needs an **ACIS body reference**, which gives it
+> parts-list characteristics and its own component CS in the DetailCenter.
+> ⇒ **This is how a bought-in machine part or an imported model reaches the parts list and a shop
+> drawing.**
+> ```
+> PsEditShapeModification.CreateAsAcisBody(id)        -> a real AcDb3dSolid (B.12.7's escape hatch)
+> PsCreateSolidReference.Create(solidId, massProp)    -> the reference
+> PsSolidReference.SolidId · IsSolidErased · GetInsertUcs
+> ```
+> ⭐ `massProp=true` is the manual's **inertia-axes** mode and is **the only one that works with no
+> further input** — `Create(solid, false)` returns 0 unless `SetInsertMatrix` supplied the 3-point
+> component CS first.
+> ⭐ The component CS drives **the orientation and dimensioning of the 2D workshop plan**: the X
+> axis is the horizontal, and the **XY plane is always the front view**.
+> ⭐⭐ **The reference dies with its solid** — measured by census: 840 → 841 (acis) → 842 (ref) →
+> delete the body → **840**. Two entities gone for one delete, exactly as the manual warns.
+> ⚠️ **But a COM `HandleToObject` check right after the delete still said the reference existed.**
+> Only the census, and a fresh COM read, showed the truth. **After deleting, re-acquire the document
+> before believing an existence check** — or trust the census, which settled immediately.
+
 > ## 🧊 SOLIDS ARE REAL PARTS (B.10, measured 09/08)
 > **`Bentley.ProStructures.Steel.Primitive.PsCreatePrimitive`** — the whole chapter in one class:
 > `CreateBox` · `CreateSphere` · `CreateCylinder` · `CreateCone(startR,endR,H)` ·
