@@ -1,8 +1,0 @@
-﻿templateCount=7
-[0] default/half convex  shapeType=1 lengthType=1 length=0 thick=10 flangeDist=1 webDist=2 offset=0 roundTo=5 radius=0 topAligned=False weldStyleCRC=0 weldFlange=0 weldWeb=0 centerPunch=0 createGroup=True withAngle=False angle=0
-[1] default/half rounded  shapeType=2 lengthType=2 length=0 thick=10 flangeDist=1 webDist=2 offset=0 roundTo=5 radius=0 topAligned=False weldStyleCRC=0 weldFlange=0 weldWeb=0 centerPunch=0 createGroup=True withAngle=False angle=0
-[2] default/full rounded  shapeType=2 lengthType=2 length=0 thick=10 flangeDist=1 webDist=2 offset=0 roundTo=5 radius=0 topAligned=False weldStyleCRC=0 weldFlange=0 weldWeb=0 centerPunch=0 createGroup=True withAngle=False angle=0
-[3] default/full convex  shapeType=1 lengthType=1 length=0 thick=10 flangeDist=1 webDist=2 offset=0 roundTo=5 radius=0 topAligned=False weldStyleCRC=0 weldFlange=0 weldWeb=0 centerPunch=0 createGroup=True withAngle=False angle=0
-[4] default/full champfered  shapeType=0 lengthType=0 length=0 thick=10 flangeDist=1 webDist=2 offset=0 roundTo=5 radius=0 topAligned=False weldStyleCRC=0 weldFlange=0 weldWeb=0 centerPunch=0 createGroup=True withAngle=False angle=0
-[5] default/half chamfered  shapeType=0 lengthType=0 length=0 thick=10 flangeDist=1 webDist=2 offset=0 roundTo=5 radius=0 topAligned=False weldStyleCRC=0 weldFlange=0 weldWeb=0 centerPunch=0 createGroup=True withAngle=False angle=0
-[6] default/Standard  shapeType=0 lengthType=0 length=0 thick=10 flangeDist=1 webDist=2 offset=0 roundTo=5 radius=0 topAligned=False weldStyleCRC=0 weldFlange=0 weldWeb=0 centerPunch=0 createGroup=True withAngle=False angle=0

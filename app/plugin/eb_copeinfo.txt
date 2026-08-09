@@ -1,8 +1,0 @@
-﻿cope templates: 3
-
-[0] 'default/Standard' shapeFit=1 copeType=0 edgeType=0 polyCut=0 radius=8.5 web=5/0 flangeT=0 endCope=False atStart=False bothEq=False rot=False innerEdge=False middle=False outer=20/20 inside=30/30 edge=5/5 rathole=0/0 shapeLen=0 slope=False
-[1] 'AutoConnect Metric v 18/10mm Cope' shapeFit=1 copeType=0 edgeType=0 polyCut=0 radius=0 web=10/0 flangeT=0 endCope=False atStart=False bothEq=False rot=False innerEdge=False middle=False outer=10/10 inside=25/25 edge=10/10 rathole=0/0 shapeLen=0 slope=False
-[2] 'AutoConnect Metric v 18/20mm Cope' shapeFit=1 copeType=0 edgeType=0 polyCut=0 radius=0 web=20/0 flangeT=0 endCope=False atStart=False bothEq=False rot=False innerEdge=False middle=False outer=20/20 inside=40/40 edge=20/20 rathole=0/0 shapeLen=0 slope=False
-
-fresh link data: shapeFit=0 copeType=0 edgeType=0 polyCut=0 radius=0 web=0/0 flangeT=0 endCope=False atStart=False bothEq=False rot=False innerEdge=False middle=False outer=0/0 inside=0/0 edge=0/0 rathole=0/0 shapeLen=0 slope=False
-plateDataCount=0

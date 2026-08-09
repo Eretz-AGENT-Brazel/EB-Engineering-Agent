@@ -31,3 +31,19 @@ app/plugin/eb_sections.txt
 app/plugin/eb_styles.txt
 app/plugin/eb_enums.txt
 app/plugin/eb_catalog.txt
+
+# --- added 09/08/2026, development-folder tidy ---
+# Compiled plugin binaries: rebuildable from the .cs beside them, and 125 of them were
+# most of a 54 MB .git. The SOURCES stay tracked — they are the written history of the API.
+app/plugin/*.dll
+app/plugin/*.pdb
+
+# Transient op output. Every one of these is written by an op and read straight back;
+# they regenerate on demand and carry no history.
+app/plugin/eb_*.txt
+!app/plugin/eb_cmd.txt
+!app/plugin/eb_result.txt
+!app/plugin/eb_expect_dwg.txt
+
+# Archived DWG snapshots — kept on disk, out of the repo
+projects/SANDBOX/_archive/

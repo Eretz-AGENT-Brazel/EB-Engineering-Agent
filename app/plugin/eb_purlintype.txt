@@ -1,9 +1,0 @@
-﻿Bentley.ProStructures.PurlinType
-  kBoltet          = 0
-  kShoe            = 1
-  kCleat           = 2
-  kShapeBased      = 3
-
-  template 'Default/Example-Purlinshape' -> PurlinType=kBoltet (0)
-  template 'Default/Example-Purlinshoe' -> PurlinType=kShoe (1)
-  template 'Default/Standard' -> PurlinType=kBoltet (0)

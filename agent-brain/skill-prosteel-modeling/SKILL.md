@@ -30,6 +30,85 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > *(Why this sits at the top: it was first recorded in a block halfway down this file, and Amir
 > had to repeat it four times. A rule this critical belongs where it cannot be missed.)*
 
+> ## 🧱 THE CEILING — CHECK IT BEFORE CHASING ANY CREATOR
+> Full list: **`knowledge/THE-CEILING-what-code-cannot-reach.md`**. Consolidated 09/08 from nine
+> chapters that each paid for it separately.
+>
+> ⭐⭐ **The pattern in one line: anything that requires a MOUSE PICK is unreachable from the API.**
+> Not a run of accidents — the shape of the product. The managed classes expose a connection's
+> *data* but not the act of choosing what it connects.
+>
+> **Closed, do not retry:** bracing (13 configurations) · the `PSN_*` macros (all prompt) · gussets
+> (no creator; they come from the bracing) · Clone / `TakeoverDrills` · standalone weld flags ·
+> haunch placement at a point · the cope's ESC route · bolting with no pre-drilled holes ·
+> `PsCreateFastener`.
+> **Parameters that never arrive** (the call works, the numbers are ignored, the template wins):
+> base plate · end plate · purlin. ⇒ **choose a template, do not pass numbers.**
+> **Never fairly tested, worth three strikes:** `CreateRotation` · `CreateHull` (needs `SetPoints`,
+> not `SetPolygon`) · Clone's other four categories · `ClsParameters.ReadFromTemplate`.
+>
+> ⇒ **Before spending a strike, look it up.** If it is closed, go straight to the composition
+> workaround — the file lists one for every case.
+
+> ## 🔧 THE VERIFICATION KIT — USE THESE, DO NOT INVENT A CHECK (built 09/08)
+> On 09/08 **four** separate findings turned out to be artefacts of a check invented on the spot:
+> bounding boxes gave **two opposite answers** to "does it touch"; `dumpmodel` was **blind to
+> bolts**; `connverify` produced **32 flags, every one false**; a COM handle read after a delete
+> returned a **stale cache**. The software failed less often than the measurements did.
+>
+> Three instruments now live in the plugin. **Reach for these first.**
+>
+> | op | question | calibrated against |
+> |---|---|---|
+> | **`vfy_bolts minx= maxx=`** | do bolts and holes correspond, **by geometry**? | B.25's balanced bay (**0/0** ✅) and B.22's `kBoltet` (**9 unfilled** ✅) |
+> | **`vfy_touch a= b=`** | do two parts touch? reports the **gap or overlap as a number** | tread vs collar → **overlap 2.0, X = −2.5**, matching the hand measurement |
+> | **`vfy_size minx= maxx=`** | has anything been **stretched**? | the haunch that reached 317,000 mm |
+>
+> ⭐ **Each op prints its own blind spot in its result line.** `vfy_bolts` matches by proximity, so
+> it cannot tell *which part* a bolt crosses; `vfy_touch` uses axis-aligned extents, so a **rotated**
+> part can read as touching when its real contour does not — for a sector or a diagonal, read the
+> contour (`plateinfo ext=`, `GetPolygon`). **An instrument that never says "I don't know" is the
+> one that produced the 32 false flags.**
+>
+> ⭐⭐ **Calibration is the point, not the code.** Both non-trivial ops were wrong on first run and
+> the *known cases* caught it:
+> - `vfy_bolts` flagged 4 iron-rule violations in a bay believed clean — and it was **right**: four
+>   **orphaned bolts** survived a rebuild in which only the rods and gussets were deleted. My
+>   "2/2/2 at all four ends" had measured only what I had just built, not what was in the band.
+> - `vfy_size` flagged a 15 × 24 m `Ks_Grid`. Grids and work frames are **layout**, legitimately
+>   huge; the guard is about a **member** being stretched, so it now skips them.
+> ⇒ **Never trust a new check until it has failed a known-bad case and passed a known-good one.**
+>
+> **Model baseline, 09/08:** 835 parts · 194 bolts · 593 holes · 187 matched · 0 oversize.
+
+> ## ✋ THREE STRIKES — AFTER 3 REFUSALS, STOP TRYING (adopted 09/08)
+> When a creator refuses, **try at most three configurations.** Then do one of:
+> **(a)** build the thing by **composition** from calls that are known to work · **(b)** ask Amir in
+> one line · **(c)** record it as dialog-only and move on.
+>
+> ⛔ **Never keep permuting parameters.** `PsBracing.insert()` was given **thirteen** configurations
+> across B.24 and B.25 before being accepted as unreachable — about two hours, and the answer was
+> visible after three. The bolted eaves in B.26 was hand-rolled **three times** from
+> plate + drill + bolt, giving 0 bolts each time, when `conn kind=endplate` built the whole corner
+> correctly **on the first call**.
+> ⭐ **The tell:** if two attempts fail for *different* reasons you are still learning; if they fail
+> the *same* way, the route is closed. **Count the attempts out loud in the report** so the budget
+> is visible while it is being spent.
+
+> ## 👁 SHOW THE SCHEME BEFORE THE DETAIL (adopted 09/08)
+> Before spending time on bolt spacings, hole patterns or plate sizes, **show Amir the joint at the
+> "is this structurally sensible" level** — one screenshot, one sentence of what carries what.
+>
+> Every scheme-level error on 09/08 was caught **by his eye, not by my measurements**, and each one
+> arrived *after* the detailing was already finished:
+> - staircase treads **floating 44.5 mm** off the collar — and I had "verified" them
+> - the anchors were a **profile, not anchor bolts** — right geometry, wrong object, wrong list
+> - the apex plate sat 120 below the ridge, bolts 50 mm apart
+> - the welded eaves **was not a connection at all** — a sloped end meeting a flat face along a line
+>
+> ⇒ **My checks answer "did the API do what I asked". His eye answers "is this a real detail."**
+> Different questions — and only the second protects the model. Ask it first, while it is cheap.
+
 > ## ⚡ READ THIS ZEROTH — the job, the bar, and what failure means
 > Amir defined all of this on **05/08/2026**, after grading lesson 5 a **failure**.
 >
