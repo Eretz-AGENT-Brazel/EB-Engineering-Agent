@@ -735,6 +735,21 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > ⇒ **An instrument that reports zero must be shown to report non-zero somewhere before its zero
 > is believed.** Run it against a region where the thing is known to exist.
 
+> ## 🎨 LAYERS: THE AUTOMATIC CONTROL FOLLOWS THE COMMAND, NOT THE OBJECT (B.1, measured 09/08)
+> ProSteel puts each object on its own layer — but only when the object is made by the shape
+> creator or a connection class. **A direct `Ps*Create*` call drops its part on whatever layer is
+> current.** Measured over a full day of modelling: **88 parts stranded on layer `0`** — 69
+> `Ks_Plate`, 14 `Ks_VolBody`, 3 `Ks_BendPlate`, 2 `Ks_ArcPlate` — while shapes, bolts, welds and
+> work frames all landed correctly.
+> ⇒ Consequences are real: `LELEMOFF` will not hide them, layer-based filters and audits miss them,
+> and they do not take the layer colour. **Pass the layer explicitly on every direct creation.**
+>
+> The manual's three switch groups map one-to-one onto real layer names, so their behaviour is
+> reachable by name over COM (`Layer.LayerOn`) with no command at all:
+> **element** `PS_Shape PS_RoofWall PS_Plate PS_Const PS_Bolt` ·
+> **additional** `PS_Dim PS_Mid PS_Pos PS_Elev_flag PS_Weld` · **frame** `PS_Workfram`.
+> ⚠️ `PS_LAYER` itself is not on `CmdAllow` — a deliberate safety control, not widened for this.
+
 > ## 📦 GETTING AN ACIS SOLID INTO THE PARTS LIST (B.11, measured 09/08)
 > An AutoCAD solid needs **no special measure** for interfering edges or 2D overviews — but for a
 > **dimensioned component-part drawing** it needs an **ACIS body reference**, which gives it
