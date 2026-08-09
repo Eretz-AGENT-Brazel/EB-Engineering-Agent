@@ -735,6 +735,28 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > ⇒ **An instrument that reports zero must be shown to report non-zero somewhere before its zero
 > is believed.** Run it against a region where the thing is known to exist.
 
+> ## 🔗 THE CONNECTION EDITOR (B.27, measured 09/08)
+> ✅ **`PsEditLogicalLink.RemoveLogicalLinkByNumber(n, DeleteParts)` — this is how you delete a
+> connection.** B.26 cost several rebuilds because deleting a connection's *parts* leaves the
+> **link alive**, and the next attempt then reports `parts +0` since ProSteel still believes the
+> joint is there. Measured: `links 1 → 0`. (`RemoveAllLogicalLinks(bool)` for the lot.)
+> ✅ `SetObjectId(id)` + `get_LogicalLinkCount()` is reliable — 74 of 321 parts, 98 links.
+> ⭐ `LogicalLinkType` has **42 values** — `kCuttedByLink`, `kHolesFromLink`, `kCopedByLink`,
+> `kConnectWithWebAngle`, `kConnectToBracing`, `kBoltedLink`, `kStiffenerLink`, **`kCOMLink`** … the
+> vocabulary for auditing a model. And B.27's **COM-Connections** family is where the 62 `PSN_*`
+> macros surface.
+> ⭐ The manual's own QA gate: **green = correct · yellow = hole distances not observed · red =
+> collisions** — exactly the defects found by hand in B.22 and B.26.
+>
+> ⛔⛔ **But the per-link detail is NOT readable, and an audit built on it had to be retracted.**
+> `PsEditConnection` has **no binder**, so `LinkType` always returns `kUndefinedLink`; and
+> `getBoltObjectId(0)` / `getLinkObjectId(0)` return 0 on every link. A verifier written on those
+> reported **32 flagged connections, every one false** — it flagged the B.22 purlins, which carry
+> 23 bolts measured through COM.
+> ⇒ **An audit is only as honest as its instrument.** A verdict column that cannot fail looks like
+> knowledge and is noise. **Judge a connection by GEOMETRY** — bolt positions against hole
+> positions — never by an API field that may be returning its default.
+
 > ## ⚠️⚠️ A HOLE'S DEPTH TELLS YOU WHERE IT REALLY WENT (B.26, measured 09/08)
 > **The drill places holes by the HOST'S geometry, not at the point you pass.** Aiming at an
 > HE300B's flange three different ways gave: an **11 mm** hole on the column **axis** (that is the
