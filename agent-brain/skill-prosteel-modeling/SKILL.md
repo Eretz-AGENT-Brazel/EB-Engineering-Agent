@@ -560,7 +560,10 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 >
 > ⛔ **The `Cope` page does not work from either class.** `CreateCope = true` plus real geometry
 > plus a template name validated by `CheckCopeTemplate('default/Standard') = True` still left the
-> beam byte-identical. Proven on both B.19 and B.20. `PsCopeConnection` is the remaining route.
+> beam byte-identical. Proven on both B.19 and B.20.
+> ✅ **RESOLVED 09/08 in B.12.6 — `PsCopeConnection` is the route, and it works.** See the B.12
+> block below for the two rules that make it work: *start from a template*, and *the support
+> object is mandatory*.
 > ⭐ Cope templates use the **`default/<name>`** convention — the same as connection templates.
 > ⚠️ **The load database is empty product-wide** (`get_PlateDataCount() = 0` on both classes), so
 > the `H(kN)`/`Hz(kN)` selection and the `MaH`/`MaHz` capacities have nothing behind them here.
@@ -576,8 +579,61 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > counts only `Ks_Shape` will not see those cleats.**
 > ⛔ Three limits, all measured: no support shape ⇒ `Create()` false (the manual's ENTER-for-none
 > case is not reachable this way); **`CreateCope` is inert even with real cope geometry** — a
-> dedicated `PsCopeConnection` exists and is the likely route; and `GetPlateId` returns nothing
-> because a web angle **makes no plates at all**.
+> dedicated `PsCopeConnection` exists and **is** the route (measured in B.12.6, below); and
+> `GetPlateId` returns nothing because a web angle **makes no plates at all**.
+
+> ## ✅ THE COPE, SETTLED (B.12.6, measured 09/08)
+> `PsCopeConnection` — `SetConnectionObjectId(beam)` + `SetSupportObjectId(support)` +
+> `SetConnectionData(...)` + `Create()`. Proof is **`mods`: `polyCuts` 0 → 1**. Two rules:
+>
+> ⭐⭐ **1. Always start from `GetTemplate(...)` and override it. Never build link data from
+> scratch.** A hand-built `PsCopeLinkDataMgd` whose every exposed property *equalled*
+> `default/Standard` did **nothing**. The template carries state the property dump does not show.
+> Template + `edge`/`rathole`/`radius` overrides works perfectly — that is the supported shape.
+>
+> ⭐⭐ **2. `Create()` lies in BOTH directions here.** Template + support → `create=False` **and it
+> succeeded**. Hand-built data → `create=True` **and nothing was made**. `Check()` is the usable
+> pre-flight *for this class* (1 = will create, 0 = won't) — but only a read-back is proof.
+>
+> ⛔ **The support object is mandatory.** The manual's ESC route — *"just enter ESC instead of
+> selecting a second shape"*, a notch at the shape end — gives `Check()=0` and creates nothing,
+> whatever `UseShapeEndCope`/`CutAtStart` say. There is also no `SetConnectionPoint` on this class,
+> so no way to name an end. **Dialog-only.**
+> ⭐ A cope lands as a **poly-cut** — the manual says that of the US-cope; it is true of the plain
+> cope too. The API calls the corner access hole a **rathole** (`First/SecondRatholeDiameter`).
+
+> ## ✂️ RESHAPING WHAT IS ALREADY THERE (B.12, measured 09/08)
+> `PsEditShapeModification` — the class for *changing* members, not making them:
+>
+> | need | call | measured |
+> |---|---|---|
+> | divide | `SplitAtPoint(id, pt)` | 8000 → original keeps **2000**, a **new** member holds 6000; census **+1** |
+> | combine | `ConnectWith(id, other)` | 2000 + 4000 → **6000**; census **−1**, the second is consumed |
+> | shorten / extend | `ChangeLengthAtSide(id, side, len)` | ⭐ **`len` is a SIGNED DELTA, not a new length** — `+1500` twice gave 2000→3500→5000, `−800` twice gave 5000→4200→3400 |
+> | ACIS escape hatch | `CreateAsAcisBody(id)` | B.12.7's way out — at the cost of a larger, slower drawing |
+>
+> ⭐ **The platform recipe (worked in the manual):** lay the beams through as *single* members, then
+> divide them at the crossing girders — *"the risk for dimensional errors is eliminated"*. The
+> separation distance is **half the crossing member's flange** (IPE300 → 75), and the dialog's
+> `Distance` shortens **both** ends, so *"the arising gap has the DOUBLE distance value."*
+>
+> **`PsCutObjects`** for the rest: `SetAsMiterCutId` · `SetAsRoundedCutId` · `SetAsStraightCutId` ·
+> `SetAsBooleanCut` + `SetSubBodyType` · `SetAsOutletCut` · `SetAsPolyCut` · `SetAsPlaneCut`.
+> ⭐ **One mitre call cuts BOTH members** (`cutPlanes` 0→1 on each) — the reciprocal call returns
+> `applied=0` and is redundant.
+> ⭐ Boolean has a third mode the manual never mentions: `SubBodyType.**kCommenBody**` —
+> intersection — alongside `kAddBody` and `kSubBody`.
+>
+> ⚠️⚠️ **AutoCAD's own booleans do NOTHING to a ProSteel object, silently.** The manual: ProSteel
+> uses the Architectural Desktop modeller, not ACIS, so *"there will be **no errors, but nothing
+> will happen**"*. Use `PS_ADD` / `PS_SUB` (or `PsCutObjects`), never `UNION`/`SUBTRACT`.
+> `PS_ADD` takes the parts-list data of the **first** part clicked; `PS_SUB` **deletes** the tools.
+
+> ## ⚠️ NEVER ASSEMBLE A SECTION KEY — SEARCH FOR IT
+> `name="HEB300"` → `create=False`, census unchanged, **no exception**. The real DIN key is
+> **`HE300B`**. A composed key does not throw; it just quietly makes nothing.
+> ⇒ Run `sections filter=…` and copy the key out of the list. This is the same lesson as the
+> catalogue survey — *a section key is an opaque string*.
 
 > ## 🧩 A RIB IS DERIVED, NOT DRAWN (B.16, measured 09/08)
 > Lesson 3 built **214 ribs by hand** as polygons. `PS_RIP` derives them from the girder:
@@ -623,6 +679,27 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > `PsEditLogicalLink` for joints). A screenshot of a bolt crossing a plate looks *identical* with or
 > without a hole — so a screenshot is never proof. This rule exists because the agent was caught
 > three times reporting success that was not there.
+
+> ## ⚠️⚠️ THE MANUAL DESCRIBES THE DIALOG, NOT THE API
+> Twice in one day a headline capability turned out to be unreachable from code:
+> - B.15 — *"the components had to be **drilled first. Which now is not necessary any more**."*
+>   `PsCreateBolt.AddObject + Create()` still returns `create=False` with no holes.
+> - B.12.6 — *"just enter **ESC** instead of selecting a second shape"* (a notch at the shape end).
+>   `PsCopeConnection` gives `Check()=0` without a support object, whatever flags are set.
+>
+> ⇒ **A feature described in the manual is a claim about the dialog.** Before building on one,
+> test it and record the result. Both of these are *deliberate* dialog affordances — an
+> interactive pick the API has no parameter for.
+
+> ## ⚠️ `PsObjectProperties.Weight` IS THE NOMINAL WEIGHT (measured 09/08)
+> A 1200×600×20 plate reports **113.04 kg** — exactly 1.2 × 0.6 × 0.02 × 7850 — and it stays
+> 113.04 after **two boolean subtractions** and **five ⌀60 holes**, across a `PS_REGEN`.
+> **It ignores all material removal.**
+> ⇒ **Never judge whether a cut landed by the weight.** Judge it by `mods` — `polyCuts`,
+> `cutPlanes`, `subBodies`, `outlets`, `holeFields`. A suspicion this session that a subtraction
+> had silently failed came from reading the weight instead.
+> ⇒ For **ordering** material this is arguably the right number (the gross plate); for a finished
+> part weight it is not. Know which one a parts list is quoting.
 
 ---
 

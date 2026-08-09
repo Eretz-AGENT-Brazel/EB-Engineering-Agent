@@ -1177,3 +1177,8 @@
 {"op": "beam", "args": {"name": "HE300B", "p1": "14500,228000,0", "p2": "14500,228000,2000", "dwg": "sandbox.dwg"}, "handle": "5AC", "ts": "18:58:05"}
 {"op": "plate", "args": {"center": "14500,228400,1000", "l": "400", "w": "400", "t": "20", "normal": "0,1,0", "dwg": "sandbox.dwg"}, "handle": "5AD", "ts": "18:58:05"}
 {"op": "beam", "args": {"name": "IPE300", "p1": "14500,227400,1000", "p2": "14500,229000,1000", "dwg": "sandbox.dwg"}, "handle": "5AE", "ts": "18:58:05"}
+{"op": "miter", "args": {"cut": "C0E", "other": "C0F", "type": "0", "dwg": "B08-insert-shapes.dwg"}, "handle": null, "ts": "13:35:38"}
+{"op": "miter", "args": {"cut": "C0F", "other": "C0E", "type": "0", "dwg": "B08-insert-shapes.dwg"}, "handle": null, "ts": "13:35:38"}
+{"op": "miter", "args": {"cut": "C10", "other": "C11", "type": "1", "dwg": "B08-insert-shapes.dwg"}, "handle": null, "ts": "13:35:38"}
+{"op": "miter", "args": {"cut": "C11", "other": "C10", "type": "1", "dwg": "B08-insert-shapes.dwg"}, "handle": null, "ts": "13:35:38"}
+{"op": "miter", "args": {"cut": "C37", "other": "C38", "type": "0", "dwg": "B08-insert-shapes.dwg"}, "handle": null, "ts": "13:37:03"}
