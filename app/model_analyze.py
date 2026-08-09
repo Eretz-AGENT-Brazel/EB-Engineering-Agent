@@ -43,7 +43,17 @@ def load(path):
             els.append({"h": f[1], "profile": f[2], "catalog": f[3],
                         "p1": xyz(f[4]), "p2": xyz(f[5]),
                         "length": float(f[6] or 0), "name": f[8]})
-    return els
+    # NEVER truncate silently. The filter is right for a customer model but wrong for a
+    # teaching drawing, where every lesson band lives beyond MAXX by design (B.8 at
+    # 0..15150 straddles it, B.6 at 32000+, B.9 at 70000+). Read on a teaching model this
+    # returned almost nothing and looked perfectly healthy.
+    if skipped:
+        sys.stderr.write(
+            "model_analyze: DROPPED %d of %d shapes at X >= %g as artefacts "
+            "(EB_ANALYZE_MAXX). If this is a teaching drawing rather than a customer "
+            "model, raise EB_ANALYZE_MAXX or the analysis is of a fraction of it.\n"
+            % (skipped, skipped + len(els), MAXX))
+    return els, skipped
 
 
 # ---------- structural role from orientation ----------
@@ -193,11 +203,17 @@ def family_spacing(els, profile, length, tol=2.0):
 
 def main():
     path = sys.argv[1] if len(sys.argv) > 1 else DEFAULT
-    els = load(path)
+    els, skipped = load(path)
     W = []
     W.append("# ניתוח גיאומטרי של המודל — איך אמיר ממדל בפועל")
     W.append("")
     W.append("*נגזר מ-%d פרופילים שנקראו מהמודל (`%s`).*" % (len(els), os.path.basename(path)))
+    if skipped:
+        W.append("")
+        W.append("> ⚠️ **הושמט%s** כי %s ב-X ≥ %g (מסנן הארטיפקטים `EB_ANALYZE_MAXX`). "
+                 "אם זה מודל לימוד ולא מודל לקוח — הניתוח הזה הוא על חלק מהמודל בלבד."
+                 % ("ו %d פרופילים נוספים" % skipped if skipped > 1 else " פרופיל נוסף אחד",
+                    "הם" if skipped > 1 else "הוא", MAXX))
     W.append("")
 
     # --- roles ---
