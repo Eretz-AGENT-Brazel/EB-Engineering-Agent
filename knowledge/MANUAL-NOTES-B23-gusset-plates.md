@@ -116,3 +116,45 @@ from the template. The B.19 notes have been corrected.
 
 ⚠️ And **catalogues have two names**: `DIN WINKEL GLEICH` for lookup, `DIN.DIN_WINK_GL` as stored
 in the model. Neither string works in the other place.
+
+
+---
+
+# The connection built by hand — 09/08/2026, at Amir's direction
+
+The chapter has no creation route, so Amir asked for the detail to be built from primitives
+instead: *"תשכפל את הזוויתנים והעמוד בטור ותייצר מחבר גזירה עם ברגים עבור כל הזוויתנים"*, with a
+sketch in TOP view.
+
+⚠️ **His correction, which changed the geometry:** the backing plate is welded to the **WEB**, not
+to the flange. It therefore sits **between the flanges**, and the gusset leaves through the flange
+opening. Measured on HE300B: flanges span X at y = ±150, web faces at **x = ±5.5**.
+
+| part | measured |
+|---|---|
+| backing plate (his 🔴) | 12 mm, `x 170006..170018`, 260 × 600, on the web face between the flanges |
+| gusset (his 🟡) | 12 mm, `x 170018..170418`, 400 × 700, straddling the bracing plane |
+| the joint between them | the backing plate's far face is **exactly** the gusset's start — 170018 |
+| the three L90x9 | envelope `y 6006..6096` — their face **exactly** on the gusset face at 6006 |
+| bolts | **2 per angle**, M16 in Ø18 holes, `DIN7990` |
+
+⭐ **The seating rule:** an L90x9's envelope is 90 wide **centred on its axis**. To land its face on
+a 12 mm gusset straddling y = 0, the axis goes to **y = 6 + 45 = 51**. Nothing else needed moving.
+
+Then replicated into a row of four: **48 objects** — 16 shapes, 8 plates, 24 bolts. Every node read
+back identical: gusset 6 holes, each angle 2, six bolts.
+
+## What this exercise taught
+
+- ⛔ **`boltparts` fails SILENTLY without an explicit `style`.** `(default)` gives `create=False`
+  and zero bolts; `DIN7990` works instantly. The plugin's own failure hint blamed the gap distance
+  and was wrong.
+- ⭐ **`drill hosts=A,B` makes one hole through both parts** in a single call — the correct way to
+  produce a shared hole. Verified 0→6 on the gusset and 0→2 on each angle.
+- ⭐ **`replicate` preserves holes and bolts** — 12 entities × 3 copies, nothing dropped.
+- ⛔ **Welds are not creatable standalone.** `PsCreateWeldFlag.Create()` returned **false** with no
+  style, with a sign, and with `makeweld=0`; `WeldStyleCount` reads **0** while the object-style
+  probe reports **4** weld styles. Yet B.21's splice produced **32 `Ks_WeldFlag`** as a
+  by-product. Amir: *"זה בסדר - לא קריטי לי הריתוכים בנתיים"* — left open deliberately.
+
+⇒ The pattern of the whole day, once more: **connection classes work, standalone creators do not.**

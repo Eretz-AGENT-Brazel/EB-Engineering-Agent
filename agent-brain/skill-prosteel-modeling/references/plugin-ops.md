@@ -75,6 +75,8 @@ plus `app\eb_shot.py` (screenshots) and `app\eb_log.py` (the command-line channe
 
 | op | what it does | verified |
 |---|---|---|
+| **`weldstyles`** | Lists `PsCreateWeldFlag`'s style table. ⚠️ returns **0** while the object-style probe reports **4** weld styles | ⚠️ reads empty |
+| **`weld`** | `from=`/`to=` the seam line · `style` `thick` `sign` `len` `roundabout` `onsite` `row` · **`makeweld=1`** asks for the weld and not only the flag | ⛔ **`Create()` returns false** in every variant tried — welds appear only as a by-product of a connection class (B.21 splice → 32 `Ks_WeldFlag`) |
 | **`splicetemplates`** | B.21 — the 2 shipped splice templates (`default/Standard` 4 plates, `default/example2` all six positions) | ✅ |
 | **`splice`** | **B.21 `PS_LASCHE`** — splices two **collinear** members. `handle=`+`support=` the two shapes · the six positions `topout`/`topin`/`downout`/`downin`/`webleft`/`webright` · `tflange`/`tweb` · `nflangev`/`nflangeh`/`nwebv`/`nwebh` · `gap` `dia` `workloose` `offflange` `offweb` · **`weldflange`/`weldweb`** (⭐ 0 bolts, 32 `Ks_WeldFlag` instead) · `welddiagonal` · `toplap`/`sidelap` | ✅ 4 variants; **6 checkboxes → 8 plates** |
 | **`shearplatetemplates`** | B.20 — 3 templates + the load database + a **cope-template probe**. Found the convention: **`CheckCopeTemplate('default/Standard') = True`**, everything else False | ✅ |

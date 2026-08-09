@@ -345,6 +345,25 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 >   When the dump and the compiler disagree, the compiler wins. It is the dependency tree:
 >   `-1` = attached to the base plate, otherwise the parent segment's index.
 
+> ## 🔧 BUILDING A BRACING CONNECTION BY HAND — the parts that work (measured 09/08)
+> Amir's detail, built and verified four times: a **plate welded to the column WEB** (not the
+> flange — he corrected this) sitting between the flanges, a **gusset perpendicular to it**
+> sticking out through the flange opening, and the bracing angles **bolted to the gusset**.
+> - **`boltparts` fails SILENTLY without an explicit `style`.** `style='(default)'` →
+>   `create=False`, zero bolts, and the plugin's own hint blamed the gap distance — wrongly.
+>   `style=DIN7990` → `created=2` immediately. **Always pass a bolt style.**
+> - **`drill hosts=A,B`** puts one hole through both parts in a single call — the right way to
+>   make a shared hole. Verified: gusset 0→6, each angle 0→2.
+> - **`replicate` preserves holes AND bolts.** 12 entities × 3 copies, every copy read back with
+>   the same 6/2/2/2 hole counts and 6 bolts. Nothing silently dropped.
+> - Seating rule that made it fit: an L90x9's envelope is 90 wide **centred on its axis**, so to
+>   land its face on a 12 mm gusset straddling y=0, put the axis at **y = 6 + 45 = 51**.
+> ⛔ **Welds are NOT creatable standalone.** `PsCreateWeldFlag.Create()` returned **false** in
+> three variants (no style / with sign / `makeweld=0`), and `WeldStyleCount` reads **0** while
+> the style list reports **4**. Yet B.21's splice produced **32 `Ks_WeldFlag`** as a by-product.
+> ⇒ Same pattern as everything else today: **the connection classes work, the standalone
+> creators do not.**
+
 > ## 🕳️ A SETTER THAT DOES NOTHING, AND A CHAPTER WITH NO WAY IN (B.23, measured 09/08)
 > **`PsWebAngleConnection.SetKey()` / `SetKatalog()` are complete no-ops.** Four connections —
 > a valid `BS EQUAL` key, a valid DIN key in two catalogue-name forms, and **no key at all** —
