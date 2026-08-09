@@ -690,12 +690,61 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > hole 100 from the right lands 100 **from the left** on a part whose PCS starts at the other end.
 > **A part inserted the other way round gets its holes silently mirrored.**
 
+> ## 🌀 A SPIRAL STAIRCASE, END TO END (built for Amir 09/08)
+> Floor-to-floor 3000, Ø1600, SHS 200/200/4 column, 1″ railings, 4 mm treads. Every riser closed
+> to **0.000 mm** and the flight lands exactly on the upper floor.
+>
+> **The design, all derived:** 17 risers → **176.471** each · 16 treads (the 17th arrival *is* the
+> floor) · 30° per tread → 480° total · r 160→800 (640 clear) · going at the walking line **251.3**
+> · **Blondel 2R+G = 604.3**, inside the 600–630 comfort band. *Twelve treads per full turn is the
+> industry norm at Ø1600 — that is where 30° comes from, not from taste.*
+>
+> ⭐ **The anchoring detail that makes a SQUARE central column work.** Treads radiate at arbitrary
+> angles but a square column has only four faces, so brackets cannot serve. Give each tread a
+> **collar** — a short `RQ220x6` (208 clear over the 200 column) welded to the column — and make
+> **the collar exactly one riser tall**. Stacked, the collars *set* the risers, and the tread welds
+> to the top of its own collar. This is the classic spiral-stair detail and it is self-jigging.
+>
+> ⛔⛔ **THE TREADS MUST BE CUT TO THE COLLAR — Amir caught this by eye.** The first build gave the
+> tread a constant inner radius (160) chosen "to clear the collar corners". That is backwards: a
+> welded tread has to **touch**, not clear. Measured gap at the collar flats: **44.5 mm** — sixteen
+> treads hanging in the air. For a square collar of half-width *a*, the inner edge must follow
+> ```
+> r(θ) = a / max(|cos θ|, |sin θ|)        a at a face, a·√2 at a corner
+> ```
+> with an extra vertex wherever a corner falls inside the tread's sector. Then it butts along its
+> whole length and can be welded all round. **Whenever a round-ish part meets a square one, cut the
+> contour to the square — never pick a radius that clears it.**
+> ⭐ And the payoff: 30° per tread against a square's 90° symmetry gives only **THREE distinct tread
+> types** for sixteen treads — three cutting programs, and 90° rotation maps the collar onto itself
+> so `spiral` can place the rest.
+>
+> ⭐ **No gap between steps:** the tread is a bent plate — a 30° sector with a riser flap bent up
+> along its **trailing radial edge**, meeting the next tread's leading edge exactly.
+> ⚠️ **`AddFlange` reaches `len + radius` above the plate mid-plane, not `len`.** To land the flap
+> on the underside of the next tread: `len = riser − t/2 − bendRadius`.
+>
+> ⚠️ **`polyplate` only builds in the z = 0 plane.** `PsCreatePlate` + `AppendEdgePoint` returns
+> `create=False` at any other z, with no exception. Build the shaped plate flat, then move it — and
+> for anything repeating, let **`spiral`** (B.4.6) place the rest.
+
 > ## ⚠️ `dumpmodel` IS BLIND TO BOLTS AND PLATES — USE COM
 > It reports `plates=0 bolts=0` with hundreds of `ERR … Object reference not set` rows. A
 > conclusion drawn from it ("no bolts here") was wrong. `doc.HandleToObject(h).InsertPoint` bound
 > **152 of 152** `Ks_Bolt` with zero failures.
 > ⇒ **An instrument that reports zero must be shown to report non-zero somewhere before its zero
 > is believed.** Run it against a region where the thing is known to exist.
+
+> ## ⚠️⚠️ A BOUNDING BOX CANNOT ANSWER "DOES IT TOUCH?"
+> Twice in one hour, checking whether spiral treads met their collar, an audit built on
+> `GetBoundingBox()` returned a confident wrong answer — first "all sixteen fine", then "eleven
+> floating". Both were the **instrument**, not the model.
+> A bbox is **axis-aligned**, so for a rotated sector its corners are points the part does not
+> occupy: a tread spanning 120°–150° reported a closest approach of 63.5 when its inner edge
+> genuinely sat at 110. Rotate the part and the answer changes even though nothing moved.
+> ⇒ **For contact, clearance or fit, read the real contour** — `plateinfo`'s `ext=`, `GetPolygon`,
+> or the generating geometry. Keep bboxes for "roughly where is it".
+> ⇒ And the general form: **when a verdict flips as the part rotates, suspect the test first.**
 
 > ## ⚠️ NEVER ASSEMBLE A SECTION KEY — SEARCH FOR IT
 > `name="HEB300"` → `create=False`, census unchanged, **no exception**. The real DIN key is
@@ -920,8 +969,24 @@ Full detail in `references/api-proven-paths.md`. The essentials:
   requested (diameter, grip) has no row in the bolt-style catalogue it **silently does nothing**. This
   caused ~400 consecutive "bolt failures" that looked style-related: the grip asked for was 280 mm and
   430 mm, far outside DIN 6914 (structural HV bolts, M24 tops out near 200 mm total). `PsBolt` exposes
-  read-only `GripMin`/`GripMax`, so the window is real and enforced. **A long anchor rod is not a bolt
-  — use `PsCreateFastener`.**
+  read-only `GripMin`/`GripMax`, so the window is real and enforced. **A long anchor rod is not a bolt.**
+- ⛔⛔ **`PsCreateFastener` CREATES NOTHING — corrected 09/08.** This file used to send anchor rods
+  here. Measured on the staircase base: **all four kinds** (`Straight` / `Hook` / `Bend` / `HeadBolt`)
+  × **three styles** (`''`, `DIN7990`, `8.8S`) × with and without `SetObjectId(host)` × with the three
+  embedment segments filled instead of zeroed — **twelve-plus combinations, zero entities**, confirmed
+  by diffing `ModelSpace` handles over COM, not by a census. With a host id it returns a **non-zero
+  value that is not an object id**, which is what made it look alive.
+  ⚠️ A round bar (`RD20` @ `DIN RUNDSTAHL`) through the drilled hole gives correct *geometry*, but
+  it is a **`Ks_Shape`** — it lands in the profile list, not the bolt list. Amir caught exactly that:
+  *"למה זה פרופיל ולא בורג עיגון כמו שמידלנו בפלטת בסיס?"* Do not ship it as an anchor.
+  ✅✅ **The anchor route that works is the BASE-PLATE CONNECTION** (`connbase`,
+  `PsBasePlateConnection` **from a template**) — it produces four real **`Ks_VolBody`** anchor
+  bolts plus the plate, in one call. Measured 09/08 on the staircase column.
+  ⚠️ **But its numbers do not land.** `anchordrill=140` gave 100; hole spacing ±150 gave ±75.
+  Only the *template's* values arrive — the same "values that never arrive" signature recorded
+  earlier for this class. **Workaround: build it, then POSITION the assembly** (`align copy=0`) so
+  the embedment comes out right. Getting 120 mm into concrete meant dropping the whole base
+  assembly by 20, not setting a parameter. Spacing stays whatever the template says.
 - `PsShape.MirrorFlag` cannot be written (read-only; `SetShapeMirror()` is a no-op; `YMirrorFlag` is a
   different flag). Mirroring is only achievable natively (`PS_COPY` mirror / `_MIRROR3D`) or by cloning.
 - `Entity.Ecs` returns **identity** for plates and bolts; `PsShape.InsertPoint`, `COGPoint`,
