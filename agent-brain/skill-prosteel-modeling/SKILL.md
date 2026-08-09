@@ -735,6 +735,30 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > ⇒ **An instrument that reports zero must be shown to report non-zero somewhere before its zero
 > is believed.** Run it against a region where the thing is known to exist.
 
+> ## 👁 A "VIEW" IS A WORK FRAME (B.7, measured 09/08)
+> Activating a view does three things at once: **moves the UCS** onto the work plane, **points the
+> camera perpendicular** to it, and **switches on clipping planes** so everything outside the slab
+> disappears. Views are not their own object type — they *are* the work frames B.6 creates.
+>
+> ⭐ **The whole chapter lives on `PSCOMWRAPPERLib.IKs_ComWorkFrame`** — no plugin needed, drive it
+> straight from Python via `doc.HandleToObject(h)`:
+> `SetActive(ZoomExtents, UseClipPlanes)` · `Get/SetClipDistances(front, back)` ·
+> `Get/SetCameraView(eye, target)` (the manual's "view via 2 points") · `GetInsertUcs` (the
+> "activate only the UCS" button) · `Delete()`.
+>
+> ⚠️ **`EnableFrontClip` / `EnableBackClip` are a trap** — writing `True` reads back `False` and
+> changes nothing. Clipping is controlled by **`SetActive`'s second argument**. Set the *distances*
+> as properties, the *on/off* through the call.
+> ⚠️ **Generated views arrive with `clip 0/0`** — the clipping the manual describes does nothing
+> until distances are set.
+> ⭐ B.6's four auto views are FRONT/BACK/TOP/BOTTOM, and the camera sits **exactly 100 mm off the
+> target plane** every time (`eye = target + 100·normal`). Match that when writing `SetCameraView`.
+>
+> ⭐⭐ **And the one place a screenshot IS evidence.** This file insists everywhere else on reading
+> geometry back, because an image cannot show whether a hole exists. B.7's claim is *about what is
+> displayed* — so the display is the right instrument, and reading geometry back would prove
+> nothing, since clipping changes no geometry at all. **Match the instrument to the claim.**
+
 > ## ⚠️⚠️ A BOUNDING BOX CANNOT ANSWER "DOES IT TOUCH?"
 > Twice in one hour, checking whether spiral treads met their collar, an audit built on
 > `GetBoundingBox()` returned a confident wrong answer — first "all sixteen fine", then "eleven
