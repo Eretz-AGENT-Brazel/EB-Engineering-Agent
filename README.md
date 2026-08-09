@@ -1,6 +1,9 @@
 # EB PROSTEEL AGENT
 **Eretz Barzel · Steel Modeling AI** — your AI co-modeler for AutoCAD 2015 + ProSteel.
 
+> 📊 **[מעקב לימוד המדריך — PROGRESS.md](PROGRESS.md)** · 73 פרקים, אחוזי התקדמות, וסדר הלימוד המתוכנן.
+> מתעדכן בסוף כל פרק.
+
 You talk to the agent (type / voice / sketch / upload), and it models steel in
 ProSteel with you — fast, like a pro. The "brain" is Claude (free, via Claude Code);
 this software is the cockpit.
