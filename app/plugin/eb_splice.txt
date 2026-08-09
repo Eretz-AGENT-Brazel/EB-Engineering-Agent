@@ -1,0 +1,5 @@
+﻿templateCount=2
+[0] default/example2  topOut=True topIn=True downOut=True downIn=True webL=True webR=True gap=10 tFlange=10 tWeb=10 nFlange=2x2 nWeb=2x2 dia=16 workloose=2 boltCRC=0 weldToFlange=False weldToWeb=False weldDiagonal=False topLap=144 sideLap=128 group=True
+[1] default/Standard  topOut=True topIn=False downOut=True downIn=False webL=True webR=True gap=10 tFlange=10 tWeb=10 nFlange=2x2 nWeb=2x2 dia=16 workloose=2 boltCRC=0 weldToFlange=False weldToWeb=False weldDiagonal=False topLap=144 sideLap=128 group=True
+
+database plateDataCount=0
