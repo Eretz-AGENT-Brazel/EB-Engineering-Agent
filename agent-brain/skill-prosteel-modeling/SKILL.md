@@ -376,6 +376,40 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > has no creator because it is not a standalone object — it is something a bracing *has*. But that
 > route is not reachable from code either, so a gusset stays dialog-only for now.
 
+> ## 🕳️ THE DRILL PICKS A FLANGE BY PARAMETER, NOT BY YOUR POINT (measured 09/08)
+> Two identical end-plate connections, one at each end of the same beam. One bolted, one refused
+> — while **both reported 6 holes on the plate and 6 on the column**. Reading the hole
+> COORDINATES showed why:
+> ```
+> end A ✓  plate  8121.6→8101.6    column  8101.6→8090.6    one continuous hole
+> end B ✗  plate 11898.4→11878.4   column 12101.6→12090.6   ← the FAR flange, 200 mm away
+> ```
+> `PsDrillObject` chose the wrong flange on the second column. The choice comes from the
+> **`flange` parameter (0 top · 1 down · 2 both)** and defaults to the same local face every
+> time — which is the near flange on one side of a frame and the far one on the other.
+> ⇒ **Always pass `flange=` when drilling a shape.** And note the failure mode: the counts were
+> perfect. Only the coordinates were wrong, and only the bolts refusing exposed it. **Count is
+> not position.**
+> ⛔ Holes cannot be removed, so the fix was to delete and rebuild the column.
+
+> ## 🏗️ TWO STABLE BEAM-TO-COLUMN SCHEMES, BUILT AND MEASURED (09/08)
+> Amir, on a frame built as three touching members: *"מסגרת כזו… היא דבר שאינו ניתן לביצוע — אין
+> כאן סכימה יציבה של הקורה על גבי העמודים."* He was right: it had no connection at all.
+>
+> **Welded** — `HE200B` columns, `IPE300` beam. The beam butts **square against the flange face**
+> (measured `y 8100..11900` against faces at exactly 8100 and 11900 — zero gap, a weldable
+> fit-up). What makes it stable is not the weld: **8 stiffeners**, a pair in each column web
+> opposite each beam flange, or the web folds. Those are creatable (B.16) and are what a checker
+> looks for.
+>
+> **Bolted** — `UC203x203x46` columns, `UB305x165x40` beam. A 20 mm **end plate** welded to the
+> beam end and bolted to the column flange, **12 × M16**, six per end in three rows. ⭐ The beam
+> must be **shortened by one plate thickness at each end** so the plate — not the beam — lands on
+> the flange.
+>
+> ⇒ Run the beam **along Y** to meet a flange FACE. An HE/UC column's flanges span X at
+> `y = ±h/2`; a beam along X meets only the flange **tips** and the open space between them.
+
 > ## 📏 BOLT GROUPS THAT CONVERGE ON ONE NODE MUST BE SPACED (measured 09/08)
 > Three members bolted to one gusset, inner rows at 100 mm along each: the hole groups came
 > within **11 mm** of each other, ProSteel **merged them**, and `boltparts` produced **14 bolts at

@@ -228,3 +228,56 @@ generated."* So a gusset **is** produced by the bracing command — the reason
 
 ⇒ B.23's gusset remains **dialog-only**, and the hand-built detail (SHS + UPN, x ≥ 170000) is
 currently the only way the agent can produce one.
+
+---
+
+# Two real frames, at Amir's direction (09/08)
+
+The host frame first built for the bracing test was **not a frame**: two columns and a beam whose
+axis sat at the column tops, touching, with no connection of any kind. Amir: *"מסגרת כזו… היא דבר
+שאינו ניתן לביצוע — אין כאן סכימה יציבה של הקורה על גבי העמודים."* He asked for two more, one
+**welded** and one **bolted**.
+
+Both run the beam **along Y**, because an HE/UC column's flanges span X at `y = ±h/2` — a beam
+along X meets only the flange tips and the gap between them, never a face.
+
+## Frame 1 — welded · `HE200B` + `IPE300` · x ≈ 190000
+
+The beam butts square against the flange face: measured `y 8100..11900` against faces at exactly
+**8100** and **11900**. Zero gap — a weldable fit-up.
+
+⭐ **The weld is not what makes it stable.** Eight stiffeners do: a pair in each column web
+opposite each beam flange, at `z = 3350` and `z = 3650` (the IPE300's flange levels). Without
+them the beam flange force folds a thin web. `collisions=0`.
+
+11 objects: 3 shapes + 8 stiffener plates.
+
+## Frame 2 — bolted · `UC203x203x46` + `UB305x165x40` · x ≈ 194000
+
+A 20 mm **end plate** welded to each beam end and bolted to the column flange, **12 × M16** —
+six per end, three rows of two.
+
+⭐ The beam is **shortened by one plate thickness at each end** so the plate, not the beam, lands
+on the flange: plate at `y 8101.6..8121.6`, exactly filling the gap between the flange face and
+the beam end.
+
+17 objects: 3 shapes + 2 plates + 12 bolts. `collisions=0`.
+
+## ⚠️ The trap this exposed: the drill picks a flange by PARAMETER
+
+One end bolted, the other refused — **while both reported 6 holes on the plate and 6 on the
+column.** The coordinates told the real story:
+
+```
+end A ✓  plate  8121.6→8101.6    column  8101.6→8090.6    one continuous hole
+end B ✗  plate 11898.4→11878.4   column 12101.6→12090.6   ← the FAR flange, 200 mm away
+```
+
+`PsDrillObject` takes a **`flange` parameter (0 top · 1 down · 2 both)** and defaults to the same
+local face regardless of the insertion point — the near flange on one side of a frame, the far one
+on the other.
+
+⇒ **Always pass `flange=` when drilling a shape.** And the failure mode is the dangerous kind: the
+**counts were perfect**. Only reading the coordinates found it, and only the bolts refusing raised
+the question at all. **A count is not a position.**
+⛔ Holes cannot be removed, so the fix was to delete and rebuild the column.
