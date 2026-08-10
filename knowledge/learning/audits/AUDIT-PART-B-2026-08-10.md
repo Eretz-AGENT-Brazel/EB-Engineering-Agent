@@ -2010,3 +2010,119 @@ wants to decide.
 * ⚠️ **The static flag and the XZ plane are UNTESTED again**, not refuted. They can only be
   retested once `PsBracing` can be given a system line — which is B.24's open item.
 * `Resolution` and `Shape Class` on the Shape Definition page — read, never exercised.
+
+---
+
+## B.26 — Haunches ⭐⭐⭐ **the placement failure is named exactly — and the audit found twelve orphan bolts of its own making**
+
+*notes 183 lines · bands x = 330 000 (welded) and 346 000 (bolted) · plugin v168 → **v169***
+
+### 1 · Was the chapter learned deeply?
+**Yes, and it is the chapter Amir corrected three times** — each correction producing a rule that
+outlives it: a hole depth is a **section-orientation probe** (an 11 mm hole means you drilled the
+web); **holes cannot be removed, so probe on a throwaway member**; and **deleting a connection's
+parts does not delete the connection**. It also carries the blast guard that catches the shipped
+template's zero plane before it stretches a rafter 300 m across the drawing.
+
+Its one abandoned item: *"the haunch builds at the **support's origin** … `SetConnectionPoint` and
+`InsertPoint` did not move them. **Not pursued further.**"*
+
+### 2 · ⭐ First: `InsertPoint` round-trips. This is not B.24's failure.
+
+B.24 had just found that `PsBracing`'s `PsPoint` **setters store garbage** — the value never
+arrives. The obvious question was whether the haunch fails the same way. It does not:
+
+```
+haunch … ex=1,0,0 ey=0,0,1 at=400000,20000,5000
+  [readback X=1,0,0  Y=0,0,1  InsertPoint=400000,20000,5000]
+```
+
+**Exactly what was set.** ⇒ ⭐⭐ **Two failures that look identical from outside are different
+underneath:** `PsBracing` never receives its geometry; `PsHaunchLinkDataMgd` receives it and
+**ignores it** — THE CEILING §2's *"parameter that never arrives"*, alongside B.17's
+`PlateIsRotated` and B.26's own `nv`/`dv`/`nh`/`dh`.
+
+### 3 · ⭐⭐⭐ And *"the support's origin"* is wrong. It is the WORLD Z ORIGIN.
+
+Five configurations, each on its own throwaway column-and-rafter pair:
+
+| what was tried | eaves at | plates landed at |
+|---|---|---|
+| world `at`, column z 0…5000 | 5 000 | **z = 0** |
+| **local** `at = 0,0,5000` | 5 000 | **z = 0** |
+| **local** `at = 0,5000,0` | 5 000 | **z = 0** |
+| **column drawn TOP-DOWN** — origin at z = 5 000 | 5 000 | **z = 0** |
+| **column based at z = 2 000**, eaves at 7 000 | 7 000 | **z = 0** |
+
+⇒ The fourth and fifth kill the recorded explanation outright. With the column drawn top-down its
+origin **is** the eaves, and with the column based at 2 000 its origin is 2 000 — **and the parts
+still land at zero.**
+
+⇒ ⭐⭐ **The haunch's parts are pinned to z = 0 absolutely. `x` and `y` are correct.** Only the
+height is lost. *(And the top-down test is the one B.26 itself prepared and never ran:*
+*"Drawing the column top-down was prepared as a test but the frames were built explicitly
+instead."* **It was run. It does not help.**)
+
+⚠️ **And the connection demonstrably knows where the joint is** — it trimmed the rafter at the
+eaves every single time, `3162.278 → 2385.67`, on all five. **The cut is placed correctly and the
+parts are not.** That is a far more specific fact than *"the parts appeared at the column's base"*,
+and it is what makes the workaround findable: **build the corner with the eaves at z = 0.**
+
+### 4 · ⛔⛔ TWELVE ORPHAN BOLTS — and this audit put them there
+
+A model-wide `vfy_fit` returned **`BOLT-NO-HOLE=12`** — the iron rule, twelve times. They are at
+x ≈ 130 200, y = 44 987 / 50 985 / 56 987: **the B.20 shear-plate isolation bays**, whose plates
+and beams were erased four chapters ago.
+
+> ### ⭐⭐ Two of this audit's own findings, combining into the defect
+> B.20's cleanup erased *"everything in the band with y ≥ 41 000"* and filtered bolts by
+> `els[i]['insert'][0]`. **B.21 later measured that `insert` is `(0,0,0)` for every plate and
+> every bolt in the model** — so that filter matched **no bolt at all**, silently, and the sweep
+> reported success. B.22 then found that **erasing a part does not erase its bolts.**
+>
+> ⇒ **The B.20 sweep could not have worked, and the fix that reveals it was found one chapter
+> later.** Nothing detected it until a whole-model iron-rule check was run — which is the argument
+> for running one.
+
+**Erased. `BOLT-NO-HOLE` 12 → 0.** Census 1 205 → **1 193**, saved.
+
+⇒ ⭐ **Rule: after any sweep that erases parts, re-run `vfy_fit` over the WHOLE model, not the
+band.** A band-local check cannot see what a band-local filter missed.
+
+### 5 · ⏳ The twelve unassemblable bolts — measured, not touched
+
+Amir's decision is pending and `PsBolt.RecomputeBoltLength()` was **not** fired.
+
+```
+SHORT  11A6…11AB   M 20x70 DIN6914   nominal 70  packet 79  spare −9   4 holes
+SHORT  11BC…11C1   M 20x70 DIN6914   nominal 70  packet 59  spare 11   3 holes
+```
+
+**Six are shorter than the packet they pass through** (spare −9: the bolt does not reach) and
+**six leave 11 mm** where a nut and washer need 22–31. Exactly as recorded.
+
+⚠️ **And the whole-model sweep found twenty more like them**, not previously listed:
+`SHORT=32` in total — e.g. `152E…1533` and `1547…` at **spare 3**, in the B.12/B.19 bands.
+⇒ **The pending decision is bigger than twelve.** Reported, untouched.
+
+### Model state
+**Whole-model verification, the first in this audit:**
+
+```
+bolts=301  OK=261  BOLT-NO-HOLE=0 🧲  OVERSIZED=0  GAP-IN-PACKET=8  SHORT=32
+```
+
+`BOLT-NO-HOLE=0` — **the iron rule is clean across the entire model.** The eight
+`GAP-IN-PACKET` are B.25's braced bay and the 32 `SHORT` are the pending bolt-length decision;
+both are Amir's and both are left exactly as found. Six throwaway haunch probes at x = 400 000
+erased. Census **1 193**, saved.
+
+### Still open
+* ⛔ **Haunch placement.** The parts are pinned to z = 0 and `InsertPoint` is ignored. The only
+  route left is to **build the corner at z = 0 and move the assembly** — untested, and it is a
+  workaround rather than a fix.
+* `IsCopedShape` — *"the haunch is not made from individual plates but from a **coped shape**"* —
+  read, mapped, **never exercised**.
+* `StiffenerAtSupport` / `StiffenerAtConnected` take **B.16's stiffener templates**. The link is
+  recorded in both chapters and has never been driven.
+* ⏳ **32 SHORT bolts** — Amir's, now counted properly.

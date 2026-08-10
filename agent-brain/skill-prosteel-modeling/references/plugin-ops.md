@@ -2148,3 +2148,64 @@ puts one hole of each pair past the end of the rod and leaves an unfilled hole i
 
 ⭐ **And shorten the rod deliberately** (`setShapeShorting`): B.25's dialog says the rod is cut
 short *"thus the rod will be kept in tension"*. Nothing in the geometry hints at it.
+
+---
+
+## ⭐⭐ TWO FAILURES THAT LOOK IDENTICAL FROM OUTSIDE — B.26, 10/08/2026
+
+A connection ignores the position you give it. There are **two completely different reasons**, and
+only a read-back tells them apart:
+
+| | symptom | read-back | what it is |
+|---|---|---|---|
+| **`PsBracing`** (B.24) | `insert()=False` | `line1=(NaN,NaN,NaN)` | ⛔ **the value never arrived** |
+| **`PsHaunchLinkDataMgd`** (B.26) | parts in the wrong place | `InsertPoint=400000,20000,5000` — exact | ⛔ **the value arrived and is IGNORED** |
+
+⇒ **Always read the parameter back before naming the failure.** *"It doesn't work"* covers both,
+and they need opposite fixes.
+
+### The haunch: parts are pinned to z = 0, absolutely
+
+Five configurations, each on its own throwaway pair:
+
+```
+world at, column z 0..5000     eaves 5000   -> plates z=0
+local at = 0,0,5000            eaves 5000   -> plates z=0
+local at = 0,5000,0            eaves 5000   -> plates z=0
+column drawn TOP-DOWN          eaves 5000   -> plates z=0    <- origin IS the eaves
+column based at z=2000         eaves 7000   -> plates z=0    <- origin is 2000
+```
+
+**`x` and `y` are correct. Only the height is lost.** ⚠️ And the connection *does* know where the
+joint is — it trimmed the rafter at the eaves every time (`3162.278 → 2385.67`). **The cut is
+placed correctly and the parts are not.**
+
+⇒ The only route left is to **build the corner with the eaves at z = 0 and move the assembly** —
+untested, and a workaround rather than a fix.
+
+---
+
+## ⛔⛔ AFTER ANY SWEEP THAT ERASES PARTS, RE-RUN `vfy_fit` OVER THE WHOLE MODEL
+
+A model-wide check found **`BOLT-NO-HOLE=12`** — twelve bolts through nothing, left behind by an
+earlier cleanup **in this same audit**:
+
+* the sweep filtered bolts by `els[i]['insert'][0]`,
+* and `insert` is **`(0,0,0)` for every plate and bolt in the model** (found one chapter later),
+* so the filter matched **no bolt at all**, silently, and reported success —
+* while **erasing a part does not erase its bolts**.
+
+Three separate facts, each individually known, combining into an iron-rule violation that nothing
+detected until a **whole-model** check was run.
+
+⇒ ⭐ **A band-local check cannot see what a band-local filter missed.** Verify globally after
+deleting.
+
+```
+vfy_fit                     -> bolts=301 OK=261 BOLT-NO-HOLE=0 🧲 OVERSIZED=0
+                               GAP-IN-PACKET=8   SHORT=32
+```
+
+⚠️ **`GAP-IN-PACKET` and `SHORT` are not the same problem.** A gap is a **scheme** error (the
+plies do not touch — B.25); SHORT is a **bolt-length** error. `vfy_fit` separates them because a
+large "spare" means one of two very different things.

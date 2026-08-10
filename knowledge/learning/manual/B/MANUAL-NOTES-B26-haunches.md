@@ -180,3 +180,81 @@ products outlive the members they were made for.**
 | apex | mitred on the bisector, one call cuts both | plates centred on the ridge, 4/4 holes, **4 bolts**, 260 apart |
 | eaves | rafter trimmed flat to the flange, 8 stiffeners welded | `example/example3` — 16 parts/side, **3 bolt rows spread 627 mm** |
 | columns | to 5250, `rot=90` (strong axis in the frame plane) | same, and **0 stray holes** |
+
+---
+
+# AUDITED 10/08/2026 — the placement failure is named exactly, and one word above is wrong
+
+*Full record: `AUDIT-PART-B-2026-08-10.md` § B.26. Plugin v168 → v169.*
+
+## 🛑 CORRECTED — it is not the SUPPORT'S origin, it is the WORLD Z ORIGIN
+
+The section above reads *"the haunch builds at the **support's origin** … `SetConnectionPoint` and
+`InsertPoint` did not move them. Not pursued further."* Pursued now, five configurations, each on
+its own throwaway pair:
+
+| tried | eaves at | plates landed at |
+|---|---|---|
+| world `at`, column z 0…5000 | 5 000 | **z = 0** |
+| local `at = 0,0,5000` | 5 000 | **z = 0** |
+| local `at = 0,5000,0` | 5 000 | **z = 0** |
+| **column drawn TOP-DOWN** — origin at z = 5 000 | 5 000 | **z = 0** |
+| **column based at z = 2 000**, eaves at 7 000 | 7 000 | **z = 0** |
+
+The last two settle it: with the column top-down its origin **is** the eaves, and with it based at
+2 000 its origin is 2 000 — **and the parts still land at zero.**
+
+⇒ ⭐⭐ **The parts are pinned to z = 0 absolutely. `x` and `y` are correct; only the height is
+lost.** *(The top-down case is the test this chapter prepared and never ran. It was run. It does
+not help.)*
+
+## ⭐ `InsertPoint` DOES round-trip — this is not B.24's failure
+
+```
+haunch … at=400000,20000,5000  ->  [readback InsertPoint=400000,20000,5000]
+```
+
+B.24 found `PsBracing`'s `PsPoint` setters store garbage — the value never arrives.
+**Here it arrives and is ignored.** ⇒ THE CEILING §2's *"parameter that never arrives"*, with
+`PlateIsRotated` and this chapter's own `nv`/`dv`/`nh`/`dh`.
+⚠️ **Two failures that look identical from outside are different underneath.**
+
+⚠️ **And the connection knows where the joint is** — it trimmed the rafter at the eaves every
+time, `3162.278 → 2385.67`, on all five. **The cut is placed correctly and the parts are not.**
+
+## ⛔⛔ TWELVE ORPHAN BOLTS — put there by this audit
+
+A model-wide `vfy_fit` returned **`BOLT-NO-HOLE=12`**, at x ≈ 130 200, y = 44 987 / 50 985 /
+56 987 — the B.20 shear-plate isolation bays, whose plates and beams were erased four chapters
+ago.
+
+> **B.20's sweep filtered bolts by `els[i]['insert'][0]`. B.21 later measured that `insert` is
+> `(0,0,0)` for every plate and bolt in the model** — so the filter matched **no bolt at all**,
+> silently, and reported success. B.22 then found that **erasing a part does not erase its
+> bolts.** Two of this audit's own findings, combining into a defect the audit introduced.
+
+**Erased. `BOLT-NO-HOLE` 12 → 0.**
+
+⇒ ⭐ **After any sweep that erases parts, re-run `vfy_fit` over the WHOLE model, not the band.**
+A band-local check cannot see what a band-local filter missed.
+
+## ⏳ The twelve unassemblable bolts — measured, NOT touched
+
+```
+SHORT  11A6…11AB   M 20x70 DIN6914   nominal 70  packet 79  spare −9
+SHORT  11BC…11C1   M 20x70 DIN6914   nominal 70  packet 59  spare 11
+```
+
+Six do not reach through their packet; six leave 11 mm where a nut and washer need 22–31.
+⚠️ **The whole-model sweep found twenty more**, `SHORT=32` in total (e.g. `152E…1533` at spare 3,
+in the B.12/B.19 bands). **The pending decision is bigger than twelve.**
+`RecomputeBoltLength()` was not fired.
+
+## Model state — first whole-model verification of this audit
+
+```
+bolts=301  OK=261  BOLT-NO-HOLE=0 🧲  OVERSIZED=0  GAP-IN-PACKET=8  SHORT=32
+```
+
+**The iron rule is clean across the entire model.** The 8 gaps are B.25's bay and the 32 SHORT are
+the pending decision — both Amir's, both left as found. Census **1 193**.

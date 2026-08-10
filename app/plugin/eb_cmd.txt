@@ -1,4 +1,3 @@
-reqid=b6397171
-op=props
-handle=F77
+reqid=6ea3597d
+op=vfy_fit
 dwg=B08-insert-shapes.dwg

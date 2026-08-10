@@ -6,7 +6,7 @@
 //
 // Protocol (file-based, avoids command-line quoting + supports Hebrew):
 //   1. Python writes  eb_cmd.txt  (key=value lines, op=... first)
-//   2. Python sends command  EB_RUN168
+//   2. Python sends command  EB_RUN169
 //   3. Plugin executes, writes eb_result.txt: "EB_OK {info}" or "EB_ERR {reason}"
 // C# 5 compatible (csc v4.0.30319).
 
@@ -44,14 +44,14 @@ using Bentley.ProStructures;
 using Bentley.ProStructures.Modeling;
 // PsShapeLoader lives in Steel.Shape (already imported)
 
-[assembly: CommandClass(typeof(EBAgent.ApiCmds168))]
-[assembly: ExtensionApplication(typeof(EBAgent.EBApp168))]
+[assembly: CommandClass(typeof(EBAgent.ApiCmds169))]
+[assembly: ExtensionApplication(typeof(EBAgent.EBApp169))]
 
 namespace EBAgent
 {
     // Registers an assembly resolver so ProSteel's managed assemblies are found
     // in the Prg folder even from a cold AutoCAD session (before any ProSteel cmd).
-    public class EBApp168 : IExtensionApplication
+    public class EBApp169 : IExtensionApplication
     {
         const string PrgDir = @"C:\Program Files\Bentley\ProStructures Ss6 R1\AutoCAD 2015\Prg";
         public void Initialize() { AppDomain.CurrentDomain.AssemblyResolve += Resolve; }
@@ -349,7 +349,7 @@ namespace EBAgent
         }
     }
 
-    public class ApiCmds168
+    public class ApiCmds169
     {
         const string Dir = @"C:\Users\User\Desktop\EB PROSTEEL AGENT\app\plugin";
         static string CurReqId = "";
@@ -439,7 +439,7 @@ namespace EBAgent
             return oid.OldIdPtr.ToInt64();
         }
 
-        [CommandMethod("EB_RUN168", CommandFlags.Modal)]
+        [CommandMethod("EB_RUN169", CommandFlags.Modal)]
         public void Run()
         {
             var kv = ReadCmd();
