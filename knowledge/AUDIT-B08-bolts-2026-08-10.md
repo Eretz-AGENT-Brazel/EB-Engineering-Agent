@@ -73,7 +73,14 @@ order three times the bolts, and on the shop floor.
 `AE6` — 6 redundant · `10E9` — 4 redundant. Drilled more than once at the same coordinates.
 Harmless in the model; **wrong on an NC file**, which would drive the drill twice.
 
-### 4. Eight oversized bolts — B.25's braced bay
+### 4. ~~Eight oversized bolts~~ — B.25's braced bay
+
+> 🛑 **THIS DIAGNOSIS IS WRONG. See "3 🛑 B.25's braced bay — RE-DIAGNOSED" below.**
+> The bolts are the correct length. The gusset and the angle are **31 mm apart** and the
+> bolt spans the air between them. Do **not** swap them for M16×50 — that would leave a
+> bolt too short to reach. The section is kept as written because the reasoning that led to
+> it is worth seeing; the calibration table below is still sound and still useful.
+
 
 `F82`…`F89`, all `M 16x75 Mu DIN7990`, clamping a **19 mm** packet (a 10 mm gusset + a 9 mm
 angle leg).
@@ -96,7 +103,11 @@ in this drawing, `spare = nominal length − packet` sits in a tight band:
 bolt hanging out of the joint**. They should be M16×45 or M16×50 — both of which the drawing
 already uses everywhere else.
 
-### 5. Eighteen `SHORT` flags — *not* defects, an instrument limit
+### 5. Eighteen `SHORT` flags — mostly an instrument limit, but **not all**
+
+> ⚠️ **Partly wrong too.** Twelve of them survived the fixes with `gap=0`, meaning the plies
+> genuinely stack — those are real and cannot be assembled. See the new findings below.
+
 
 Where two bolt rows sit closer together than the 12 mm matching tolerance, each bolt sweeps in
 its neighbour's holes, the packet reads too thick and the spare too small. `vfy_fit` prints this
@@ -118,7 +129,10 @@ blind spot in its own result line. **Read the `owners` column before acting on a
 
 ---
 
-## What has NOT been done
+## What had not been done *at the time of writing*
+
+> ✅ **Superseded — Amir approved all four on 10/08 and they were carried out. See the
+> FIXES section below.** Kept for the record of what was proposed.
 
 **Nothing has been fixed.** The approval covered running the checks. Every item above is a
 deletion or a substitution in a model of record, and those are Amir's call:
@@ -135,3 +149,105 @@ zero separation, holes meeting exactly and running the same way, same diameter. 
 **not** find evidence that this cost the older bands their bolts: the bands are fully bolted, and
 their faults are *duplication and orphans*, not absence. **The refusal remains unexplained and
 belongs to B.15.**
+
+---
+
+# ⚙️ THE FIXES — carried out 10/08, with a second retraction along the way
+
+Amir: *"תבצע את כל 4 התיקונים."* Backup taken first:
+`_archive/B08-insert-shapes-before-audit-fix-100826.dwg`.
+
+## What changed
+
+| | before | after |
+|---|---:|---:|
+| bolts | 194 | **179** |
+| 🧲 bolts with no hole | **7** | **0** |
+| redundant bolts | 8 | **0** |
+| redundant holes | 10 | **0** |
+| parts | 835 | 820 |
+
+### 1 ✅ B.26's apex — sixteen bolts down to four
+
+Established before deleting anything, because the first look was misleading: **both rafters
+carry a live end-plate connection, each claiming six bolts** — and every one of those twelve
+object ids is **DEAD**. None matches any of the sixteen bolts actually present.
+
+> ⭐⭐ **A logical link's bolt list can name objects that no longer exist.**
+> `getBoltObjectId()` kept returning ids of bolts deleted in an earlier rebuild. **The link is
+> not a reliable ownership record after an edit** — which is one more instance of the day's
+> theme: it is the *editing* that breaks things, silently.
+
+So no live connection owned any of the sixteen, and deleting was safe. The two apex plates
+carry **four hole positions**; the joint therefore wants **four bolts**. Kept `119C`–`119F`,
+deleted the four orphans and the two duplicate sets — **twelve bolts**.
+After: `4 bolts · 8 holes · 4 matched · 0 iron-rule · 0 duplicates · 0 oversized`.
+
+### 2 ✅ B.15's three experiment bolts — deleted
+
+`M 16x65`, `M 16x0` (zero length) and `M 20x660` (a 660 mm rod). Band now reads clean.
+
+### 3 🛑 B.25's braced bay — **RE-DIAGNOSED. The bolts were never the fault.**
+
+The plan was to swap eight M16×75 for M16×50. Before doing it, the bolt style list showed
+that a ProSteel bolt style is the **standard** (`DIN7990`), not the length — **ProSteel picks
+the length from the packet.** So it had sized these bolts for a 50 mm packet. Why?
+
+```
+hole in gusset F72   y −55 … −65     (a 10 mm plate)
+hole in angle  F76   y −96 … −105    (a 9 mm L 90x9 leg)
+                     ─────────────
+                     31 mm of NOTHING in between
+```
+
+⇒ **The gusset and the angle do not touch. There are 31 mm of air inside the joint.** The
+M16×75 is exactly the right length for the assembly as modelled. **The fault is the gap, and
+it is worse than the fault I thought I had found:** a bolted lap with an air gap puts the bolt
+in bending and cannot be fabricated as drawn without a 31 mm packer.
+
+⛔ **Not fixed.** Moving a gusset or an angle in a braced bay is a **scheme change**, not a
+cleanup, and it is Amir's call.
+
+⭐ **The instrument was corrected, not just the diagnosis.** `vfy_fit` now measures the air
+between consecutive holes along the bolt axis and reports **`GAP-IN-PACKET`** separately from
+`OVERSIZED`, because a large "spare" means one of two very different things. On the bay it
+now reads: `GAP-IN-PACKET=8 · worst 31 mm of air, in F82`.
+
+### 4 ✅ The redundant holes — both parts, by two different routes
+
+* **`AE6`** — 12 hole *fields* carrying 12 holes at 6 positions. Clean surgery: fields 6–11
+  repeat 0–5 exactly, so six whole fields came out, **highest index first** because removing
+  one renumbers the rest. Now 6 holes at 6 positions.
+* **`10E9`** — **one** field producing all 8 holes, so the doubling lived inside the field's
+  own definition and no single hole could be removed. Checked first: **none of the eight was
+  used by any bolt.** Deleted the field and re-drilled the four intended positions at ⌀20.
+  Now 4 fields, 4 holes, 4 positions.
+
+> ✅ **B.26's note that holes cannot be removed was WRONG.**
+> `PsEditModification.DeleteHoleField(handle)` exists and works. New ops: `holefields`
+> (fields *and* holes, so the two cases above can be told apart) and `killholefield`.
+
+## 🆕 Found while fixing — NOT in the approved four, NOT touched
+
+**Twelve bolts at B.26's bolted portal that cannot be assembled.**
+
+| bolts | bolt | packet | left for the nut | verdict |
+|---|---|---|---|---|
+| `11A6`–`11AB` (6) | M20×70 | **79 mm** (4 plies: 20+20+19+20, contiguous, gap 0) | **−9 mm** | the bolt is **shorter than the steel** |
+| `11BC`–`11C1` (6) | M20×70 | 59 mm (3 plies: 20+19+20) | **11 mm** | an M20 nut is **16 mm** thick |
+
+Both groups have `gap=0`, so the plies genuinely stack — this is not the matcher sweeping in a
+neighbour's holes. **Neither group can be bolted up as drawn.**
+
+**Also: twelve unfilled holes** at ≈(351 840, ±30, 5 030/5 080) in parts `10E9` and `1096` —
+the residue of a connection that was drilled and never bolted. Four of them are the ones just
+re-drilled on `10E9`; the other eight belong to `1096` and were left alone.
+
+## Final state — whole model
+
+```
+vfy_bolts   179 bolts · 583 holes · 179 matched · BOLT-NO-HOLE = 0  🧲
+vfy_dupes   0 duplicate bolts · 0 duplicate holes
+vfy_fit     159 OK · 8 GAP-IN-PACKET · 12 SHORT · 0 OVERSIZED · 0 no-hole
+vfy_size    820 parts · 0 oversize
+```

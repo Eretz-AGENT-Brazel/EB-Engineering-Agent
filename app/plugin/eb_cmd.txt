@@ -1,3 +1,3 @@
-reqid=fccce409
-op=vfy_dupes
+reqid=157e2de1
+op=vfy_fit
 dwg=B08-insert-shapes.dwg

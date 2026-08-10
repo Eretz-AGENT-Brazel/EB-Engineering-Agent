@@ -99,12 +99,32 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > ### 🔧 What replaced it — `vfy_fit` and `vfy_dupes` (judge only measured geometry)
 > | op | judges | blind to |
 > |---|---|---|
-> | **`vfy_fit`** | `spare = nominal length − packet` — **oversized / short bolts** | over-counts when two bolt rows sit closer than `tol` |
+> | **`vfy_fit`** | `spare = nominal length − packet`, and the **air between consecutive holes** | over-counts when two bolt rows sit closer than `tol` |
 > | **`vfy_dupes`** | bolts at the same point · holes at the same point in one part | nothing else; it is pure coincidence detection |
 >
 > ⭐ **The model calibrates the threshold, not me.** Across ten healthy bolt types, `spare` sits
-> in a tight **22–31 mm** band — a nut, a washer and a few protruding threads. The outlier was
-> M16×75 on a 19 mm packet: **56 mm**, i.e. 30 mm of bolt hanging out.
+> in a tight **22–31 mm** band — a nut, a washer and a few protruding threads.
+>
+> ### 🛑 …AND THE SECOND RETRACTION, an hour later: "oversized" was wrong too
+> Eight M16×75 on a 19 mm packet read `spare = 56 mm`, so they were about to be swapped for
+> M16×50. **The bolt style list stopped it:** a ProSteel bolt style is the **standard**
+> (`DIN7990`), not the length — **ProSteel picks the length from the packet.** So it had sized
+> them for 50 mm. The holes say why:
+> ```
+> gusset F72   y −55 … −65     (10 mm)
+> angle  F76   y −96 … −105    (9 mm)
+>              31 mm of NOTHING in between
+> ```
+> ⇒ **The plies do not touch.** The bolt is exactly right for the assembly as modelled; the
+> fault is a **31 mm air gap inside a bolted lap**, which puts the bolt in bending and cannot be
+> fabricated without a packer. Swapping to M16×50 would have left it too short to reach.
+> ⭐⭐ **A large `spare` means one of two opposite things** — an over-long bolt, or plies that do
+> not touch. `vfy_fit` now measures the air between consecutive holes along the bolt axis and
+> reports **`GAP-IN-PACKET`** separately. ⇒ **When a check fires, ask what ELSE would produce
+> that number before acting on the first explanation.**
+> ⚠️ Also real, and found the same way: **a bolt can be SHORTER than its packet** — 6 × M20×70
+> through 79 mm of contiguous steel, and 6 more leaving 11 mm for a 16 mm nut. Neither can be
+> assembled, and nothing but this check would have said so.
 > ⭐⭐ **A DUPLICATE BOLT IS INVISIBLE TO EVERY BOLT-VS-HOLE CHECK** — each copy matches the same
 > hole perfectly, so `vfy_bolts` calls it clean. It surfaces in the **parts list**, not the
 > geometry. B.26's apex was bolted **three times over**, 8 redundant bolts, undetected for a day.
