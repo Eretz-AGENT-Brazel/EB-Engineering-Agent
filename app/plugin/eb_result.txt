@@ -1,1 +1,1 @@
-﻿EB_OK vfy_grip bolts=24 OK=24  UNDRILLED=0 (🧲 the bolt clamps material with NO hole)  BOLT-NO-HOLE=0  OVER-COUNT=0 (holes counted that it does not cross)  no-klemm=0  worst=0mm ()  slack=1.5  [grip length is ProSteel's OWN figure for the clamped packet; the hole SET is still matched by proximity, so a wrong set must add up to exactly the right total to slip through] -> eb_vfy_grip.txt reqid=23e2878d
+﻿EB_OK zoom all w=148413.52 h=91312.247 margin=0.06 reqid=8407b5ea
