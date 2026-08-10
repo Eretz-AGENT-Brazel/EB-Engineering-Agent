@@ -1,1 +1,1 @@
-﻿EB_OK dumpmodel shapes=356 plates=189 bolts=179 other=178 err=0 -> eb_model.txt reqid=d4c0beba
+﻿EB_OK save 'C:\Users\User\Desktop\EB PROSTEEL AGENT\projects\SANDBOX\B08-insert-shapes.dwg' bytes=1657912->1676803 at=16:58:20 reqid=5a9718e6

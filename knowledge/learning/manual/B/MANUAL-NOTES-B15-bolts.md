@@ -212,3 +212,44 @@ try the indexer.**
   earlier that day had turned out to be the missing style.
   ⚠️ Two different causes, one error message. Read the hint against the geometry, not against
   the last thing that went wrong.
+---
+
+## AUDIT 10/08/2026 — B.15.4 implemented, and two traps closed
+
+### ⭐ B.15.4 *Sort* — the whole dialog is `PsObjectStyleList`, new op `stylelist`
+
+```
+stylelist action=list|sync|reload|readfile|append|moveup|movedown|delete  type=0..4
+```
+`type`: 0 bolt · 1 weld · 2 posflag · 3 koteflag · 4 universal.
+
+```
+action=list type=0 -> count=27  [0]4.6S/crc=1851029805 … [16]DIN6914 … [20]DIN7990
+action=sync type=0 -> synchronized loadAll=True
+```
+
+⭐ **`action=sync` is the manual's "update all styles from disk"**, and it is the answer to the
+warning in this chapter: *"the styles are stored as objects in the drawing… modifications on the
+hard disk are not transferred to the internal objects."* **A bolt style is frozen into the model
+when it is used**; editing it on disk does nothing to an existing drawing until this runs.
+
+⚠️ `action=delete` requires `confirm=DELETE`. The manual says it deletes without asking, and a
+style is referenced by every bolt using it.
+
+### ⭐ `Initialize()` is not enough — `ReadFromFile()` fills the list
+
+`Count` reads **0** after `Initialize()` and **27** after `ReadFromFile()`, on the same object.
+Same mechanism as the frozen-style warning: the definitions live on disk.
+
+### ⭐⭐ The indexer trap, fourth instance — now a rule
+
+The dump prints `Entry` and `Index` as plain properties. The compiler:
+`get_Entry(short)` and `get_Index(string)`. With `get_ParentFlangeIndex(int)`,
+`get_WeldStyleName(int)` and `get_BoltStyleName(int)`, the pattern is settled:
+
+> **When a `String`/`Int32` property looks like it should be a list, it is an indexer, and the
+> type dump will not say so. Let the compiler say it.**
+
+### Left deliberately unfired
+`PsBolt.RecomputeBoltLength()` exists, is used nowhere, and is the obvious candidate for B.26's
+twelve unassemblable bolts — **which are awaiting Amir's decision**, so it was not run on them.

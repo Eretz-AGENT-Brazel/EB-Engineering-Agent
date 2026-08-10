@@ -1579,3 +1579,36 @@ yields the part's own layer, and connection classes were always correct. But *pr
 `PsEditPlateModification` exposes **`DisplayAsRaster`** — *Raster* again, the same word behind
 B.9.3's grating flag. It may be the read/write route for that flag on an **existing** plate, where
 `SetGrid` only offers it at creation. **Not tested.**
+
+---
+
+## `stylelist` — B.15.4, the style selection list (added 10/08/2026)
+
+```
+stylelist action=list|sync|reload|readfile|append|moveup|movedown|delete  type=0..4
+          [name=] [index=] [confirm=]
+```
+`type`: **0 bolt** · 1 weld · 2 posflag · 3 koteflag · 4 universal.
+
+⭐⭐ **`action=sync` is the one that matters for fabrication.** The manual: *"the styles are
+stored as **objects in the drawing**; when the style definition is modified on the hard disk the
+modifications are **not transferred** to the internal objects."* ⇒ **A bolt style is frozen into
+the model at the moment it is used.** Editing DIN7990 on disk changes nothing in an existing
+drawing until `stylelist action=sync` runs.
+
+⚠️ `action=delete` needs `confirm=DELETE` — the manual says it deletes without asking, and a style
+is referenced by every bolt that uses it.
+
+⭐ **`Initialize()` leaves `Count` at 0; `ReadFromFile()` fills it** — 0 → 27 on the same object.
+If a style list looks empty, it has not been read from disk yet.
+
+## ⭐⭐ The indexer rule — four instances, settled
+
+`get_ParentFlangeIndex(int)` · `get_WeldStyleName(int)` · `get_BoltStyleName(int)` ·
+`get_Entry(short)` / `get_Index(string)`.
+
+> **When a `String` or `Int32` property looks like it should be a list, it IS an indexer — and the
+> type dump prints it as a plain property. Let the compiler tell you.**
+
+⛔ And the matching write-side trap: **`BoltStyle`, `BoltType` and `Diameter` are WRITE-ONLY.**
+You can set a style and never read back which one is set.

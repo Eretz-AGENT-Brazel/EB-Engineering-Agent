@@ -997,3 +997,68 @@ other than what was asked is the worst kind, and I shipped one this afternoon.
 ### Plugin versions this chapter
 v150 (edgecheck added) → **v151** (edgecheck disabled after the crash) → **v152** (the `plate9`
 mode guard).
+
+---
+
+## B.15 — Bolts ⭐⭐ **B.15.4 was read and never implemented — and it is entirely reachable**
+
+*notes 213 lines · all four sub-sections*
+
+### 1 · Was the chapter learned deeply?
+**Yes, and it produced three of the session's most useful traps:**
+* ⛔ **"Drilling first is no longer necessary" is false at this API entry point.** Two plates with
+  zero holes → `created=0`. Drilled first → 2 bolts, cleanly. ⭐ **Amir's own sequence — DRILL,
+  then pick the two parts — is the only route available to code.**
+* ⚠️⚠️ **`BoltStyle`, `BoltType` and `Diameter` are WRITE-ONLY** — the dump prints them as
+  ordinary properties and they have no get accessor.
+* ⭐ **`get_BoltStyleName(int)` is an INDEXER, invisible in the dump.**
+
+### 2 · The gap: B.15.4 *Sort* had no op at all
+
+Every button in that dialog is a method on **`PsObjectStyleList`**, and none was implemented:
+
+| B.15.4 dialog | API |
+|---|---|
+| create a new style | `Append(name)` · `appendUniversalStyle(name)` |
+| load one from file | `readStyleFromFile(styleId)` · `ReadFromFile()` |
+| delete ⚠️ *without confirmation* | `DeleteAt(index)` |
+| move up / down | `MoveUp` · `MoveDown` |
+| ⭐ **update all styles from disk** | **`Synchronize(loadAll)`** · `Reload()` |
+
+⭐ **Why the last one matters for fabrication.** The manual: *"The styles are stored as **objects
+in the drawing**. When the style definition is modified on the hard disk, normally the
+modifications are **not transferred** to the internal objects."* ⇒ **A bolt style is frozen into
+the model the moment it is used.** Editing it on disk changes nothing in an existing drawing until
+`Synchronize` runs. New op **`stylelist`**, and it works:
+
+```
+stylelist action=list type=0
+  -> count=27 readFromFile=1
+     [0]4.6S/crc=1851029805  [2]8.8S/crc=-401163854  [16]DIN6914/crc=-410302868
+     [20]DIN7990/crc=-1614854285  … 27 entries with their CRCs
+stylelist action=sync type=0   -> synchronized loadAll=True
+```
+
+⚠️ **`delete` is gated behind `confirm=DELETE`** — the manual says it deletes without asking, and
+a style is referenced by every bolt that uses it.
+
+### 3 · Two measurements the op paid for
+
+⭐ **`Initialize()` alone leaves `Count` at 0. `ReadFromFile()` is what fills the list** — 0 → 27
+on the same object. That is the same mechanism as the frozen-style warning: the definitions live
+on disk and must be pulled in.
+
+⭐⭐ **A FOURTH instance of the indexer trap, and it is now a rule.** The type dump prints
+`Entry` and `Index` as plain properties; the compiler says they are
+**`get_Entry(short)`** and **`get_Index(string)`**. After `get_ParentFlangeIndex(int)`,
+`get_WeldStyleName(int)` and `get_BoltStyleName(int)`:
+
+> ⭐ **When a `String` or `Int32` property looks like it should be a list, it is an indexer — and
+> the type dump will not tell you. Let the compiler tell you.**
+
+### Still open
+* `PsBolt.RecomputeBoltLength()` exists and is **used nowhere**. It is the obvious candidate for
+  B.26's twelve unassemblable bolts (six shorter than their packet, six leaving 11 mm for a 16 mm
+  nut) — **awaiting Amir's decision on those**, so not fired here.
+* `WriteStyleToFile` / `WriteToFile` — writing a style back to disk. Not in B.15.4's dialog list
+  and not exercised.
