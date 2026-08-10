@@ -240,6 +240,20 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > ⚠️ **Revision Check tolerances** feed the same comparison as positioning
 > (`CheckTwoPartsAreEqual`) ⇒ **"are these two parts the same" has a configurable answer.**
 
+> ## 🎨 LET PROSTEEL PICK THE LAYER — do not force the current one (B.1 audit, 10/08)
+> ⭐⭐⭐ Every creator that exposes `UseCurrentLayer` will put the part on **its own** layer if you
+> pass **`false` and set no layer at all**. Measured with `layerprobe` against a deliberately
+> wrong current layer: `UseCurrentLayer(true)` → the junk layer · **`(false)` with no
+> `SetLayer` → `PS_Plate`**.
+> ⇒ **The 88 parts found on layer 0 on 09/08 were self-inflicted** — the plugin was overriding
+> ProSteel's automatic layer control, which B.1's first sentence promises and which works.
+> ⇒ **`layer=` is an OVERRIDE, not a requirement.** Default to letting the software choose.
+> ⚠️ **`PsCreatePrimitive` (all solids) has NEITHER `SetLayer` NOR `UseCurrentLayer`** — it
+> cannot be told, so `solid` assigns the layer *after* creation, defaulting to `PS_Solid`.
+> ⭐ **`layerprobe`** is the op for this question, and it cleans up after itself.
+> 💡 The wider lesson: **before adding a parameter to eleven call sites, ask whether the software
+> already does the thing and is being overridden.**
+
 > ## 🔩 TWO CORRECTIONS TO EARLIER NOTES, both found while fixing (10/08)
 >
 > ### ✅ HOLES **CAN** BE REMOVED — B.26's note was wrong

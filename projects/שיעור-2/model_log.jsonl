@@ -1213,3 +1213,5 @@
 {"op": "beam", "args": {"name": "HE300B", "p1": "240000,0,0", "p2": "240000,0,3000", "layer": "A05-project", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "193", "ts": "13:02:53"}
 {"op": "plate", "args": {"l": "500", "w": "250", "t": "12", "center": "300000,0,0", "layer": "A06-settings", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "1A7", "ts": "13:06:58"}
 {"op": "beam", "args": {"name": "HE300B", "p1": "300000,3000,0", "p2": "300000,3000,3000", "layer": "A06-settings", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "1A9", "ts": "13:06:58"}
+{"op": "plate", "args": {"l": "300", "w": "200", "t": "10", "center": "430000,0,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "1338", "ts": "13:31:52"}
+{"op": "beam", "args": {"name": "HE300B", "p1": "430000,2000,0", "p2": "430000,2000,2000", "dwg": "B08-insert-shapes.dwg"}, "handle": "133A", "ts": "13:31:53"}

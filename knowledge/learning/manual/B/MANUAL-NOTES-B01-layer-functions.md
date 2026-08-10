@@ -69,3 +69,37 @@ after:  PS_Shape 341 · PS_Plate 199 · PS_Bolt 198 · PS_Workfram 41 · PS_Weld
 ⇒ **Set the layer explicitly on every direct creation.** `plate9` already takes `layer=`; the
 others need it passing too. Otherwise the model looks right and behaves wrong the moment anyone
 switches layers.
+
+---
+
+# 🛑 CORRECTED BY THE AUDIT — 10/08/2026
+
+**The conclusion above was the wrong fix, and the diagnosis was incomplete.** The strays were
+not caused by "a direct API creator drops its part on whatever layer is current" as a fact of
+the API. They were caused by **my own code calling `UseCurrentLayer(true)`**.
+
+Measured with the new op **`layerprobe`** — three plates, one variable, the current layer
+deliberately forced to a junk value so a right answer could not be luck:
+
+| | call | landed on |
+|---|---|---|
+| A | `UseCurrentLayer(true)` | ❌ `ZZ_PROBE_WRONG` |
+| **B** | **`UseCurrentLayer(false)`, no `SetLayer`** | ✅ **`PS_Plate`** |
+| C | `UseCurrentLayer(false)` + `SetLayer("PS_Plate")` | ✅ `PS_Plate` |
+
+⇒ ⭐⭐⭐ **B.1's opening sentence is true for the API too.** *"Automatic layer control… normally
+you don't have to take care of this."* ProSteel assigns the part's own layer the moment you
+stop insisting on the current one. **On 09/08 I fixed the symptom in the model and left the
+cause in the code.**
+
+**What was actually done (plugin v139 → v141):**
+
+* Six call sites changed from `UseCurrentLayer(true)` to `(false)`. Verified against a wrong
+  current layer, with **no `layer=` passed**: `plate` → `PS_Plate` · `polyplate` → `PS_Plate` ·
+  `beam` → `PS_Shape`.
+* ⇒ **`layer=` is an OVERRIDE, not a requirement.** Do not add it to ops that do not need it.
+* ⚠️ **Solids are the real exception.** `PsCreatePrimitive` exposes **neither `SetLayer` nor
+  `UseCurrentLayer`** — it cannot be told where to build. `solid` therefore assigns the layer
+  **after** creation, defaulting to `PS_Solid`. Verified: `box`, `sphere` → `PS_Solid`.
+* Ten other ops still take no `layer=`; that is now believed harmless but is **assumed, not
+  measured** — probe each with `layerprobe` when its chapter is audited.
