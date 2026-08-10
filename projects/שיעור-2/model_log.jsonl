@@ -1200,3 +1200,8 @@
 {"op": "beam", "args": {"name": "HE300B", "p1": "62000,0,0", "p2": "62000,0,5000", "layer": "E10-classes", "dwg": "E-structural-elements.dwg"}, "handle": "340", "ts": "10:04:22"}
 {"op": "beam", "args": {"name": "HE300B", "p1": "62000,8000,0", "p2": "62000,8000,5000", "layer": "E10-classes", "dwg": "E-structural-elements.dwg"}, "handle": "342", "ts": "10:04:22"}
 {"op": "beam", "args": {"name": "IPE400", "p1": "62000,150,4800", "p2": "62000,7850,4800", "layer": "E10-classes", "dwg": "E-structural-elements.dwg"}, "handle": "343", "ts": "10:04:22"}
+{"op": "plate", "args": {"l": "300", "w": "200", "t": "20", "center": "122000,0,0", "layer": "E11-grip", "dwg": "E-structural-elements.dwg"}, "handle": "380", "ts": "10:14:44"}
+{"op": "plate", "args": {"l": "300", "w": "200", "t": "15", "center": "122000,0,17.5", "layer": "E11-grip", "dwg": "E-structural-elements.dwg"}, "handle": "382", "ts": "10:14:45"}
+{"op": "plate", "args": {"l": "300", "w": "200", "t": "20", "center": "122000,0,35", "layer": "E11-grip", "dwg": "E-structural-elements.dwg"}, "handle": "383", "ts": "10:14:46"}
+{"op": "plate", "args": {"l": "300", "w": "200", "t": "20", "center": "122000,0,0", "layer": "E11-grip", "dwg": "E-structural-elements.dwg"}, "handle": "387", "ts": "10:18:10"}
+{"op": "plate", "args": {"l": "300", "w": "200", "t": "20", "center": "122000,0,20", "layer": "E11-grip", "dwg": "E-structural-elements.dwg"}, "handle": "388", "ts": "10:18:11"}

@@ -80,6 +80,37 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > ⇒ **Never trust a new check until it has failed a known-bad case and passed a known-good one.**
 >
 > **Model baseline, 09/08:** 835 parts · 194 bolts · 593 holes · 187 matched · 0 oversize.
+>
+> ### 🧲 `vfy_grip` — the iron rule answered by ProSteel, not by proximity (10/08)
+> `vfy_bolts` says in every result line that it cannot tell **which part** a hole belongs to.
+> That blind spot is where a real violation hides: a bolt clamping one drilled plate and one
+> **undrilled** one looks perfect to a proximity matcher.
+>
+> **`KlemmLen`** (E.9.3, the bolt's *grip length*) is ProSteel's own figure for the thickness of
+> the packet the bolt clamps, and every hole's `Start`/`End` gives its depth. So:
+> **sum(matched hole depths) vs KlemmLen** — equal is clean, **less means the bolt clamps
+> undrilled material**. And it prints the owning part and thickness of every hole it counted.
+>
+> Calibrated exactly: twelve M20×70 in end-plate joints, `klemm=39 drilled=39 diff=0`,
+> `owners=340:19,344:20` — a 19 mm HE300B flange plus a 20 mm end plate.
+> ⚠️ **The UNDRILLED branch is NOT calibrated**, and here is why it could not be:
+>
+> ⭐ **ProSteel itself refuses to bolt across an undrilled element.** Three plates 20+15+20,
+> faces touching, outer two drilled, middle solid → `boltparts` refuses, *"holes further apart
+> than 'Gap distance'"*. **Part of the iron rule is enforced by the software at bolting time.**
+> ⇒ Violations therefore come from **editing afterwards**, not from bolting badly — which is
+> exactly how both real ones arrived (4 orphaned bolts after a rebuild; 2 destroyed by a section
+> change). **Run the checks after every edit, not after the modelling.**
+>
+> ### ⚠️ OPEN — `boltparts` refused geometry that measures perfect (10/08)
+> Two 20 mm plates, `vfy_touch` → TOUCHING with **Z separation 0**, holes `…,10→…,−10` and
+> `…,30→…,10` — meeting exactly at z=10, same direction, same ⌀22. `boltparts` returned
+> `create=False`; the single `bolt` op refused too. The canned reason (*gap distance / angle
+> difference*) **is contradicted by the measurements**.
+> **This is a live risk**: `boltparts` is the route for hand-composed connections and bolted
+> B.25's braced bay. If it refuses valid geometry, earlier work may carry fewer bolts than
+> intended. **Run `vfy_bolts` + `vfy_grip` over the older bands, and raise it with Amir before
+> hand-composing the next connection.**
 
 > ## 📝 THE PROPERTIES DIALOG IS A WRITE SURFACE (E.9, 10/08)
 > Full notes: **`knowledge/MANUAL-NOTES-E09-properties-dialogs.md`**.
