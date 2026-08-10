@@ -1,0 +1,28 @@
+# RETRACTED CLAIMS — the fuel for qc/consistency.py
+#
+# Every row is a claim that was once written down as a finding and later DISPROVED by measurement.
+# The guard fails the build if any of these phrases appears as a live assertion anywhere in
+# knowledge/, the skill, the memory or the root docs.
+#
+# Quoting a withdrawn claim INSIDE a retraction is correct and expected — the guard allows the
+# phrase within 14 lines of a retraction marker (RETRACTED / CORRECTED / WITHDRAWN / CLOSED /
+# "used to say" / "used to read" / הופרך / נסגר / תוקן).
+#
+# ADD A ROW THE MOMENT YOU RETRACT SOMETHING. That is the whole point: the next person to write
+# the old sentence gets stopped by a machine instead of by luck.
+#
+# Columns, tab separated:
+#   date        phrase (a distinctive fragment — long enough to be unambiguous)        why it is false
+#
+date	phrase	why it is false
+2026-08-10	Clone (B.4.5) is dialog-only	TakeoverDrills transfers: changed=1 on three identical HE300B beams, each hole at its own beam centre, read back by geometry. B.4 audit.
+2026-08-10	five call sequences, selections proven	The five sequences were run without the manual's stated precondition. variant 1 alone gives changed=1.
+2026-08-10	moves nothing from code	TakeoverDrills moves real geometry. 5 of 8 variants transfer.
+2026-08-10	never re-investigated from scratch	This sentence sat on a claim that was false. Never write a do-not-look-again instruction on a negative result.
+2026-08-10	matching Posnum are eligible	The position number is not a gate: changed=1 with no posnum, a different posnum and a matching one alike.
+2026-08-10	returns 0 unless `SetInsertMatrix` supplied	SetInsertMatrix was never called when that was written. Calling it with a world UCS and a rotated UCS changes nothing: refId=0 both times. Cause unknown.
+2026-08-10	Pass the layer explicitly on every direct creation	UseCurrentLayer(false) with no SetLayer yields the part's own layer. The 88 strays came from UseCurrentLayer(true). layer= is an override, not a requirement.
+2026-08-10	Untried: `PsGrid.insert	Tried 10/08 via op gridaxes: addedX=0 addedY=0, census 836->836. B.6.7 is dialog-only, and the reason is structural.
+2026-08-10	values still unmeasured	EdgeLayout was measured: kFacet(1) kRadius(2) kRounded(3) kInverted(4) kFold(5) kNotch(6), all six applied and read back.
+2026-08-10	the weight cannot be verified	op=props reads a plate's weight through PsObjectProperties without touching the lethal computeObjectWeigth.
+2026-08-10	never a fair test	CreateHull was fed the wrong input type. Given a real PsDataPointArray it builds exactly: 800x600x600 and 600x500x500.

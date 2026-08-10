@@ -97,11 +97,21 @@ same shape as `-300,-200 … 300,200`, it measured **600 × 400 × 700** exactly
 ⇒ **The polygon lives in the primitive's own plane** (set by `SetInsertPoint` + `SetXYPlane`).
 ⚠️ And that is almost certainly why `CreateRotation` refused: it also takes a polygon.
 
-## ⛔ Still open
+## ~~⛔ Still open~~ — 🛑 **BOTH CLOSED 10/08/2026, see the audit section below**
 
-- **`rotate`** — refused with a world polygon and with a local one; the axis framing is untested.
-- **`hull`** — needs **`SetPoints(PsDataPointArray)`**, not `SetPolygon`; the op passes a polygon,
-  so this was never a fair test. A plugin change is required to try it properly.
+*Left visible rather than deleted, because the wording matters: each of these named its own
+missing test and was then filed as an open finding. Running the named test closed both. The
+consistency guard (`qc/consistency.py`) flagged this block still standing after the audit section
+had been appended below it — the same failure as the day's headline one, in miniature.*
+
+- ~~**`rotate`** — refused with a world polygon and with a local one; the axis framing is
+  untested.~~ ⇒ **It works.** The polygon is LOCAL 2D (`x,y` only), the **axis is WORLD**, and the
+  axis must lie **in the profile's plane**. A 300×400 profile at radius 200–500 measures
+  1000 × 400 × 1000 exactly.
+- ~~**`hull`** — needs `SetPoints(PsDataPointArray)`, not `SetPolygon`; the op passes a polygon,
+  so this was not a fair test. A plugin change is required to try it properly.~~ ⇒ **The plugin
+  change was made (`solid dpts=`) and it builds exactly** — 6-point wedge 800 × 600 × 600, 4-point
+  tetra 600 × 500 × 500.
 
 ---
 
