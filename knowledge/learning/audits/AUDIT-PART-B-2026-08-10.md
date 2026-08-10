@@ -747,3 +747,53 @@ acted on rather than carried forward.
 ### Still open
 * Why a **perfect box** defeats `CreateHull` — measured, not explained.
 * Whether `rev` is degrees at all, or an enum/flag whose values I have not found.
+
+---
+
+## B.11 — Create ACIS Body Reference ⭐ **the chapter is sound; one of its EXPLANATIONS is retracted**
+
+*notes 100 lines · band x = 380 000*
+
+### 1 · Was the chapter learned deeply?
+**Yes.** Both API classes mapped, the whole chain measured end to end, `GetFromMassProp`
+correctly identified as *the manual's ESC-at-the-first-X-point* (the inertia-axes mode), and
+⭐⭐ the manual's warning proved **literally true by census** — deleting the ACIS body takes the
+reference with it, two entities gone for one delete. It also recorded a **measurement trap**:
+a COM `HandleToObject` check right after the delete still reported the reference alive; only the
+census (and a later fresh read) showed it gone.
+
+**Re-verified today**, because it is cheap and the warning matters: `other` **168 → 166** on one
+delete, and the reference then answers **`EX:eWasErased`** — the true signal, exactly as recorded.
+
+### 2 · 🛑 The retraction — `massProp = false`
+
+The notes did not just record the refusal; they **explained** it:
+
+> *"The non-inertia mode needs the component coordinate system supplied first via
+> **`SetInsertMatrix`** — with no matrix there are no axes, and the call declines."*
+
+**`SetInsertMatrix` had never been called.** The explanation was reasoning, written where a
+measurement belongs. Tested today — new `acisref ucs=origin;xaxis;yaxis`, building a real
+`PsMatrix` via `SetCoordinateSystem`:
+
+| call | result |
+|---|---|
+| `massProp=1` | ✅ `refId=13FB`, census +1 |
+| `massProp=0`, no matrix | ❌ `refId=0`, census unchanged |
+| `massProp=0` **+ world UCS** (`ucsSet` confirmed) | ❌ `refId=0`, census unchanged |
+| `massProp=0` **+ a rotated UCS** (`ucsSet` confirmed) | ❌ `refId=0`, census unchanged |
+
+⇒ ⭐ **The explanation is wrong and is withdrawn.** What remains is only the measurement:
+**`massProp=false` refuses, and why is not known.**
+
+*A reading, offered as a reading and not as a finding:* `GetFromMassProp=false` is plausibly the
+manual's **three-point pick** mode — the user clicks the component's coordinate system — which
+would put it under THE CEILING's one-line rule. **Not measured, not claimed.**
+
+### 3 · The pattern this makes three times today
+B.4 (`TakeoverDrills`), B.9 (*"the weight cannot be verified"*), B.10 (*"never a fair test"*) and
+now B.11. Each time a conclusion outran its evidence, and each time the audit's only job was to
+**run the test the note itself named**.
+
+⇒ ⭐⭐ **Rule, now explicit:** an explanation written next to a measurement must say which of the
+two it is. If a note names the missing call, the note is a **to-do**, not a finding.

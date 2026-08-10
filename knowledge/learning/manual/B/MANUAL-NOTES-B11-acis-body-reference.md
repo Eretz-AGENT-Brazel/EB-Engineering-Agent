@@ -98,3 +98,30 @@ showed it gone. The first read-back was a stale-cache artefact.
 ⇒ **After a delete, re-acquire the document before believing an existence check**; prefer the
 census, which settled correctly at once. (Reading the reference through the plugin at that moment
 threw **`eWasErased`**, which was the true signal.)
+
+---
+
+## 🛑 RETRACTED 10/08/2026 — the `massProp = false` explanation
+
+The note above said the non-inertia mode *"needs the component coordinate system supplied first
+via `SetInsertMatrix`"*. **`SetInsertMatrix` had never been called.** That was reasoning written
+where a measurement belongs.
+
+Tested with `acisref ucs=origin;xaxis;yaxis` (a real `PsMatrix` via `SetCoordinateSystem`, with
+`ucsSet` confirming the call was made):
+
+```
+massProp=1                        refId=13FB   census +1     OK
+massProp=0, no matrix             refId=0      unchanged
+massProp=0 + world UCS  ucsSet    refId=0      unchanged
+massProp=0 + rotated UCS ucsSet   refId=0      unchanged
+```
+
+⇒ **The explanation is withdrawn.** `massProp=false` refuses and **why is not known.**
+
+*A reading, not a finding:* `GetFromMassProp=false` is plausibly the manual's **three-point pick**
+mode, which would put it under THE CEILING's rule about mouse picks. Not measured.
+
+### Re-verified while here
+Deleting the ACIS body still takes the reference with it — `other` 168 → **166** for one delete —
+and the reference then answers **`eWasErased`**, the true signal the notes identified.
