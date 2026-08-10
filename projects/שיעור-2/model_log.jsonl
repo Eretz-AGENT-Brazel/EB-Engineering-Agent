@@ -1231,3 +1231,9 @@
 {"op": "beam", "args": {"name": "HE300B", "p1": "464000,1000,0", "p2": "464000,1000,3000", "dwg": "B08-insert-shapes.dwg"}, "handle": "1368", "ts": "13:50:34"}
 {"op": "beam", "args": {"name": "HE300B", "p1": "464000,1800,0", "p2": "464000,1800,3000", "dwg": "B08-insert-shapes.dwg"}, "handle": "1369", "ts": "13:50:35"}
 {"op": "beam", "args": {"name": "HE300B", "p1": "464000,2600,0", "p2": "464000,2600,3000", "dwg": "B08-insert-shapes.dwg"}, "handle": "136A", "ts": "13:50:36"}
+{"op": "beam", "args": {"name": "IPE300", "p1": "470000,0,0", "p2": "470000,0,2000", "dwg": "B08-insert-shapes.dwg"}, "handle": "1375", "ts": "13:58:37"}
+{"op": "beam", "args": {"name": "IPE300", "p1": "470000,600,0", "p2": "470000,600,2000", "dwg": "B08-insert-shapes.dwg"}, "handle": "1376", "ts": "13:58:37"}
+{"op": "beam", "args": {"name": "IPE300", "p1": "470000,1200,0", "p2": "470000,1200,2000", "dwg": "B08-insert-shapes.dwg"}, "handle": "1377", "ts": "13:58:37"}
+{"op": "beam", "args": {"name": "IPE300", "p1": "470000,1800,0", "p2": "470000,1800,2000", "dwg": "B08-insert-shapes.dwg"}, "handle": "1378", "ts": "13:58:37"}
+{"op": "beam", "args": {"name": "IPE300", "p1": "470000,2400,0", "p2": "470000,2400,2000", "dwg": "B08-insert-shapes.dwg"}, "handle": "1379", "ts": "13:58:37"}
+{"op": "beam", "args": {"name": "IPE300", "p1": "470000,3000,0", "p2": "470000,3000,2000", "dwg": "B08-insert-shapes.dwg"}, "handle": "137A", "ts": "13:58:37"}

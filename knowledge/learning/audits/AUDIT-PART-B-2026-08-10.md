@@ -311,3 +311,127 @@ All 16 test beams erased. 834 baseline + the 2 construction lines added in B.2 =
 * `clonedrills` still defaults to `variant 9`, the composition. **That default should probably
   change**, but not before the API route is exercised on **rotated and mirrored** targets —
   which is exactly where the coordinate-system warning bites.
+
+---
+
+## B.5 — Display / Assign parts ⚠️ **one of its four systems was never implemented**
+
+*Manual 2727–3093 (367 lines) · notes 109 lines · ratio 0.30, flagged*
+
+### 1 · Was the chapter learned deeply?
+**Yes.** The notes carry all six sub-sections, the six `PS_HIDE*` variants, the difference
+between ProSteel's `Regenerate` and AutoCAD's, `Count` raising the number of available classes,
+`Complete Groups`, B.5.4's overlap sentence, and all of B.5.5 — the **position-number prefix**,
+the colour, the common detail style, the separate 2D line settings, and the three assignment
+modes (`Single Parts` adopts *all* the family data, `Groups` adopts **only the prefix**).
+
+They also carry a sharp measured finding: *everything a connection class generated carries a
+`FamilyClass`; everything created by hand does not* — so the prefix machinery runs underneath
+and hand-built parts sit outside it.
+
+### 2 · The gap — measured across all 820 parts
+
+| system | assigned | unassigned |
+|---|---:|---:|
+| `AreaClass` | 305 | 515 |
+| `FamilyClass` | 40 *(all by connection classes)* | **780** |
+| **`DisplayClass`** | **0** | **820** |
+
+⇒ ⚠️ **B.5.3 Display Classes was read and never exercised — zero parts in the whole model.**
+Three of the chapter's four assignment systems were implemented; the fourth was not.
+
+### 3 · What was done
+Six fresh beams, display class **1** on three and **2** on three, area class **12** on all six:
+
+* ✅ **`DisplayClass` is writable and sticks** — reads back 1 and 2 respectively.
+* ✅ **B.5.4's independence claim confirmed** — *"area and display classes are completely
+  independent from one another"*: a part held `d1 / a12` simultaneously, and the op's own tally
+  reported them as separate axes (`d1/a12/f-1=3`, `d2/a12/f-1=3`).
+* ✅ Per-part visibility toggles both ways.
+
+> ### ⚠️ What I did NOT test, stated plainly
+> B.5.4's *"in case of overlapping… the **last carried out action** will be valid"* is about
+> **class-level** hide/show actions. My test hid and showed by **coordinate window**, which
+> writes `PsObjectProperties.Visible` per part — the equivalent of `PS_HIDE`, not of the class
+> buttons. **The overlap rule remains untested.**
+>
+> ⭐ But the data explains it. **There is one `Visible` boolean per part**, and both the display
+> and area class actions write that same flag. *"Last carried out action wins"* is therefore a
+> **description of a single shared flag, not a priority system** — which is why the rule reads
+> the way it does. Recorded as an **explanation**, not as a measurement.
+
+### Still open
+* ⛔ **Assigning display classes across the model was NOT done, deliberately.** B.5.3's own
+  examples are *"bracings, bay rails, curtain walls"* — **structural function**, which is a
+  taxonomy for Amir to define, not for me to invent. The capability is proven; the scheme is his.
+* Same for `FamilyClass` on the 780 hand-built parts: the family carries a **position-number
+  prefix**, a colour and a detail style, so assigning one is a **fabrication decision**.
+  ⚠️ It is also a **prerequisite for prefixed position numbers**, so it will matter when B.29 is
+  audited.
+
+---
+
+## B.6 — Work Frames ✅ **the best-learned chapter so far; its one open route now closed**
+
+*Manual 3094–3530 (437 lines) · notes 242 lines · band x 32 000 – 52 000, 41 `Ks_WorkFrame`*
+
+### 1 · Was the chapter learned deeply?
+**Yes — this is the standard the others should be measured against.** Every item checked was
+present: the four basic types, `Absolute` heights, the **ALT** asymmetrical-division input
+(`number*distance`) and **CTRL** to clear a dimension, roof angle / centre height / ridge width
+(0 or = width → a single roof surface), the group name as a **prefix on every view name**,
+*"work frames are OBJECTS"* and the UCS following them, the **layer-unlock warning**, all eleven
+view flags, `Distances Cut.Surfaces`, and the whole axis-naming dialog down to **`Avoid I, O`**,
+`Suppress First/Last`, `Decreasing`, `2 Lines`, `Dynamic` and `Axis Gap`.
+
+And the measured half is the strongest in part B:
+
+* ⭐ **`SetType(GridType)` is the shape switch** — without it every roof and radius value is
+  *stored on the entity and never drawn*. The first cone had a 1721 mm bounding box (pure axis
+  text) while `BottomRadius` read back a perfect 8000.
+* ⭐ **The enum-collision trap**, caught and written down: a second `GridType` exists in another
+  assembly (`aSa.PC.Shape.Graphics`) and reflecting by bare name found the wrong one.
+* ⚠️ **`checkExistingGrids(name)` returned `True` for four brand-new names** — it is not the
+  collision test its name implies.
+* An honest **"Not reachable / not true"** section, which is what made this audit quick.
+
+### 2 · The open route, now tried
+
+B.6.7 *Additional Axes* — *"This function helps you to create an axis grid completely out of an
+existing 2D-axis plan"*, i.e. build the grid from the architect's drawing. The notes left one
+**recorded untried route**: `PsGrid.insert(Origin, Xaxis, Yaxis)` as an alternative creator.
+
+**Tried today. It fails.** New op `gridaxes` builds a fresh `PsGrid`, sets `Length`/`Wide`, adds
+user axes and inserts:
+
+```
+addedX=0  addedY=0  readBackX=0  readBackY=0   census 836 -> 836
+```
+
+`addUserXaxis` returns **false** on an un-inserted grid, and `insert()` creates nothing.
+
+Three things were re-verified rather than assumed, because B.4 showed what assuming costs:
+
+| claim | re-checked |
+|---|---|
+| *"`IKs_ComGrid` has no user-axis equivalent"* | ✅ **true** — no `AddUserXaxis`, no `GetUserXaxis` |
+| *"`PsGrid` cannot bind to an existing frame"* | ✅ **true** — no `SetObjectId`, no `readFrom`, no binder of any kind |
+| the untried `insert()` route | ❌ **fails** |
+
+⇒ ⭐ **The difficulty is structural and now nameable: `PsCreateGrid` is the creator and has no
+user-axis methods; `PsGrid` has the user axes and no creator and no binder.** The two halves
+never meet in the API. **B.6.7 is genuinely dialog-only** — and that is now a *tested* closure,
+not an open question left hanging.
+
+### 3 · What was fixed
+* New op **`gridaxes`** — kept, because it is the evidence, and it reads every axis back rather
+  than trusting `addUserXaxis`' boolean.
+* THE CEILING gains B.6.7 as a properly closed entry.
+* The band was **not** modified: nothing in it was wrong.
+
+### Still open
+* `SetXViews` / `SetYViews` / `SetZViews` **do not produce a view per axis** — `B6_RECT` got the
+  six surface views and a single `Y_1`. Still unexplained; low value, since the surface views
+  are the ones used.
+* B.6.9 user-defined blocks (`UserBlockNameX/Y`, `UserBlockPath`, scales) — writable over COM,
+  **never exercised**. They are drawing presentation, not modelling.

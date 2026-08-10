@@ -26,6 +26,7 @@ thing by composition from calls that do work.**
 | **The cope's ESC route** (notch at a shape end, no second shape) | `Check()=0` without a support, whatever `UseShapeEndCope` says; and the class has **no `SetConnectionPoint`** | B.12.6 |
 | **Bolting with no pre-drilled holes** | The manual says drilling first *"is not necessary any more"*. `PsCreateBolt.AddObject + Create()` returns `create=False` with 0 holes; drilled first, it bolts cleanly | B.15 |
 | **`PsCreateFastener`** (anchor bolts) | **Nothing created** — 4 kinds × 3 styles × with/without host id × embedment segments, verified by diffing `ModelSpace` handles | B.11 / staircase |
+| **B.6.7 Additional Axes** (build the grid from an architect's 2D plan) | ⭐ **Structural, and now named:** `PsCreateGrid` is the creator and has **no user-axis methods**; `PsGrid` has `addUserXaxis`/`addUserYaxis` and **no creator and no binder** — no `SetObjectId`, no `readFrom`. The two halves never meet. The one recorded untried route, `PsGrid.insert()`, was tried 10/08: `addedX=0 addedY=0`, census unchanged. `IKs_ComGrid` has no equivalent either (re-verified) | B.6.7 |
 | **The 62 `PSN_*` macros** | The Connection Center's own connections. They instantiate and give real metric defaults — but every entry point prompts | B.24 |
 
 ---
