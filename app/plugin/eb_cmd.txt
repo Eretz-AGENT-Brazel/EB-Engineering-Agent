@@ -1,4 +1,4 @@
-reqid=383e4aab
-op=groupinfo
-handle=F76
+reqid=12cb0afc
+op=posnum
+out=eb_posnum.txt
 dwg=B08-insert-shapes.dwg

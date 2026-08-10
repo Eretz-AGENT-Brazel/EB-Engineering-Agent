@@ -2337,3 +2337,76 @@ until it is grouped and classed.
 ⛔ **Do not group them in a loop.** A group encodes *stock part / dispatched part / site assembly* —
 that is a **fabrication decision** and Amir's taxonomy, exactly as B.5 refused to invent a
 display-class scheme. **The capability is proven; the scheme is his.**
+
+---
+
+## ⛔⛔ NOT ONE PART IN THE MODEL HAS A POSITION NUMBER — B.29, 10/08/2026
+
+```
+posnum   objects=1194   withPosnum=0
+```
+
+Three chapters key off it, in the manual's own words:
+
+| chapter | |
+|---|---|
+| **B.4.5** Clone Manipulations | *"only parts with the **same position number** will be considered"* |
+| **B.28.3** Compare+Modify | compares groups **by** position number |
+| **B.29.1** Group Detection | *"single parts are only compared **using their position number**"* |
+
+⇒ **All three are inoperative on this model and always have been.** B.29's own action-list item #1
+is *"number BEFORE replicating, not after."*
+
+⚠️ **And it places B.4's measurement properly.** That audit found `TakeoverDrills` transfers with
+no position number, with a different one and with a matching one alike, and recorded *"why 06/08
+returned zero is unknown."* The field is **blank on every part in the drawing**, so the "different"
+and "same" cases were two hand-set values in an otherwise empty field. That is a measurement of
+**what happens when the field is empty**, not a refutation of the manual's precondition.
+
+---
+
+## ✅ CHECK-ONLY NUMBERING — `posauto dry=1`
+
+B.29 asked whether numbering can run without writing, and proposed
+`PsCreatePositioning.SetOverrideExisting(false)`. **That engine cannot be run from code at all** —
+no public `Perform`/`Run`/`Execute`/`Apply`, no `SetToDefaults`; the only orchestrator is the modal
+`PS_POS` dialog. The capability exists because it was **built here**, on
+`PsCompareDrawing.CheckTwoPartsAreEqual` — the one identity test that sees cuts (`IsEqualTo` is
+the trap).
+
+```
+posauto dry=1 kinds=shape,plate tol=0.5
+  ->  parts=677  distinct=272  buckets=205  comparisons=705
+      written=0  failed=0   (DRY RUN)   secs=8.7
+
+posnum  (re-read, independently)  ->  withPosnum=0     <- verified: nothing written
+```
+
+⭐ **Verify "nothing was written" with a SECOND, INDEPENDENT read** — not with the op's own
+`written=0`. That is the same discipline as reading a part back after creating it.
+
+### What the dry run measures about a model
+
+**677 parts → 272 distinct positions ⇒ 405 are duplicates: a 2.5 : 1 repetition ratio.**
+That is *"build once, then replicate"* measured on a real drawing, and it is what a numbering pass
+is worth — each of those 405 only has to be detailed, checked and NC'd **once**.
+
+⚠️ 205 buckets, 705 comparisons — bucketing keeps it near O(n) instead of 677²/2 ≈ 229 000.
+
+---
+
+## ⏳ THREE THINGS THIS AGENT MUST NOT DECIDE — the pattern, settled
+
+| | the capability | the scheme |
+|---|---|---|
+| **B.5** display / family classes | proven — writable, readable | ⏳ **Amir's** — *"bracings, bay rails, curtain walls"* is a structural taxonomy |
+| **B.28** groups | proven — `grouporphans` finds 414 orphans of 707 | ⏳ **Amir's** — a group encodes stock / dispatch / site assembly |
+| **B.29** position numbers | proven — dry run in 8.7 s | ⏳ **Amir's** — family **prefixes**, and the column/beam **ANGLE** tolerance |
+
+⇒ ⭐ **Where the input is a shop convention rather than geometry, measure and report. Do not
+invent it.** ⚠️ B.29 is the one that blocks the most: B.4.5, B.28.3 and B.29.1 are all waiting on
+it.
+
+⚠️ **Two corrections B.29 made to itself, worth keeping:** `SetColumnTol`/`SetBeamTol` are **angle**
+tolerances, not dimensional; and `SetHolesTol` is the drill **AXIS deviation**, not the diameter —
+*"the detailed section overrides the summary."*

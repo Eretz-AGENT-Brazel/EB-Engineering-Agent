@@ -1,1 +1,1 @@
-﻿EB_OK groupinfo handle=F76 parts=0 subParts=0 isMain=False main=? mainOf=? topMain=? asmMain=? | members: | wt=0 wtNoBolts=0 dim=0x0x0 cog=0,0,0 name='' | groupProps rc=3 name='' pos='' send='' wt=0 paint=0 LxWxH=0x0x0 count=1/1 sub=False assembly=False weld=False noPos=False noDetail=False reqid=383e4aab
+﻿EB_OK posnum objects=1194 withPosnum=0 -> eb_posnum.txt reqid=12cb0afc

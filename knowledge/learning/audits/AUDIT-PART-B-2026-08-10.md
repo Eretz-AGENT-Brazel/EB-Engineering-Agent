@@ -2333,3 +2333,120 @@ taxonomy, exactly as B.5 refused to invent a display-class scheme.
   — `PsBlock` / `PsBlockReference` exist in `Drawing` and were **not** tried.
 * The *"nearly"* in *"a component part group and a subgroup **nearly** behave identically"* —
   still unmeasured.
+
+---
+
+## B.29 — Positioning ⭐⭐⭐ **not one part in the model has a position number, and three chapters depend on it**
+
+*Manual 878 lines · notes 125 · **ratio 0.14 — the thinnest in part B**, and flagged at the top of
+this audit as the place to look hardest · no plugin change needed*
+
+### 1 · Was the chapter learned deeply?
+**The half it read, yes — and the other half was a declared scope decision, not a gap.** B.29.2/3/
+6/7 are **position flags**, i.e. 2D drawing annotation, and Amir had explicitly deferred the output
+chain: *"דבר ראשון נועלים מודל, ואחר כך עוברים לתכניות."* The note says so in its own opening
+table. ⇒ **The 0.14 ratio is misleading here in a way it was not in B.5, B.6 or B.8.**
+
+What it did read, it read well — and it produced two corrections to itself:
+`SetColumnTol`/`SetBeamTol` are **angle** tolerances, not dimensional ones; and `SetHolesTol` is
+the **drill AXIS deviation**, not the diameter, *"the detailed section overrides the summary."*
+
+### 2 · ⭐⭐⭐ The measurement nobody had taken
+
+B.29 §1 lists three separate chapters that key off the position number:
+
+| chapter | the manual |
+|---|---|
+| **B.4.5** Clone Manipulations | *"only parts with the **same position number** will be considered"* |
+| **B.28.3** Compare+Modify | compares groups **by** position number |
+| **B.29.1** Group Detection | *"single parts are only compared **using their position number**"* |
+
+**So: how many parts in the reference model have one?**
+
+```
+posnum   objects=1194   withPosnum=0
+```
+
+⇒ ⛔ **Not one. Zero of 1 194.** The chapter's own action-list item #1 is *"number BEFORE
+replicating, not after"*, and **nothing in this programme has ever been numbered.** All three
+tools above are inoperative on this model and always have been.
+
+> ### ⭐⭐ And it places a B.4 measurement properly
+> B.4's audit tested `TakeoverDrills` against the manual's stated precondition and found the gate
+> absent — *"no position number → `changed=1`; a **different** one → `changed=1`; the **same** one
+> → `changed=1`"* — and recorded honestly that *"why 06/08 returned zero is unknown."*
+>
+> **The model has no position numbers at all.** So the "different" and "same" cases were
+> constructed by hand on two parts in a drawing where the field is blank everywhere else.
+> That is not a refutation of the manual's precondition — it is a measurement of **what happens
+> when the field is empty**. The distinction matters and is now recorded in both places.
+
+### 3 · ✅ The chapter's open question, answered — and not the way it guessed
+
+> *the note:* *"⚠️ Can numbering be run in a **check-only mode** without writing numbers to the
+> model? `SetOverrideExisting(false)` is a candidate — **needs an experiment before use on a real
+> model.**"*
+
+`SetOverrideExisting` is on **`PsCreatePositioning`**, and that engine **cannot be run from code at
+all** — no public `Perform`/`Run`/`Execute`/`Apply`, no `SetToDefaults`; the only orchestrator is
+the modal `PS_POS` dialog. So the question as posed has no answer.
+
+**But the capability exists, because it was built here** — `posauto dry=1`, on
+`PsCompareDrawing.CheckTwoPartsAreEqual`, the one identity test that sees cuts:
+
+```
+posauto dry=1 kinds=shape,plate tol=0.5
+  ->  parts=677  distinct=272  buckets=205  comparisons=705
+      written=0  failed=0   (DRY RUN -- nothing written)   secs=8.7
+
+posnum (re-read, independently)
+  ->  objects=1194  withPosnum=0        <- confirmed: nothing was written
+```
+
+⇒ ⭐ **Check-only numbering works, runs in 8.7 s over 677 parts, and was verified not to write by
+a second, independent read** — not by trusting the op's own `written=0`.
+
+### 4 · ⭐⭐ What the dry run says about the model
+
+**677 parts fall into 272 distinct positions.** ⇒ **405 of them are duplicates of another part** —
+a repetition ratio of about **2.5 : 1**.
+
+That is the *"build once, then replicate"* economics measured on a real drawing, and it is the
+number that says how much a correct numbering pass is worth: **every one of those 405 is a part
+that only has to be detailed, checked and NC'd once.**
+
+⚠️ 205 buckets for 705 comparisons — the bucketing keeps it to O(n) in practice rather than
+677² / 2 ≈ 229 000. That is why it takes 8.7 s.
+
+### 5 · ⏳ NOT numbered — and this is the largest single decision left for Amir
+
+Writing the numbers would touch **every part in the model**, and two of the inputs are **his
+conventions, not derivable from geometry**:
+
+* **`Family Prefixes`** — the prefix comes from the **family class**, and B.5 left the family-class
+  scheme to Amir for exactly the same reason (*"the family carries a position-number prefix, a
+  colour and a detail style, so assigning one is a **fabrication decision**"*).
+* **`SetColumnTol` / `SetBeamTol`** — the **angle** within which a shape counts as vertical. That
+  is a shop convention.
+
+⇒ **The instrument is proven and the scheme is his.** Third time in this audit — after B.5's
+display classes and B.28's groups — and the same answer.
+
+⚠️ **But this one blocks the most:** B.4.5's clone, B.28.3's Compare+Modify and B.29.1's group
+detection are **all** waiting on it, and B.28 has already shown 414 of 707 steel parts are not even
+in a group. ⇒ **Recorded as the single highest-value pending decision in part B.**
+
+### Model state
+**Nothing built, nothing changed, nothing numbered.** Census **1 194**, saved and verified
+unnumbered afterwards.
+
+### Still open
+* ⏳ **The numbering scheme — Amir's**: family prefixes, and the column/beam **angle** tolerance.
+* ⚠️ **The two-part diff** (B.29.4: *"you can see **in detail where** the parts differ"*).
+  `PsCompareDrawing.CheckTwoPartsAreEqual` gives the **boolean** and it is the only test that sees
+  cuts; **where** they differ is not exposed. Dialog-only as far as this audit went.
+* ⚪ **B.29.2 / 3 / 6 / 7 — position flags.** Still a declared scope decision, still correct:
+  they belong to the output chain, which Amir deferred. **Not a gap.**
+* ⚠️ **Volume-based identity** (`SetVolCheck`, `SetMinSingleVol`, `SetMinGroupVol` — relative
+  tolerances in **percent**) is the manual's second identity method and has never been exercised;
+  `posauto` uses the geometric one.
