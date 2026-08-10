@@ -149,6 +149,39 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > plate is `PLATE 400x300x20` here and would be `BLECH 400x300x20` under Deutsch. **Never change
 > it; it is a whole-installation decision.**
 
+> ## 📐 A TEMPLATE IS A SAVED DIALOG, AND ITS NAME IS `branch/name` (A.3.2, 10/08)
+> The mechanism behind the week's working rule — *choose a template, do not pass numbers*.
+> A template is **the dialog's complete state saved under a name**, in a folder tree. So
+> `example/example3` is the template `example3` in the branch `example`.
+>
+> ⭐ **There is a shipped METRIC library: the `AutoConnect Metric v 18` branch** — named by size
+> (`450x450x25`, `600x600x25`) or bolt count (`2 Bolt`, `3 Bolt`).
+> ⚠️ **`default/Standard` is not the neutral choice it looks like** — the shipped defaults use
+> bolt style **`8.8S`** (Australian) while the AutoConnect branch uses **`DIN7990`/`DIN7969`,
+> which is what the models actually contain.**
+>
+> ⭐⭐ **Demonstrated: same op, same column, only the template name changed** —
+> `default/Standard` → 200×200×10; `AutoConnect Metric v 18/450x450x25` → 450×450×25.
+> **Every number came from the template; none was passed.**
+>
+> 🛑 **THE TRAP THAT COST 10 POINTS IN LESSON 4, now explained.** `default/Standard` carries
+> anchor *dimensions* (⌀18, drill 185, `detailed=1`) but its **`AnchorBolts` flag is OFF** — so
+> it builds the plate and the holes and **no anchor bodies**. That is exactly Amir's *"where are
+> the nuts?"*. ⇒ **ALWAYS read a template's parameters before using it**: `conntemplates`,
+> `stifftemplates`, `webangletemplates`, `shearplatetemplates`, `splicetemplates` print every
+> field of every template. **A template hides its own settings; those ops are how you look
+> inside.**
+>
+> ⭐ **`CLONE` (a dialog button) reads a live connection's settings onto another one** —
+> *"the exact default settings of which, however, you don't know any more"*. Not yet tried.
+> ⚠️ It is **not** the `Clone` on THE CEILING; that one is B.4.5's modification clone.
+> ⭐ `UPDATE` and **dynamic mode**: *"each modification of a parameter is directly translated
+> into a modification of the object"* — the documented reason a connection **re-runs** when its
+> inputs change (E.9's section swap, lesson 5's clones). It has an off switch in A.6.
+> 🔜 **dBASE / Excel template generation** (A.3.2) is the most promising unexplored route in the
+> manual — and `Varia` on a network share would give the whole office one set of details.
+> **Both are Amir's call.**
+
 > ## 🔩 TWO CORRECTIONS TO EARLIER NOTES, both found while fixing (10/08)
 >
 > ### ✅ HOLES **CAN** BE REMOVED — B.26's note was wrong
