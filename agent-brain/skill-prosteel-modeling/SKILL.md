@@ -208,6 +208,38 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > ⭐ `ALT` at **Connect** skips the type check; at **Haunch** on the support it **adapts plate
 > thicknesses to the supporting shape**; at **Insert Shapes** it rotates −90° instead of +90°.
 
+> ## ⚙️ A.6 IS THE DEFAULTS, E.9 IS THE PER-PART OVERRIDE (A.6, 10/08)
+> A.6 says it itself: *"Identical values … resulting from these settings **can be modified at any
+> time for each part** via the 'Change PS Properties' command."* All of it readable through
+> `Ks_ComGlobalSettings`, no dialog. **Read, never written — these are global on Amir's machine.**
+>
+> ### ⭐⭐⭐ Why a plate's `Name` cannot be written — closed across THREE chapters
+> ```
+> PlateNameTemplate  '$(N) $(L)x$(W)x$(T)'      PlateNameBigValue True
+> ```
+> **A.2** gives the constant `$(N)` from the language config (`PLATE` / `BLECH`) · **A.6**
+> renders it with the live dimensions · **E.9** therefore cannot store a name — it is
+> **re-rendered every time**. ⇒ **Label a plate with `Note1`/`Note2`/`Posnum`.**
+> ⚠️ `Desired Plate Name` is what **NC/PPS output** uses — *"keep this name, otherwise there
+> will be compatibility problems with output"*.
+>
+> ### ⭐⭐ Two more silent-refusal explanations
+> **`Lock Part Properties`** — *"part properties created **under the control of a logical link**
+> can only be **read but not edited**"*. A part inside a connection has its connection-owned
+> fields locked, and the API still returns success.
+> **`Allow additional data`** — this is E.9.17's *"Logical Links / Extended Input"*, the switch
+> that makes a link's `Ident`/`Name` exist. **It is OFF**, which is why they read empty.
+>
+> ### ⭐ Numbers worth carrying
+> **`MaterialSpecificWeight = 7850`** — ProSteel's steel density is exactly the EB factory rule,
+> confirmed rather than assumed (2700 = aluminium).
+> **`PlateRasterWeightReduction = 10%`** — a **grating** (`Grid` on E.9.2's Layout tab) is billed
+> at 90 % of a solid plate.
+> ⚠️ **Weight and paint area have a METHOD setting** — exact form vs *"rubber tape"* — and it
+> **changes the parts list**. ⇒ a weight difference between two models can be a *setting*.
+> ⚠️ **Revision Check tolerances** feed the same comparison as positioning
+> (`CheckTwoPartsAreEqual`) ⇒ **"are these two parts the same" has a configurable answer.**
+
 > ## 🔩 TWO CORRECTIONS TO EARLIER NOTES, both found while fixing (10/08)
 >
 > ### ✅ HOLES **CAN** BE REMOVED — B.26's note was wrong
