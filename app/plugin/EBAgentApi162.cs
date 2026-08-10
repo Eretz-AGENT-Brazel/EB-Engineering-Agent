@@ -6,7 +6,7 @@
 //
 // Protocol (file-based, avoids command-line quoting + supports Hebrew):
 //   1. Python writes  eb_cmd.txt  (key=value lines, op=... first)
-//   2. Python sends command  EB_RUN160
+//   2. Python sends command  EB_RUN162
 //   3. Plugin executes, writes eb_result.txt: "EB_OK {info}" or "EB_ERR {reason}"
 // C# 5 compatible (csc v4.0.30319).
 
@@ -43,14 +43,14 @@ using Bentley.ProStructures;
 using Bentley.ProStructures.Modeling;
 // PsShapeLoader lives in Steel.Shape (already imported)
 
-[assembly: CommandClass(typeof(EBAgent.ApiCmds160))]
-[assembly: ExtensionApplication(typeof(EBAgent.EBApp160))]
+[assembly: CommandClass(typeof(EBAgent.ApiCmds162))]
+[assembly: ExtensionApplication(typeof(EBAgent.EBApp162))]
 
 namespace EBAgent
 {
     // Registers an assembly resolver so ProSteel's managed assemblies are found
     // in the Prg folder even from a cold AutoCAD session (before any ProSteel cmd).
-    public class EBApp160 : IExtensionApplication
+    public class EBApp162 : IExtensionApplication
     {
         const string PrgDir = @"C:\Program Files\Bentley\ProStructures Ss6 R1\AutoCAD 2015\Prg";
         public void Initialize() { AppDomain.CurrentDomain.AssemblyResolve += Resolve; }
@@ -348,7 +348,7 @@ namespace EBAgent
         }
     }
 
-    public class ApiCmds160
+    public class ApiCmds162
     {
         const string Dir = @"C:\Users\User\Desktop\EB PROSTEEL AGENT\app\plugin";
         static string CurReqId = "";
@@ -438,7 +438,7 @@ namespace EBAgent
             return oid.OldIdPtr.ToInt64();
         }
 
-        [CommandMethod("EB_RUN160", CommandFlags.Modal)]
+        [CommandMethod("EB_RUN162", CommandFlags.Modal)]
         public void Run()
         {
             var kv = ReadCmd();
@@ -10599,7 +10599,9 @@ namespace EBAgent
             { "weldstyles", "||" },
             { "weld", "|at|from|len|makeweld|onsite|roundabout|row|sign|style|thick|to|" },
             { "splicetemplates", "||" },
-            { "splice", "|at|boltsingroup|dia|downin|downout|gap|group|handle|nflangeh|nflangev|nwebh|nwebv|offflange|offweb|sidelap|support|template|tflange|topin|toplap|topout|tweb|webleft|webright|welddiagonal|weldflange|weldweb|workloose|" },
+            // v161: boltstyle/boltstylecrc added. Without one of them this op cannot produce a
+            // bolted splice at all -- both shipped templates carry BoltStyleCRC=0.
+            { "splice", "|at|boltsingroup|boltstyle|boltstylecrc|dia|downin|downout|gap|group|handle|nflangeh|nflangev|nwebh|nwebv|offflange|offweb|sidelap|support|template|tflange|topin|toplap|topout|tweb|webleft|webright|welddiagonal|weldflange|weldweb|workloose|" },
             { "shearplatetemplates", "||" },
             { "shearplate", "|at|boltsingroup|boltstyle|cope|copeedgetop|copeinsidetop|coperadius|copetemplate|copewebdist|cutconn|cutsup|dia|eachplate|fromdown|fromedge|fromhole|gapconn|gapsup|group|handle|holehoriz|holehorizin|holehorizout|holevert|holevertedge|nhoriz|normaltocut|nvert|poly|pos|shear|slot|support|template|thick|vertoff|weldconn|weldsup|workloose|" },
             { "webangletemplates", "||" },

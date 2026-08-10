@@ -180,3 +180,95 @@ removed; its length comes from the `Length` field instead of the bolt pattern.
 - ⚠️ **The database is empty again**: `get_PlateDataCount()` = **0**. Third of three
   (`web angle`, `shear plate`, `splice`), which settles it as a **product-wide** gap on this
   installation rather than anything chapter-specific.
+
+---
+
+# AUDITED 10/08/2026 — what changed
+
+*Full record: `AUDIT-PART-B-2026-08-10.md` § B.21. Plugin v160 → v162, and `eb_api.dumpmodel` fixed.*
+
+## ⛔⛔ CORRECTED — every measurement above was taken on an UNBOLTED joint
+
+The 09/08 table reads *"bolted | 4 × `Ks_Shape` 298×150×10 | **via 2 hole fields** | 0"*. The bolt
+column says "via 2 hole fields", which is **not a bolt count**, and nobody counted the bolts.
+
+```
+y 0     Standard   4 plates   boltSlots=0   holeFields=2
+y 3000  example2   8 plates   boltSlots=0   holeFields=2
+y 6000  web only   2 plates   boltSlots=0   holeFields=1
+```
+
+⇒ **Three joints, drilled, with nothing through the holes.** Iron rule 1, in the model since
+09/08. **Cause:**
+
+```
+[0] default/example2  … boltCRC=0 …
+[1] default/Standard  … boltCRC=0 …
+```
+
+⭐⭐⭐ **Both shipped templates carry NO BOLT STYLE**, and this class is the one of the three with
+**no `BoltStyle` string** — only the CRC. The note above flags the missing string as a curiosity.
+**It was the reason the chapter's whole product was unbolted.**
+
+**Fixed — `splice boltstyle=<name>` (v162), resolving the name through `PsObjectStyleList`:**
+
+| | new objects | plates | real bolts |
+|---|---:|---:|---:|
+| shipped | 4 | 4 | **0** ⛔ |
+| **`boltstyle=DIN7990`** | **20** | 4 | **16** ✅ |
+
+## ⚠️⚠️ A WELD FLAG OCCUPIES A BOLT SLOT
+
+The welded bay reports `BoltObjectCount = 32`. All 32 are on layer **`PS_Weld`** — `Ks_WeldFlag`.
+
+⇒ **`getBoltObjectId` / `BoltObjectCount` mean FASTENERS, not bolts.** A link reporting 32 bolts
+can hold zero. Any iron-rule check that counts slots is **defeated by welds** — v160's shear-plate
+guard was. v161 opens each fastener and classifies it.
+
+## ⚠️ `dumpmodel`'s `insert` is (0,0,0) for EVERY plate and EVERY bolt
+
+All 241 plates and all 305 bolts. B.9 fixed the plugin to emit a world bbox; **the Python client
+never parsed it**, so any region query answered *zero bolts everywhere in the model*.
+
+```
+bolts in the splice band via insert[] : 0
+bolts in the splice band via center[] : 62
+```
+
+Fixed in `eb_api.dumpmodel()` — plate and bolt rows now carry `bbox` and `center`.
+⇒ ⭐ **A fix that stops at the producer is half a fix.**
+
+## ✅ `TopPlateLap` / `SidePlateLap` — the inferred mapping, measured
+
+Predicted before the run: a welded splice at `toplap=100 sidelap=100` gives 200 mm plates.
+Measured: **200 × 150 × 10** (flange) and **200 × 128 × 10** (web), all four.
+
+⇒ ⭐ **The lap is a HALF-length: plate length = 2 × lap.** A **bolted** splice ignores it — its
+plates measure 298, set by the bolt pattern.
+
+## ⭐ What the splice actually orders (B.20's naming rule)
+
+| part | name | stock? |
+|---|---|---|
+| flange plates | `FL 150x10` | ✅ a real `DIN FLACHEISEN` entry |
+| web plates | **`Plate 128x10`** | ⚠️ no |
+| inner flange strips | **`Plate 39x10`** | ⚠️ no |
+
+The web plate's width is derived from the web depth less the flange thicknesses, so it lands on a
+stock width only by accident. ⛔ The parts-list half is part C and untested.
+
+## Band, after the audit
+
+y 9 000 welded · y 15 000 `DIN7990` proof · y 18 000 `Standard` 4 plates/16 bolts ·
+y 21 000 `example2` 8 plates/16 bolts · y 24 000 web-only 2/8 · y 27 000 lap test.
+The three drilled-and-unbolted originals and the two defect probes were erased after every
+demonstration they carried had been rebuilt bolted.
+
+## Still open
+
+* `Diagonal` (`WeldDiagonal`) and `Single Side` — mapped, **never exercised**. `Single Side` →
+  `WeldToSupportShape` remains **inferred** and stays marked so.
+* ⚠️ The transversal `Dist. Between` dual meaning is **quoted from the manual, not measured**.
+  Test it B.14's way: build at 2 and at 3 transversal bolts and compare the **gaps**.
+* ⚠️ **Whether `webangle`, `haunch` and `connbase` also ship with `BoltStyleCRC = 0` was NOT
+  checked.** A task for their chapters — and after this it is the first thing to check in each.

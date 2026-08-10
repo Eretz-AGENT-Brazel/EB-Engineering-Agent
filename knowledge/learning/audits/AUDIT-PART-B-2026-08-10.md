@@ -1437,3 +1437,148 @@ Census 1 115 → **1 087**, saved.
 * ⚠️ **`dia=` on the other connection ops has NOT been swept.** The bolt-drop was measured on
   `shearplate` alone. `webangle`, `splice`, `haunch` and `connbase` take the same parameter and
   **were not tested**, so this is a **task for their chapters, not a finding about them.**
+
+---
+
+## B.21 — Splice Joints ⛔⛔ **the chapter could not produce a bolted joint at all, and had not noticed**
+
+*notes 183 lines · band x = 150 000 · plugin v160 → **v162** · `eb_api.dumpmodel` fixed*
+
+### 1 · Was the chapter learned deeply?
+**Yes, and its best finding is still its best finding** — *six checkboxes produce **eight** plates*,
+because the web crosses the inner flange face and each inner plate becomes two strips. Nothing in
+the manual says that. The dialog is fully mapped, the `Weld` variant was built, and `Ks_WeldFlag`
+was correctly identified as a new entity class.
+
+**But every measurement in it was taken on a joint with no bolts in it, and the chapter counted
+plates and hole fields and never counted bolts.**
+
+### 2 · ⛔⛔ `BoltStyleCRC = 0` — the connection drills and does not bolt
+
+The fixed `connscan` from B.20 was pointed at B.21's own band as its first real use:
+
+| bay | plates | **bolt slots** | hole fields on the beam |
+|---|---:|---:|---:|
+| y 0 `default/Standard` | 4 | **0** | **2** |
+| y 3 000 `default/example2` | 8 | **0** | **2** |
+| y 6 000 web only | 2 | **0** | **1** |
+| y 9 000 welded | 4 | 32 | 0 |
+
+⇒ **Three joints, drilled, with nothing through the holes.** Iron rule 1, in the reference model
+since 09/08.
+
+**The cause is in the templates, and it is total:**
+
+```
+[0] default/example2   … dia=16 workloose=2  boltCRC=0 …
+[1] default/Standard   … dia=16 workloose=2  boltCRC=0 …
+```
+
+⇒ ⭐⭐⭐ **Both shipped templates carry NO BOLT STYLE.** And `PsSpliceJointLinkDataMgd` is the one
+class of the three with **no `BoltStyle` string** — only the CRC — so there was no way to supply
+one. The 09/08 note recorded the missing string as a curiosity. **It was the reason the chapter's
+entire product was unbolted.**
+
+**Fixed and measured on two fresh collinear pairs:**
+
+| | new objects | plates | **real bolts** |
+|---|---:|---:|---:|
+| shipped, as it has always run | 4 | 4 | **0** ⛔ |
+| **`boltstyle=DIN7990`** | **20** | 4 | **16** ✅ |
+
+16 = 2×2 per flange × 2 + 2×2 per web × 2 — exactly the hole pattern that was already being
+drilled. New op parameter **`splice boltstyle=<name>`** resolves the name through
+`PsObjectStyleList` to the CRC the class wants (`DIN7990 → -1614854285`); `boltstylecrc=` takes a
+raw value.
+
+### 3 · ⚠️⚠️ A WELD FLAG OCCUPIES A BOLT SLOT — and it defeats a bolt-count guard
+
+The welded bay reported `bolts=32`. Reading those 32 objects: **every one sits on layer
+`PS_Weld`.** They are `Ks_WeldFlag`.
+
+> ### ⭐⭐ `getBoltObjectId` / `BoltObjectCount` do not mean bolts. They mean **fasteners**.
+> A link reporting **32 bolts can hold zero bolts** — which is the exact shape of an iron-rule
+> violation that **passes** a bolt-count check.
+>
+> ⚠️ **This weakens the guard I shipped in v160 one chapter earlier.** It counted link slots, so a
+> weld flag would have satisfied it. Corrected in v161: `CountRealBolts` opens each fastener and
+> classifies it, and the splice guard exempts a deliberately welded joint rather than a boltless
+> one.
+
+### 4 · ⚠️ And the same failure class again — this time in the PYTHON client
+
+Chasing "how many bolts are actually in that band" gave **0**, which happened to be right. Then it
+gave 0 for the fixed band too.
+
+```
+every plate  (241) reports InsertPoint = 0,0,0
+every bolt   (305) reports InsertPoint = 0,0,0
+```
+
+B.9's audit fixed the **plugin** to emit a world bounding box for exactly this reason.
+**`eb_api.dumpmodel()` never parsed it.** So `els[i]['insert']` located every plate and every bolt
+at the origin, and *any* "what is in this region" question answered **zero bolts, everywhere in
+the model** — a false negative indistinguishable from a true one.
+
+**Fixed, and the contrast measured on the same data:**
+
+```
+bolts found via insert[] : 0
+bolts found via center[] : 62      (y15000:16  y18000:16  y21000:16  y24000:8  y-6000:6)
+```
+
+⇒ ⭐ **B.9's lesson had been applied to the producer and not to the consumer.** A fix that stops
+at the file format is half a fix.
+
+### 5 · ✅ `TopPlateLap` / `SidePlateLap` — an INFERRED mapping, now measured
+
+The note marked these *(inferred — "lap" is an overlap length)*. B.11's rule says an inference
+filed beside measurements is a **to-do**. Done, as a prediction: a welded splice at
+`toplap=100 sidelap=100` must give **200 mm** plates.
+
+```
+predicted  200
+measured   176F FL 150x10  200 x 150 x 10      1781 Plate 128x10  200 x 128 x 10
+           1778 FL 150x10  200 x 150 x 10      1782 Plate 128x10  200 x 128 x 10
+```
+
+⇒ ⭐ **The lap is a HALF-length: plate length = 2 × lap**, the overlap onto each member, and the
+flange and web plates each obey their own value. A **bolted** splice ignores it — those plates
+measure 298, set by the bolt pattern.
+
+### 6 · ⭐ B.20's naming rule pays off one chapter later
+
+Read straight off the rebuilt band:
+
+| part | name | stock? |
+|---|---|---|
+| flange plates | **`FL 150x10`** | ✅ a real `DIN FLACHEISEN` entry |
+| web plates | **`Plate 128x10`** | ⚠️ **no** |
+| inner flange strips | **`Plate 39x10`** | ⚠️ **no** |
+
+⇒ The web plate's width comes from the web depth less the flange thicknesses, so it lands on a
+stock width **only by accident**. In this band it does not. *(What a parts list does with it is
+part C and untested — as in B.20.)*
+
+### 7 · `GetPlateId` — third class, same zero
+Returns nothing here too. The logical-link route from B.20 was propagated into `splice`, and it
+reports `parts= boltSlots= realBolts= weldFlags=` per link.
+
+### Model state
+Band x = 150 000. **Every joint left is either bolted or deliberately welded:**
+y 9 000 welded (32 weld flags) · y 15 000 the `DIN7990` proof (16 bolts) · y 18 000 `Standard`
+4 plates / 16 bolts · y 21 000 `example2` 8 plates / 16 bolts · y 24 000 web-only 2 plates /
+8 bolts · y 27 000 the lap test (welded, 200 mm plates).
+**Erased:** the three drilled-and-unbolted originals at y 0 / 3 000 / 6 000 — every demonstration
+they carried was rebuilt bolted — and the two defect probes at y 12 000. Census **1 189**, saved.
+
+### Still open
+* **`Diagonal`** (`WeldDiagonal`) and **`Single Side`** — read, mapped, **never exercised**. The
+  `Single Side` → `WeldToSupportShape` mapping is still marked *inferred* and stays marked.
+* ⚠️ **The transversal `Dist. Between` dual meaning** — the manual says it is a spacing at two
+  bolts and an outer-to-outer span at three or more. **Quoted, not measured.** The test is B.14's:
+  build at 2 and at 3 and compare the **gaps**, never the counts.
+* **`get_PlateDataCount() = 0`** — third of three. Product-wide, phase-2.
+* ⚠️ **Whether the other connection classes also ship with `BoltStyleCRC = 0`.** `webangle`,
+  `haunch` and `connbase` were **not** checked. A **task** for their chapters — and after this
+  chapter it is the first thing to check in each.

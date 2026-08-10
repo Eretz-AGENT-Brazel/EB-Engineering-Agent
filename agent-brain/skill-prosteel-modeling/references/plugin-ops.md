@@ -1807,3 +1807,76 @@ $plug = "C:\Users\User\Desktop\EB PROSTEEL AGENT\app\plugin"
 
 Bump **five** tokens in the copied source — `EB_RUN<N>` (×2), `ApiCmds<N>` (×2), `EBApp<N>` (×2) —
 then set `DLL` and `RUN_CMD` in `app/eb_api.py`, which is the **only** authority for the version.
+
+---
+
+## ⛔⛔ A CONNECTION CAN SHIP WITH NO BOLT STYLE — B.21 audit, 10/08/2026 (v160 → v162)
+
+**Both shipped splice templates carry `BoltStyleCRC = 0`.** With no style the connection drills
+its hole fields and inserts **nothing**. Three joints stood in the reference model, drilled and
+unbolted, from 09/08 until this audit — because the chapter counted plates and hole fields and
+**never counted bolts**.
+
+```
+splice … (as shipped)          ->  4 plates,  0 bolts,  2 hole fields   ⛔
+splice … boltstyle=DIN7990     ->  4 plates, 16 bolts                   ✅
+```
+
+⚠️ `PsSpliceJointLinkDataMgd` is the one connection class of the three with **no `BoltStyle`
+string** — only `BoltStyleCRC` — so a name has to be resolved through `PsObjectStyleList` first.
+`splice boltstyle=<name>` does that (`DIN7990 → -1614854285`); `boltstylecrc=` takes a raw value.
+
+⇒ **FIRST THING TO CHECK ON ANY CONNECTION CLASS: what bolt style does the template carry?**
+`webangle`, `haunch` and `connbase` have **not** been checked.
+
+---
+
+## ⚠️⚠️ A WELD FLAG OCCUPIES A BOLT SLOT
+
+The welded splice reports `BoltObjectCount = 32`. All 32 objects sit on layer **`PS_Weld`** —
+they are `Ks_WeldFlag`.
+
+> ⭐⭐ **`getBoltObjectId` / `BoltObjectCount` mean FASTENERS, not bolts.** A link reporting 32
+> bolts can hold **zero** bolts — the exact shape of an iron-rule violation that **passes** a
+> bolt-count check.
+
+**Never test the iron rule by counting link slots.** Open each fastener and classify it
+(`CountRealBolts` in the plugin does this: class/layer containing `Weld` → weld flag, `Bolt` →
+bolt). A deliberately **welded** joint legitimately has no bolts and no holes; a joint that was
+**drilled** and has no bolts is the violation. Those are different, and only the class tells you.
+
+---
+
+## ⚠️ `dumpmodel`'s `insert` IS (0,0,0) FOR EVERY PLATE AND EVERY BOLT — use `center`
+
+Measured over the whole model: **241 of 241 plates and 305 of 305 bolts** report
+`InsertPoint = 0,0,0`. B.9's audit fixed the *plugin* to emit a world bounding box for exactly
+this reason; the **Python client never parsed it**.
+
+⇒ Any code locating a part through `els[i]['insert']` put it at the origin, and any "what is in
+this region" question answered **zero bolts, everywhere in the model** — a false negative that
+looks identical to a true one.
+
+```
+bolts in the splice band via insert[] : 0
+bolts in the splice band via center[] : 62
+```
+
+**`eb_api.dumpmodel()` now returns `bbox` and `center` on plate and bolt rows. Use `center`.**
+⭐ A fix that stops at the producer is half a fix.
+
+---
+
+## `splice` — the measured parameter meanings
+
+| | |
+|---|---|
+| **`toplap` / `sidelap`** | ⭐ **HALF-lengths. Plate length = 2 × lap.** Predicted 200 from `toplap=100`, measured 200 on all four plates. **Only a WELDED splice obeys them** — a bolted splice's plates are set by the bolt pattern (298 in the band) |
+| `weldflange` / `weldweb` | no bolts and no holes; `Ks_WeldFlag` objects instead, 8 per plate |
+| six position flags | `topout topin downout downin webleft webright` — and **six flags give EIGHT plates**, because the web crosses the inner flange face and each inner plate becomes two strips |
+| `boltstyle` | ⭐ **required for a bolted splice** — see above |
+
+**What a splice orders** (B.20's naming rule): flange plates come out `FL 150x10` — stock — but
+the web plates are `Plate 128x10` and the inner strips `Plate 39x10`, **neither of which is a
+stock flat**. The web plate's width is the web depth less the flange thicknesses, so it hits a
+stock width only by accident.

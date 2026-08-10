@@ -21,8 +21,8 @@ ROOT = os.path.dirname(HERE)
 PLUG = os.path.join(HERE, "plugin")
 CMD = os.path.join(PLUG, "eb_cmd.txt")
 RES = os.path.join(PLUG, "eb_result.txt")
-DLL = os.path.join(PLUG, "EBAgentApi160.dll")
-RUN_CMD = "EB_RUN160"
+DLL = os.path.join(PLUG, "EBAgentApi162.dll")
+RUN_CMD = "EB_RUN162"
 # ---- which drawing every op is expected to run on -------------------------
 # Twice on 06/08/2026 work landed in the WRONG drawing: first two documents were open
 # at once (Amir spotted the two windows), then opening a Bentley sample silently became
@@ -817,6 +817,28 @@ def dumpmodel(out="eb_model.txt"):
         except Exception:
             return (0.0, 0.0, 0.0)
 
+    def _bbox(s):
+        """The WORLD bounding box the plugin appends to PLATE and BOLT rows: 'min;max'.
+
+        ⚠️ MEASURED 10/08/2026 (B.21 audit): EVERY plate and EVERY bolt in the model reports
+        InsertPoint = 0,0,0 -- all 305 bolts, all 241 plates. B.9's audit fixed the plugin to
+        emit a world bbox for exactly this reason, and this parser never read it. So any code
+        that located a plate or a bolt through els[i]['insert'] found it at the origin, and any
+        "how many bolts are in this region" question answered ZERO for every region of the
+        model. A false negative that looks identical to a real one -- the same failure class
+        B.9 found in the plugin, sitting here in the client.
+        """
+        try:
+            lo, hi = s.split(";")
+            return (_xyz(lo), _xyz(hi))
+        except Exception:
+            return None
+
+    def _center(bb, fallback):
+        if not bb:
+            return fallback
+        return tuple((bb[0][i] + bb[1][i]) / 2.0 for i in range(3))
+
     for line in open(fp, encoding="utf-8").read().splitlines():
         f = line.split("\t")
         if not f or not f[0]:
@@ -828,16 +850,22 @@ def dumpmodel(out="eb_model.txt"):
                             "p1": _xyz(f[4]), "p2": _xyz(f[5]), "length": float(f[6] or 0),
                             "material": f[7], "name": f[8], "cls": f[9]})
             elif k == "PLATE" and len(f) >= 10:
+                bb = _bbox(f[10]) if len(f) >= 11 else None
+                ins = _xyz(f[5])
                 els.append({"kind": "plate", "handle": f[1], "l": float(f[2] or 0),
                             "w": float(f[3] or 0), "t": float(f[4] or 0),
-                            "insert": _xyz(f[5]),
+                            "insert": ins,
                             "poly": [_xyz(p) for p in f[6].split(";") if p],
-                            "material": f[7], "name": f[8], "cls": f[9]})
+                            "material": f[7], "name": f[8], "cls": f[9],
+                            "bbox": bb, "center": _center(bb, ins)})
             elif k == "BOLT" and len(f) >= 9:
+                bb = _bbox(f[9]) if len(f) >= 10 else None
+                ins = _xyz(f[6])
                 els.append({"kind": "bolt", "handle": f[1], "diameter": float(f[2] or 0),
                             "style": f[3], "count": int(float(f[4] or 0)),
-                            "length": float(f[5] or 0), "insert": _xyz(f[6]),
-                            "name": f[7], "cls": f[8]})
+                            "length": float(f[5] or 0), "insert": ins,
+                            "name": f[7], "cls": f[8],
+                            "bbox": bb, "center": _center(bb, ins)})
             elif k in ("OTHER", "ERR"):
                 els.append({"kind": k.lower(), "handle": f[1] if len(f) > 1 else "",
                             "cls": f[2] if len(f) > 2 else "",

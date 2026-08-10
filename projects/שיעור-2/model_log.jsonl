@@ -1288,3 +1288,19 @@
 {"op": "beam", "args": {"name": "IPE 300", "p1": "150000,-6000,1500", "p2": "152500,-6000,1500", "dwg": "B08-insert-shapes.dwg"}, "handle": "159B", "ts": "17:11:48"}
 {"op": "beam", "args": {"name": "HE 300 B", "p1": "158000,-6000,0", "p2": "158000,-6000,3000", "dwg": "B08-insert-shapes.dwg"}, "handle": "15BC", "ts": "17:17:19"}
 {"op": "beam", "args": {"name": "HE 300 B", "p1": "162000,-6000,0", "p2": "162000,-6000,3000", "dwg": "B08-insert-shapes.dwg"}, "handle": "15CA", "ts": "17:17:42"}
+{"op": "beam", "args": {"name": "IPE400", "catalog": "DIN_IPE", "p1": "150000,12000,0", "p2": "153000,12000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "16CB", "ts": "18:29:08"}
+{"op": "beam", "args": {"name": "IPE400", "catalog": "DIN_IPE", "p1": "153020,12000,0", "p2": "156000,12000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "16CC", "ts": "18:29:09"}
+{"op": "beam", "args": {"name": "IPE400", "catalog": "DIN_IPE", "p1": "150000,15000,0", "p2": "153000,15000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "16D7", "ts": "18:29:09"}
+{"op": "beam", "args": {"name": "IPE400", "catalog": "DIN_IPE", "p1": "153020,15000,0", "p2": "156000,15000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "16D8", "ts": "18:29:09"}
+{"op": "beam", "args": {"name": "IPE400", "catalog": "DIN_IPE", "p1": "150000,12000,0", "p2": "153000,12000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "16ED", "ts": "18:30:20"}
+{"op": "beam", "args": {"name": "IPE400", "catalog": "DIN_IPE", "p1": "153020,12000,0", "p2": "156000,12000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "16EE", "ts": "18:30:20"}
+{"op": "beam", "args": {"name": "IPE400", "catalog": "DIN_IPE", "p1": "150000,15000,0", "p2": "153000,15000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "16F9", "ts": "18:30:20"}
+{"op": "beam", "args": {"name": "IPE400", "catalog": "DIN_IPE", "p1": "153020,15000,0", "p2": "156000,15000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "16FA", "ts": "18:30:20"}
+{"op": "beam", "args": {"name": "IPE400", "catalog": "DIN_IPE", "p1": "150000,18000,0", "p2": "153000,18000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "171F", "ts": "18:31:08"}
+{"op": "beam", "args": {"name": "IPE400", "catalog": "DIN_IPE", "p1": "153020,18000,0", "p2": "156000,18000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "1720", "ts": "18:31:09"}
+{"op": "beam", "args": {"name": "IPE400", "catalog": "DIN_IPE", "p1": "150000,21000,0", "p2": "153000,21000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "173B", "ts": "18:31:09"}
+{"op": "beam", "args": {"name": "IPE400", "catalog": "DIN_IPE", "p1": "153020,21000,0", "p2": "156000,21000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "173C", "ts": "18:31:09"}
+{"op": "beam", "args": {"name": "IPE400", "catalog": "DIN_IPE", "p1": "150000,24000,0", "p2": "153000,24000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "175B", "ts": "18:31:09"}
+{"op": "beam", "args": {"name": "IPE400", "catalog": "DIN_IPE", "p1": "153020,24000,0", "p2": "156000,24000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "175C", "ts": "18:31:09"}
+{"op": "beam", "args": {"name": "IPE400", "catalog": "DIN_IPE", "p1": "150000,27000,0", "p2": "153000,27000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "176D", "ts": "18:31:10"}
+{"op": "beam", "args": {"name": "IPE400", "catalog": "DIN_IPE", "p1": "153020,27000,0", "p2": "156000,27000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "176E", "ts": "18:31:10"}
