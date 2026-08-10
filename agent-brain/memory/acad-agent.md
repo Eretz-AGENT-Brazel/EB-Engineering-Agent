@@ -5,13 +5,15 @@ metadata:
   node_type: memory
   type: project
   originSessionId: 5085ae2a-8410-44d0-8793-a97d55bd8dfb
-  modified: 2026-08-02T08:19:20.858Z
+  modified: 2026-08-10T08:43:16.022Z
 ---
 
 A second tool for Amir (ארץ ברזל), separate from [[tankforge-project]]: an AI agent that drives his **real installed AutoCAD 2015 + ProSteel V8i** by typed/spoken/sketched commands. Built 2026-06-17.
 
 ## 📁 LOCATION (relocated 2026-06-18): `C:\Users\User\Desktop\EB PROSTEEL AGENT\`
 Clean app structure: `app/` (acad.py, console.py, models.py, prosteel.py, plan2steel.py), `knowledge/` (KB), `projects/` (per-project, was models/), `data/` (runtime bus: inbox/outbox/conversation/cursor/project.jsonl + uploads/ + brand/logo.jpg), `assets/` (logo.jpg+logo.ico), `EB PROSTEEL AGENT.bat` (launcher), desktop shortcut `EB PROSTEEL AGENT.lnk` (logo icon). Old `Desktop\AcadAgent` DELETED. Run console from `app/` dir. Paths inside code: console.py uses ROOT=parent of app; models.py ROOT=../projects.
+
+**📁 `knowledge/` REORGANISED 2026-08-10** at Amir's request (*"כל התהליך למידה שלנו — תרכז אותו בתוך תיקייה אחת מרוכזת תחת knowledge"*). The whole learning process now lives under **`knowledge/learning/`** — map in its `README.md`: `manual/A|B|E/` (chapter notes + `manual_fulltext.txt`) · `lessons/` (the graded lessons with Amir) · `findings/` (**`THE-CEILING-what-code-cannot-reach.md` is here** — read it before chasing any creator) · `audits/` · `plan/`. The API surface dump moved to **`knowledge/api/`**. ⚠️ Deliberately NOT moved, because running code reads them: `knowledge/LEARNED_PATTERNS.md`, `section_catalog_map.json`, `steel/`, `recipes/`, `research/`; the models stay in `projects/SANDBOX/` (map: `README-MODELS.md`); the command channel stays in `app/plugin/` (the plugin holds its directory as a compiled-in constant). Old top-level paths like `knowledge/MANUAL-NOTES-*.md` no longer exist.
 
 ## 📐 STANDARDS TAB (2026-07-16): Israeli + European steel-design standards knowledge base
 Added a **📐 תקנים** header button in the console → overlay panel (#stdPanel) rendering `standards/STANDARDS.md` via `/standards` endpoint (returns {md, pdfs}). Knowledge base = Israeli (ת"י 412/414/413, **ת"י 1225 חלק 1.1 verified 29-Jun-2023 EN1993-based, 3yr transition w/ old חלק 1 1998-2009**, 466/940/1523) + European (EN 1990/1991, full EN 1993-1-1..1-12 + 2..6, EN 1994/1997/1998/1992, EN 1090-1/2 EXC classes, EN 10025/10210/10219/10164, EN ISO 898/14399/15048/3834/5817/9606, EN ISO 12944/1461). **COPYRIGHT/POLICY (binding):** standards are copyrighted (SII/CEN/ISO) — the agent cites number+part+edition+clause, NEVER reproduces full clause text; legally-purchased official PDFs go in `standards/pdfs/` and the agent quotes from them when present, else points to the clause only. Built from the user's 2 curated ref docs + verified via SII (sii.org.il) + CEN official sources. User will expand later. `standards/pdfs/README.md` explains the drop-in policy.
