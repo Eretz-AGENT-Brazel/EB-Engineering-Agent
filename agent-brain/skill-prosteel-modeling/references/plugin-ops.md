@@ -1444,3 +1444,46 @@ All six verified: applied to six plates, read back as `layout=1…6` with top an
 `PsEdgeChamfer` is a **data payload, not a creator** — no `Create`/`insert`/`writeTo`; it is
 assigned to `em.PlateBreakEdge`. And `Min. Radius`/`Max. Height` are **dialog-side validation
 only**; nothing in the API surface exposes them.
+
+---
+
+## Drilling — what the layout string really does (B.14, verified 10/08/2026)
+
+`drillfield handle= dia= x= y= at=` feeds `PsDrillObject.SetLinearHoleField`, and it takes the
+**dialog's own layout syntax** — verified by spacing, not by hole count:
+
+```
+x=3*70          ->  gaps 70, 70          uniform
+x=2*60,200,1*   ->  gaps 60, 200         non-uniform, honoured in full
+```
+
+Syntax: `Number1*Pitch1, IntermediatePitch, Number2*Pitch2, …`
+Length only ⇒ leave the cross field empty. Cross only ⇒ you **must** write `1*` in the length.
+
+### ⭐⭐ `W` — inherit the section's marking gauge, never invent bolt spacing
+
+`W` in place of a pitch means *the shape's own predefined marking gauge*. It works through the API
+and needs no dialog. Proved by contrast:
+
+| beam | `y=` | measured |
+|---|---|---|
+| HE 300 B | `2*W` | **120 mm** |
+| IPE 300 | `2*W` | **80 mm** |
+| HE 300 B | `2*100` (control) | 100 mm |
+
+Applies to **shapes**, not plates. If a section has no gauge defined the software asks — so use it
+on catalogue sections.
+
+## ⛔ `edgecheck` is DISABLED — it killed AutoCAD
+
+`PsVolume.checkHoleEdgeDistance` is the manual's admissible-edge-distance check and it **ends the
+process**: no exception, no dialog, `EB_TIMEOUT` and an empty `Get-Process acad`. The op remains,
+refusing, so nobody rediscovers it. **The edge-distance table is dialog-only in practice.**
+See `knowledge/learning/findings/LETHAL-CALLS-do-not-invoke.md`.
+
+## ⚠️ `plate9 mode=rect` places from `at=`, not `p1=`
+
+`p1` is a valid key for the op (the `poly`/`pts` modes use it) so the strict-parameter guard used
+to accept it **in silence** — nine plates built on 10/08 stacked up at the origin while their
+labels pointed at empty strips. **Valid FOR THE OP is not valid FOR THE MODE.** `mode=rect` now
+refuses `p1/p2/p3/pts/radius` and creates nothing.

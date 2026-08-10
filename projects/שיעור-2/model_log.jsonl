@@ -1259,3 +1259,6 @@
 {"op": "beam", "args": {"name": "IPE 300", "p1": "405150,-6000,1500", "p2": "408000,-6000,1500", "dwg": "B08-insert-shapes.dwg"}, "handle": "1409", "ts": "15:04:09"}
 {"op": "beam", "args": {"name": "IPE 300", "p1": "400000,-6000,1500", "p2": "403000,-6000,1500", "dwg": "B08-insert-shapes.dwg"}, "handle": "140A", "ts": "15:04:30"}
 {"op": "beam", "args": {"name": "IPE 300", "p1": "405000,-6000,1500", "p2": "408000,-6000,1500", "dwg": "B08-insert-shapes.dwg"}, "handle": "140B", "ts": "15:04:30"}
+{"op": "beam", "args": {"name": "HE 300 B", "p1": "434000,-6000,0", "p2": "436000,-6000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "1478", "ts": "15:34:45"}
+{"op": "beam", "args": {"name": "IPE 300", "p1": "437000,-6000,0", "p2": "439000,-6000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "1479", "ts": "15:34:45"}
+{"op": "beam", "args": {"name": "HE 300 B", "p1": "440000,-6000,0", "p2": "442000,-6000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "1484", "ts": "15:35:16"}

@@ -907,3 +907,93 @@ B.9.3's grating flag. It may be the read/write route for that flag on an existin
 
 ### What was added to the model
 Six plates at x = 410 000, one per edge kind, labelled — the enum made visible.
+
+---
+
+## B.14 — Drilling / Bolted Connections ⭐⭐⭐ **all three open items closed — one of them cost two AutoCAD crashes**
+
+*Manual 5633–5900 · notes 218 lines · the chapter Amir gave a whole evening to*
+
+### 1 · Was the chapter learned deeply?
+**Yes.** The mental model (*a hole FIELD, not a hole*), the layout syntax, the four ways to create
+holes with different behaviour each, the edge-distance system, and B.14.2 correcting an earlier
+wrong conclusion of mine. It left **three** open items, each with the test named.
+
+### 2 · ⛔ The edge-distance table — reachable, and **LETHAL**
+
+> *the note:* *"where exactly does the edge-distance table sit, and is it reachable from the API?"*
+
+**It is reachable.** `PsVolume.checkHoleEdgeDistance(Int32)` is the manual's check, and
+`PsBaseObject.BlockHoleEdgeDistanceCheck` is the per-part suppression flag. A new `edgecheck` op
+was written for it.
+
+**It kills AutoCAD.** Isolated in stages, each with a save:
+
+```
+plate created   -> saved -> survived
+hole drilled    -> saved -> survived
+edgecheck ALONE, on a saved model  ->  process gone
+```
+
+No exception, no dialog, `EB_TIMEOUT` on the Python side and an empty `Get-Process acad`. **Second
+member of a family** — the first is `PsPlate.computeObjectWeigth` from B.9, which cost five plates.
+
+⇒ **New file: `knowledge/learning/findings/LETHAL-CALLS-do-not-invoke.md`** — both calls, what they
+have in common (`check*`/`compute*` methods on the entity classes), the list of untested
+neighbours, the isolate-and-save test protocol, and the recovery procedure.
+
+⇒ The op was **not deleted**. It stays, refusing with an explanation, so the next attempt reads it
+instead of paying again.
+
+⇒ **Answer to B.14's question: the edge-distance table is dialog-only in practice.**
+
+⚠️ **Nothing was lost** — the model had been saved immediately before. That was the protocol, and
+it is the whole difference from B.9's five lost plates.
+
+### 3 · ✅ The layout string — `SetLinearHoleField` takes the dialog's own syntax
+
+Counts prove nothing (`3*70` and `2*60,200,1*` both give 6 holes). **Spacings prove it:**
+
+| `x=` | measured gaps |
+|---|---|
+| `3*70` | **70, 70** — uniform |
+| `2*60,200,1*` | **60, 200** — non-uniform, exactly as written |
+
+⇒ **The same string syntax, honoured in full**, including the intermediate pitch and the trailing
+`1*`.
+
+### 4 · ✅ `W` — the marking gauge works through the API
+
+> *the manual:* *"you can enter the **predefined marking gauges of the shape** by typing the letter
+> **W** instead of a pitch, e.g. `2*W`"*
+
+Proved by **contrast**, not by a hole count:
+
+| beam | `y=` | measured cross gap |
+|---|---|---|
+| **HE 300 B** | `2*W` | **120 mm** |
+| **IPE 300** | `2*W` | **80 mm** |
+| HE 300 B | `2*100` *(control)* | **100 mm** |
+
+Two sections, one command, **different gauges** — so `W` reads the section's own table. The
+numeric control lands on exactly 100, so the two paths are distinct. No dialog appeared.
+
+⇒ ⭐⭐ **Inherit the gauge; never invent bolt spacing.** This is the drilling half of the same
+principle as *choose a template, do not pass numbers*.
+
+### 5 · A defect in my own tooling, found in passing
+
+**Nine plates built during this audit were stacked at the origin.** `plate9 mode=rect` places from
+**`at=`**; I passed **`p1=`**, which is a valid key *for the op* (the `poly` and `pts` modes use
+it) and therefore passed the strict-parameter guard **in silence**.
+
+⚠️ ⭐ **The guard gave false confidence: valid FOR THE OP is not valid FOR THE MODE.** Fixed —
+`plate9 mode=rect` now refuses `p1/p2/p3/pts/radius` and creates nothing. The nine plates were
+moved to the strips their labels already pointed at, and the crash probe deleted.
+
+**This is the audit's own lesson turned on the auditor:** a call that silently does something
+other than what was asked is the worst kind, and I shipped one this afternoon.
+
+### Plugin versions this chapter
+v150 (edgecheck added) → **v151** (edgecheck disabled after the crash) → **v152** (the `plate9`
+mode guard).
