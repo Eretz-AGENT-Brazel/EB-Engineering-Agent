@@ -1,3 +1,4 @@
-reqid=633f0b80
-op=save
+reqid=f770da99
+op=dumpcat
+catalog=DIN_BREITFLACHEISEN
 dwg=B08-insert-shapes.dwg
