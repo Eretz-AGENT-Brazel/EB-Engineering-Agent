@@ -1,1 +1,1 @@
-﻿EB_OK dumpmodel shapes=430 plates=241 bolts=305 other=213 err=0 -> eb_model.txt reqid=7cd8c9e3
+﻿EB_OK purlin dump templates=3 properties=27 -> eb_purlin.txt reqid=ff907892

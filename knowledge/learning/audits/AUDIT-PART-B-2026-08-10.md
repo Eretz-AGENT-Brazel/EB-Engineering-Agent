@@ -1582,3 +1582,105 @@ they carried was rebuilt bolted — and the two defect probes at y 12 000. Censu
 * ⚠️ **Whether the other connection classes also ship with `BoltStyleCRC = 0`.** `webangle`,
   `haunch` and `connbase` were **not** checked. A **task** for their chapters — and after this
   chapter it is the first thing to check in each.
+
+---
+
+## B.22 — Purlin Connection ⭐⭐⭐ **the chapter's one unexplained item is solved, and the cause is geometric**
+
+*notes 190 lines · band x = 250 000 · no plugin change needed*
+
+### 1 · Was the chapter learned deeply?
+**Yes — it is one of the two or three strongest notes in part B.** `PurlinType` measured rather
+than inferred from declaration order, the template-name-does-not-set-the-type trap, all four
+products confirmed by entity class, the `Default/` vs `default/` case difference, `Create()`
+returning `False` on all seven successes, and the `WeldToSupportShape=False` cleat-attached-to-
+nothing defect that matches what Amir caught by eye in B.19.
+
+It left exactly one thing open, and it left it honestly: *"Cause not established."*
+
+### 2 · ⭐⭐⭐ `kBoltet` drills four and bolts two — solved
+
+The note ruled out geometry and grip length and stopped. **What it never did was compare
+POSITIONS** — B.16's rule, unapplied here. Done:
+
+```
+girder C7A   (249964,1472,186.5)->200   (249964,1528,186.5)->200
+             (250036,1472,186.5)->200   (250036,1528,186.5)->200
+purlin C7B   (249964,1472,200)->360   depth 160.00
+             (249964,1528,200)->208.82 depth   8.82
+purlin C7C   (250036,1472,200)->360   depth 160.00
+             (250036,1528,200)->208.82 depth   8.82
+```
+
+⇒ ⚠️ **First: the note's own table was a miscount.** It reads *"girder holes 4 · purlin holes 2
+each · bolts 2"* as though the girder were over-drilled. **The holes are 4 and 4 and every one is
+exactly coaxial.** Nothing is over-drilled. The imbalance is entirely in **which of the four
+matched positions can take a bolt.**
+
+⇒ ⭐⭐⭐ **And the depths say why.** The U160 stands with its 160 mm depth vertical on the girder's
+top flange. `HoleDistanceSupport = 56` puts the pair at ±28 from the purlin axis, and at **−28 the
+drill line falls on the channel's WEB stood on edge** — 160 mm in the drill direction, and a bolt
+there would clamp the width of a plate seen edge-on. **At +28 it lands on the bottom FLANGE,
+8.82 mm.** That is the one you bolt a channel down through, and that is the one that gets a bolt.
+
+**The drill field is applied across the purlin without regard to where the section's material is.**
+
+### 3 · The fix, measured two ways
+
+| setting | girder holes | **bolts** | purlin hole depths | |
+|---|---:|---:|---|---|
+| `nSup=2 dSup=56` *(shipped)* | 4 | **2** | **160.00** + 8.82 | ⛔ two holes on the web |
+| **`HoleCountSupport=1`** | 2 | **2** | **11.06** | ✅ balanced, on the axis |
+| **`HoleDistanceSupport=20`** | 4 | **4** | **11.86** and **10.26** | ✅ **balanced, both on the flange** |
+| `HoleDistanceSupport=-56` | 4 | 2 | 160.00 + 8.82 | ⚠️ **the negative was silently normalised to +56** |
+
+⇒ ⭐ **`HoleDistanceSupport = 20` is a fully balanced two-bolt purlin detail on a U160.** The
+shipped 56 straddles the web.
+
+⚠️ **The depths also measure the DIN channel's taper**: 11.86 at −10, 11.06 on the axis, 10.26 at
++10, 8.82 at +28. The flange thins outward, and the hole depth follows it exactly.
+
+### 4 · ⚠️ Two traps found while fixing it, both about cleanup rather than about purlins
+
+> **① Erasing a part does NOT erase its bolts.** Deleting purlins `C7B`/`C7C` left `C8E` and `C8F`
+> standing at the old gauge — **bolts connecting nothing**, which is iron rule 1 from the other
+> side. Found only because the station then counted **6** bolts where 4 were expected.
+> ⇒ **After erasing any bolted part, sweep for orphan bolts.**
+
+> **② A parameter that was never sent is not a parameter that does nothing.** The first sweep
+> built three labelled cases and forgot the `set=` — three identical results that read exactly
+> like *"`HoleCountSupport` has no effect."* The op echoes what it applied; **read the echo.**
+> This is the same shape as B.16's count trap, one step earlier in the chain.
+
+### 5 · B.21's task, answered here rather than assumed
+
+B.21 handed every remaining connection chapter one question: **what bolt style does the template
+carry?** For the purlin class, measured:
+
+```
+Default/Standard              BoltStyle=8.8S     CRC=-401163854
+Default/Example-Purlinshoe    BoltStyle=DIN7990  CRC=-1614854285
+Default/Example-Purlinshape   BoltStyle=DIN7990  CRC=-1614854285
+```
+
+⇒ ✅ **All three carry a real style.** B.21's `BoltStyleCRC = 0` defect is **specific to the splice
+class**, not a product-wide pattern — a measured negative that narrows the concern for B.23–B.26.
+
+### Model state
+Band x = 250 000. **The `kBoltet` demonstration at y = 1 500 was rebuilt with the balanced gauge**
+— 4 holes, 4 bolts, both hole lines on the flange — and the orphaned hole field its predecessor
+left on the girder was removed (`killholefield`, field identified by deleting and reading the
+holes back, not by guessing: the two live stations at y 3 368 and 7 448 survived untouched).
+The two fix demonstrations are kept at y 21 000 (`HoleCountSupport=1`) and y 23 500
+(`HoleDistanceSupport=20`). Everything else built for the sweep — four stations carrying orphan
+holes, plus their throwaway girder — was erased. Census **1 201**, saved.
+
+### Still open
+* ⚠️ **Whether a channel's web line is always at `−` from the axis.** Measured on U160 in this
+  build only; the orientation may follow the purlin's insertion direction. **Do not generalise the
+  sign** — measure the depths and take the shallow line.
+* **The connection database** the whole chapter is built around — *"please refer to the technical
+  supplement or ask your ProSteel dealer."* Not present on this installation, and building one is
+  Amir's call.
+* `kCleat` still has **no shipped template**; the `WeldToSupportShape=False` cleat defect stands as
+  recorded — **always set it explicitly.**

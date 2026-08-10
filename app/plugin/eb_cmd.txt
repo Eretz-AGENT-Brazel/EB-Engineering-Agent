@@ -1,4 +1,5 @@
-reqid=7cd8c9e3
-op=dumpmodel
-out=eb_model.txt
+reqid=ff907892
+op=purlin
+dump=1
+template=Default/Example-Purlinshape
 dwg=B08-insert-shapes.dwg

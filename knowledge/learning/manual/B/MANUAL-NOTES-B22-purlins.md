@@ -187,3 +187,83 @@ o.InsertPoint                       # real coordinates
 ⇒ And a discipline point: **an instrument that reports zero must be shown to report non-zero
 somewhere** before its zero is believed. The control here was the B.15 band, where bolts are known
 to exist — it read zero there too, which is what exposed the blindness.
+
+---
+
+# AUDITED 10/08/2026 — the open item is CLOSED, with a cause and a fix
+
+*Full record: `AUDIT-PART-B-2026-08-10.md` § B.22. No plugin change was needed.*
+
+## 🛑 CORRECTED — the hole table above is a miscount
+
+The table reads *"`kBoltet` · girder holes **4** · purlin holes **2 each** · bolts **2**"*, which
+reads as though the girder were over-drilled. Measured position by position:
+
+```
+girder   (249964,1472)  (249964,1528)  (250036,1472)  (250036,1528)
+purlin B (249964,1472) depth 160.00    (249964,1528) depth   8.82
+purlin C (250036,1472) depth 160.00    (250036,1528) depth   8.82
+```
+
+**Four girder holes, four purlin holes, every one exactly coaxial.** Nothing is over-drilled. The
+imbalance is entirely in **which matched position can take a bolt.**
+
+## ⭐⭐⭐ THE CAUSE — the drill field straddles the channel's web
+
+The U160 stands with its 160 mm depth vertical on the girder's top flange.
+`HoleDistanceSupport = 56` puts the hole pair at **±28** from the purlin axis:
+
+| offset | what the drill meets | depth |
+|---|---|---|
+| **−28** | the channel's **WEB, stood on edge** | **160.00 mm** — a bolt there clamps a plate seen edge-on |
+| **+28** | the channel's **bottom FLANGE** | **8.82 mm** — the one you actually bolt through |
+
+⇒ **The field is applied across the purlin without regard to where the section's material is.**
+The bolt count was never wrong; the **gauge** was.
+
+## ✅ THE FIX — measured two ways
+
+| setting | girder holes | bolts | purlin depths | |
+|---|---:|---:|---|---|
+| `dSup=56` shipped | 4 | **2** | 160.00 + 8.82 | ⛔ |
+| `HoleCountSupport=1` | 2 | **2** | 11.06 | ✅ balanced |
+| **`HoleDistanceSupport=20`** | 4 | **4** | 11.86 + 10.26 | ✅ **balanced, both on the flange** |
+| `HoleDistanceSupport=-56` | 4 | 2 | 160.00 + 8.82 | ⚠️ **normalised silently to +56** |
+
+⭐ **For a U160 purlin on an IPE girder, `HoleDistanceSupport = 20` is the balanced two-bolt
+detail.** ⚠️ The depths also measure the DIN channel's **taper** — 11.86 at −10, 11.06 on the axis,
+10.26 at +10, 8.82 at +28.
+
+⚠️ **Do NOT generalise the sign.** The web fell on the `−` side for this U160 in this build; the
+orientation may follow the insertion direction. **Measure the depths and take the shallow line.**
+
+## ⚠️ Two cleanup traps, learned the hard way
+
+**① Erasing a part does NOT erase its bolts.** Deleting the two purlins left `C8E`/`C8F` standing
+at the old gauge — **bolts connecting nothing**. Caught only because the station then counted 6
+bolts where 4 were expected. **Sweep for orphan bolts after erasing any bolted part.**
+
+**② A parameter that was never sent is not a parameter that does nothing.** The first sweep built
+three labelled cases and forgot the `set=`; three identical results read exactly like
+*"`HoleCountSupport` has no effect."* **The op echoes what it applied — read the echo.**
+
+## ✅ B.21's task, answered
+
+B.21 found that both splice templates carry `BoltStyleCRC = 0` and asked every remaining chapter
+to check its own. Measured here:
+
+```
+Default/Standard              BoltStyle=8.8S     CRC=-401163854
+Default/Example-Purlinshoe    BoltStyle=DIN7990  CRC=-1614854285
+Default/Example-Purlinshape   BoltStyle=DIN7990  CRC=-1614854285
+```
+
+⇒ **All three carry a real style.** The splice defect is **specific to that class**.
+
+## Band, after the audit
+
+The `kBoltet` demonstration at y = 1 500 was **rebuilt with the balanced gauge** (4 holes,
+4 bolts), and the orphaned hole field its predecessor left on the girder was removed with
+`killholefield` — the field index was identified by deleting and **reading the holes back**, not
+by guessing, and the two live stations at y 3 368 / 7 448 survived untouched. The two fix
+demonstrations are kept at y 21 000 and y 23 500.

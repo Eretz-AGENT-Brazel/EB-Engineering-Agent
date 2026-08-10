@@ -1880,3 +1880,73 @@ bolts in the splice band via center[] : 62
 the web plates are `Plate 128x10` and the inner strips `Plate 39x10`, **neither of which is a
 stock flat**. The web plate's width is the web depth less the flange thicknesses, so it hits a
 stock width only by accident.
+
+---
+
+## ⭐⭐⭐ A DRILL FIELD DOES NOT KNOW WHERE THE SECTION'S METAL IS — B.22, 10/08/2026
+
+A `kBoltet` purlin connection on a **U160** with the shipped `HoleDistanceSupport = 56` puts its
+hole pair at **±28** from the purlin axis. The channel stands with its 160 mm depth vertical, so:
+
+| offset | what the drill meets | depth |
+|---|---|---|
+| **−28** | the **WEB, stood on edge** | **160.00 mm** — a bolt clamps a plate seen edge-on |
+| **+28** | the bottom **FLANGE** | **8.82 mm** — the one you bolt through |
+
+⇒ Four holes, four *matched* holes, and **two bolts**. The bolt count was never wrong. **The gauge
+was.** *(And the 09/08 note's "4 girder / 2 purlin" was a miscount — the holes are 4 and 4 and
+exactly coaxial.)*
+
+**The fix, measured:**
+
+```
+HoleDistanceSupport=20  ->  4 holes, 4 BOLTS, depths 11.86 and 10.26   <- both on the flange
+HoleCountSupport=1      ->  2 holes, 2 BOLTS, depth 11.06              <- on the axis
+HoleDistanceSupport=-56 ->  silently normalised to +56
+```
+
+⭐ **For a U160 purlin on an IPE girder: `HoleDistanceSupport = 20`.**
+
+⚠️ **Do not generalise the sign.** The web fell on the `−` side for this section in this build; the
+orientation may follow the insertion direction. **Read the hole depths and take the shallow line** —
+the depth measures the metal, and it even shows the DIN channel's taper (11.86 / 11.06 / 10.26 /
+8.82 as you move outward).
+
+⇒ ⭐⭐ **The general rule: on any open section — channel, angle, Z or C purlin — check the hole
+DEPTHS before trusting a hole field. A depth equal to the section's overall size means the drill
+went through the void, and that hole will never be bolted.**
+
+---
+
+## ⚠️ ERASING A PART DOES NOT ERASE ITS BOLTS
+
+Deleting two purlins left their two bolts standing — **bolts connecting nothing**, iron rule 1
+from the other side. It surfaced only because the station then counted 6 bolts where 4 were
+expected.
+
+**After erasing any bolted part, sweep the region for orphan bolts** (`dumpmodel` + `center`, the
+B.21 fix) and erase them too.
+
+---
+
+## ⚠️ A PARAMETER THAT WAS NEVER SENT IS NOT A PARAMETER THAT DOES NOTHING
+
+A sweep of three `HoleCountSupport` values returned three identical results — which reads exactly
+like *"this property has no effect."* The `set=` had been left off the call entirely.
+
+**Every op echoes what it applied. Read the echo before drawing a negative conclusion.** This is
+B.16's count trap moved one step earlier: there, two values gave the same count; here, the value
+never arrived at all.
+
+---
+
+## Bolt styles on the connection templates — measured, 10/08/2026
+
+`BoltStyleCRC = 0` means **no bolts at all** (B.21). Checked so far:
+
+| class | templates | style |
+|---|---|---|
+| **splice** | both | ⛔ **`BoltStyleCRC = 0`** — pass `boltstyle=` or the joint is drilled and empty |
+| **purlin** | all three | ✅ `8.8S` / `DIN7990`, real CRCs |
+| shear plate | `default/Standard` | ✅ `8.8S` |
+| web angle · haunch · base plate | — | **not checked** |
