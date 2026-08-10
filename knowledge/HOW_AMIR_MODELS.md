@@ -90,4 +90,4 @@
 **קטלוגים שאתה עובד איתם:** AUSTRALIA.AS_SHS_C450 · BRITAIN.BS_CELSIUS_RHS · BRITAIN.BS_EQUAL · BRITAIN.BS_ROHR_COLD · SWEDEN.SW_SO_ROR · DIN.DIN_FLACH · FRANCE.FR_UPN · CHINA.CN_RZBG. ⇒ **הסוכן לא ינחש קטלוג** — הוא ישתמש בקטלוג המדויק מהמודל.
 
 ---
-*המסמך נגזר מדאטה, לא מהנחות. סקריפט הניתוח: `app/model_analyze.py` (ניתן להריץ על כל מודל). פלט גלם: `knowledge/MODEL_GEOMETRY_ANALYSIS.md`.*
+*המסמך נגזר מדאטה, לא מהנחות. סקריפט הניתוח: `app/model_analyze.py` (ניתן להריץ על כל מודל). פלט גלם: `knowledge/learning/audits/MODEL_GEOMETRY_ANALYSIS.md`.*

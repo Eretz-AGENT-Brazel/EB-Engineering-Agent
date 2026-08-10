@@ -46,7 +46,7 @@ The agent should always think toward the end goal: **shop drawings for the facto
 - Checkpoint discipline: it's a real production drawing — prefer reversible steps; `U` undoes.
 
 ## Learning loop (how the agent gets to "master")
-- For any task the agent is unsure about: `grep -i "<topic>" knowledge/manual_fulltext.txt`
+- For any task the agent is unsure about: `grep -i "<topic>" knowledge/learning/manual/manual_fulltext.txt`
   to pull the exact procedure, then act.
 - Record reusable command sequences that work into this file over time.
 - The 310-page course manual is image-based (needs OCR) — pending; the 1179-page manual

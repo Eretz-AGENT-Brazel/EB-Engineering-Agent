@@ -65,7 +65,7 @@
 - [x] **🧠 הידע הוטמע בסקיל:** ‏`~/.claude/skills/prosteel-modeling/` — SKILL.md + 3 מסמכי reference (מחברים כאובייקטים · פלטת בסיס וריפים · מסלולי API מוכחים ומבואות סתומים)
 - [x] **🗺️ מפת ה-API המלאה — החוב מ-R1 נסגר** (02/08): רפלקציה על קובצי ProStructures עצמם.
       **‏75 assemblies · 4,590 טיפוסים · 771 ציבוריים · 4,796 חתימות · 0 כשלונות.** השתמשתי ב-26 (3.4%).
-      ‏→ `knowledge/API-SURFACE-RAW.txt` (383 KB) + `knowledge/API-SURFACE.md`.
+      ‏→ `knowledge/api/API-SURFACE-RAW.txt` (383 KB) + `knowledge/api/API-SURFACE.md`.
       **גילויים שסוגרים חובות פתוחים:** `PsCreateFastener` (עוגנים כאובייקט אמיתי, עם Embedment/GroutThickness) ·
       `PsGeometryFunctions` (47 בדיקות יחסים = "העיניים") · `PsMiscTools.ObjectsCopy/Mirror3d` ·
       `PsSelection.RemoveDuplicates()` · `PsObjectGroup` (הפרט כיחידה) · `PsCollisionCheck` ·

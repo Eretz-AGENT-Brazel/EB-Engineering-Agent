@@ -241,7 +241,7 @@ def main():
 
 if __name__ == "__main__":
     txt = main()
-    out = os.path.join(os.path.dirname(APP), "knowledge", "SELF_AUDIT_LESSON2.md")
+    out = os.path.join(os.path.dirname(APP), "knowledge", "learning", "audits", "SELF_AUDIT_LESSON2.md")
     open(out, "w", encoding="utf-8").write(txt)
     try:
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")

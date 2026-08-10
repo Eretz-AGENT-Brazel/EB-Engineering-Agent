@@ -31,7 +31,7 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > had to repeat it four times. A rule this critical belongs where it cannot be missed.)*
 
 > ## 🧱 THE CEILING — CHECK IT BEFORE CHASING ANY CREATOR
-> Full list: **`knowledge/THE-CEILING-what-code-cannot-reach.md`**. Consolidated 09/08 from nine
+> Full list: **`knowledge/learning/findings/THE-CEILING-what-code-cannot-reach.md`**. Consolidated 09/08 from nine
 > chapters that each paid for it separately.
 >
 > ⭐⭐ **The pattern in one line: anything that requires a MOUSE PICK is unreachable from the API.**
@@ -125,6 +125,28 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > ⚠️ Also real, and found the same way: **a bolt can be SHORTER than its packet** — 6 × M20×70
 > through 79 mm of contiguous steel, and 6 more leaving 11 mm for a 16 mm nut. Neither can be
 > assembled, and nothing but this check would have said so.
+
+> ## 🔩 TWO CORRECTIONS TO EARLIER NOTES, both found while fixing (10/08)
+>
+> ### ✅ HOLES **CAN** BE REMOVED — B.26's note was wrong
+> **`PsEditModification.DeleteHoleField(handle)`** exists and works. Ops: **`holefields`** and
+> **`killholefield`**.
+> ⭐ **A hole FIELD is not a hole, and the difference decides the surgery.** `holefields` prints
+> both counts and says which case you are in:
+> - **fields == holes** → one hole per field, so a duplicate is a whole field. Delete it.
+>   **Highest index first** — removing a field renumbers the ones after it.
+> - **fields < holes** → the pattern lives *inside* the field, and no single hole can be
+>   removed. Check first that the holes are unused, then delete the field and **re-drill** the
+>   intended positions.
+>
+> ### ⚠️ A CONNECTION'S BOLT LIST CAN NAME BOLTS THAT NO LONGER EXIST
+> At B.26's apex both rafters carried a **live** end-plate link each claiming six bolts — and
+> **all twelve object ids were dead.** None matched any of the sixteen bolts actually present;
+> they pointed at bolts deleted in an earlier rebuild.
+> ⇒ **`getBoltObjectId()` is not an ownership record after an edit.** Before deleting a bolt
+> because a link seems to own it — or keeping one for the same reason — **resolve the ids
+> against the bolts that are really there.** (`propfull` prints the plugin's own `oid`;
+> COM's `ObjectID` is a *different* numbering and comparing the two silently gives nonsense.)
 > ⭐⭐ **A DUPLICATE BOLT IS INVISIBLE TO EVERY BOLT-VS-HOLE CHECK** — each copy matches the same
 > hole perfectly, so `vfy_bolts` calls it clean. It surfaces in the **parts list**, not the
 > geometry. B.26's apex was bolted **three times over**, 8 redundant bolts, undetected for a day.
@@ -135,7 +157,7 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > ⇒ Violations come from **editing afterwards**, not from bolting badly. Every one found so far
 > arrived that way: 4 orphans after a rebuild (09/08), 2 destroyed by a section change (10/08),
 > 4 more orphans at B.26's apex (10/08). **Run the checks after every edit, not after the
-> modelling.** Full audit: `knowledge/AUDIT-B08-bolts-2026-08-10.md`.
+> modelling.** Full audit: `knowledge/learning/audits/AUDIT-B08-bolts-2026-08-10.md`.
 >
 > ### ⚠️ OPEN — `boltparts` refused geometry that measures perfect (10/08)
 > Two 20 mm plates, `vfy_touch` → TOUCHING with **Z separation 0**, holes `…,10→…,−10` and
@@ -148,7 +170,7 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > hand-composing the next connection.**
 
 > ## 📝 THE PROPERTIES DIALOG IS A WRITE SURFACE (E.9, 10/08)
-> Full notes: **`knowledge/MANUAL-NOTES-E09-properties-dialogs.md`**.
+> Full notes: **`knowledge/learning/manual/E/MANUAL-NOTES-E09-properties-dialogs.md`**.
 >
 > ⭐⭐ **Every field in ProSteel's properties dialog is a property on `PsObjectProperties`, and that
 > class has `writeTo(Int64 ObjId)`.** Measured: 14 fields set in one call, `writeTo.rc=0`, **14/14
@@ -211,7 +233,7 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > wide — and the grid's **LENGTH runs along world Y, its WIDTH along world X**.
 
 > ## 📖 E.10's chapter numbers are STALE — trust the COMMAND, re-derive the chapter (10/08)
-> Corrected table: **`knowledge/E10-COMMAND-REFERENCE.md`** — 126 commands, chapter column
+> Corrected table: **`knowledge/learning/manual/E/E10-COMMAND-REFERENCE.md`** — 126 commands, chapter column
 > re-derived from the manual's own table of contents, plus which agent op covers each.
 >
 > E.10 gives *Function / Chapter / Command*. Of the 50 rows whose function name matches a TOC
@@ -1333,7 +1355,7 @@ element actually wants.
 HD/VD/4T/DIA`), channels (`DIN_U`/`UPE`/`UAP`), hollow sections hot and cold (`RQ`/`RR`/`RO`),
 **split tees** (`DIN_HALBE IPE` → `HIPE300`), rolled tees (`T80`), heavy columns (`Peiner_HD`/`HL`),
 cold-formed purlins (`Z160`, `C150x75x6,5`, `METSEC_C`…), flats, round and square bar, threaded rod,
-bulb flats, even timber. Full map + traps: `knowledge/SECTION-CATALOGUES.md`.
+bulb flats, even timber. Full map + traps: `knowledge/learning/findings/SECTION-CATALOGUES.md`.
 
 ⚠️ **A section key is an opaque string — look it up, never construct it.** `HD260x68,15` uses a
 German decimal **comma** while `RO 219.1x6.3` in the same library uses a **point**; `DIN HALBE IPE`
@@ -1510,7 +1532,7 @@ Amir to add the path once, then verify it and refuse to run without it.
    (embedment ±1, nut-to-plate gap 0±3, nothing in mid-air); contact (plate on concrete, column on
    plate); exact **and near** duplicates (same XY, different Z — the connection-rerun signature); and
    a delta vs the previous state where every change is explained. Full catalogue of the 15 errors this
-   would have caught: `EB PROSTEEL AGENT/knowledge/lessons/RETROSPECTIVE-L4-L5.md`.
+   would have caught: `EB PROSTEEL AGENT/knowledge/learning/lessons/RETROSPECTIVE-L4-L5.md`.
 1b. **Report only what you measured.** Gate tables with evidence per row; no victory language before
    every gate is green. "Approved" is not immunity — re-audit after any adjacent change.
 1c. **A value not in the drawing and not in the template is a QUESTION to Amir, never an invention.**
@@ -1529,9 +1551,9 @@ Amir to add the path once, then verify it and refuse to run without it.
 4. Smoke tests at **X ≥ 40000**, deleted immediately. Keep a `PRISTINE-<name>.dwg` before any build.
 5. **Every project on its own terms** — generalise the *method*, never the numbers.
 6. **Read the documentation you already have before asking, guessing, or hand-building.**
-   `knowledge/manual_fulltext.txt` (1,179 pp) · `Prg\Plugins\*.chm` (34) ·
+   `knowledge/learning/manual/manual_fulltext.txt` (1,179 pp) · `Prg\Plugins\*.chm` (34) ·
    `Samples\COM Macros\` (25 worked DWGs, one per macro) · `Samples\Detailing\` (12) ·
-   `knowledge/API-SURFACE-RAW.txt`. Manual chapters already mapped: `B.4` move/copy/mirror ·
+   `knowledge/api/API-SURFACE-RAW.txt`. Manual chapters already mapped: `B.4` move/copy/mirror ·
    `B.9` plates · `B.12` 3D modifications · `B.13` plate editor · `B.14` drilling/bolted ·
    `B.16` stiffeners · `B.17` plate connections · `B.18` DSTV base plates · `B.20` shear plates ·
    `B.21` splices · `B.22` purlins · `B.23` gussets · `B.27` Connection Editor · `B.28` groups ·
@@ -1554,7 +1576,7 @@ hand-drilled centre holes. The chain order was wrong (`dedupe` ran *before* `flo
 
 **The lesson is not the timing — it is that speed was never the problem.** The 10-minute target
 was beaten threefold on a defective model, and **Amir's eye was still the only relationship
-checker in the system.** Full record: `EB PROSTEEL AGENT/knowledge/lessons/BASELINE-L5-2026-08-05.md`
+checker in the system.** Full record: `EB PROSTEEL AGENT/knowledge/learning/lessons/BASELINE-L5-2026-08-05.md`
 
 ## The engineering behind a column base
 

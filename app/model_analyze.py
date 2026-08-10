@@ -343,7 +343,7 @@ def main():
 
 if __name__ == "__main__":
     txt = main()
-    out = os.path.join(os.path.dirname(APP), "knowledge", "MODEL_GEOMETRY_ANALYSIS.md")
+    out = os.path.join(os.path.dirname(APP), "knowledge", "learning", "audits", "MODEL_GEOMETRY_ANALYSIS.md")
     open(out, "w", encoding="utf-8").write(txt)
     try:
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
