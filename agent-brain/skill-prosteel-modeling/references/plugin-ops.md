@@ -291,21 +291,36 @@ considered."** That prerequisite is why this could not exist before `posauto`.
 **The manual lists five transferable kinds — Cuts, Drill Holes, PolyCut, Notches, Boolean.
 Exactly ONE is exposed in the API, and it does not work from code.**
 
-### ❌ `PsDrillObject.TakeoverDrills(PsSelection, PsSelection)` — five sequences, all dead
+### 🛑 `PsDrillObject.TakeoverDrills(PsSelection, PsSelection)` — **RETRACTED 10/08/2026: IT WORKS**
 
-Selections were **proven correct** each time (`srcSel=1 tgtSel=3`, `Find()` true for both), and
-`Apply()` returned `0` = nothing to apply:
+This section used to be headed *"five sequences, all dead"*, carried a table of `changed=0`, and
+ended *"Clone is a dialog-only feature. Recorded so this is never re-investigated from scratch."*
+**All of that is withdrawn.** Measured on three identical HE300B beams:
 
-| variant | sequence | result |
-|---|---|---|
-| 1 | `SetToDefaults` → `SetObjectId` → `TakeoverDrills` | changed=0 |
-| 2 | …+ `Apply()` | changed=0 |
-| 3 | no `SetToDefaults` | changed=0 |
-| 4 | per-target subject | changed=0 |
-| 5 | selections built from AutoCAD's **own pick set** (`SetImpliedSelection` + `GetCurrentSelections`) | changed=0 |
+```
+source  135E   hole  y 150 -> -150  at z=1500, dia 22
+variant 1  ->  135F   hole y 1050 -> 1350   z=1500  dia 22    changed=1
+variant 2  ->  1360   hole y 1450 -> 1750   z=1500  dia 22    changed=1
+variant 3  ->  1361   hole y 1850 -> 2150   z=1500  dia 22    changed=1
+variants 4, 5 also transfer;  6, 7, 8 have no case and do nothing
+```
 
-There is **no `PS_CLONE` command token** in the manual either — only `PS_COPY`. ⇒ Clone is a
-dialog-only feature. *Recorded so this is never re-investigated from scratch.*
+`variant 1` is `SetToDefaults` + `SetObjectId(src)` + `TakeoverDrills(sSrc, sTgt)` and **nothing
+else** — there is no fall-through to the composition route, which is `variant 9`. Each hole sits
+at **its own beam's centre**, same z, same diameter: real geometry, read back, not a count.
+
+⚠️ **The posnum "gate" is not a gate either.** With the source numbered `CTRL`, the target
+transferred with **no** posnum, with a **different** one, and with a **matching** one — `changed=1`
+all three. Why the 06/08 run returned zero is **unknown and left unknown**.
+
+⇒ ⭐ **The lesson, which outlives the capability:** *"selections proven correct"* proved the
+selection **sets** were valid and nothing about the call's preconditions. **A closed-do-not-retry
+verdict is only as good as the preconditions the test honoured**, and a wrong one is the most
+expensive kind because its whole purpose is to stop anyone looking again.
+
+⚠️ Still true, and it matters: the transfer is **relative to each part's own coordinate system**.
+The source hole ran −Y and the targets' ran +Y. Immaterial for a through-hole; **it matters for a
+countersink or a slot**, and a mirrored target receives a mirrored modification.
 
 ### ✅ What works: compose two things that already do
 
@@ -486,10 +501,11 @@ small marking"*, which is `HoleType.kHoleWeldSign = 2`.
 `Flange` picks upper / lower / both; `Shape Centre` forces the insertion point perpendicular to
 the shape centre so the holes come out symmetrical.
 
-📌 **And the UI feature that has no working API entry point:** *"Click this button to adopt the
-drill holes of one component part into another one… drill holes from a copied connecting plate
-may be rapidly transferred to a shape."* That is `TakeoverDrills` — it exists in the dialog and
-**does nothing from code** (five call sequences, measured). `clonedrills` does the job instead.
+📌 *"Click this button to adopt the drill holes of one component part into another one… drill
+holes from a copied connecting plate may be rapidly transferred to a shape."* That is
+`TakeoverDrills`. 🛑 **This line used to say it does nothing from code — RETRACTED 10/08/2026, it
+transfers.** See the retraction above (`clonedrills variant=1`); `variant=9` composes the same
+result by re-drilling and remains a valid fallback.
 
 ## 🏛️ B.8 INSERT SHAPES — the foundation, read and implemented (v87 → v91)
 
@@ -693,9 +709,25 @@ one side each — so the X run can be numeric and the Y run alphabetic.
 
 ### Still open in B.6
 
-**B.6.7 Additional Axes** — `PsGrid.addUserXaxis(Start,End)` exists but lives on the class that
-cannot bind, and `Ks_ComGrid` has no equivalent. Untried: `PsGrid.insert(Origin, Xaxis, Yaxis)`
-as an *alternative creator* (set properties + user axes on a fresh `PsGrid`, then `insert()`).
+**B.6.7 Additional Axes** — ✅ **CLOSED 10/08/2026. Dialog-only, and the reason is structural.**
+The one recorded untried route, `PsGrid.insert(Origin, Xaxis, Yaxis)` as an alternative creator,
+was tried with a new op **`gridaxes`** (build a fresh `PsGrid`, set `Length`/`Wide`, add user axes,
+insert):
+
+```
+addedX=0  addedY=0  readBackX=0  readBackY=0   census 836 -> 836
+```
+
+`addUserXaxis` returns **false** on an un-inserted grid and `insert()` creates nothing. Two claims
+were re-verified rather than assumed: `IKs_ComGrid` genuinely has no user-axis equivalent (no
+`AddUserXaxis`, no `GetUserXaxis`) and `PsGrid` genuinely cannot bind to an existing frame (no
+`SetObjectId`, no `readFrom`, no binder of any kind).
+
+⇒ ⭐ **`PsCreateGrid` is the creator and has no user-axis methods; `PsGrid` has the user axes and
+has neither a creator nor a binder. The two halves never meet in the API.** So building a grid
+from an architect's 2D axis plan is genuinely unreachable — a **tested** closure, not an open
+question. `gridaxes` is kept because it *is* the evidence, and it reads every axis back rather
+than trusting `addUserXaxis`' boolean.
 B.6.9 user blocks (`UserBlockNameX/Y`, `UserBlockPath`, scales) are writable over COM, untested.
 
 ## 🔩 B.15.1 — BOLTING PARTS: AMIR'S ACTUAL DAILY WORKFLOW (v85)
@@ -1286,9 +1318,9 @@ It now reports the split and takes the expected count from the caller.
 | ~~**positioning from code**~~ | ✅ **CLOSED 06/08** — see the POSITIONING section above. `posset` / `posauto`. |
 | **anchors** | `PsCreateFastener` creates nothing. Lead: `Use Dowel` reads from `Data\Bolts\Duebel.mdb`; `Ks_VolBody` matches what Amir's anchors measure as |
 | **purlin** | needs two purlin segments + a socket, per `B.22` |
-| **`EdgeLayout`** | six kinds per the manual; names known, **values still unmeasured**. `enumdump` holds a fixed list and does not resolve it — measure it the way `FacetType` was measured |
-| **`Clone Manipulations`** | not implemented — requires positioning first |
-| **`PsEdgeChamfer`** | ⬅ next: `PsCutObjects.SetAsPlateBreakEdgeCut`. The *vertex* chamfer (`SetAsFacetCut`) is **done**; the *edge* one is not |
+| ~~**`EdgeLayout`**~~ | ✅ **CLOSED 10/08** — `kFacet(1) kRadius(2) kRounded(3) kInverted(4) kFold(5) kNotch(6)`, all six applied and read back as `layout=1…6`. See the B.13 section below |
+| ~~**`Clone Manipulations`**~~ | ✅ **CLOSED 10/08** — `TakeoverDrills` transfers; positioning is **not** a precondition. See the retraction above |
+| ~~**`PsEdgeChamfer`**~~ | ✅ **CLOSED 10/08** — it is a **data payload**, not a creator: no `Create`/`insert`/`writeTo`, assigned to `em.PlateBreakEdge`. That is the route, and it is the one the plugin already uses |
 | ~~**`PsCollisionCheck`**~~ | ✅ **CLOSED 06/08** — `op=collision`, see above |
 | ~~**`props`**~~ | ✅ **FIXED v57** — see below |
 
@@ -1487,3 +1519,58 @@ See `knowledge/learning/findings/LETHAL-CALLS-do-not-invoke.md`.
 to accept it **in silence** — nine plates built on 10/08 stacked up at the origin while their
 labels pointed at empty strips. **Valid FOR THE OP is not valid FOR THE MODE.** `mode=rect` now
 refuses `p1/p2/p3/pts/radius` and creates nothing.
+
+---
+
+# Back-filled 10/08/2026 — items the part-B audit produced that never reached this file
+
+*Found by an independent verification pass, not by me. Three chapters' worth of findings had gone
+into the running audit record and into `SKILL.md` and stopped there.*
+
+## B.12 — the cope, and two things that will cost you an hour each
+
+⚠️ **A cope that does nothing may be a GEOMETRY error, not an API refusal.** Building the beam so
+it **butts against** the support gave `polyCuts=0` on every attempt; running the beam **through**
+the support gave `polyCuts=1` — same call, same parameters, same template.
+
+⛔ **`edge=2` (Corner Layout = Access Holes) and `edge=0` (bevelled Edge) are indistinguishable
+from the API.** Built as a contrast pair:
+
+```
+holes  edge=2  beam=140A  polyCuts=1   ext 400010.5,-6075,1350 ; 403000,-5925,1650
+bevel  edge=0  beam=140B  polyCuts=1   ext 405010.5,-6075,1350 ; 408000,-5925,1650
+```
+
+Identical extents to 0.1 mm and identical `mods` counts. ⇒ **`polyCuts=1` proves a cut, not its
+shape.** A volumetric probe was considered and **deliberately not run**: placing it needs to know
+where the cut *ends*, and **no op exposes a polyCut's polygon** — a probe on a guess proves nothing
+either way.
+
+⇒ ⭐ **Missing capability, named: a reader for a polyCut's polygon.** Until then the rathole
+question stays open. The contrast pair is kept in the model at x 400 000 / 405 000, labelled.
+
+*(The other route — a shaded view — needs `VSCURRENT`, which is **not** in the `CmdAllow`
+allowlist. That allowlist is a safety control and is not widened without Amir's explicit approval.)*
+
+## Three ops that exist and were never catalogued here
+
+| op | what it is for | why it was kept |
+|---|---|---|
+| **`layerprobe`** | B.1. Creates plates under `UseCurrentLayer(true)` vs `(false)` with the current layer deliberately set to junk, and reports where each landed | it is the evidence that ProSteel's automatic layer control works from the API, and that the 88 strays were self-inflicted |
+| **`gridaxes`** | B.6.7. Builds a fresh `PsGrid`, sets `Length`/`Wide`, adds user axes, `insert()`s, then **reads every axis back** | it is the evidence that the route fails — and it does not trust `addUserXaxis`' boolean |
+| **`acisref ucs=origin;xaxis;yaxis`** | B.11. Builds a real `PsMatrix` via `SetCoordinateSystem` and calls `SetInsertMatrix` before `Create` | it is what disproved the `massProp=false` explanation. `ucsSet` in the reply confirms the call was made |
+
+## B.1 — the ten ops that still take no `layer=`
+
+Their creators were **assumed** to behave, not measured: `stiffener`, `weld`, `bend`, `bendtwo`,
+`grid`, `workframe`, `frame`, `boltfield`, `boltparts`, `threadedrod`.
+
+⇒ After B.1's finding this is **probably fine** — `UseCurrentLayer(false)` with no `SetLayer`
+yields the part's own layer, and connection classes were always correct. But *probably* is not
+*measured*, and this list is here so the distinction stays visible.
+
+## B.13 — a loose thread, recorded and not chased
+
+`PsEditPlateModification` exposes **`DisplayAsRaster`** — *Raster* again, the same word behind
+B.9.3's grating flag. It may be the read/write route for that flag on an **existing** plate, where
+`SetGrid` only offers it at creation. **Not tested.**

@@ -79,6 +79,7 @@ set 1750/1250  -> 1750 / 1250
 ```
 
 ## ⚠️ 3. "A standard view overwrites the distances" — NOT REPRODUCED, and not fairly tested
+### ✅ **RESOLVED 10/08/2026 — see the audit section at the end of this file. No longer open.**
 
 After setting 1750/1250 and switching with `view dir=front`, the distances **survived unchanged**.
 ⇒ But the manual says *"switching to one of the **standard views**"*, and a ProSteel standard view
@@ -100,3 +101,61 @@ B.3.1's promise — *insertion direction parallel to the X-axis*, so a slanted m
 horizontally — is only possible because the view **turns the coordinate system onto the object**.
 That is the same fact B.7 states from the other side: a view is a UCS + a direction + clip planes,
 never merely a camera angle.
+
+---
+
+# AUDIT 10/08/2026 — the "NOT REPRODUCED" item **explained**, not re-tested
+
+## ⭐⭐ There are two different places, and on 09/08 only one had been read
+
+That is the whole of it. Nothing was re-run on B.3 today; what changed is that the second place
+became readable.
+
+| | value | source |
+|---|---|---|
+| a **generated view's** clip distances | `0 / 0` | B.7, measured 09/08 |
+| the **GLOBAL** cut-plane distances | **`500 / 500`** | A.6, measured today |
+
+The global pair was read from `Ks_ComGlobalSettings` — the in-process COM object **A.2 unlocked**:
+
+```
+Ks_ComGlobalSettings.ObjCutPlaneDistance       = 500.0
+Ks_ComGlobalSettings.ObjCutPlaneDistanceRear   = 500.0
+Ks_ComGlobalSettings.SetGlobalViewDirection(Number, Coord, newVal)   ← the matching writer
+```
+
+## ⭐ B.3.5's dead end is now a route
+
+B.3.5's *"can only be done using the **global settings**"* and B.3.3's *"specified in the **Global
+Settings**"* read on 09/08 as a full stop — the dialog and nothing else. With the settings object
+in hand they are simply an **address**: those distances are reachable from code, and
+`SetGlobalViewDirection` is how the five global views of B.3.3 are written.
+
+## ⚠️ INFERENCE, not a measurement — labelled as such
+
+⇒ B.3.6's *"when you enter the distance **0**, no cut planes are created"* + B.7's measured
+*generated views arrive with `clip 0/0`* ⇒ **a generated view has no clipping at all until
+distances are given**, and *"switching to one of the standard views overwrites these values"*
+describes the standard view applying a **stored pair over whatever the view held**. B.3.6, B.3.5,
+B.7 and A.6 stop contradicting each other once the places are told apart.
+
+That paragraph is **reasoning about measurements taken elsewhere**, not a result of its own. It is
+filed as an explanation, and today's rule is that an explanation never gets recorded as a finding.
+
+## ⛔ The empirical half is deliberately NOT here
+
+Activating a work-frame view through `SetActive` and watching what the distances become is a
+**B.7** test — a ProSteel standard view is a work-frame view, which is B.7's business, not B.3's.
+It was run in **B.7's audit**, and the numbers live there:
+
+⇒ **`MANUAL-NOTES-B07-choose-view.md`** — read it before quoting the inference above.
+
+## Model state
+Untouched. B.3 owns no band; its 09/08 measurements were `VIEWDIR` and clip values, and neither
+was rebuilt today.
+
+## Still open
+* `SetGlobalViewDirection` — **settable and never written**. Writing it changes Amir's
+  installation defaults, so it stays on the same hold as the other A.6 writes.
+* The perspective view (`Focal Distance`, `Distance`) — display-only by the manual's own words,
+  *"only a display view and does not allow any changes"*. No API value beyond screenshots.

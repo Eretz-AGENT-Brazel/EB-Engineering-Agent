@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: a4c7fddc-7ed7-48b9-a359-e4b37dc8fdbe
-  modified: 2026-08-09T11:06:44.359Z
+  modified: 2026-08-10T15:11:00.000Z
 ---
 
 ⚡ **יש שני ממשקי API, לא אחד.** מלבד `ProStructuresNet.dll` קיים **`PSCOMWRAPPERLib`** — אותם

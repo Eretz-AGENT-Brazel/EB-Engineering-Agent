@@ -15,7 +15,7 @@ your drawing… **this allows actual dimensions to be used**"* · `Angle` · `Nu
 created on the current UCS-plane. In addition, possible **picked points are projected** to the
 current UCS-plane"* · `Create Reference Line` · `Loop`.
 
-**The nine direct commands:** `PS_CONST_HOR` · `PS_CONST_VER` · `PS_CONST_PAP` (parallel through a
+**The eight direct commands:** `PS_CONST_HOR` · `PS_CONST_VER` · `PS_CONST_PAP` (parallel through a
 point) · `PS_CONST_PAE` (parallel at a distance) · `PS_CONST_SAP` (perpendicular at a point) ·
 `PS_CONST_SAE` (perpendicular at a distance from a reference point) · ⭐ `PS_CONST_DVD` — *"divides
 a reference line into equal segments and creates corresponding perpendicular construction lines
@@ -49,7 +49,7 @@ Two points, then a dialog in **two blocks**:
   cosines square-sum to **1.000000000**. That is the whole dialog, verified twice over.
 
 - **Construction lines are ordinary AutoCAD lines on `PS_Const`.** That layer exists (confirmed in
-  B.1), so the products of all nine `PS_CONST*` commands are reachable straight over COM —
+  B.1), so the products of all eight `PS_CONST*` commands are reachable straight over COM —
   horizontal, vertical, parallel at ±400, perpendicular, and the divide.
   Divide measured: **4000 / 5 = 800 per segment, 6 perpendiculars** — start and end included,
   exactly as the manual specifies.
@@ -62,3 +62,46 @@ reachable without them.
 ⇒ **The useful takeaway for the agent: the divide is a layout tool.** Purlin spacings, bolt rows,
 stair stringers — anything laid out at equal intervals is `PS_CONST_DVD`'s job, and the start and
 end lines come free.
+
+---
+
+# AUDIT 10/08/2026 — part-B chapter-by-chapter review
+
+## ⚠️ The right answer, for the wrong reason — now for the right one
+
+The 09/08 bullet above — *"construction lines are ordinary AutoCAD lines on `PS_Const`"* — was
+concluded from lines **I had created myself as `AcDbLine`**. That is circular: it measures my own
+op, not what ProSteel produces. **It was an explanation filed as a finding.**
+
+Checked properly this time: **there is no ProSteel construction-line type anywhere in the managed
+API surface** — no `PsConstructionLine`, no `Ks_Const*`, nothing. Put beside the manual's own
+wording — the lines go on a layer *"so that all of them can be **jointly hidden or deleted**"*, and
+`PS_CONST_DEL` deletes all construction lines drawn up to then **on the layer** — the conclusion
+survives, on a real basis.
+
+⇒ ⭐ **`PS_CONST_DEL` is a LAYER sweep, not a type sweep.** Anything of mine parked on `PS_Const`
+is swept with it; anything ProSteel-ish that is *not* on `PS_Const` is not.
+
+## ⭐ The band had built only half of B.2.1's `Line Type`
+
+`Line Type` offers two kinds — standard lines *"the length of which is determined by projection"*
+and **X-lines *"which always run up to the edge of the screen"***. The band held only the first:
+
+```
+PS_Const before:  AcDbLine 13
+PS_Const after :  AcDbLine 13 · AcDbXline 1 · AcDbRay 1
+```
+
+`AcDbXline` is the screen-edge kind (infinite both ways); `AcDbRay` is its half-open sibling, added
+beside it so the family is complete. Both on layer `PS_Const`, so the layer sweep still catches
+them.
+
+## ⚠️ Count corrected in this file
+
+The heading above read **"The nine direct commands"** and then listed **eight** — `HOR` · `VER` ·
+`PAP` · `PAE` · `SAP` · `SAE` · `DVD` · `DEL`. Corrected to **eight**, in both places the numeral
+appeared (the heading, and the 09/08 measured bullet).
+
+## Still open
+* `Scale` — read, never exercised. Harmless while everything is modelled 1:1 in model space; it
+  starts to matter the moment a drawing is set to a scale, which is part C's ground.

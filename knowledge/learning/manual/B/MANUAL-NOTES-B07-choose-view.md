@@ -105,3 +105,66 @@ geometry back would prove nothing, since clipping changes no geometry at all.
 
 - `op=workframe at= x= y=` returned `EB_ERR workframe create failed`. Not chased: B.7 is about
   *choosing* views and 41 already exist, but creating one from code is unresolved.
+
+---
+
+# AUDIT 10/08/2026
+
+*Part-B chapter-by-chapter audit, B.1 → B.29. Full record:
+`knowledge/learning/audits/AUDIT-PART-B-2026-08-10.md`. B.7's job here was to pay the debt B.3
+left: B.3's audit refused to run the `SetActive` test itself and handed it to this chapter.*
+
+## ⭐ B.3.6's "overwritten" — resolved into THREE storage places, not one contradiction
+
+B.3.6 claims *"when switching to one of the standard views, these values are **overwritten**"*.
+On 09/08 that was tried with an **AutoCAD** view change and the distances survived; it was recorded
+as **untested rather than refuted**, because a ProSteel standard view is a work-frame view
+activated through `SetActive` — which is B.7's business, not B.3's.
+
+Tested properly today, on work frame `2E8`:
+
+```
+GLOBAL cut-plane pair          500 / 500      (Ks_ComGlobalSettings, read in A.6)
+work frame 2E8, as found       500 / 500
+after SetClipDistances         1750 / 1250
+after SetActive(True, True)    1750 / 1250    <- SURVIVED
+```
+
+⇒ ⭐ **MEASURED: `SetActive(True, True)` does NOT overwrite a view's stored distances.**
+
+The chapters only disagree if one assumes a single set of numbers. There are **three places**:
+
+| # | place | what it holds |
+|---|---|---|
+| 1 | B.3.6's `Distance` field | the **current session's** cut-plane distances |
+| 2 | a view's `GetClipDistances` | that **view's own stored pair** — `1750 / 1250` after the write above, and still `1750 / 1250` after activation |
+| 3 | `Ks_ComGlobalSettings.ObjCutPlaneDistance` / `ObjCutPlaneDistanceRear` | the **global default a fresh view inherits** — **500 / 500** on this installation (A.6) |
+
+⚠️ **What follows is an EXPLANATION, not a measurement.** The measurement is the four lines above
+and nothing else — this audit withdrew four conclusions elsewhere in part B that were reasoning
+filed as findings.
+
+*The reading:* activating a view **applies the view's own pair** (place 2), which is precisely what
+*"your entered values are overwritten"* describes from the dialog's side (place 1). Read that way,
+B.3.6's **"0 = no cut planes are created"**, B.3.5's *"can only be done using the **global
+settings**"* and this chapter's own **`clip 0/0` on generated views** (measured 09/08, above) all
+agree: a generated view arrives with **no clipping at all** until distances are given, and 500/500
+is the default it would inherit — not a value that activation forces back onto a view that already
+holds its own.
+
+⇒ Cross-reference: `MANUAL-NOTES-B03-3d-object-views.md`, audit section of the same date, where
+the same three-way split is written from B.3's side.
+
+⭐ And it confirms 09/08's other finding from the opposite direction: **clipping is switched by
+`SetActive`'s second argument, not by `EnableFrontClip`** — the distances are ordinary stored
+values that persist across activation.
+
+## Model state
+
+Nothing needed fixing. `2E8`'s distances were **restored to 500 / 500**, so the model is left
+exactly as found.
+
+## Open — added 10/08
+
+- `SetXViews` / `SetYViews` / `SetZViews` still do not produce a view per axis — carried over from
+  B.6, still unexplained, still low value: the surface views are the ones used.

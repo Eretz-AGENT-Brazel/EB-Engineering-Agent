@@ -234,9 +234,59 @@ side each, so the X run can be numeric and the Y run alphabetic.
   the collision test its name suggests. Do not gate on it.
 - **`SetXViews`/`SetYViews`/`SetZViews` did not produce a view per axis** — `B6_RECT` got the six
   surface views and a single `Y_1`, not the full `X_1…X_4` / `Z_1…Z_3` set the manual describes.
-- **B.6.7 Additional Axes is still open.** `PsGrid.addUserXaxis(Start,End)` / `addUserYaxis`
-  exist, but they live on `PsGrid`, which cannot bind to an existing frame, and `Ks_ComGrid` has
-  no equivalent. Untried route: `PsGrid.insert(Origin, Xaxis, Yaxis)` as an *alternative creator*
-  — set the properties and the user axes on a fresh `PsGrid`, then `insert()`.
+- **B.6.7 Additional Axes — CLOSED 10/08/2026, see the audit section below.**
+  `PsGrid.addUserXaxis(Start,End)` / `addUserYaxis` exist, but they live on `PsGrid`, which cannot
+  bind to an existing frame, and `Ks_ComGrid` has no equivalent. ⛔ The route left untried here —
+  `PsGrid.insert(Origin, Xaxis, Yaxis)` as an *alternative creator* — **was tried and it fails**:
+  `addedX=0 addedY=0`, census unchanged.
 - B.6.9 user-defined blocks: `UserBlockNameX/Y`, `UserBlockPath`, `UserBlockXScale/YScale` are
   all writable over COM. Not exercised.
+
+---
+
+# B.6 audit — measured 10/08/2026
+
+*Part-B chapter-by-chapter audit (B.1 → B.29), record:
+`knowledge/learning/audits/AUDIT-PART-B-2026-08-10.md`.
+Verdict: **B.6 was assessed as the best-learned chapter in part B** — the standard the others were
+measured against. The band (x 32 000 – 52 000, 41 `Ks_WorkFrame`) was **not modified: nothing in
+it was wrong.** The only work was closing the one route the notes had left untried.*
+
+## ⛔ B.6.7 — the untried route, tried. It fails.
+
+New op **`gridaxes`**: build a fresh `PsGrid`, set `Length` and `Wide`, add the user axes, then
+`insert()`.
+
+```
+addedX=0  addedY=0  readBackX=0  readBackY=0   census 836 -> 836
+```
+
+`addUserXaxis` returns **false** on an un-inserted grid, and `insert()` creates nothing.
+
+Three claims were **re-verified rather than assumed** — B.4's retraction the same morning showed
+what assuming costs:
+
+| claim | re-checked |
+|---|---|
+| *"`IKs_ComGrid` has no user-axis equivalent"* | ✅ **true** — no `AddUserXaxis`, no `GetUserXaxis` |
+| *"`PsGrid` cannot bind to an existing frame"* | ✅ **true** — no `SetObjectId`, no `readFrom`, no binder of any kind |
+| the untried `insert()` route | ❌ **fails** |
+
+⇒ ⭐ **The difficulty is structural, and it can now be named.**
+**Measured:** `PsCreateGrid` is the creator and has **no user-axis methods**; `PsGrid` has the user
+axes and has **neither a creator nor a binder**.
+**The reading those two absences support — stated as an explanation, not as a further
+measurement:** the two halves never meet in the API, which is why every route out of this chapter
+dead-ends. **B.6.7 is genuinely dialog-only**, and that is now a **tested** closure rather than an
+open question left hanging.
+
+⭐ `gridaxes` is **kept, because it IS the evidence** — and it reads **every axis back** instead of
+trusting `addUserXaxis`' boolean.
+
+## Still open, honestly
+
+- `SetXViews` / `SetYViews` / `SetZViews` **do not produce a view per axis** — `B6_RECT` got the
+  six surface views and a single `Y_1`. Still unexplained; low value, since the surface views are
+  the ones actually used.
+- **B.6.9 user-defined blocks** — writable over COM, **never exercised**. Drawing presentation,
+  not modelling.

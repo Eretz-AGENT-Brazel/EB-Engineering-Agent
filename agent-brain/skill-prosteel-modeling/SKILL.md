@@ -1080,11 +1080,16 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > the current view"*. From code always prefer the 3-point form; it cannot be wrong for a reason
 > you cannot see.
 >
-> ⛔ **Clone (B.4.5) is dialog-only.** `PsDrillObject.TakeoverDrills` is the only manipulation
-> transfer in the API and it moves nothing from code — five call sequences, selections proven
-> correct, `changed=0` every time. ✅ Do it by **composition**: read the source's holes and drill
-> them again (`clonedrills variant=9`). The manual's position-number gate is real — only parts with
-> a **matching Posnum** are eligible.
+> 🛑 **RETRACTED 10/08/2026 — `TakeoverDrills` WORKS.** This block used to read *"Clone is
+> dialog-only… it moves nothing from code — five call sequences, `changed=0` every time"*, and
+> that a **matching Posnum** was the gate. **Both halves are false.** Measured on three identical
+> HE300B beams: `SetToDefaults` + `SetObjectId(src)` + `TakeoverDrills(sSrc, sTgt)` and nothing
+> else gives `changed=1`, each target receiving a ⌀22 hole at **its own** centre — verified by
+> reading start, end and diameter back, not by a count. 5 of 8 variants transfer. The posnum
+> control disproved the gate too: `changed=1` with **no** posnum, with a **different** one and
+> with a **matching** one alike. Why the 06/08 run returned zero is unknown and is left unknown.
+> `clonedrills variant=9` (read the holes, drill them again) still works — it is now a **choice**,
+> not the only route.
 > ⚠️⚠️ **And cloning is relative to each part's OWN coordinate system.** The manual's warning: a
 > hole 100 from the right lands 100 **from the left** on a part whose PCS starts at the other end.
 > **A part inserted the other way round gets its holes silently mirrored.**
@@ -1159,8 +1164,25 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > current.** Measured over a full day of modelling: **88 parts stranded on layer `0`** — 69
 > `Ks_Plate`, 14 `Ks_VolBody`, 3 `Ks_BendPlate`, 2 `Ks_ArcPlate` — while shapes, bolts, welds and
 > work frames all landed correctly.
-> ⇒ Consequences are real: `LELEMOFF` will not hide them, layer-based filters and audits miss them,
-> and they do not take the layer colour. **Pass the layer explicitly on every direct creation.**
+> 🛑 **CORRECTED 10/08/2026 — the 88 strays were self-inflicted.** This block used to end *"Pass
+> the layer explicitly on every direct creation."* **That is the wrong lesson.** Asked what the
+> creator does when told **not** to use the current layer and given no layer either (new op
+> `layerprobe`, three plates, the current layer deliberately set to junk):
+>
+> | | landed on |
+> |---|---|
+> | `UseCurrentLayer(true)` | the junk layer ⬅ this is what the plugin was doing |
+> | `UseCurrentLayer(false)` + **no** `SetLayer` | **`PS_Plate`** — the part's own layer |
+>
+> ⇒ ⭐ **B.1's opening sentence is true for the API as well: the automatic layer control works,
+> normally you do not have to take care of it.** Fixed at six call sites; `plate`, `polyplate` and
+> `beam` now land correctly with **no `layer=` at all**, and `layer=` is an **override**, not a
+> requirement. ⚠️ **Solids are the genuine exception** — `PsCreatePrimitive` exposes neither
+> `SetLayer` nor `UseCurrentLayer`, so the `solid` op assigns the layer *after* creation
+> (default `PS_Solid`).
+>
+> Consequences of a stray are still real: `LELEMOFF` will not hide it, layer-based filters and
+> audits miss it, and it does not take the layer colour.
 >
 > The manual's three switch groups map one-to-one onto real layer names, so their behaviour is
 > reachable by name over COM (`Layer.LayerOn`) with no command at all:
@@ -1179,9 +1201,13 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > PsCreateSolidReference.Create(solidId, massProp)    -> the reference
 > PsSolidReference.SolidId · IsSolidErased · GetInsertUcs
 > ```
-> ⭐ `massProp=true` is the manual's **inertia-axes** mode and is **the only one that works with no
-> further input** — `Create(solid, false)` returns 0 unless `SetInsertMatrix` supplied the 3-point
-> component CS first.
+> ⭐ `massProp=true` is the manual's **inertia-axes** mode and is **the only one that works.**
+> 🛑 **RETRACTED 10/08/2026.** This line used to explain the refusal — *"`Create(solid, false)`
+> returns 0 unless `SetInsertMatrix` supplied the 3-point component CS first"*. **`SetInsertMatrix`
+> had never been called.** Tested with a world UCS and with a rotated one (`ucsSet` confirming the
+> call in both): `refId=0`, census unchanged, every time. **The explanation is withdrawn —
+> `massProp=false` refuses and why is NOT known.** *(A reading, not a finding: it is plausibly the
+> manual's three-point pick mode, which would put it under the mouse-pick rule. Not measured.)*
 > ⭐ The component CS drives **the orientation and dimensioning of the 2D workshop plan**: the X
 > axis is the horizontal, and the **XY plane is always the front view**.
 > ⭐⭐ **The reference dies with its solid** — measured by census: 840 → 841 (acis) → 842 (ref) →
@@ -1785,3 +1811,142 @@ it. Such a model passes every *count* check and is still wrong. **Always test fo
 `AcDb3dSolid` bodies may be present purely as **illustration** — in one lesson a 200 mm concrete wall
 and a 300 mm floor slab were modelled as solids so the intent was tangible. They are not steel:
 exclude them from weights, part lists and NC output, and never "correct" them as if they were.
+
+---
+
+# 🔎 THE PART-B AUDIT — 10/08/2026
+
+*Amir commissioned a chapter-by-chapter self-audit of manual part B with three questions each: can
+anything be improved, was the chapter learned deeply enough for the API work, and if there is
+something to improve — do it in the practice models. B.1 → B.14 in this pass. What follows is what
+changed, not a diary.*
+
+## ⭐⭐⭐ The rule the whole audit produced
+
+> **A verdict is only as good as the test that produced it.**
+
+Four conclusions were **withdrawn** in one day, and every one of them had named its own missing
+test and then been filed as a finding anyway:
+
+| chapter | the claim | what the named test showed |
+|---|---|---|
+| **B.4** | `TakeoverDrills` *"moves nothing — 5 sequences, `changed=0`"* | **it transfers**, `changed=1`, geometry read back |
+| **B.9** | *"the grating weight claim cannot be verified — the weight call is lethal"* | `props` reads plate weight **safely** through `PsObjectProperties` |
+| **B.10** | `CreateHull` *"never a fair test — a plugin change is required"* | plugin changed → **it builds**, exactly |
+| **B.11** | *"`massProp=false` declines because `SetInsertMatrix` was not called"* | `SetInsertMatrix` **was never called**; calling it changes nothing |
+
+⇒ ⭐ **An explanation written next to a measurement must say which of the two it is. If a note
+names the missing call, the note is a TO-DO, not a finding.**
+
+⇒ ⭐ And its mirror, from B.1: **the 88 layer strays were self-inflicted.** Before blaming the
+software, check what your own call passed.
+
+## ⛔ LETHAL CALLS — read `knowledge/learning/findings/LETHAL-CALLS-do-not-invoke.md` first
+
+Two calls **end the AutoCAD process**: no exception, no dialog, `EB_TIMEOUT` on the Python side and
+an empty `Get-Process acad`.
+
+| call | class |
+|---|---|
+| `computeObjectWeigth(bool)` | `PsPlate` |
+| `checkHoleEdgeDistance(int)` | `PsVolume` |
+
+⚠️ ⭐ **Both are `check*`/`compute*` methods on the entity classes. Treat every one of them as
+suspect** — `checkDoubleHoles`, `checkValidHoleFields`, `computeHoleField`, `checkLogicalLinks` are
+untested neighbours. **Save the model immediately before, isolate the call in its own run, and
+check `Get-Process acad` afterwards** — a timeout does not distinguish a hung session from a dead
+one. That protocol is why B.14's crash lost nothing and B.9's lost five plates.
+
+⇒ **Plate weight has a safe route: `op=props` → `wt=`.** It goes through `PsObjectProperties` and
+never near `computeObjectWeigth`. ⚠️ But it is the **NOMINAL** weight — unchanged by booleans and
+by holes alike (a 1200×600×20 plate still reads 113.04 kg after two subtractions and five ⌀60
+holes). Never judge a cut by the weight; judge it by `mods`.
+
+⇒ **The edge-distance table is therefore dialog-only in practice.** `checkHoleEdgeDistance` is the
+manual's admissible-edge-distance check and it cannot be called. The `edgecheck` op exists and
+**refuses**, so nobody rediscovers it.
+
+## ⭐⭐⭐ 1 890 sections that one hardcoded line made unreachable (B.8)
+
+`PsCreateShape` exposes **four** selectors and the `beam` op called only the first.
+
+```
+beam kind=standard   name="HE 300 B"                             90 catalogs
+beam kind=special    catalog=SCHRAG_z-pfetten name=Z140-15       68 catalogs, 1528 sections
+beam kind=roofwall   catalog=Bardage  name=4-250-36bx100         20 catalogs,  270 sections
+beam kind=combi      catalog=Dreiecksbinder name=R273x28-H440    15 catalogs,   88 sections
+```
+
+**The folder is the `catalog=`, the `.psp` filename is the `name=`.** Some catalogs are **`.dbf`
+tables** instead (`SCHRAG_z-pfetten`, `SCHRAG_c-riegel`, `Kantteile`, `Steel Deck`) — there the
+name is the row's **`KEY`**.
+
+⚠️ **Address a section by its FILENAME.** `Dreiecksbinder/R273x28-H440.psp` reads back as
+`name='R244.5x22.2-H420'` while its W/H match the filename. The internal name field lies.
+
+⭐ **What this unlocks for EB:** cold-formed **purlins** (`SCHRAG_z-pfetten`, `SCHRAG_c-riegel`,
+`Sadef_zed/cee/sigma`, `sbe_c/z/zeta`, `ayrsh_zeta`, `ayrshire_eb`) — what **B.22 needed and never
+had**; **crane rails** (`Kranschienen_Form_A`, `krupp_z*`); **Halfen cast-in channels**
+(`halfen_hl/hm/np/p`); bent sheet (`Kantteile`); decking (`Steel Deck`); stairs (`stair`).
+
+### `bendshape` — B.8.2, which had no op at all
+`PsCreateBendShape` appeared nowhere in the plugin (`bend` bends a **plate**). It is also the
+**only creator with `SelectWeldSections`** — the straight creator has 4 selectors, the bent one 5 —
+so welded plate girders (`I950x300x30`, `K900x400`) are reachable **only** this way.
+
+```
+bendshape name="HE 200 B" pts=0,0,0;0,2500,0;2000,4000,0     |  circle=R  |  helix=r,ang,rise,res
+```
+⚠️ **≥ 3 path points required** — two create nothing, same section name.
+⚠️ **`handle=` (`ConvertFromPolyline`) does not follow arcs** — a 90° bulge left a vertex **650 mm
+outside** the result. Every call now reports **`pathfit=ok`** or **`pathfit=MISMATCH …`**. **Read
+it.** A route that silently builds different geometry from the one asked for is the worst kind.
+
+## What else changed in the toolbox
+
+| what | chapter |
+|---|---|
+| ⛔ **`dumpmodel` was BLIND** to every plate and every bolt until 10/08 — `plates=0 bolts=0 err=357`, one unguarded `InsertPoint` dereference. **Any dumpmodel result older than 10/08 has false zeros.** `err=` is not noise — open it | B.9 |
+| `PLATE`/`BOLT` rows now carry a **world bounding box** — a plate's `InsertPoint` reads `0,0,0` and its polygon is in **local** coordinates | B.9 |
+| **Gratings**: `plate9 grid=1` sticks and is readable — `DisplayFlagsLong` bit **8192** + `PitchLineMode=True`. `Ks_ComGlobalSettings.PlateRasterWeightReduction` ships at **10 %** and does **not** reach the object weight | B.9 |
+| `solid kind=hull` needs **`dpts=`** (`PsDataPointArray`), not `pts=`. ⚠️ a **perfect box** creates nothing; jitter the corners 10 mm and the same eight points build | B.10 |
+| `solid kind=rotate`: polygon is **LOCAL 2D (x,y)**, the **axis is WORLD**, and the axis must lie **in the profile's plane** (a Z axis is degenerate geometry, not a refusal). ⚠️ `rev` is ignored — 90/180/360 identical | B.10 |
+| **`edgechamfer layout=`** — the six kinds the manual promises and never names: `1 kFacet · 2 kRadius · 3 kRounded · 4 kInverted · 5 kFold · 6 kNotch`, all applied and read back | B.13 |
+| ⚠️ ⭐ **The two APIs can DISAGREE.** `.NET EdgeLayout` has **7** members, COM `KsEdgeLayout` has **6** — `kNotch` is .NET-only. Same enum name, different members. **When they disagree, .NET is the complete one.** COM rescues .NET on *binding* and can be *behind* it on *content* | B.13 |
+| `PsEdgeChamfer` is a **data payload, not a creator** — no `Create`/`insert`/`writeTo`; assign it to `em.PlateBreakEdge`. `Min. Radius`/`Max. Height` are **dialog-side validation only** | B.13 |
+| **`DisplayClass`** is writable, sticks, and is **independent** of `AreaClass` (one part holds `d1` and `a12` at once). It was **0 on all 820 parts** — a whole assignment system read and never used | B.5 |
+| **`Ks_ComGlobalSettings.ObjCutPlaneDistance` / `…Rear`** = 500.0 — the global cut-plane distances B.3.5 calls "settings only". And `SetActive(True,True)` does **not** overwrite a view's own pair (1750/1250 survived) | B.3, B.7 |
+| **B.6.7 Additional Axes is dialog-only, tested**: `PsCreateGrid` is the creator with no user-axis methods; `PsGrid` has the axes and no creator and no binder. The halves never meet | B.6 |
+| ⚠️ **A cope that does nothing may be a GEOMETRY error, not an API refusal** — the beam must run **through** the support, not butt against it. Same call, `polyCuts` 0 → 1 | B.12 |
+| Missing capability, named: **a reader for a polyCut's polygon.** Without it, `edge=2` (Access Holes) and `edge=0` (bevelled) copes are indistinguishable — identical extents to 0.1 mm | B.12 |
+| **No ProSteel construction-line type exists** in the managed API — which is why `PS_CONST_DEL` is a **layer** sweep, not a type sweep | B.2 |
+
+## ⭐⭐ Drilling: inherit, never invent (B.14)
+
+`drillfield x= y=` takes the **dialog's own layout string** — proven by spacing, not by count:
+
+```
+x=3*70          ->  gaps 70, 70        uniform
+x=2*60,200,1*   ->  gaps 60, 200       non-uniform, honoured in full
+```
+
+⭐⭐ **`W` in place of a pitch = the SECTION's own marking gauge**, and it works through the API
+with no dialog:
+
+| beam | `y=` | measured |
+|---|---|---|
+| **HE 300 B** | `2*W` | **120 mm** |
+| **IPE 300** | `2*W` | **80 mm** |
+| HE 300 B | `2*100` *(control)* | 100 mm |
+
+⇒ **Never invent a bolt gauge.** This is the drilling half of *choose a template, do not pass
+numbers*.
+
+## ⚠️ And one the auditor did to himself
+
+`plate9 mode=rect` places from **`at=`**, not `p1=`. `p1` is a valid key **for the op** (the `poly`
+and `pts` modes use it), so the strict-parameter guard accepted it **in silence** — and nine plates
+built during this audit stacked up at the origin while their labels pointed at empty strips.
+
+⇒ ⭐ **Valid FOR THE OP is not valid FOR THE MODE.** The guard gave false confidence. `mode=rect`
+now refuses `p1/p2/p3/pts/radius` and creates nothing.
