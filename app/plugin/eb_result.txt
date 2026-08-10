@@ -1,1 +1,1 @@
-﻿EB_OK save 'C:\Users\User\Desktop\EB PROSTEEL AGENT\projects\SANDBOX\A-dialogs-templates-settings.dwg' bytes=73769->82022 at=12:54:18 reqid=b6f9cca6
+﻿EB_OK save 'C:\Users\User\Desktop\EB PROSTEEL AGENT\projects\SANDBOX\A-dialogs-templates-settings.dwg' bytes=82022->82765 at=12:59:15 reqid=a09d7012

@@ -182,6 +182,32 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > manual — and `Varia` on a network share would give the whole office one set of details.
 > **Both are Amir's call.**
 
+> ## ⌨️ WHY THINGS RE-RUN, AND WHY ENTER RECOVERS A MACRO (A.4, 10/08)
+> ⭐⭐⭐ **`ALT` suppresses the LINK UPDATE** — *"avoids working off the link update… you can use
+> this function to **move parts without causing a reaction of the connected parts**."*
+> **That is the mechanism behind every re-run that has cost work:** the section change that
+> destroyed two bolts (E.9), the base plate that re-ran in every clone (lesson 5), the four
+> orphans at B.26's apex. Not a quirk — the documented **dynamic mode**.
+> **And the switches are reachable** on `Ks_ComGlobalSettings`, currently all ON:
+> `DynamicConnections` · `LinksActiv`/`LinksActivUpdate` · `LinksPassiv`/`LinksPassivUpdate` ·
+> `RecalcWhenNeeded=False`.
+> ⛔ **Do not change them without Amir** — they are global, and they change how the software
+> behaves for him too. The safe shape is the UCS pattern: **toggle → one operation → restore in
+> a `finally`.** Propose it; do not do it.
+>
+> ⭐⭐ **`RETURN` at a selection prompt selects EVERYTHING.** That is *why* ENTER (not ESC)
+> recovers a parked macro — it is being handed a valid selection, not cancelled. A rule that was
+> right for two weeks without a reason.
+> ⭐ **`ESC`+`SHIFT` during selection opens the FILTER** without leaving the command.
+> ⭐ **There is a BOLT CACHE** — *"the bolted joint command saves the last created bolt"*, and
+> `CTRL` clears it and forces a re-read from file. **A live lead on `boltparts` refusing
+> geometry that measures perfect.**
+> ⭐ `ALT` at **Edit Drill Holes** *"cancels the blocking of bolt fields… these can then be
+> deleted"* — holes owned by a bolt field are **blocked**, which is why "holes cannot be
+> removed" looked true before `DeleteHoleField`.
+> ⭐ `ALT` at **Connect** skips the type check; at **Haunch** on the support it **adapts plate
+> thicknesses to the supporting shape**; at **Insert Shapes** it rotates −90° instead of +90°.
+
 > ## 🔩 TWO CORRECTIONS TO EARLIER NOTES, both found while fixing (10/08)
 >
 > ### ✅ HOLES **CAN** BE REMOVED — B.26's note was wrong
