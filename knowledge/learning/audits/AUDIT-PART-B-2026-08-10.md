@@ -797,3 +797,60 @@ now B.11. Each time a conclusion outran its evidence, and each time the audit's 
 
 ⇒ ⭐⭐ **Rule, now explicit:** an explanation written next to a measurement must say which of the
 two it is. If a note names the missing call, the note is a **to-do**, not a finding.
+
+---
+
+## B.12 — 3D-Modifications ⭐⭐ **the largest and strongest chapter note in part B**
+
+*Manual 4734–5434 · notes **322 lines** · all seven sub-sections*
+
+### 1 · Was the chapter learned deeply?
+**Yes — this is the reference standard.** B.12.6's cope, left open by both B.19 and B.20, is
+solved here. And its measured half contains three findings that changed how everything else is
+tested:
+
+* ⭐⭐ **`Create()` lies in BOTH directions** — the cope returns `False` while succeeding *and*
+  `True` while doing nothing. Only a read-back is evidence.
+* ⭐⭐ **A template carries state the property dump does not expose.** A hand-built copy, identical
+  on every property `PsCopeLinkDataMgd` exposes, did nothing; the template worked. ⇒ *`GetTemplate`
+  and override; never construct link data from scratch.*
+* ⚠️⚠️ **`PsObjectProperties.Weight` is the NOMINAL weight** — a 1200×600×20 plate reads 113.04 kg
+  after two boolean subtractions *and* five ⌀60 holes. It ignores all material removal.
+
+### 2 · ⭐ A cross-link the audit found: B.12 already explains B.9's grating result
+
+Today's B.9.3 test measured 117.75 kg on a grating-flagged plate at every raster percentage and
+concluded the object carries the gross figure. **B.12 had already established why**: the weight
+`PsObjectProperties` reports is nominal and ignores holes and booleans alike. The two findings are
+the same fact reached from two chapters — and B.9's conclusion is *stronger* for it, since a
+number that ignores a ⌀60 hole was never going to show a 10 % raster reduction.
+
+⇒ ⚠️ **The cost of not cross-reading:** B.9's test was run without recalling B.12's finding, and
+would have been misread if it had come out any other way.
+
+### 3 · The one unresolved item — attacked, and honestly still open
+
+> *the note:* *whether `edge=2` genuinely produced **access holes (ratholes)** — `polyCuts=1`
+> proves a cut, not its shape. Confirming it needs a shaded view, and `VSCURRENT` is not in the
+> plugin's `CmdAllow` allowlist. **Not widening that allowlist without Amir's approval.**
+
+That refusal was right and stands. A route needing **no view and no new permission** was tried
+instead: build the same cope twice — `edge=2` (Access Holes) against `edge=0` (bevelled Edge) —
+and distinguish them geometrically.
+
+```
+holes  edge=2  beam=140A  polyCuts=1   ext 400010.5,-6075,1350 ; 403000,-5925,1650
+bevel  edge=0  beam=140B  polyCuts=1   ext 405010.5,-6075,1350 ; 408000,-5925,1650
+```
+
+⇒ **The two are indistinguishable at bounding-box level** — identical extents to the 0.1 mm, and
+identical `mods` counts. A volumetric probe was considered and **not run**, because placing it
+needs to know where the cut *ends*, and **no op exposes a polyCut's polygon**. A probe placed on a
+guess that reported "no collision" would prove nothing.
+
+⇒ **Still open, with the missing capability now named:** *a reader for a polyCut's polygon.* The
+contrast pair is kept in the model, labelled, as the evidence and the starting point.
+
+⚠️ The first attempt built the beam starting at the column **face** and produced `polyCuts=0` on
+both — a cope needs the beam to run **through** the support, not butt against it. Worth recording:
+a cope that silently does nothing may be a geometry error, not an API refusal.

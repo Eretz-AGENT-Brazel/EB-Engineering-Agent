@@ -320,3 +320,35 @@ part weight it is not. Worth knowing which one a parts list is quoting.
   a cut, not its shape. Confirming it needs a shaded view, and `VSCURRENT` is not in the plugin's
   `CmdAllow` allowlist. **Not widening that allowlist without Amir's approval** — it is a safety
   control, and `UCS` was only ever added after he approved it explicitly.
+
+---
+
+## AUDIT 10/08/2026
+
+### ⭐ This chapter's nominal-weight finding explains B.9.3
+
+B.9's grating test read **117.75 kg** on a flagged plate at 0 %, 10 % and 35 % raster reduction.
+That is the same fact as this chapter's: **`PsObjectProperties.Weight` is nominal** and ignores
+holes and booleans alike. A number that ignores a ⌀60 hole was never going to show a percentage
+reduction. Cross-read before running a weight test.
+
+### The rathole question — attacked, still open, and the missing piece named
+
+Refusing to widen `CmdAllow` for `VSCURRENT` stands. A route needing no view was tried instead:
+the same cope built twice, `edge=2` (Access Holes) against `edge=0` (bevelled Edge).
+
+```
+holes  edge=2  140A  polyCuts=1   ext 400010.5,-6075,1350 ; 403000,-5925,1650
+bevel  edge=0  140B  polyCuts=1   ext 405010.5,-6075,1350 ; 408000,-5925,1650
+```
+
+**Indistinguishable** — identical extents and identical `mods` counts. A volumetric probe needs to
+know where the cut ends, and **no op exposes a polyCut's polygon**; a probe on a guess proves
+nothing either way.
+
+⇒ **Missing capability, now named: a reader for a polyCut's polygon.** The contrast pair is in the
+model at x 400 000 / 405 000, labelled.
+
+⚠️ **A cope that does nothing may be a geometry error, not an API refusal.** The first attempt put
+the beam's start at the column *face* and got `polyCuts=0` on both; running the beam **through**
+the support gave `polyCuts=1` on both. Same call, same parameters.
