@@ -127,6 +127,41 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > ⚠️ **The general lesson: any op that can resize an existing member must be followed by `vfy_bolts`
 > on that bay.** Same family as the blast guard.
 
+> ## 📐 ONE LESSON, ONE STRIP — the separation must be VISIBLE (Amir, 10/08)
+> *"שכל המידולים של כל שיעור יהיו בסטריפ מוגדר ונראה הפרדה בין שיעור לשיעור."*
+>
+> A practice model is read by a human, so the layout has to say where one lesson ends without
+> anyone having to consult a file.
+>
+> * **Pitch 60 000 mm along +X: a 56 000 strip and a 4 000 gap.** The gap *is* the separator.
+> * Each strip is bounded by a **named `Ks_Grid`** carrying the lesson's name
+>   (`grid at= lsteps= wsteps= name=`), all on layer **`_STRIPS`** so they switch off in one click.
+> * ⭐ **Label every specimen through the Data tab** — `propset Note1=` what it is for,
+>   `Note2=` what was measured on it. The model then documents itself, and a deliberate oddity
+>   (a bare hole built to calibrate `mods`) is never later misread as a defect.
+>
+> ⚠️ Two `grid` traps, both measured, both opposite to what the names suggest:
+> **`lsteps`/`wsteps` are BAY SPACINGS, not counts** — `lsteps=1` builds a bay one millimetre
+> wide — and the grid's **LENGTH runs along world Y, its WIDTH along world X**.
+
+> ## 📖 E.10's chapter numbers are STALE — trust the COMMAND, re-derive the chapter (10/08)
+> Corrected table: **`knowledge/E10-COMMAND-REFERENCE.md`** — 126 commands, chapter column
+> re-derived from the manual's own table of contents, plus which agent op covers each.
+>
+> E.10 gives *Function / Chapter / Command*. Of the 50 rows whose function name matches a TOC
+> chapter title **verbatim**: 26 cite the chapter correctly, **16 are off by exactly one**, 8 are
+> off by two or three. Part B is right through B.10 and off by one from **B.11** onward; part C
+> is off by 2–3; part E off by one from E.2; `RevisionCenter` cites D.6 but lives at **C.6**.
+> ⭐ The cause is visible in the data: the one row citing B.11 correctly is *"Create ACIS body
+> reference"* — the chapter **inserted** in a later edition that pushed everything after it down.
+>
+> ⇒ **The command names are reliable and are the interactive route to everything the API refuses.
+> The chapter numbers are not — look the chapter up in the TOC.**
+>
+> 🔒 **The `cmd` allowlist runs 9 of those 126, and that is deliberate.** Most ProSteel commands
+> are interactive; an unattended agent that starts one leaves the session parked. **Nothing is
+> added without Amir saying so, one command at a time, with a reason.**
+
 > ## ✋ THREE STRIKES — AFTER 3 REFUSALS, STOP TRYING (adopted 09/08)
 > When a creator refuses, **try at most three configurations.** Then do one of:
 > **(a)** build the thing by **composition** from calls that are known to work · **(b)** ask Amir in

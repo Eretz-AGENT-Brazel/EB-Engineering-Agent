@@ -40,6 +40,54 @@ so they can also be selected and sorted by class rather than by coordinate.
 
 ---
 
+## `E-structural-elements.dwg` — **the part-E practice model** ⭐ *(new 10/08/2026)*
+
+Opened for part E on Amir's instruction: *"תפתח מודל חדש שבו תמדל את כל תרגילי היישום שאתה צריך
+לפרק E."*
+
+### 📐 One lesson, one STRIP — and the separation is visible in the model
+
+Amir, 10/08: *"שכל המידולים של כל שיעור יהיו בסטריפ מוגדר ונראה הפרדה בין שיעור לשיעור."*
+
+| lesson | strip (x) | boundary |
+|---|---|---|
+| **E.9** Properties Dialogs | −3 000 → 53 000 | `Ks_Grid` "E.09-PROPERTIES-DIALOGS" |
+| **E.10** Command Reference | 57 000 → 113 000 | `Ks_Grid` "E.10-COMMAND-REFERENCE" |
+| **E.11** Own Notes | 117 000 → 173 000 | `Ks_Grid` "E.11-OWN-NOTES" |
+
+**Pitch 60 000 mm — a 56 000 strip and a 4 000 gap.** The gap *is* the separator: you can see
+where one lesson ends without reading anything. Each strip is bounded by a **named grid**, so
+the boundary carries the lesson's name, and all of them sit on layer **`_STRIPS`** so they can
+be switched off in one click.
+
+⚠️ Two things about `grid` that are the opposite of what the names suggest, both measured:
+`lsteps` / `wsteps` are **bay spacings, not counts** (`lsteps=1` builds a bay one millimetre
+wide), and the grid's **LENGTH runs along world Y, its WIDTH along world X**.
+
+### What is inside each strip
+
+**E.9 — the properties laboratory.** Specimen A is an intact bolted joint; the column is
+**green with a centre line** because `propset` wrote `ColorIndex=3` and `CenterLineMode=1`, which
+is the visual proof that the write surface reaches AutoCAD. Specimen B is the same joint after
+a section change — the test that found **two bolts destroyed** — killed and rebuilt. Plus a
+modifications rig (the bare hole there is **deliberate**), the `propcopy` pair, and the failed
+notch attempts.
+
+**E.10 — the classification rig.** A small portal with real end-plate joints at both ends,
+whose members are classified by role: columns family 1, girder family 2. It demonstrates the
+two commands E.9's write surface newly reached, `PS_FAMILY_CLASS` and `PS_PROCESS_STATUS`.
+
+⭐ **Every specimen is labelled through E.9's own Data tab** — `Note1` says what the part is
+for, `Note2` what was measured on it. The model documents itself; read a part's properties and
+it tells you why it exists.
+
+### 📐 Baseline — 10/08/2026
+
+**79 parts** · 24 bolts · 49 holes · 24 matched · **0 iron-rule violations** · 0 oversize.
+One unfilled hole, and it is the deliberate one, labelled as such on the part.
+
+---
+
 ## `sandbox.dwg` — **Amir's own drawing** 🛑
 
 **Amir's file.** Part B work from **07/08** is in here.

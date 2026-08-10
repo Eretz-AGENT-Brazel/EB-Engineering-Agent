@@ -1,4 +1,3 @@
-reqid=3ce5f7d7
-op=zoom
-handle=2BE
+reqid=c04d2a17
+op=vfy_size
 dwg=E-structural-elements.dwg

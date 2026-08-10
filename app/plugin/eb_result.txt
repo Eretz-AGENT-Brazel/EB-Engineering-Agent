@@ -1,1 +1,1 @@
-﻿EB_OK zoom handle=2BE w=530.33 h=4021.246 margin=0.25 reqid=3ce5f7d7
+﻿EB_OK vfy_size parts=79 limit=20000 oversize=0 (grids/frames skipped=3) largest=7660 (343)  [run this after ANY op that can resize an existing member -- the haunch stretched a rafter to 317,000 mm and nothing noticed] -> eb_vfy_size.txt reqid=c04d2a17

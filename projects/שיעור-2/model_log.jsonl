@@ -1197,3 +1197,6 @@
 {"op": "plate", "args": {"l": "400", "w": "300", "t": "20", "center": "31000,0,0", "layer": "E09-props", "dwg": "E-structural-elements.dwg"}, "handle": "314", "ts": "09:35:47"}
 {"op": "plate", "args": {"l": "400", "w": "300", "t": "20", "center": "32000,0,0", "layer": "E09-props", "dwg": "E-structural-elements.dwg"}, "handle": "315", "ts": "09:38:46"}
 {"op": "beam", "args": {"name": "IPE300", "p1": "40000,0,0", "p2": "44000,0,0", "layer": "E09-props", "dwg": "E-structural-elements.dwg"}, "handle": "316", "ts": "09:40:38"}
+{"op": "beam", "args": {"name": "HE300B", "p1": "62000,0,0", "p2": "62000,0,5000", "layer": "E10-classes", "dwg": "E-structural-elements.dwg"}, "handle": "340", "ts": "10:04:22"}
+{"op": "beam", "args": {"name": "HE300B", "p1": "62000,8000,0", "p2": "62000,8000,5000", "layer": "E10-classes", "dwg": "E-structural-elements.dwg"}, "handle": "342", "ts": "10:04:22"}
+{"op": "beam", "args": {"name": "IPE400", "p1": "62000,150,4800", "p2": "62000,7850,4800", "layer": "E10-classes", "dwg": "E-structural-elements.dwg"}, "handle": "343", "ts": "10:04:22"}
