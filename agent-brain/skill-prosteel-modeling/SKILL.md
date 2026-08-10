@@ -61,8 +61,12 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > countersink or a slot**, and a mirrored target gets a mirrored modification.
 > **Parameters that never arrive** (the call works, the numbers are ignored, the template wins):
 > base plate · end plate · purlin. ⇒ **choose a template, do not pass numbers.**
-> **Never fairly tested, worth three strikes:** `CreateRotation` · `CreateHull` (needs `SetPoints`,
-> not `SetPolygon`) · Clone's other four categories · `ClsParameters.ReadFromTemplate`.
+> 🛑 **RETRACTED 10/08/2026.** This line used to read *"Never fairly tested, worth three strikes:
+> `CreateRotation` · `CreateHull`…"* — **both work.** `CreateHull` needed a real
+> `PsDataPointArray` (`solid dpts=`) and builds exactly; `CreateRotation` needs a **local 2D**
+> polygon and a **world** axis that lies **in the profile's plane**.
+> **Still genuinely untried:** Clone's other four categories (Cuts, PolyCut, Notches, Boolean)
+> and `ClsParameters.ReadFromTemplate`.
 >
 > ⇒ **Before spending a strike, look it up.** If it is closed, go straight to the composition
 > workaround — the file lists one for every case.

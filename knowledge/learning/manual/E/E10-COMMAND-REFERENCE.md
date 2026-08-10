@@ -108,8 +108,8 @@ have not been studied yet.
 | Create 3D-Cuboid | `PS_SOLID_BOX` | B.10 | `box` `solid` |
 | Create 3D-Cylinder | `PS_SOLID_CYLINDER` | B.10 | `cylinder` |
 | Create 3D-Extrusion Solid | `PS_SOLID_EXTRUDE` | B.10 | `extrude` |
-| Create 3D-Rotation Solid | `PS_SOLID_ROTATE` | B.10 | ⚠️ `solid` refused — axis framing never varied |
-| Create 3D-Solid | `PS_SOLID_HULL` | B.10 | ⚠️ `hull` — needs `SetPoints`, never fairly tested |
+| Create 3D-Rotation Solid | `PS_SOLID_ROTATE` | B.10 | ✅ `solid kind=rotate` — **retracted 10/08:** the polygon is LOCAL 2D, the **axis is WORLD**, and it must lie **in the profile's plane**. `rev` is ignored |
+| Create 3D-Solid | `PS_SOLID_HULL` | B.10 | ✅ `solid kind=hull dpts=…` — **retracted 10/08:** it needed `SetPoints(PsDataPointArray)` and builds exactly. ⚠️ a perfect box creates nothing |
 | Create 3D-Sphere | `PS_SOLID_SPHERE` | B.10 | `sphere` |
 | Create 3D-Torus | `PS_SOLID_TORUS` | B.10 | `torus` |
 | Cut Plane | `PS_CUTPLANE` | B.3.6 | `planecut` |

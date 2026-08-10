@@ -36,3 +36,11 @@ date	phrase	why it is false
 2026-08-10	לא מעביר כלום	TakeoverDrills מעביר גאומטריה אמיתית: changed=1 על שלוש קורות זהות. הניסוח העברי של אותה טענה.
 2026-08-10	נבדק ב-5 רצפים	חמשת הרצפים רצו בלי התנאי המוקדם שהמדריך מציין. variant 1 לבדו נותן changed=1.
 2026-08-10	5 סוגי חתכים בלבד מתוך 357	B.8 מצא 1890 חתכים נוספים ב-4 מאגרים לא-סטנדרטיים. 357 הוא חצי התמונה, לא כולה.
+#
+# --- added 10/08/2026, third pass. A fresh review found the SAME withdrawn claim under a THIRD
+# --- wording, live in SKILL.md's top-of-file block: "Never fairly tested, worth three strikes:
+# --- CreateRotation, CreateHull". The list said "never a fair test" and matched nothing.
+# --- ⭐ A CLAIM IS NOT A SENTENCE, IT IS A FAMILY OF SENTENCES. Write down the family.
+#
+2026-08-10	Never fairly tested	CreateRotation and CreateHull were both closed on 10/08. A third wording of 'never a fair test'.
+2026-08-10	never fairly tested	Same claim, lower case, as it appears in THE CEILING's section title.

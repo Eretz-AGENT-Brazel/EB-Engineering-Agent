@@ -45,15 +45,22 @@ RETRACTED = os.path.join(HERE, "retracted.tsv")
 
 # A quoted claim inside a retraction is correct and must not trip the check. These markers open a
 # window in which the withdrawn wording is expected to appear.
-RETRACTION_MARKERS = ("retracted", "corrected", "withdrawn", "withdraw", "retract",
-                      "closed 10/08", "closed 2026", "used to say", "used to read",
-                      "used to be headed", "used to end", "this line used to",
-                      "this block used to", "no longer true", "disproved", "disproven",
-                      # Hebrew: match the STEM, not one inflection. The rule block in PROGRAM.md
-                      # quotes a retracted phrase and used the forms הפריכה / מפריכים / הפרכה,
-                      # none of which matched the single form הופרך -- so the guard flagged the
-                      # very document that explains the retractions.
-                      "הופרך", "הפרכ", "הפריכ", "מופרכ", "נסגר", "תוקן", "בטל")
+# ⚠️ These must be UNAMBIGUOUS. The first version included bare "closed" and "נסגר", and
+# RESUME-HERE.md has a section headed "## מה נסגר בהמשך היום" — "what got CLOSED today" in the
+# sense of FINISHED, not RETRACTED. That false friend whitewashed the whole section and let a
+# withdrawn claim sit in it undetected. A marker must mean "this was taken back", nothing else.
+RETRACTION_MARKERS = ("retracted", "retraction", "withdrawn", "withdraw",
+                      "corrected 10/08", "corrected 2026",
+                      "used to say", "used to read", "used to be headed", "used to end",
+                      "this line used to", "this block used to", "this section used to",
+                      "no longer true", "disproved", "disproven", "🛑",
+                      "הופרך", "הפרכ", "הפריכ", "מופרכ", "נמשך בחזרה", "בוטל")
+
+# Protection is LINE-LOCAL, not section-wide. The first version scoped it to markdown sections
+# found with a leading "#", which failed twice over: SKILL.md writes its guidance as ">" blocks
+# so its real structure was invisible, and one marker anywhere in a long section whitewashed
+# everything else in it. A quote inside a retraction sits within a few lines of it.
+WINDOW = 6
 
 FAILS = []
 WARNS = []
@@ -72,6 +79,23 @@ def read(p):
         return io.open(p, encoding="utf-8", errors="replace").read()
     except Exception:
         return ""
+
+
+def _is_quoted(line, phrase):
+    """Is the phrase inside quotation marks on this line?
+
+    Quoting a withdrawn claim is how a retraction is written; asserting it is the failure. Handles
+    the straight ", the typographic pair “ ”, and the Hebrew-side ״ — and requires the phrase to
+    sit BETWEEN an opening and a closing mark, not merely on a line that happens to contain one.
+    """
+    i = line.find(phrase)
+    if i < 0:
+        return False
+    before, after = line[:i], line[i + len(phrase):]
+    for op, cl in (('"', '"'), ('“', '”'), ('«', '»'), ('״', '״')):
+        if op in before and cl in after:
+            return True
+    return False
 
 
 def md_files(root, skip_dirs=()):
@@ -126,29 +150,24 @@ def check_retractions():
             scanned += 1
             lines = text.split("\n")
 
-            # Protection is SECTION-scoped, not distance-scoped. Quoting a withdrawn claim inside
-            # the retraction that withdraws it is correct; asserting it in some other section --
-            # which is exactly what happened on 10/08, the retraction 1000 lines from the stale
-            # text -- is not. So: a phrase is allowed only if the markdown section it sits in
-            # also contains a retraction marker.
-            sec_of = []                      # section index per line
-            sec_has_marker = []
-            cur = 0
-            sec_has_marker.append(False)
-            for l in lines:
-                if l.startswith("#"):
-                    cur += 1
-                    sec_has_marker.append(False)
-                sec_of.append(cur)
-                low = l.lower()
-                if any(m in low for m in RETRACTION_MARKERS):
-                    sec_has_marker[cur] = True
+            # Quoting a withdrawn claim inside the retraction that withdraws it is correct;
+            # asserting it anywhere else is not. A genuine quote sits WITHIN A FEW LINES of the
+            # marker, so the window is small and symmetric.
+            marks = [i for i, l in enumerate(lines)
+                     if any(m in l.lower() for m in RETRACTION_MARKERS)]
 
             for e in entries:
                 for i, l in enumerate(lines):
                     if e["phrase"] not in l:
                         continue
-                    if sec_has_marker[sec_of[i]]:
+                    if any(abs(i - m) <= WINDOW for m in marks):
+                        continue
+                    # ⭐ QUOTING IS REPORTING; UNQUOTED IS ASSERTING. A withdrawn claim shown in
+                    # quotation marks is being described -- "it used to say X" -- and that is how
+                    # every retraction in this corpus is written. The same words with no quotes
+                    # around them are a live claim. This one rule separated four real findings
+                    # from four false ones on 10/08.
+                    if _is_quoted(l, e["phrase"]):
                         continue
                     rel = os.path.relpath(path, HOME)
                     fail("retractions",
@@ -313,12 +332,65 @@ def check_chapters():
 
 
 # ----------------------------------------------------------------- main
+# ----------------------------------------------------------------- 7. version drift
+def check_version_claims():
+    """No document may ASSERT a canonical plugin version that disagrees with app/eb_api.py.
+
+    Found 10/08/2026: the skill's ops reference -- the first thing read before every single op --
+    declared "Canonical build: EBAgentApi91.dll", 61 builds stale, while the memory declared v6
+    and eb_api.py's own docstring said EB_RUN6 above code that ran v152. Four numbers, one truth.
+    ⇒ The version is a COMPUTED fact with exactly one source. Everything else points at it.
+    """
+    src = read(os.path.join(REPO, "app", "eb_api.py"))
+    m = re.search(r"^\s*RUN_CMD\s*=\s*[\"']EB_RUN(\d+)[\"']", src, re.M)
+    if not m:
+        warn("versions", "cannot read RUN_CMD from app/eb_api.py")
+        return
+    live = int(m.group(1))
+    # Only lines that CLAIM canonicity count. A dated log line recording what was true then is
+    # history and is left alone.
+    CLAIMY = ("canonical", "points at", "current build", "the build is", "הקנונית", "הגרסה הנוכחית")
+    hits = 0
+    roots = [(KNOW, ()), (SKILL_LIVE, ()), (MEM_LIVE, ()),
+             (REPO, ("knowledge", "agent-brain", "app", "projects", "qc",
+                     "assets", "data", "standards"))]
+    for root, skip in roots:
+        if not os.path.isdir(root):
+            continue
+        for path in md_files(root, skip_dirs=skip + ("__pycache__", "_attic", "_archive")):
+            body = read(path)
+            # A file may DECLARE itself an append-only dated log with <!-- DATED-LOG --> near the
+            # top. Its sections record what was true when written and are not claims about now.
+            # The declaration must be visible to a human reader too -- see acad-agent.md's banner.
+            if "<!-- DATED-LOG -->" in body[:4000]:
+                continue
+            for i, l in enumerate(body.split("\n")):
+                low = l.lower()
+                if not any(c in low for c in CLAIMY):
+                    continue
+                # ⭐ A DATED claim is a RECORD of what was true then; an undated one is an
+                # assertion about now. acad-agent.md is a session log whose headers legitimately
+                # read "(2026-08-02) ... canonical plugin v31" -- that is history, not a lie.
+                if re.search(r"\d{2}/\d{2}/\d{4}|\d{4}-\d{2}-\d{2}|\(\d{4}-\d{2}-\d{2}\)", l):
+                    continue
+                for mm in re.finditer(r"EBAgentApi(\d+)\.(?:dll|cs)|EB_RUN(\d+)|ApiCmds(\d+)", l):
+                    n = int(mm.group(1) or mm.group(2) or mm.group(3))
+                    if n != live:
+                        fail("versions",
+                             "%s:%d claims plugin v%d as canonical; app/eb_api.py runs v%d\n"
+                             "        line   : %s"
+                             % (os.path.relpath(path, HOME), i + 1, n, live, l.strip()[:110]))
+                        hits += 1
+    print("  live build v%d ; %d contradicting claims" % (live, hits))
+
+
 CHECKS = [
     ("1. retractions  ", check_retractions),
     ("2+3. memory     ", check_memory),
     ("4. skill backup ", check_skill_backup),
     ("5. plugin       ", check_plugin),
     ("6. chapter sync ", check_chapters),
+    ("7. version drift", check_version_claims),
 ]
 
 

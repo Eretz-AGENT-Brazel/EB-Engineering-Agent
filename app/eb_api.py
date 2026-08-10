@@ -1,7 +1,9 @@
 """
 eb_api.py - Python client for the EB Modeling API (native ProSteel from code).
 
-File protocol: write plugin/eb_cmd.txt -> SendCommand EB_RUN6 -> read plugin/eb_result.txt
+File protocol: write plugin/eb_cmd.txt -> SendCommand RUN_CMD -> read plugin/eb_result.txt
+The version lives in DLL and RUN_CMD below and NOWHERE ELSE. This line used to hardcode
+EB_RUN6 and went 146 builds stale.
 Verified native ops: beam (Ks_Shape), plate (Ks_Plate), bolt (Ks_Bolt DIN6914),
 boltfield, conn_bolted, miter cut, workframe. Plus COM-level view/zoom/copy/delete/undo.
 

@@ -1,42 +1,107 @@
-# EB PROSTEEL AGENT
-**Eretz Barzel · Steel Modeling AI** — your AI co-modeler for AutoCAD 2015 + ProSteel.
+# 🏗️ EB PROSTEEL AGENT
 
-> 📊 **[מעקב לימוד המדריך — PROGRESS.md](PROGRESS.md)** · 79 פרקים, אחוזי התקדמות, וסדר הלימוד המתוכנן.
-> 📚 **[תהליך הלמידה כולו — knowledge/learning/](knowledge/learning/README.md)** · מדריך, שיעורים, ממצאים וביקורות, בתיקייה אחת.
-> מתעדכן בסוף כל פרק.
+**Claude כממדל הפלדה של ארץ ברזל** — מפעיל AutoCAD 2015 + ProStructures (ProSteel) V8i SS6 באמת,
+לא בסימולציה. המטרה, בניסוח של אמיר: *"שתיקח ממני את העבודה השחורה ותגיע לכל הפונקציות
+הקיימות בתוכנה."*
 
-You talk to the agent (type / voice / sketch / upload), and it models steel in
-ProSteel with you — fast, like a pro. The "brain" is Claude (free, via Claude Code);
-this software is the cockpit.
+---
 
-## How to start (one click)
-Double-click **`EB PROSTEEL AGENT`** (the desktop icon, or the `.bat` in this folder).
-It launches **AutoCAD 2015 + ProSteel**, starts the console server, and opens the
-**workspace window**. Then talk to the agent — work is discussed **only in the console**.
+## ⚡ מאיפה מתחילים
 
-## The workspace (console)
-- **Chat** — type or 🎤 speak (Hebrew/English), agent replies are shown and read aloud.
-- **ProSteel command palette** (sidebar) — one click fires the right ProSteel tool.
-- **📸 Screenshot + ✏️ Sketch** — capture the screen and mark it up (pencil, colors), send it.
-- **📎 Files** — upload a client **PDF / DWG** plan; the agent analyzes it.
-- **Live status** — ProSteel connection, model element count, current project.
-- **RTL/LTR + He/En** toggles.
-
-## Folder layout
-| Folder | What |
+| רוצה... | קרא |
 |---|---|
-| `app/` | The program (Python). `console.py` = workspace; `acad.py` = AutoCAD bridge; `prosteel.py` = command dispatcher; `plan2steel.py` = plan analyzer; `models.py` = projects. |
-| `knowledge/` | ProSteel knowledge base (82-command reference, manual index, full searchable manual, agent guide). |
-| `projects/` | One folder per project, with its own `MODEL.md` memory + plan analysis. Resume any time. |
-| `data/` | Runtime: conversations + uploads + brand logo. |
-| `assets/` | Company logo + icon. |
+| **להבין לאן הפרויקט הולך** | [`PROGRAM.md`](PROGRAM.md) — תוכנית-העל של אמיר, שני השלבים, וחוק הרישום |
+| **לראות מה נעשה ומה נשאר** | [`PROGRESS.md`](PROGRESS.md) — טבלת מעקב לפי פרקי המדריך |
+| **להמשיך עבודה מאתמול** | [`knowledge/learning/RESUME-HERE.md`](knowledge/learning/RESUME-HERE.md) |
+| **לדעת איך למדל בפועל** | הסקיל: `~/.claude/skills/prosteel-modeling/` — *זה מה שהסוכן טוען* |
+| **להריץ** | `EB PROSTEEL AGENT.bat` · ואת AutoCAD פותחים ידנית עם פרופיל ProStructures |
 
-## Per-project memory
-Every project has its own folder under `projects/` with a `MODEL.md` the agent reads
-when you return — so it always knows exactly where you stopped.
+---
 
-## Notes
-- Free — no API key. Brain = Claude in Claude Code.
-- ProSteel modeling commands open dialogs; the agent fires the exact right tool and uses
-  seed-and-copy + skeleton-first techniques. See `knowledge/KNOWLEDGE.md`.
-- Course manual OCR pending (image-based); main 1179-page manual is fully searchable.
+## 🗺️ מפת הרשויות — לכל עובדה בית אחד
+
+> ⭐⭐ **זה הלב של הסידור.** הכשל של 10/08/2026 לא היה חוסר סדר — הוא היה ש**לאותה עובדה
+> היו כמה בתים ואף אחד לא שמר עליהם מסכימים**. הטבלה הזאת קובעת מי הרשות, וכל השאר מצביע אליה.
+
+| סוג העובדה | **הרשות** | מי מצטט אותה |
+|---|---|---|
+| **איך מפעילים op** | `~/.claude/skills/.../references/plugin-ops.md` | הסקיל, ההערות |
+| **מה התוכנה עושה בדיאלוג** | `knowledge/learning/manual/<חלק>/MANUAL-NOTES-*` | הסקיל |
+| **מה ה-API מסרב לעשות** | `knowledge/learning/findings/THE-CEILING-what-code-cannot-reach.md` | הכול |
+| **⛔ קריאות שהורגות את AutoCAD** | `knowledge/learning/findings/LETHAL-CALLS-do-not-invoke.md` | הסקיל |
+| **מה הופרך ומתי** | `qc/retracted.tsv` — *וגם הדלק של השומר* | השומר |
+| **מה נמדד בביקורת פרק** | `knowledge/learning/audits/AUDIT-*.md` | הערות הפרק |
+| **המשטח הגולמי של ה-API** | `knowledge/api/API-SURFACE-RAW.txt` | הכול |
+| **קטלוגי חתכים** | `knowledge/SECTION-CATALOGUES.md` | הסקיל, הזיכרון |
+| **הידע ההנדסי** | `knowledge/steel/` | שלב 2 |
+| **מי אמיר ואיך הוא עובד** | `~/.claude/projects/.../memory/` + `MEMORY.md` | כל סשן |
+
+⚠️ **גרסת התוסף הקנונית היא `app/eb_api.py` ותו לא** — שם `DLL` ו-`RUN_CMD` מוצהרים.
+כל מספר גרסה אחר במסמך כלשהו הוא ציטוט מתוארך, לא מקור.
+
+---
+
+## 📁 מבנה התיקייה
+
+```
+EB PROSTEEL AGENT/
+├── PROGRAM.md              תוכנית-העל + חוק הרישום            ← אמיר קובע
+├── PROGRESS.md             מעקב פרקים
+├── README.md               הקובץ הזה — המפה
+│
+├── app/                    הקוד החי
+│   ├── console.py          שרת הקונסולה (מוקפא 05/08)
+│   ├── eb_api.py           ⭐ הגשר לתוסף — הרשות לגרסה
+│   ├── acad.py             עטיפת COM
+│   ├── context.py nlu.py prosteel.py learn.py standards_kb.py
+│   ├── plugin/             🔒 לא להזיז — הנתיב צרוב ב-.cs המקומפל
+│   │   ├── EBAgentApi<N>.cs    153 גרסאות = ההיסטוריה הכתובה של ה-API
+│   │   └── eb_cmd/eb_result    ערוץ הפקודות (מתחלף בכל op)
+│   └── _attic/             סקריפטים חד-פעמיים משיעורים שהסתיימו
+│
+├── knowledge/              ⭐ כל מה שנלמד
+│   ├── api/                משטח ה-API הגולמי (רפלקציה)
+│   ├── learning/
+│   │   ├── RESUME-HERE.md      נקודת חזרה
+│   │   ├── manual/A|B|E/       הערות לכל פרק במדריך
+│   │   ├── audits/             ביקורות פרקים — מרשם ההפרכות
+│   │   ├── findings/           THE CEILING · LETHAL CALLS
+│   │   ├── lessons/            יומני שיעורים עם אמיר
+│   │   └── plan/
+│   ├── steel/ recipes/ research/
+│   └── SECTION-CATALOGUES.md
+│
+├── qc/                     ⭐ השומרים
+│   ├── consistency.py      ← להריץ לפני כל קומיט
+│   ├── selftest_consistency.py
+│   └── retracted.tsv       רשימת הטענות המופרכות
+│
+├── projects/               מודלים: SANDBOX + שיעור-N/ (כולל יומני בנייה)
+├── agent-brain/            גיבוי הסקיל והזיכרון לתוך הריפו (sync.py)
+└── standards/ qc/ data/ assets/
+```
+
+---
+
+## 🚦 לפני כל קומיט
+
+```bash
+python qc/consistency.py
+```
+
+עוצר אם: טענה מופרכת עומדת חיה · זיכרון לא באינדקס · גיבוי הסקיל לא תואם · גרסת תוסף שגויה ·
+פרק בביקורת בלי סימון בהערות שלו. הנימוק המלא: [`PROGRAM.md`](PROGRAM.md) § חוק הרישום.
+
+⚠️ **`agent-brain/sync.py` מגבה, הוא לא כותב.** ההודעה `backup already current` פירושה
+"הגיבוי תואם", לא "הידע נשמר".
+
+---
+
+## 🧲 כללי ברזל
+
+1. **בורג חייב לעבור דרך חור מדולל בכל אלמנט שהוא מחבר.** אין "חומר". החריג היחיד הוא בורג
+   קודח, ורק בהצהרה מפורשת של אמיר לכל מקרה. שתיקה = שגיאה קריטית.
+2. **LISP אסור.**
+3. **מטרי תמיד.**
+4. **לשמור את המודל אחרי כל שלב.**
+5. **`sandbox.dwg` הוא של אמיר** — לא לשמור, לא לשנות, לא לסגור.

@@ -1,9 +1,14 @@
 # The plugin's op set — what exists and what it is verified to do
 
-*Canonical build: **`EBAgentApi91.dll` / `EB_RUN91` / `ApiCmds91`**, 06/08/2026.
-Source: `EB PROSTEEL AGENT\app\plugin\EBAgentApi91.cs`. Python client: `app\eb_api.py`,
-plus `app\eb_shot.py` (screenshots) and `app\eb_log.py` (the command-line channel).
-86 ops. Every "verified" line below was measured by reading the model back.*
+> ⭐⭐ **The canonical build is whatever `app/eb_api.py` declares — never a number written here.**
+> Read `DLL` and `RUN_CMD` at the top of that file, and the source is `app/plugin/EBAgentApi<N>.cs`
+> for the same `<N>`. This header used to name a specific build; it went **61 versions stale**
+> while being the first thing read before every single op. The number is gone on purpose, and
+> `python qc/consistency.py` now fails if any document contradicts `eb_api.py`.
+
+*Python client: `app\eb_api.py`, plus `app\eb_shot.py` (screenshots) and `app\eb_log.py`
+(the command-line channel). Every "verified" line below was measured by reading the model back —
+the op count is not quoted here either, for the same reason.*
 
 > ⚠️ **`_netload()` now PROVES the command is live** before returning, by pinging until it
 > answers. It used to sleep one second and return `None`; on 06/08 the DLL loaded a moment
