@@ -2240,3 +2240,96 @@ recorded. Two crashes' worth of recovery, nothing lost. No geometry created or d
 * ⚠️ **The `kUndefinedLink` stub on `C7A`** — cannot be removed by number. Whether
   `RemoveAllLogicalLinks` clears it was **not tried**: it would take the girder's three good
   purlin joints with it.
+
+---
+
+## B.28 — Group Structure ⭐⭐ **`Check Groups` is not in the API. The CHECK is — composed, validated, and run**
+
+*notes 165 lines · no band · plugin v171 → **v172***
+
+### 1 · Was the chapter learned deeply?
+**Yes, and it is the chapter that understood *why* rather than *how*:** a group is not a modelling
+convenience, it encodes **what is bought ready · what ships as one unit · what is assembled on
+site**. It also found `Check Groups` — a whole QA package — and then did the honest thing: scanned
+all 8 622 public types and reported that **the command is not in the API**.
+
+Its own action list ends with *"run **`Check Groups`** before every report"*, and there was no way
+to run it.
+
+### 2 · ⭐⭐ The dialog is unreachable. The check is not.
+
+The manual says what each button *does*, and all three are **membership questions** —
+which `PsObjectGroup` answers:
+
+| B.28.3 button | the manual | the query |
+|---|---|---|
+| **Mark Orphans** | *"display the parts that **don't belong to a group**"* | `getMainPartOf(id) == 0` |
+| **main-part check** | *"checks whether all the groups have a main part"* | `getMainPart() == 0` on a populated group |
+| **Release Single Part Groups** | groups with one part | `PartCount <= 1` |
+
+⇒ ⭐ **Same lesson as B.25's six separable buttons: the manual describing a command in parts is an
+instruction to compose it.** New op **`grouporphans`**.
+
+### 3 · ⚠️ And the instrument was validated before its number was believed
+
+The first run returned rows whose `PartCount` climbed monotonically with the handle — 7, 9, 11,
+21, 23 — and whose `mainPart` was the part's **own** handle. That looks exactly like a global
+counter leaking through, and B.27 had just finished paying for a verdict column that could not
+fail.
+
+**Cross-checked against `groupinfo`, which reads the same object by a different route:**
+
+```
+53C   parts=7   members 53C 558 559 55E 55F 560 561              main=53C  isMain=True
+53E   parts=9   members 53E 5A4 5A5 5A9 5AA 5AB 5AC 5AD 5AE      main=53E  isMain=True
+541   parts=21  21 real members                                   main=541  isMain=True
+1610  parts=3   members 15ED 1610 1611                            main=15ED isMain=False
+15EE  parts=0   -- not in a group                                 ORPHAN
+F76   parts=0   -- not in a group                                 ORPHAN
+```
+
+⇒ **The counts are real group memberships.** They climb with the handle because the bigger
+structures were built later. The suspicion was wrong, and checking it was still right.
+
+### 4 · The result, and what it says
+
+```
+grouporphans   steelParts=707  inGroup=293  ORPHAN=414
+               GROUP-NO-MAIN=0   SINGLE-PART-GROUP=0   distinctGroups=65   err=0
+```
+
+✅ **Both structural checks are clean:** every group has a main part, and no group has been left
+with a single member. **414 of 707 steel parts belong to no group at all.**
+
+⭐⭐ **And the split is not random — it is connection-made versus hand-made.** `1610`, a B.20 shear
+plate, sits in a group of three with the **column as its main part** — the connection templates
+carry `CreateGroup=True` and build the group themselves. `15EE`, the beam of that same joint, and
+`F76`, a B.25 bracing rod, are orphans.
+
+> ### ⭐ Third time the same boundary appears
+> B.5 measured it for the class systems: *"everything a connection class generated carries a
+> `FamilyClass`; everything created by hand does not."* Here it is again for **groups**.
+> **What the software builds, it registers. What we build by hand, it does not** — and every
+> downstream consumer (parts lists, shipping marks, `Display as 1 Part`) reads the register.
+
+### 5 · ⛔ NOT grouped — deliberately, and on B.5's precedent
+
+414 parts could be grouped in a loop. They will not be. B.28's own §1 says a group encodes
+**stock part / dispatched part / site assembly** — that is a **fabrication decision**, Amir's
+taxonomy, exactly as B.5 refused to invent a display-class scheme.
+**The capability is proven and the scheme is his.**
+
+### Model state
+**Nothing built, nothing changed, nothing grouped.** Census **1 194**, saved.
+
+### Still open
+* ⏳ **The grouping scheme itself — Amir's.** `grouporphans` is now the instrument for checking it
+  once it exists.
+* **`Compare` + `Compare+Modify`** — the identity engine behind it *is* exposed, on
+  `PsCreatePositioning` (`SetEqualPart*`, `SetHolesTol`, `RecordIdenticalRecord`). ⚠️ Whether it
+  can run **without writing numbers to the model** is the chapter's own open question and belongs
+  to **B.29**, which is next.
+* **Group export as a block** (*"like a WBLOCK — but **do not use the standard AutoCAD command**"*)
+  — `PsBlock` / `PsBlockReference` exist in `Drawing` and were **not** tried.
+* The *"nearly"* in *"a component part group and a subgroup **nearly** behave identically"* —
+  still unmeasured.

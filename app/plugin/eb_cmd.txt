@@ -1,3 +1,4 @@
-reqid=46aac442
-op=save
+reqid=383e4aab
+op=groupinfo
+handle=F76
 dwg=B08-insert-shapes.dwg

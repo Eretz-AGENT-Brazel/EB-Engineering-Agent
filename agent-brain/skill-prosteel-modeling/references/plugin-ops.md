@@ -2285,3 +2285,55 @@ OK=22, `BOLT-NO-HOLE=0`.
 ⇒ ⭐ **Same trap as B.26's hole fields. Delete from the HIGHEST index down, and READ THE LIST BACK
 afterwards** — the numbers are indices into a list that renumbers, and a removal can leave a stub
 nothing removes.
+
+---
+
+## ⭐⭐ `grouporphans` — B.28.3's CHECK GROUPS, COMPOSED (B.28, 10/08/2026)
+
+`Check Groups` as a **dialog** is not in the API — B.28 scanned all 8 622 public types and was
+right. But the manual says what each button *does*, and all three are **membership questions**,
+which `PsObjectGroup` answers:
+
+| button | the manual | the query |
+|---|---|---|
+| **Mark Orphans** | *"the parts that **don't belong to a group**"* | `getMainPartOf(id) == 0` |
+| main-part check | *"whether all the groups have a main part"* | `getMainPart() == 0` on a populated group |
+| Release Single Part | one-member groups | `PartCount <= 1` |
+
+```
+grouporphans   steelParts=707  inGroup=293  ORPHAN=414
+               GROUP-NO-MAIN=0  SINGLE-PART-GROUP=0  distinctGroups=65
+```
+
+⇒ ⭐ **A manual that describes a command in separable parts is an instruction to compose it** —
+the same reading that produced B.25's braced bay from six buttons.
+
+⚠️ **And validate the instrument before believing its number.** The first run showed `PartCount`
+climbing monotonically with the handle and `mainPart` equal to the part's own handle — which looks
+exactly like a global counter leaking. Cross-checked against `groupinfo`, a different route to the
+same object: **the counts are real members** (`53C` → 7 members listed by handle; `541` → 21). The
+suspicion was wrong and checking it was still right.
+
+---
+
+## ⭐⭐ WHAT THE SOFTWARE BUILDS, IT REGISTERS. WHAT YOU BUILD BY HAND, IT DOES NOT.
+
+Third measurement of the same boundary:
+
+| register | in it | not in it |
+|---|---|---|
+| **`FamilyClass`** (B.5) | everything a **connection class** generated — 40 parts | everything hand-built — 780 |
+| **`AreaClass`** (B.5) | 305 | 515 |
+| **groups** (B.28) | **293**, in 65 groups | **414 orphans** |
+
+A B.20 shear plate sits in a group of three whose main part is **the column** — the connection
+templates carry `CreateGroup=True` and build the group themselves. The beam of that same joint,
+and a B.25 bracing rod, are orphans.
+
+⇒ ⚠️ **Every downstream consumer reads that register** — parts lists, shipping marks,
+`Display as 1 Part`, and B.29's position numbers. A hand-built detail is invisible to all of them
+until it is grouped and classed.
+
+⛔ **Do not group them in a loop.** A group encodes *stock part / dispatched part / site assembly* —
+that is a **fabrication decision** and Amir's taxonomy, exactly as B.5 refused to invent a
+display-class scheme. **The capability is proven; the scheme is his.**
