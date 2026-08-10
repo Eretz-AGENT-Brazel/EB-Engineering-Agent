@@ -1111,3 +1111,73 @@ way round.
 ### What was added to the model
 Six labelled IPE 400 girders at x 102 000, one per swept ordinal — the sweep itself is the
 evidence and is left in place.
+
+---
+
+## B.17 — Plate Connections ⭐⭐ **the company-connection database is real, on disk, and readable**
+
+*notes 208 lines · the chapter whose own conclusion was "the manual IS the API documentation"*
+
+### 1 · Was the chapter learned deeply?
+**Yes.** The software's plate-type decision rule, the two dimension conventions, the
+non-intuitive hole-layout semantics, the 132 haunch parameters, and — importantly — it correctly
+identified **B.17.2's DAST selector as the value-engineering tool Amir described** *and then
+refused to use it*, because load-based selection is **phase 2 and locked**. That restraint was
+right and it stands: **the DAST item was not touched today either.**
+
+### 2 · ⭐⭐ B.17.3 — the company connection database, closed
+
+> *the manual:* *"you can create a database containing **user-defined plate connections**… **HINT:**
+> create a database with frequently utilized and maybe **company-specific connections**, which are
+> then **always available to all program users within your company**."*
+
+The note left this as *"where the dBASE database sits, and whether `PsDBaseDatabase` reaches it"*.
+**Both answered.** They sit in `Prg/Plugins/`, one per connection macro, and the class reads them.
+New op **`dbase`**:
+
+```
+dbase file=…\Plugins\BasePlate\BasePlate.dbf
+  -> records=56 fields=11
+     SHAPE, CODE, LENGTH, WIDTH, THICKNESS, DIAMETER, WORKLOOSE, HOLEX, HOLEY, AF, AS
+     row 0: 150UB14.0 | BBP 15 150UB14.0 | 180 | 160 | 8 | 16 | 2 | 2*100 | 1* | 5 | 5
+```
+
+| macro | records | fields |
+|---|---:|---:|
+| `AECChute` | 59 | 19 |
+| `BasePlate` / `BasePlateChinese` | 56 | 11 |
+| `BeamBeamClamp` | 5 | 2 |
+| `PipeStrap` | 33 | 9 |
+| `PurlinBeamBraceFly` | 60 | 19 |
+
+⭐⭐ **And they speak B.14's language.** `HOLEX` reads **`2*100`** and `HOLEY` reads **`1*`** —
+*the same drill-field layout string* `drillfield x= y=` takes. **The connection databases and the
+drilling API are one vocabulary**, which is what makes encoding EB's own connections realistic.
+
+⚠️ **`dbase` is READ ONLY on purpose.** `PsDBaseDatabase` exposes `PutRecord` and
+`AppendNewRecord`; these files live in `Program Files` and define how connections get built.
+Writing them is Amir's decision, not a side effect of an audit. Map:
+`knowledge/CONNECTION-DATABASES.md`.
+
+### 3 · `Rotate Connection` — exposed, writable, and inert
+
+The note asked whether it is `PlateIsRotated`. **It is** — on `PsStandardPlateLinkData`. But the
+only route to it was **`connset`, which is QUARANTINED** for having crashed AutoCAD four times and
+once left the drawing unsaveable. **The quarantine stands**; instead the single boolean was added
+to the *safe* `conn` op, which already writes nine template properties the same way.
+
+```
+conn kind=endplate … rotated=1   ->  create=True … PlateIsRotated=True
+```
+
+The property is **set and reads back True**. And the connection is **byte-identical**: both runs
+produced the same eight plates — 140×130×10 ×2, 481.6×8×202.3, 10×65×138.3 ×2, 140×260×10 ×2,
+300×290×10.
+
+⇒ ⭐ **Another "parameter that never arrives"** — THE CEILING §2's signature, and consistent with
+this chapter's own base-plate / end-plate / purlin finding. **Set, confirmed, ignored.**
+
+### Still open — deliberately
+* **B.17.2's DAST load-based connection selector — PHASE 2, LOCKED.** Knowing the tool exists is
+  phase 1; using it to rule on a design is not, and it was not touched.
+* Writing to the connection databases — reachable, and Amir's call.

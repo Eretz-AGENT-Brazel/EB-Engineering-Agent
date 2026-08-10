@@ -206,3 +206,51 @@ because **all parameters are visible in the view**"*.
 לעולם לא תיתן.
 
 ⇒ **כל 1,179 העמודים רלוונטיים, לא רק כמדריך למשתמש.**
+
+---
+
+## ‏AUDIT 10/08/2026 — שניים משלושת הפריטים נסגרו
+
+### ⭐⭐ B.17.3 — מסד המחברים של החברה: נמצא, נקרא, וממופה
+
+הם יושבים ב-`Prg/Plugins/`, אחד לכל מאקרו, ו-`PsDBaseDatabase` קורא אותם. ‏op חדש **`dbase`**:
+
+```
+dbase file=…\Plugins\BasePlate\BasePlate.dbf
+  -> records=56 fields=11
+     SHAPE CODE LENGTH WIDTH THICKNESS DIAMETER WORKLOOSE HOLEX HOLEY AF AS
+```
+
+| מאקרו | רשומות | שדות |
+|---|---:|---:|
+| `AECChute` | 59 | 19 |
+| `BasePlate` / `BasePlateChinese` | 56 | 11 |
+| `BeamBeamClamp` | 5 | 2 |
+| `PipeStrap` | 33 | 9 |
+| `PurlinBeamBraceFly` | 60 | 19 |
+
+⭐⭐ **והם מדברים את השפה של B.14.** ‏`HOLEX` מכיל **`2*100`** ו-`HOLEY` מכיל **`1*`** — *בדיוק
+מחרוזת פריסת הקידוח* ש-`drillfield x= y=` מקבל. **מסדי המחברים וה-API של הקידוח הם אוצר מילים
+אחד**, וזה מה שהופך את קידוד מחברי ארץ ברזל למעשי.
+
+⚠️ **`dbase` הוא קריאה בלבד במכוון.** ל-`PsDBaseDatabase` יש `PutRecord` ו-`AppendNewRecord`,
+אבל הקבצים יושבים ב-`Program Files` ומגדירים איך מחברים נבנים. כתיבה היא החלטה של אמיר.
+המפה: `knowledge/CONNECTION-DATABASES.md`.
+
+### ‏`Rotate Connection` — חשוף, ניתן לכתיבה, וחסר השפעה
+
+כן, זה **`PlateIsRotated`** על `PsStandardPlateLinkData`. אבל המסלול היחיד אליו היה **`connset`,
+שנמצא בהסגר** אחרי שהפיל את AutoCAD ארבע פעמים והשאיר פעם שרטוט שלא ניתן לשמירה. **ההסגר
+נשאר**; במקומו הבוליאני נוסף ל-op הבטוח `conn`.
+
+```
+conn kind=endplate … rotated=1   ->  create=True … PlateIsRotated=True
+```
+
+התכונה **נכתבת ונקראת חזרה כ-True**, והמחבר **זהה לחלוטין** — אותן שמונה פלטות בשני המקרים.
+
+⇒ ⭐ **עוד "פרמטר שלא מגיע"** — אותה חתימה כמו פלטת בסיס / פלטת קצה / מרזב בפרק הזה עצמו.
+**נקבע, אושר, נעלם.**
+
+### נשאר פתוח במכוון
+**בורר המחברים של DAST לפי עומס — שלב 2, נעול.** לדעת שהכלי קיים זה שלב 1; להשתמש בו לפסיקה — לא.

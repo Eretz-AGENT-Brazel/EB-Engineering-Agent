@@ -1612,3 +1612,44 @@ If a style list looks empty, it has not been read from disk yet.
 
 ⛔ And the matching write-side trap: **`BoltStyle`, `BoltType` and `Diameter` are WRITE-ONLY.**
 You can set a style and never read back which one is set.
+
+---
+
+## `dbase` — the connection databases (B.17.3, added 10/08/2026)
+
+```
+dbase file=<path.dbf> [row=N] [max=N] [out=eb_dbase.txt]
+```
+
+ProStructures ships one dBASE file per connection macro under
+`…\ProStructures Ss6 R1\AutoCAD 2015\Prg\Plugins\<macro>\<macro>.dbf`:
+
+| macro | records | fields |
+|---|---:|---:|
+| `AECChute` | 59 | 19 |
+| `BasePlate` / `BasePlateChinese` | 56 | 11 |
+| `BeamBeamClamp` | 5 | 2 |
+| `PipeStrap` | 33 | 9 |
+| `PurlinBeamBraceFly` | 60 | 19 |
+
+⭐⭐ **They speak the drilling API's language.** `BasePlate.dbf` stores `HOLEX = "2*100"` and
+`HOLEY = "1*"` — the same layout string `drillfield x= y=` takes. One vocabulary across the
+connection databases and the drilling API.
+
+⭐ This is the manual's route to a **company connection standard**: *"create a database with
+frequently utilized and maybe company-specific connections, which are then always available to
+all program users within your company."*
+
+⚠️ **READ ONLY on purpose.** `PsDBaseDatabase` has `PutRecord`/`AppendNewRecord`, but these files
+live in `Program Files` and define how connections get built. Full map:
+`knowledge/CONNECTION-DATABASES.md`.
+
+## `conn … rotated=1` — set, confirmed, and ignored
+
+`PsStandardPlateLinkData.PlateIsRotated` is the dialog's *Rotate Connection*. It **writes and
+reads back `True`** — and the connection is identical either way (the same eight plates,
+140×130×10 ×2, 481.6×8×202.3, 10×65×138.3 ×2, 140×260×10 ×2, 300×290×10).
+
+⇒ Another **parameter that never arrives**. ⚠️ Its other route, `connset`'s generic reflection
+setter, is **QUARANTINED** — it crashed AutoCAD four times and once left the drawing unsaveable.
+Do not un-quarantine it to reach a property that does nothing.
