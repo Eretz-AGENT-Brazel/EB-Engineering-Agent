@@ -1,1 +1,1 @@
-﻿EB_OK list 1203 entities -> eb_list.txt reqid=f2dc8b8a
+﻿EB_ERR bracing census=1203->1203 created=0 byClass: handles: ptmode=api line=190150,0,150->193850,0,3850 hosts=A43,A44 shapeType=NormalType cat=DIN WINKEL GLEICH size=L90X9 [readback cat='DIN WINKEL GLEICH' size='L90X9' type=kNormalType thick=0] plateThick=10 cross=0 [line1=(NaN,NaN,NaN)->(NaN,NaN,NaN) line2=(0,0,0)->(0,0,0) crossedMode=False] ucsSetToPlane insert()=False ucsRestored reqid=2bcbbd0b

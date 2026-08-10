@@ -6,7 +6,7 @@
 //
 // Protocol (file-based, avoids command-line quoting + supports Hebrew):
 //   1. Python writes  eb_cmd.txt  (key=value lines, op=... first)
-//   2. Python sends command  EB_RUN165
+//   2. Python sends command  EB_RUN168
 //   3. Plugin executes, writes eb_result.txt: "EB_OK {info}" or "EB_ERR {reason}"
 // C# 5 compatible (csc v4.0.30319).
 
@@ -44,14 +44,14 @@ using Bentley.ProStructures;
 using Bentley.ProStructures.Modeling;
 // PsShapeLoader lives in Steel.Shape (already imported)
 
-[assembly: CommandClass(typeof(EBAgent.ApiCmds165))]
-[assembly: ExtensionApplication(typeof(EBAgent.EBApp165))]
+[assembly: CommandClass(typeof(EBAgent.ApiCmds168))]
+[assembly: ExtensionApplication(typeof(EBAgent.EBApp168))]
 
 namespace EBAgent
 {
     // Registers an assembly resolver so ProSteel's managed assemblies are found
     // in the Prg folder even from a cold AutoCAD session (before any ProSteel cmd).
-    public class EBApp165 : IExtensionApplication
+    public class EBApp168 : IExtensionApplication
     {
         const string PrgDir = @"C:\Program Files\Bentley\ProStructures Ss6 R1\AutoCAD 2015\Prg";
         public void Initialize() { AppDomain.CurrentDomain.AssemblyResolve += Resolve; }
@@ -349,7 +349,7 @@ namespace EBAgent
         }
     }
 
-    public class ApiCmds165
+    public class ApiCmds168
     {
         const string Dir = @"C:\Users\User\Desktop\EB PROSTEEL AGENT\app\plugin";
         static string CurReqId = "";
@@ -439,7 +439,7 @@ namespace EBAgent
             return oid.OldIdPtr.ToInt64();
         }
 
-        [CommandMethod("EB_RUN165", CommandFlags.Modal)]
+        [CommandMethod("EB_RUN168", CommandFlags.Modal)]
         public void Run()
         {
             var kv = ReadCmd();
@@ -3851,9 +3851,39 @@ namespace EBAgent
             {
                 PsBracing b = new PsBracing();
 
-                // the system line, and the two shapes it is joined to
-                b.setStartPoint(Pt(Get(kv, "p1", "0,0,0")));
-                b.setEndPoint(Pt(Get(kv, "p2", "1000,0,1000")));
+                // ⭐⭐ v166 (B.24 audit) -- THE POINTS ARE HELD, NOT PASSED AS TEMPORARIES.
+                // MEASURED 10/08/2026: with setStartPoint(Pt(...)) -- a PsPoint created inline
+                // and immediately unreachable -- getStartPoint reads back (NaN,NaN,NaN), while
+                // the string/enum setters on the same object round-trip perfectly
+                // (cat, size, shapeType, crossedMode all correct). So the geometry never arrived,
+                // and insert() was being asked to build a bracing with no system line.
+                // Six configurations were tested on 09/08 and every one of them fed the creator
+                // NaN. This is B.9's dead-native-handle trap in a new place: a PsPoint that is
+                // not kept alive is not a PsPoint the native side can read.
+                // ⭐ v167: the DISCRIMINATOR. With nothing set, getCrossStartPoint reads a clean
+                // (0,0,0); with a freshly constructed PsPoint set, it reads NaN. So the getter
+                // works and THE SETTER WRITES GARBAGE. The remaining hypothesis is that these
+                // setters only accept a PsPoint the API itself issued -- so ptmode=api reads the
+                // object's own point out, mutates its x/y/z in place, and writes it back.
+                double[] q1 = Nums(Get(kv, "p1", "0,0,0"));
+                double[] q2 = Nums(Get(kv, "p2", "1000,0,1000"));
+                PsPoint bp1, bp2;
+                if (Get(kv, "ptmode", "new") == "api")
+                {
+                    bp1 = new PsPoint(0, 0, 0); bp2 = new PsPoint(0, 0, 0);
+                    b.getStartPoint(bp1); b.getEndPoint(bp2);      // the object's OWN points
+                    bp1.x = q1[0]; bp1.y = q1.Length > 1 ? q1[1] : 0; bp1.z = q1.Length > 2 ? q1[2] : 0;
+                    bp2.x = q2[0]; bp2.y = q2.Length > 1 ? q2[1] : 0; bp2.z = q2.Length > 2 ? q2[2] : 0;
+                    applied += " ptmode=api";
+                }
+                else
+                {
+                    bp1 = Pt(Get(kv, "p1", "0,0,0"));
+                    bp2 = Pt(Get(kv, "p2", "1000,0,1000"));
+                    applied += " ptmode=new";
+                }
+                b.setStartPoint(bp1);
+                b.setEndPoint(bp2);
                 applied += " line=" + Get(kv, "p1", "") + "->" + Get(kv, "p2", "");
                 long o1 = IdFromHandle(Get(kv, "host1", ""));
                 long o2 = IdFromHandle(Get(kv, "host2", ""));
@@ -3896,10 +3926,11 @@ namespace EBAgent
                 // true, every previous attempt asked the software to build a cross stay whose
                 // second diagonal was (0,0,0)->(0,0,0). A degenerate line is a perfectly good
                 // reason for insert() to answer false, and it would look identical to a refusal.
+                PsPoint bc1 = null, bc2 = null;
                 v = Get(kv, "crossp1", "");
-                if (v.Length > 0) { b.setCrossStartPoint(Pt(v)); applied += " crossP1=" + v; }
+                if (v.Length > 0) { bc1 = Pt(v); b.setCrossStartPoint(bc1); applied += " crossP1=" + v; }
                 v = Get(kv, "crossp2", "");
-                if (v.Length > 0) { b.setCrossEndPoint(Pt(v)); applied += " crossP2=" + v; }
+                if (v.Length > 0) { bc2 = Pt(v); b.setCrossEndPoint(bc2); applied += " crossP2=" + v; }
                 // report what the object holds for BOTH lines before insert() decides
                 try
                 {
@@ -3965,9 +3996,16 @@ namespace EBAgent
 
                 if (Get(kv, "prerecalc", "0") == "1")
                 { try { b.recalcPoints(); applied += " preRecalc"; } catch (System.Exception e) { applied += " preRecalc!EX:" + One(e.Message); } }
-                ok = b.insert(org, new PsVector(ax[0], ax[1], ax[2]), new PsVector(ay[0], ay[1], ay[2]));
+                PsVector ivx = new PsVector(ax[0], ax[1], ax[2]);
+                PsVector ivy = new PsVector(ay[0], ay[1], ay[2]);
+                ok = b.insert(org, ivx, ivy);
                 applied += " insert()=" + ok;
                 try { b.recalcPoints(); } catch { }
+                // keep every PsPoint/PsVector reachable until AFTER insert() has run --
+                // see the note at setStartPoint. GC.KeepAlive is the explicit way to say so.
+                System.GC.KeepAlive(bp1); System.GC.KeepAlive(bp2);
+                System.GC.KeepAlive(bc1); System.GC.KeepAlive(bc2);
+                System.GC.KeepAlive(org); System.GC.KeepAlive(ivx); System.GC.KeepAlive(ivy);
             }
             catch (System.Exception ex) { msg += " EX:" + One(ex.Message); }
             finally
@@ -10845,7 +10883,7 @@ namespace EBAgent
             { "boltsingle", "|addlen|dia|from|style|to|" },
             { "nutonly", "|dia|from|style|to|" },
             { "threadedrod", "|dia|from|offset|style|to|" },
-            { "bracing", "|angle|cat|centerhole|cross|crossp1|crossp2|divideall|dm|dynamic|edgeborder|edgehole|ex|ey|group|holecross|holeedge|holehole|host1|host2|layout|mirror|ncross|nogussets|nprof|origin|p1|p2|plateside|platethick|platetype|platewide|play|roundto|shapedist|shapetype|shorten|size|sym|type|prerecalc|welded|setucs|" },
+            { "bracing", "|angle|cat|centerhole|cross|crossp1|crossp2|divideall|dm|dynamic|edgeborder|edgehole|ex|ey|group|holecross|holeedge|holehole|host1|host2|layout|mirror|ncross|nogussets|nprof|origin|p1|p2|plateside|ptmode|platethick|platetype|platewide|play|roundto|shapedist|shapetype|shorten|size|sym|type|prerecalc|welded|setucs|" },
             { "weldstyles", "||" },
             { "weld", "|at|from|len|makeweld|onsite|roundabout|row|sign|style|thick|to|" },
             { "splicetemplates", "||" },

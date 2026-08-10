@@ -357,3 +357,63 @@ selection prompt ENTER means *"done selecting, nothing selected"*, so the macro 
 ⇒ **Add ENTER to the recovery sequence, and never call a `PSN_*` entry point unattended.** The
 model was never at risk here (saved, 723 entities before and after), but the session was unusable
 until the right key was found.
+
+---
+
+# AUDITED 10/08/2026 — the closure stands; the reason for it was inferred, and the real one is measurable
+
+*Full record: `AUDIT-PART-B-2026-08-10.md` § B.24. Plugin v165 → v168.*
+
+## ⭐⭐ CORRECTED — `insert()` was never given a system line
+
+The six configurations above all report `insert()=False`. **None of them read the system line
+back.** The op now does:
+
+```
+cross=0 single bar        insert()=False  line1=(NaN,NaN,NaN)  line2=(0,0,0)->(0,0,0)
+cross=1 + second line     insert()=False  line1=(NaN,…)        line2=(NaN,…)
+cross=1 + line + noGuss   insert()=False  line1=(NaN,…)        line2=(NaN,…)
+cross=0 + welded          insert()=False  line1=(NaN,…)        line2=(0,0,0)->(0,0,0)
+```
+
+> ⭐⭐⭐ **Read the two `line2` values against each other. Untouched it is a clean `(0,0,0)`; set,
+> it is `NaN`.** The getter works. **Setting the geometry is what produces the garbage.**
+
+⇒ **`insert()` was not refusing a well-formed request — it was refusing a bracing with no line.**
+`crossedMode`, `cat`, `size` and `shapeType` all round-trip perfectly on the same object, so it is
+**specifically the `PsPoint` setters** that fail.
+
+⚠️ The conclusion *"interactive by design"* is **true and proven for the `PSN_*` macro route** and
+stays. For `PsBracing` it was an inference from a `False` whose cause had not been read back.
+**Two different walls, and they should not be blurred.**
+
+## Four hypotheses tested and excluded
+
+| hypothesis | result |
+|---|---|
+| the **cross system line** was never supplied — `setCrossStartPoint`/`setCrossEndPoint` were not exposed by the op at all | ❌ supplied; still `NaN`, still `False` |
+| the `PsPoint` was **garbage-collected** before the native read (B.9's dead-handle trap) | ❌ held in locals + `GC.KeepAlive` past `insert()`; unchanged |
+| the setters accept only a **PsPoint the API issued** | ❌ `ptmode=api` — read the object's own point, mutate in place, write back; unchanged |
+| a **single bar** avoids the cross geometry | ❌ `cross=0`, `welded=1`, `nogussets=1`; unchanged |
+
+**Ten configurations now — six from 09/08, four today.**
+
+## ⚠️ NOT established
+
+Two readings fit and this audit did **not** separate them:
+* the setter stores nothing usable, or
+* the setter stores correctly and the getter cannot read back after a write.
+
+The clean `(0,0,0)` proves the getter can return a real value; it does not prove it can after a
+set. ⇒ **A task.** The next test is **`listInformation()`** — it prints the object's own state to
+the command line, a third channel independent of both setter and getter, and `app/eb_log.py`
+already captures what ProSteel writes there.
+
+## New op parameters
+
+`crossp1=` / `crossp2=` — the second diagonal, i.e. the whole `Cross Bracing` field, previously
+unreachable. `ptmode=new|api`. And **both system lines plus `crossedMode` are now printed before
+`insert()` decides** — that read-back is the instrument that produced this section.
+
+## Model state
+Nothing built, nothing changed. Ten attempts, census 1 203 → 1 203.

@@ -1,3 +1,13 @@
-reqid=f2dc8b8a
-op=list
+reqid=2bcbbd0b
+op=bracing
+p1=190150,0,150
+p2=193850,0,3850
+host1=A43
+host2=A44
+cat=DIN WINKEL GLEICH
+size=L90X9
+shapetype=NormalType
+platethick=10
+cross=0
+ptmode=api
 dwg=B08-insert-shapes.dwg

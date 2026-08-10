@@ -1807,3 +1807,95 @@ existing drawing never asks, and no second document is created.
   genuinely unknown. **Each costs a crash to find out; none is worth it without a reason.**
 * `*2`-style distances (a multiple of the **bolt diameter**, not a repeat count) — dialog grammar,
   and with no creation route there is nothing to send it to.
+
+---
+
+## B.24 — Dynamic Bracing ⭐⭐ **the verdict stands; the REASON was wrong, and the real one is measurable**
+
+*notes 360 lines (ratio 1.02) · band x = 190 000 · plugin v165 → **v168***
+
+### 1 · Was the chapter learned deeply?
+**Yes — it is the most complete chapter note in part B**, and it did the hardest thing: it went
+looking for a second route when the first failed, found the **62 `PSN_*` macro assemblies** nobody
+had touched, drove one of them, and recorded that ENTER — not ESC — clears a parked macro prompt.
+It also caught the `flange=` drilling trap by reading coordinates when the counts were perfect.
+
+Its closure was: *"bracing cannot be created from code in this product, **by design**. Both routes
+lead to a pick."*
+
+### 2 · ⭐⭐ The verdict is right. The reason is not — the system line never arrives
+
+The six 09/08 configurations all reported `insert()=False`. **None of them read the system line
+back.** The op now does, and it changes the picture completely:
+
+```
+cross=0, single bar          insert()=False   line1=(NaN,NaN,NaN)->(NaN,NaN,NaN)   line2=(0,0,0)->(0,0,0)
+cross=1 + second line        insert()=False   line1=(NaN,…)                        line2=(NaN,…)
+cross=1 + line + noGussets   insert()=False   line1=(NaN,…)                        line2=(NaN,…)
+cross=0 + welded             insert()=False   line1=(NaN,…)                        line2=(0,0,0)->(0,0,0)
+```
+
+> ### ⭐⭐⭐ Read the two `line2` values against each other
+> **Untouched, it reads a clean `(0,0,0)`. Set, it reads `NaN`.**
+> The getter works. **Setting the geometry is what produces the garbage.**
+
+⇒ **`insert()` has never once been given a system line.** It was not refusing a well-formed
+request; it was refusing a bracing with no line. The old note read the refusal as *"the product is
+interactive by design"* — the interactivity finding is true of the **macro** route and was proved
+there, but for `PsBracing` it was an inference from a `False` whose cause had not been read back.
+
+⚠️ **And `crossedMode` on the same object round-trips perfectly** (`False`/`True` as set), as do
+`cat`, `size` and `shapeType` — which the 09/08 note had already verified. So it is specifically
+**the `PsPoint` setters** that fail, on an object whose every other setter works.
+
+### 3 · Four hypotheses tested and excluded
+
+| hypothesis | test | result |
+|---|---|---|
+| the **cross system line** was never supplied (a cross stay has TWO diagonals, and `setCrossStartPoint`/`setCrossEndPoint` were **not exposed by the op at all**) | exposed them, supplied the second diagonal | ❌ still `NaN`, still `False` |
+| the `PsPoint` was **garbage-collected** before the native side read it (B.9's dead-handle trap) | held every point in a local and added `GC.KeepAlive` past `insert()` | ❌ unchanged |
+| the setters accept only a **PsPoint the API itself issued** | `ptmode=api` — read the object's own point out, mutate `x`/`y`/`z` in place, write it back | ❌ unchanged |
+| a **single bar** avoids whatever the cross geometry needs | `cross=0`, and `welded=1` (no borings), and `nogussets=1` | ❌ unchanged |
+
+**Ten configurations now: six from 09/08 and four today.** All `insert()=False`, and now with the
+cause localised to a specific family of setters rather than left as a whole-command refusal.
+
+### 4 · ⚠️ What is NOT established, stated plainly
+
+Two readings fit the data and **this audit did not separate them**:
+
+* **the setter stores nothing usable**, or
+* **the setter stores correctly and the getter cannot read it back after a write.**
+
+The clean `(0,0,0)` on the untouched line proves the getter *can* return a real value; it does not
+prove it can return one *after a set*. ⇒ **A task, not a finding.** The next test is
+`listInformation()`, which prints the object's own state to the command line — a third channel,
+independent of both the setter and the getter, and `app/eb_log.py` already exists to capture what
+ProSteel writes there.
+
+⇒ Either way **B.24's practical closure is unchanged and now better founded:** a bracing cannot be
+built from code. `PSN_HollowShapeBracing` stops at *"Choose support shape"*, and `PsBracing` cannot
+be told where the bracing goes.
+
+### 5 · What this means for B.23, restated
+B.23's gusset is produced *by* the bracing command (*"the entire bracing **including gusset plate**
+is generated"*). Both routes to a bracing are closed, so the gusset stays hand-built —
+**unchanged.** ⚠️ But the *reason* now differs between the two routes and should not be blurred:
+the macro is **interactive**; `PsBracing` **cannot receive its geometry**. Two different walls.
+
+### 6 · What was added to the op
+`crossp1=` / `crossp2=` (the second system line — B.24's whole `Cross Bracing` field, previously
+unreachable), `ptmode=new|api`, and a **read-back of both system lines and `crossedMode` printed
+before `insert()` decides**. That read-back is the instrument that produced this section, and it
+is the thing the 09/08 run lacked.
+
+### Model state
+**Nothing built, nothing changed.** Ten `insert()` attempts, census **1 203 → 1 203** throughout,
+saved. The 09/08 host frames (welded `HE200B`+`IPE300`, bolted `UC203`+`UB305`) are untouched.
+
+### Still open
+* ⚠️ **Setter or getter** — see §4. `listInformation()` is the named next test.
+* The `PSN_*` macros stay off-limits unattended. ⭐ **ENTER, not ESC**, clears a parked prompt —
+  unchanged and still the most operationally useful line in this chapter.
+* **Bracing catalogues** (dBASE files for the three rod types) — read in the manual, never located
+  on disk. B.17.3's `dbase` op could read them if the files were found.

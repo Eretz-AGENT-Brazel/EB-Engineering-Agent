@@ -2043,3 +2043,42 @@ Start-Process 'C:\Program Files\Autodesk\AutoCAD 2015\acad.exe' -ArgumentList `
 ⚠️ **`Get-Process acad` IS NOT THE TEST.** A crash can leave the process listed and
 `Responding=True` while the op never returns. **`modal_dialogs()` is the test** — an
 *"AutoCAD Error Report"* window means it died.
+
+---
+
+## ⭐⭐ A `False` YOU HAVEN'T READ BACK IS NOT A REFUSAL — B.24, 10/08/2026
+
+`PsBracing.insert()` had been recorded as refusing under six configurations, closed as *"the
+product is interactive by design"*. The op now reads the system line back before `insert()` runs:
+
+```
+cross=0   insert()=False   line1=(NaN,NaN,NaN)->(NaN,NaN,NaN)   line2=(0,0,0)->(0,0,0)
+cross=1   insert()=False   line1=(NaN,…)                        line2=(NaN,…)
+```
+
+⭐⭐⭐ **The untouched line reads a clean `(0,0,0)`. The one that was SET reads `NaN`.** The getter
+works; **setting the geometry produces the garbage**. `insert()` was never given a system line —
+it was refusing a bracing with no geometry, in all ten configurations now tested.
+
+⚠️ **On the same object, `crossedMode`, `cat`, `size` and `shapeType` all round-trip perfectly.**
+So it is **specifically the `PsPoint` setters** that fail. Excluded by test: GC lifetime
+(`GC.KeepAlive` past the call), point provenance (read the object's own point out, mutate in
+place, write back), the missing second diagonal, and single-bar/welded/no-gusset variants.
+
+⇒ ⭐ **THE RULE: before concluding that a creator refuses, READ BACK WHAT YOU GAVE IT.** A `False`
+tells you the call failed; it never tells you the call was well formed. This is the same shape as
+B.12's *"`Create()` lies in both directions"*, one step earlier in the chain.
+
+⚠️ **What is NOT known:** whether the setter stores nothing, or stores fine and the getter cannot
+read back after a write. `listInformation()` is the named next test — a third channel independent
+of both.
+
+**The practical closure is unchanged:** a bracing cannot be built from code. But the two routes
+fail for **different** reasons and must not be blurred — `PSN_HollowShapeBracing` is
+**interactive** (proven: it parks at *"Choose support shape"*), while `PsBracing` **cannot receive
+its geometry**.
+
+### `bracing` op — new parameters
+`crossp1=` / `crossp2=` — the second diagonal of a cross stay, i.e. B.24's whole `Cross Bracing`
+field, previously unreachable from code at all. `ptmode=new|api`. Both system lines and
+`crossedMode` are printed before `insert()` decides.
