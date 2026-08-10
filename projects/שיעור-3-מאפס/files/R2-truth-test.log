@@ -1,0 +1,53 @@
+========================================================================
+R2.3  DRILLING TRUTH TEST — does a bolt with hosts drill a real hole?
+========================================================================
+
+[0] plugin identity
+    EB_OK whoami doc=C:\Users\User\Desktop\EB PROSTEEL AGENT\projects\שיעור-3-מאפס\שיעור-3.dwg entities=794 reqid=0047c2e1
+
+[1] enum discovery (needed to pass correct ints, not guesses)
+    EB_OK enumdump -> eb_enums.txt reqid=da0a01df
+    ENUM LongHoleMode : kSingleHole=0, kLongHole=1, kDoubleHole=2
+    ENUM HoleType : kHoleNormal=0, kHoleLenLimited=1, kHoleWeldSign=2, kHoleUndefined=-1
+    ENUM DrillType : kDrillFlangeTop=0, kDrillFlangeDown=1, kDrillFlangeBoth=2
+    ENUM HoleBoltType : kHoleBoltNormal=0, kHoleBoltMontage=1, kHoleBoltMontageDrill=2, kHoleBoltInHouse=3, kHoleBoltUndefined=-1
+    ENUM PsOpenMode : kForRead=0, kForWrite=1, kForNotify=2, kForClone=3
+    ENUM PositionSelection : kLeft=0, kRight=1, kDown=2, kTop=3, kCenter=4, kGravity=5, kPitch=6, kUser=7
+    ENUM CoordSystem : kWcs=0, kUcs=1, kEcs=2, kInversEcs=3
+    ENUM VerticalPosition : kDown=0, kTop=1, kMiddle=2
+    ENUM HoleGeometrie : kCentric=0, kLong=1, kHoleGeometrieUndefined=-1
+    ENUM DrillAcuracy : kDrillFast=0, kDrillNormal=1, kDrillExact=2
+    ENUM ModificationType : kUndefinedModification=0, kCutPlane=1, kPolyCut=2, kHoleField=3, kOutlet=4, kSubPrimitive=5, kSection=6, kArcSection=7, kSubtractBody=8, kFacetEdge=9
+    ENUM PolyStatus : eOutside=0, eInside=1, eUndefined=-1
+
+[2] build test assembly at X=50000 (plate 200x200x10 + plate + bolt M20)
+    plate1: EB_OK plate 200x200x10 handle=5B6 class=Ks_Plate via=ecs layer=1:PS_Plate entities=795 reqid=f45810ac
+    plate2: EB_OK plate 200x200x10 handle=5B7 class=Ks_Plate via=ecs layer=1:PS_Plate entities=796 reqid=d5004ba7
+
+[3] holes BEFORE any bolt (baseline — must be 0)
+    plate 5B6 : EB_OK holes handle=5B6 count=0 -> eb_holes.txt reqid=be7d7ab2
+    plate 5B7 : EB_OK holes handle=5B7 count=0 -> eb_holes.txt reqid=c6b7fe79
+
+[4] create bolt WITH hosts (exactly as build_from_scratch.py did)
+    bolt: EB_OK bolt dia=20 style=DIN6914 handle=5B8 class=Ks_Bolt hosts=2/2 len=1:100 layer=1:PS_Bolt entities=797 reqid=d0aeb986
+
+[5] holes AFTER the bolt  <<<< THE ANSWER
+    plate 5B6 : EB_OK holes handle=5B6 count=0 -> eb_holes.txt reqid=ba410842
+    plate 5B7 : EB_OK holes handle=5B7 count=0 -> eb_holes.txt reqid=848587c4
+
+    >>> hosts => holes ?  NO   (total holes read back: 0)
+
+[6] hosts did NOT drill. Testing explicit PS drill (PsDrillObject)
+    drill: EB_OK drill dia=23 hosts_ok=2 failed=0 5B6:rc=1,holes=1 5B7:rc=1,holes=1 reqid=d2745c4f
+    plate 5B6 : EB_OK holes handle=5B6 count=1 -> eb_holes.txt reqid=f73ebd5b
+    plate 5B7 : EB_OK holes handle=5B7 count=1 -> eb_holes.txt reqid=7cb84fc0
+
+[7] contour read test (PsPlate.GetPolygon)
+    EB_OK platepoly handle=5B6 verts=5 rect=1 pts=-100,-100,0;100,-100,0;100,100,0;-100,100,0;-100,-100,0 reqid=fd2294f6
+
+[8] non-rectangular plate (rib/gusset shape) creation test
+    EB_OK polyplate handle=5B9 class=Ks_Plate sent=4 verts_readback=4 rect=0 t=10 pts=50000,600,1000;50000,750,1000;50000,750,1100;50000,600,1150 reqid=2d82953d
+
+[9] CLEANUP — delete everything in the smoke zone
+    EB_OK dumpholes objs=797 withholes=2 holes=2 slotted=0 err=0 -> eb_smoke_holes.txt reqid=82555b05
+    wipe: manual

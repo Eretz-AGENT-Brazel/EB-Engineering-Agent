@@ -1,0 +1,20 @@
+
+=== bolts (real connections, hosts drilled) : 304 ===
+   25/304 (made 25, fail 0, no-host 0)
+   50/304 (made 50, fail 0, no-host 0)
+   75/304 (made 75, fail 0, no-host 0)
+   100/304 (made 100, fail 0, no-host 0)
+   125/304 (made 125, fail 0, no-host 0)
+   150/304 (made 150, fail 0, no-host 0)
+   175/304 (made 175, fail 0, no-host 0)
+   200/304 (made 200, fail 0, no-host 0)
+   225/304 (made 225, fail 0, no-host 0)
+   250/304 (made 250, fail 0, no-host 0)
+   275/304 (made 275, fail 0, no-host 0)
+   300/304 (made 300, fail 0, no-host 0)
+   304/304 (made 304, fail 0, no-host 0)
+   bolts without hosts: 0 (should be ~0)
+
+BOLTS: made 304 fail 0 skip 0
+
+elapsed 1.0 min

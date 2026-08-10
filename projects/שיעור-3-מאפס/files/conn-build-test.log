@@ -1,0 +1,29 @@
+============================================================================
+BUILDING CONNECTIONS AS CONNECTIONS — proof of capability
+============================================================================
+EB_OK whoami doc=C:\Users\User\Desktop\EB PROSTEEL AGENT\projects\שיעור-3-מאפס\שיעור-3.dwg entities=794 reqid=d1ec7f42
+
+[1] column RHS150X100X4, 2m, at X=52000
+    EB_OK beam name=RHS150X100X4 catalog=BS_CELSIUS_RHS handle=5C2 class=Ks_Shape off=0/0 mir_applied=n/a layer=1:PS_Shape entities=795 reqid=2f1eed33
+
+[2] holes on the bare column (baseline)
+    EB_OK holes handle=5C2 count=0 -> eb_holes.txt reqid=8443d93b
+
+[3] BASE-PLATE CONNECTION (Amir's recipe: 300x300x12, hole 23, 200x200)
+    EB_OK connbase host=5C2 added=5 check=1 create=True host_holes=0 reqid=d2f419de
+
+[4] what did the connection create, and did it drill?
+    column holes : EB_OK holes handle=5C2 count=0 -> eb_holes.txt reqid=7df7e4c8
+    model holes  : EB_OK dumpholes objs=795 withholes=1 holes=4 slotted=0 err=0 -> eb_holes_conntest.txt reqid=8d80810d
+    connections  : EB_OK connscan scanned=1 withlinks=1 links=1 err=0 | t13/BASEPLATE/RIB/SPLICE/SHEARPLATE/WEBANGLE/COPE=1 -> eb_conn_test.txt reqid=ba7165e0
+
+[5] RIB via the stiffener connection — chamfered (shape=0), t=10
+    EB_OK connstiff host=5C2 added=2 newest=5F1 check=1 create=True reqid=a38dbb75
+    rib contour  : EB_OK platepoly handle=5F1 verts=7 rect=0 pts=50,-75,0;-35,-75,0;-50,-60,0;-50,60,0;-35,75,0;50,75,0;50,-75,0 reqid=8317fa30
+
+[6] rib from a named template (default/half chamfered)
+    EB_OK connstiff host=5C2 added=2 newest=5F3 check=1 create=True reqid=4aa2b3ee
+    rib2 contour : EB_OK platepoly handle=5F3 verts=5 rect=0 pts=47.5,-37,0;-32.5,-37,0;-47.5,-22,0;-47.5,37,0;47.5,37,0 reqid=bd4fef83
+
+[7] final census in the smoke zone
+    EB_OK whoami doc=C:\Users\User\Desktop\EB PROSTEEL AGENT\projects\שיעור-3-מאפס\שיעור-3.dwg entities=804 reqid=64397b95

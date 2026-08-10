@@ -1,0 +1,22 @@
+============================================================================
+EXAM 5 — anchorage details per drawing (20 columns)
+============================================================================
+
+[1] floor plates 300x300x20, 4 corner holes @156 x 162 + anchors
+   base plates: 20/20
+
+[2] middle row of the floor plate (the drawing shows 3 rows, not 2)
+   base plates found: 20
+   middle-row holes 40, bolts 0 (expect 40 each)
+
+[3] wall plates 600x500x20 x3 per column, 6 holes @452 x 200 + anchors
+   col  5/20 : plates 15, holes 90, bolts 0  (1.0 min)
+   col 10/20 : plates 30, holes 180, bolts 0  (1.6 min)
+   col 15/20 : plates 45, holes 270, bolts 0  (2.3 min)
+   col 20/20 : plates 60, holes 360, bolts 0  (2.9 min)
+   wall: plates 60/60, holes 360/360, bolts 0/360
+
+[4] save
+   saved (133497 bytes)
+
+elapsed 3.7 min

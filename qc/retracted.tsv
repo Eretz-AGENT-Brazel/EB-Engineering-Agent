@@ -26,3 +26,13 @@ date	phrase	why it is false
 2026-08-10	values still unmeasured	EdgeLayout was measured: kFacet(1) kRadius(2) kRounded(3) kInverted(4) kFold(5) kNotch(6), all six applied and read back.
 2026-08-10	the weight cannot be verified	op=props reads a plate's weight through PsObjectProperties without touching the lethal computeObjectWeigth.
 2026-08-10	never a fair test	CreateHull was fed the wrong input type. Given a real PsDataPointArray it builds exactly: 800x600x600 and 600x500x500.
+#
+# --- added 10/08/2026, after an independent survey found TWO MORE places carrying an already
+# --- withdrawn claim that this list did not catch: one in Hebrew, one phrased differently in
+# --- English. A stoplist is only as good as its synonyms.
+# --- ⭐ WHEN YOU RETRACT SOMETHING, LIST EVERY WORDING OF IT, IN BOTH LANGUAGES.
+#
+2026-08-10	which moves nothing	TakeoverDrills moves real geometry -- a second English wording of the same withdrawn claim.
+2026-08-10	לא מעביר כלום	TakeoverDrills מעביר גאומטריה אמיתית: changed=1 על שלוש קורות זהות. הניסוח העברי של אותה טענה.
+2026-08-10	נבדק ב-5 רצפים	חמשת הרצפים רצו בלי התנאי המוקדם שהמדריך מציין. variant 1 לבדו נותן changed=1.
+2026-08-10	5 סוגי חתכים בלבד מתוך 357	B.8 מצא 1890 חתכים נוספים ב-4 מאגרים לא-סטנדרטיים. 357 הוא חצי התמונה, לא כולה.

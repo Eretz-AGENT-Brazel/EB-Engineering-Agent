@@ -1,0 +1,28 @@
+==========================================================================
+EXAM 5 — base plates and wall plates
+==========================================================================
+
+[1] FLOOR base plates 300x300x20, holes dia 28 @156 x 162, from template
+   col 511 -> added=5 anchors=0
+   col 512 -> added=5 anchors=0
+   col 513 -> added=5 anchors=0
+   col 514 -> added=5 anchors=0
+   col 515 -> added=5 anchors=0
+   col 516 -> added=5 anchors=0
+   col 517 -> added=5 anchors=0
+   col 518 -> added=5 anchors=0
+   base plates: 8/8
+
+[2] WALL plates 600x500x20, 3 per column, holes dia 28 @452 x 200
+   col 511 : plates so far 3, holes 18
+   col 512 : plates so far 6, holes 36
+   col 513 : plates so far 9, holes 54
+   col 514 : plates so far 12, holes 72
+   col 515 : plates so far 15, holes 90
+   col 516 : plates so far 18, holes 108
+   col 517 : plates so far 21, holes 126
+   col 518 : plates so far 24, holes 144
+
+   wall plates 24 (expect 24) | wall holes 144 (expect 144)
+
+elapsed 0.4 min

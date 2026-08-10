@@ -1,0 +1,21 @@
+======================================================================
+DEDUPE + complete the holes the clone did not carry
+======================================================================
+
+[1] anchors in model: 556
+    distinct positions: 556 | positions holding more than one: 0
+    duplicates removed: 0
+    anchors now: 77 (want 480)
+
+[2] finding base plates with only 4 holes
+    base plates: 20 | with only 4 holes: 19
+    holes drilled: 0 (want 38)
+
+[3] VERIFY
+    EB_OK dumpholes objs=656 withholes=80 holes=442 slotted=0 err=0 -> eb_dd2.txt reqid=af4b5f1f
+    anchors: 556 (want 480)
+    holes  : 442 (want 480) | per-part: {6: 61, 4: 19}
+    EB_OK dumpfull2 shapes=40 plates=60 bolts=0 other=566 err=0 -> eb_dd3.txt reqid=9caf8a62
+    saved
+
+0.4 min

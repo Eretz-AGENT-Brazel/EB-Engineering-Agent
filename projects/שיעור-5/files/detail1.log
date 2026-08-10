@@ -1,0 +1,35 @@
+==========================================================================
+EXAM 5 — ONE column, for approval before any replication
+==========================================================================
+EB_OK whoami doc=C:\Users\User\Desktop\EB PROSTEEL AGENT\projects\שיעור-5\מבחן-שיעור-5.dwg entities=10 reqid=f5ea2082
+
+face +X at x=1082.8 | steel at (1252.8, -8780.8)
+steel z 50..6050 (L=6000) | wall plates at z 5600, 4100, 2600
+
+[1] column
+    rot=0   -> bbox 300 (X) x 300 (Y)
+    rot=90  -> bbox 300 (X) x 300 (Y)
+    kept rot=0 handle=DF4
+
+[2] base plate 300x300x20 as a connection (from template)
+    EB_OK connbase host=DF4 added=5 check=1 create=True host_holes=0 anchors_with_body=0 reqid=b4cf4e2f
+
+[3] middle hole row (the drawing shows 3 rows)
+    2 holes + 2 anchors added -> 6 holes total
+
+[4] 3 wall plates 600x500x20, 6 holes each
+    plates 3, holes 18
+
+[5] horizontal anchors (a vertical one rotated 90 about Y)
+    master E03 size (428.0, 36.0, 41.6)
+    wall anchors 18/18
+
+[6] VERIFY the detail
+    EB_OK dumpfull2 shapes=2 plates=3 bolts=0 other=34 err=0 -> eb_d1.txt reqid=66163db7
+    EB_OK dumpholes objs=29 withholes=4 holes=24 slotted=0 err=0 -> eb_d1h.txt reqid=686c6e5a
+    objects: 29 | anchors: 24 (expect 24) | holes: {28: 24}
+      Ks_Shape     bbox    300 x    300 x   6000  at z=3050
+      Ks_Shape     bbox    300 x    300 x     20  at z=40
+    saved (121044 bytes)
+
+0.2 min — STOPPING for approval. No replication yet.

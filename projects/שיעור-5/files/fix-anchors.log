@@ -1,0 +1,31 @@
+==========================================================================
+FIX ANCHORS — default length from the template, head on the plate face
+==========================================================================
+
+[1] deleting my 24 anchors
+    deleted 24
+
+[2] rebuilding the base plate — anchordia only, NO grip, NO key size
+    EB_OK connremove host=DF4 links_removed=1 entities 15->14 reqid=6a5fa24c
+    EB_OK connbase host=DF4 added=5 check=1 create=True host_holes=0 anchors_with_body=0 reqid=7fd567e0
+    anchors now: 4
+    size (25.0, 28.9, 422.5)  -> length 422 (Amir's are 157)
+
+[3] centre holes at x=1252.8, y=[-8858.8, -8702.8]
+    done — 6 floor holes, 6 anchors
+
+[4] wall anchors — anchor length 422
+    plate outer face x=1102.8, so the bolt spans 680.3 .. 1102.8
+    master E8C size (422.5, 28.9, 25.0)
+    每 anchor centre must be x=891.5
+    placed 18/18
+
+[5] VERIFY
+    anchors: 24   lengths: {422: 24}
+    horizontal anchors sticking out past the plate: 0 OK
+    sample: x 680.3 .. 1102.8  (concrete face 1082.8, plate outer 1102.8)
+    floor:  z -310.0 .. 112.5  (slab top 30, plate top 50)
+    EB_OK dumpholes objs=29 withholes=4 holes=24 slotted=0 err=0 -> eb_fa3.txt reqid=dd37cc83
+    saved
+
+0.2 min

@@ -1,0 +1,23 @@
+
+==========================================================================
+STEP 5 — VERIFY by reading the model back
+==========================================================================
+  EB_OK dumpfull2 shapes=2 plates=8 bolts=0 other=5 err=0 -> eb_full_exam.txt reqid=a8b6980a
+  EB_OK dumpholes objs=10 withholes=1 holes=4 slotted=0 err=0 -> eb_holes_exam.txt reqid=78762488
+  EB_OK dumppoly plates=8 nonrect=0 verts>4=8 err=0 -> eb_poly_exam.txt reqid=d92f2465
+  EB_OK connscan scanned=10 withlinks=2 links=2 err=0 | t13/BASEPLATE/RIB/SPLICE/SHEARPLATE/WEBANGLE/COPE=1 t10/BASEPLATE/RIB/SPLICE/SHEARPLATE/WEBANGLE/COPE=1 -> eb_conn_exam.txt reqid=f16285db
+  SHAPE: RQ200X8  name=RQ 200x8  p1=0,0,0 p2=0,0,3500 L=3500
+  SHAPE: 400X20  name=BRFL 400x20  p1=0,-200,-10 p2=0,200,-10 L=400
+  holes read back: 4  diameters={23: 4}
+  hole spacing measured: 300 x 300
+  plates read back: 7, of which shaped (>=5 verts): 7
+  joints: 2
+
+  --- ACCEPTANCE ---
+   PASS 4 holes                            4
+   PASS all dia 23                         {23: 4}
+   PASS spacing 300x300                    300x300
+   FAIL 8 ribs                             7
+   FAIL ribs are shaped, not rectangles    7/8
+   PASS base plate is a connection         2
+  SOME CHECKS FAILED

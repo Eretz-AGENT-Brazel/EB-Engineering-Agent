@@ -23,9 +23,10 @@ Two of them matter to us:
 > don't know any more**."*
 >
 > That is the exact situation I have been in all week: a connection built from a template whose
-> contents I could not name. ⚠️ **This is NOT the `Clone` recorded on THE CEILING** — that one
-> is B.4.5's *modification* clone (`TakeoverDrills`, which moves nothing). This is a
-> **connection-settings** clone, a different thing with the same button name.
+> contents I could not name. ⚠️ **This is NOT B.4.5's `Clone`** — that one is the *modification*
+> clone (`TakeoverDrills`), which 🛑 **RETRACTED 10/08/2026 — transfers, and was wrongly recorded
+> here as doing nothing**. This is a **connection-settings** clone, a different thing with the same
+> button name; the distinction between the two is the point of this note and still holds.
 
 > ### ⭐ `UPDATE` — and the dynamic mode behind it
 > *"Normally in ProSteel, you are working in a **dynamic mode**. Each modification of a

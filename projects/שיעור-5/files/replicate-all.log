@@ -1,0 +1,60 @@
+==========================================================================
+REPLICATE the approved detail to every position
+==========================================================================
+EB_OK whoami doc=C:\Users\User\Desktop\EB PROSTEEL AGENT\projects\שיעור-5\BASELINE-מבחן-5.dwg entities=39 reqid=1b9fba7e
+
+20 positions (corner columns 2 faces, edge columns 3)
+   +X  at (  1252.8,   -8780.8)
+   +Y  at (   682.8,   -8210.8)
+   +X  at (  1252.8,   -4297.4)
+   +Y  at (   682.8,   -3727.4)
+   -Y  at (   682.8,   -4867.4)
+   +X  at (  1252.8,     186.0)
+   -Y  at (   682.8,    -384.0)
+   +X  at (  5852.8,   -8780.8)
+   -X  at (  4712.8,   -8780.8)
+   +Y  at (  5282.8,   -8210.8)
+   +X  at (  5852.8,     186.0)
+   -X  at (  4712.8,     186.0)
+   -Y  at (  5282.8,    -384.0)
+   -X  at (  9312.8,   -8780.8)
+   +Y  at (  9882.8,   -8210.8)
+   -X  at (  9312.8,   -4297.4)
+   +Y  at (  9882.8,   -3727.4)
+   -Y  at (  9882.8,   -4867.4)
+   -X  at (  9312.8,     186.0)
+   -Y  at (  9882.8,    -384.0)
+
+approved detail: 29 objects at (1252.8, -8780.8) face +X
+   {'Ks_Shape': 2, 'Ks_Plate': 3, 'Ks_VolBody': 24}
+
+replicating by explicit handles (one API call per position)
+    1/19  (   682.8,  -8210.8) +Y  rot +90   EB_OK replicate picked=29 cloned=29 failed=0 to=
+    2/19  (  1252.8,  -4297.4) +X  rot  +0   EB_OK replicate picked=29 cloned=29 failed=0 to=
+    3/19  (   682.8,  -3727.4) +Y  rot +90   EB_OK replicate picked=29 cloned=29 failed=0 to=
+    4/19  (   682.8,  -4867.4) -Y  rot+270   EB_OK replicate picked=29 cloned=29 failed=0 to=
+    5/19  (  1252.8,    186.0) +X  rot  +0   EB_OK replicate picked=29 cloned=29 failed=0 to=
+    6/19  (   682.8,   -384.0) -Y  rot+270   EB_OK replicate picked=29 cloned=29 failed=0 to=
+    7/19  (  5852.8,  -8780.8) +X  rot  +0   EB_OK replicate picked=29 cloned=29 failed=0 to=
+    8/19  (  4712.8,  -8780.8) -X  rot+180   EB_OK replicate picked=29 cloned=29 failed=0 to=
+    9/19  (  5282.8,  -8210.8) +Y  rot +90   EB_OK replicate picked=29 cloned=29 failed=0 to=
+   10/19  (  5852.8,    186.0) +X  rot  +0   EB_OK replicate picked=29 cloned=29 failed=0 to=
+   11/19  (  4712.8,    186.0) -X  rot+180   EB_OK replicate picked=29 cloned=29 failed=0 to=
+   12/19  (  5282.8,   -384.0) -Y  rot+270   EB_OK replicate picked=29 cloned=29 failed=0 to=
+   13/19  (  9312.8,  -8780.8) -X  rot+180   EB_OK replicate picked=29 cloned=29 failed=0 to=
+   14/19  (  9882.8,  -8210.8) +Y  rot +90   EB_OK replicate picked=29 cloned=29 failed=0 to=
+   15/19  (  9312.8,  -4297.4) -X  rot+180   EB_OK replicate picked=29 cloned=29 failed=0 to=
+   16/19  (  9882.8,  -3727.4) +Y  rot +90   EB_OK replicate picked=29 cloned=29 failed=0 to=
+   17/19  (  9882.8,  -4867.4) -Y  rot+270   EB_OK replicate picked=29 cloned=29 failed=0 to=
+   18/19  (  9312.8,    186.0) -X  rot+180   EB_OK replicate picked=29 cloned=29 failed=0 to=
+   19/19  (  9882.8,   -384.0) -Y  rot+270   EB_OK replicate picked=29 cloned=29 failed=0 to=
+
+VERIFY (0.0 min)
+   EB_OK dumpfull2 shapes=40 plates=60 bolts=0 other=566 err=0 -> eb_all.txt reqid=b5384c6a
+   EB_OK dumpholes objs=656 withholes=80 holes=442 slotted=0 err=0 -> eb_allh.txt reqid=cbe8e874
+   objects now: {'Ks_Shape': 40, 'Ks_Plate': 60, 'Ks_VolBody': 556}
+   expected   : {'Ks_Shape': 40, 'Ks_Plate': 60, 'Ks_VolBody': 480}
+   holes: {28: 442}   (expect 480 of dia 28)
+   saved (343011 bytes)
+
+TOTAL 0.2 min

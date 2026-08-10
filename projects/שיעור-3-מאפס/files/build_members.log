@@ -1,0 +1,33 @@
+
+=== 01_primary_frame : 32 members ===
+   15/32 (made 15, fail 0)
+   30/32 (made 30, fail 0)
+   32/32 (made 32, fail 0)
+
+=== 02_secondary_channels : 9 members ===
+   9/9 (made 41, fail 0)
+
+=== 03_angle_frames : 29 members ===
+   15/29 (made 56, fail 0)
+   29/29 (made 70, fail 0)
+
+=== 04_ladder_rungs : 27 members ===
+   15/27 (made 85, fail 0)
+   27/27 (made 97, fail 0)
+
+=== 05_guardrail_posts : 38 members ===
+   15/38 (made 112, fail 0)
+   30/38 (made 127, fail 0)
+   38/38 (made 135, fail 0)
+
+=== 06_handrails : 19 members ===
+   15/19 (made 150, fail 0)
+   19/19 (made 154, fail 0)
+
+=== 07_flats_stiffeners : 21 members ===
+   15/21 (made 169, fail 0)
+   21/21 (made 175, fail 0)
+
+MEMBERS: made 175 fail 0 skip 0
+
+elapsed 0.6 min

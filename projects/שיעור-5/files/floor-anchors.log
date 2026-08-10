@@ -1,0 +1,28 @@
+======================================================================
+FLOOR ANCHORS — nut must bear on the plate, 120 into the slab
+======================================================================
+
+floor 196 (len {172.5: 196}) | wall 180 (len {165.0: 180})
+   current gap under the nut: 10.0 mm
+
+[1] removing 196 floor anchors (their XY positions are kept)
+
+[2] harvesting a 165-long anchor
+    master 1A28 length 165.0
+    span z -90.0 .. 75.0 -> nut gap 2.5
+
+[3] placing 196 anchors
+    placed 196/196
+
+[4] clearing the scratch zone
+    removed 6
+
+[5] VERIFY
+    floor: len 165.0 | z -90.0 .. 75.0 | 120 into concrete | nut gap 2.5
+    wall : len 165.0 | 120 into concrete | nut gap 2.5
+    anchors: 196 floor + 180 wall = 556 (want 480)
+    EB_OK dumpholes objs=656 withholes=80 holes=442 slotted=0 err=0 -> eb_fa9h.txt reqid=7c233063
+    EB_OK dumpfull2 shapes=40 plates=60 bolts=0 other=566 err=0 -> eb_fa9f.txt reqid=114a13d1
+    saved
+
+0.9 min

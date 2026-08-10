@@ -1,0 +1,25 @@
+============================================================================
+EXAM 5 (corrected) — a steel column at every inward concrete face
+============================================================================
+EB_OK whoami doc=Drawing1.dwg entities=82 reqid=003428b1
+
+slab: x 283..10283  y -9181..586  top z=30 | 8 concrete columns
+
+clearing previous steel...
+  deleted 72/72
+  concrete (683,-8781): 2 inward faces ['+X', '+Y']
+  concrete (683,-4297): 3 inward faces ['+X', '+Y', '-Y']
+  concrete (683,186): 2 inward faces ['+X', '-Y']
+  concrete (5283,-8781): 3 inward faces ['+X', '-X', '+Y']
+  concrete (5283,186): 3 inward faces ['+X', '-X', '-Y']
+  concrete (9883,-8781): 2 inward faces ['-X', '+Y']
+  concrete (9883,-4297): 3 inward faces ['-X', '+Y', '-Y']
+  concrete (9883,186): 2 inward faces ['-X', '-Y']
+
+=> 20 steel columns planned (corners 2 faces, edges 3)
+   steel z 50..6050 (L=6000) | wall-plate centres 5600, 4100, 2600
+   columns 5/20
+   columns 10/20
+   columns 15/20
+   columns 20/20
+   built 20 columns (0.1 min)

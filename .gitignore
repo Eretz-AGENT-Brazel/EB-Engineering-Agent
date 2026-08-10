@@ -4,7 +4,16 @@
 *.sv$
 *.ac$
 *.err
-*.log
+
+# ⚠️ FIXED 10/08/2026. This block used to end with a bare `*.log`, and it was silently excluding
+# 18 LESSON BUILD LOGS under projects/שיעור-*/files/ — full_build.log, live_run.log,
+# R2-truth-test.log, build_bolts/members/plates.log. Those are the record of what was actually
+# built in each lesson, not session noise; the comment above says "never content" and it was
+# wrong about them. AutoCAD's own logs are named, so name them:
+acad*.log
+*.err.log
+plot.log
+# and nothing else — a lesson log is content.
 
 # AutoCAD's own rolling backup of the previous save (the *-backup-*.dwg files ARE kept —
 # they are deliberate, timestamped snapshots; these .bak ones are automatic and redundant)

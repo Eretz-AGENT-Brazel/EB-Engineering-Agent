@@ -1,0 +1,35 @@
+==========================================================================
+EXAM 5 — HEB 300 columns anchored to floor + concrete columns (inward)
+==========================================================================
+EB_OK whoami doc=Drawing1.dwg entities=10 reqid=88bbfccd
+
+slab top z=30.0 | 8 concrete columns | building centre (5282.8, -4297.4)
+steel column: z 50 -> 6050 (L=6000 after shortening)
+wall-plate centres z: 5600, 4100, 2600
+
+--- steel column 1 : concrete face +X, steel at (1252.8, -8780.8) ---
+   column 511
+
+--- steel column 2 : concrete face +X, steel at (1252.8, -4297.4) ---
+   column 512
+
+--- steel column 3 : concrete face +X, steel at (1252.8, 186.0) ---
+   column 513
+
+--- steel column 4 : concrete face +Y, steel at (5282.8, -8210.8) ---
+   column 514
+
+--- steel column 5 : concrete face -Y, steel at (5282.8, -384.0) ---
+   column 515
+
+--- steel column 6 : concrete face -X, steel at (9312.8, -8780.8) ---
+   column 516
+
+--- steel column 7 : concrete face -X, steel at (9312.8, -4297.4) ---
+   column 517
+
+--- steel column 8 : concrete face -X, steel at (9312.8, 186.0) ---
+   column 518
+
+8 columns built in 0.0 min
+state -> C:\Users\User\Desktop\EB PROSTEEL AGENT\projects\שיעור-5\files\exam5_state.json
