@@ -1,1 +1,1 @@
-﻿EB_OK save 'C:\Users\User\Desktop\EB PROSTEEL AGENT\projects\SANDBOX\B08-insert-shapes.dwg' bytes=1621373->1621373 at=18:29:54 reqid=bbce5627
+﻿EB_OK ping 09:09:40 reqid=2d344075
