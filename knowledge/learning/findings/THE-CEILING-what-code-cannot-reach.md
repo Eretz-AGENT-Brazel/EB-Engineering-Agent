@@ -19,7 +19,7 @@ thing by composition from calls that do work.**
 | **Bracing** (`PsBracing.insert()`) | **13 configurations** — shape type, two catalogue spellings, `recalcPoints`, minimal, UCS, static flag, layout, welded, no-gussets, shorten, dynamic control, wrong-plane control. `insert()=False`, census unchanged, every time | B.24 + B.25 |
 | **The bracing MACRO** (`PSN_HollowShapeBracing`) | `InitialCall()`, `CreateClone(params)`, `Create()` — **all three print *"Choose support shape"* and park the session**; all return 0 | B.24 |
 | **Gusset plates** | `PsGussetConnection` has **no creator at all**. The manual: *"the entire bracing including gusset plate is generated"* — so the gusset inherits the bracing's interactivity | B.23 + B.24 |
-| **Clone / transfer of manipulations** | `PsDrillObject.TakeoverDrills` is the only transfer in the API and moves **nothing** — 5 call sequences with selections proven correct (`srcSel=1 tgtSel=3`, `Find()` true), `changed=0` every time | B.4.5 |
+| ~~**Clone / transfer of manipulations**~~ | 🛑 **RETRACTED 10/08 — see below. `TakeoverDrills` WORKS.** | B.4.5 |
 | **Standalone weld flags** | `PsCreateWeldFlag.Create()` returns false, `objectId=0` — **5/5** in B.26. Welds exist only where a **connection owns them** (B.22 produced four `Ks_WeldFlag` that way) | B.19, B.22, B.26 |
 | **Haunch placement at a point** | With the plane fixed, the parts still build at the **support's origin**; `SetConnectionPoint` and `InsertPoint` do not move them | B.26 |
 | **Cope from a connection class** | `CreateCope=true` + valid template left the beam byte-identical, on both B.19 and B.20. ✅ **Solved separately** by `PsCopeConnection` — see the workarounds | B.19, B.20 |
@@ -27,6 +27,68 @@ thing by composition from calls that do work.**
 | **Bolting with no pre-drilled holes** | The manual says drilling first *"is not necessary any more"*. `PsCreateBolt.AddObject + Create()` returns `create=False` with 0 holes; drilled first, it bolts cleanly | B.15 |
 | **`PsCreateFastener`** (anchor bolts) | **Nothing created** — 4 kinds × 3 styles × with/without host id × embedment segments, verified by diffing `ModelSpace` handles | B.11 / staircase |
 | **The 62 `PSN_*` macros** | The Connection Center's own connections. They instantiate and give real metric defaults — but every entry point prompts | B.24 |
+
+---
+
+## 🛑 RETRACTED 10/08/2026 — `TakeoverDrills` was never broken
+
+Found during the part-B audit. The entry above said the transfer *"moves nothing — 5 call
+sequences with selections proven correct, `changed=0` every time"*.
+
+**It transfers. Measured today**, on three fresh identical HE300B beams:
+
+```
+source  135E   hole  y 150 → −150  at z=1500,  ⌀22
+variant 1  →  135F   hole  y 1050 → 1350   z=1500  ⌀22      changed=1
+variant 2  →  1360   hole  y 1450 → 1750   z=1500  ⌀22      changed=1
+variant 3  →  1361   hole  y 1850 → 2150   z=1500  ⌀22      changed=1
+variants 4, 5 also transferred · 6, 7, 8 have no case and do nothing
+```
+
+Each hole sits at **its own beam's centre**, same z, same diameter — the transfer is real
+geometry, not a count. `variant 1` is `SetToDefaults` + `SetObjectId(src)` +
+`TakeoverDrills(sSrc, sTgt)` and **nothing else**; there is no fall-through to the composition
+route, which is `variant 9`.
+
+### What I got wrong, and how
+
+Re-reading B.4.5 for the audit turned up a precondition the notes had quoted but the test had
+never honoured: *"A prerequisite for cloning is that the parts have a **position number** and
+that these **match**."* The model carries **no position numbers at all** — 0 distinct `Posnum`
+across 400 parts — so the 06/08 test violated the documented precondition.
+
+⚠️ **But the control disproved my own new hypothesis too.** With the source numbered `CTRL`:
+
+| target | result |
+|---|---|
+| no position number | `changed=1` |
+| a **different** position number | `changed=1` |
+| the **same** position number | `changed=1` |
+
+⇒ **The position number is not the gate either.** I cannot reconstruct why 06/08 returned zero,
+and I am not going to invent a reason. What is established is only this: **it works now, on
+identical parts, verified by geometry.**
+
+### The lesson, which is the useful part
+
+*"Selections proven correct"* proved the **selection sets** were valid. It did **not** prove the
+call had been given what the manual asks for. **A "closed, do not retry" verdict is only as good
+as the preconditions the test honoured** — and a wrong entry on this list is expensive, because
+its whole purpose is to stop anyone looking again.
+
+⇒ **Anything on this list that was closed without the manual's stated preconditions being
+checked should be re-tested.**
+
+⚠️ **One real caveat, exactly as B.4.5 warns.** The source hole ran **−Y** and the targets' run
+**+Y**: *"the transfer of the manipulations refers to the **coordinate system of the parts**"*.
+Immaterial for a through-hole; **it matters for a countersink or a slot**, and it is why a
+mirrored target receives a mirrored modification.
+
+### Still not exposed
+The other four Clone categories — **Cuts, PolyCut, Notches, Boolean** — have no API entry point.
+`TakeoverDrills` is still the only transfer *method*; what changed is that it works.
+
+---
 
 ## 2. Partly closed — the parameters do not arrive
 

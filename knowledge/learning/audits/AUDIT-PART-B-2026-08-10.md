@@ -117,3 +117,197 @@ count returned to 834 exactly.
   their creators respect ProSteel's automatic control — but that has been *verified only for
   plates, shapes and solids*. The rest are **assumed, not measured**, and should be probed the
   same way when their chapters come up.
+
+---
+
+## B.2 — Construction Utilities ✅ **one real gap, closed**
+
+*Manual 2009–2161 (153 lines) · notes 64 lines · band x ≈ 390 000*
+
+### 1 · Was the chapter learned deeply?
+**Yes, and the notes hold up.** They carry the whole dialog — `Direction`, `Line Type`,
+`Distance`, `Scale`, `Angle`, `Number`, `Offset`, `Only in Plane`, `Create Reference Line`,
+`Loop` — the eight direct `PS_CONST_*` commands, and both blocks of the measure dialog
+including the **directional cosine** and the **angle relative to the UCS x-axis**.
+
+The measurement behind them is sound and was checked two ways: `Dist Direct` **3472.751**
+against AutoCAD's own `Length` for the same segment — **delta 0.00e+00** — and the direction
+cosines square-summing to **1.000000000**.
+
+### 2 · Does the API development have what it needs?
+**Yes — but one claim rested on circular reasoning and has now been given a real basis.**
+
+The notes asserted *"construction lines are ordinary AutoCAD lines on `PS_Const`"*. That was
+concluded from lines **I had created myself as `AcDbLine`** — which proves nothing about what
+ProSteel produces. Checked properly: **there is no ProSteel construction-line type anywhere in
+the managed API surface** — no `PsConstructionLine`, no `Ks_Const*`, nothing. Combined with the
+manual's own wording — the lines go on a layer *"so that all of them can be jointly hidden or
+deleted"*, and `PS_CONST_DEL` deletes *"all construction lines drawn up to then **on the
+layer**"* — the conclusion stands: **they are AutoCAD entities on a known layer, which is
+exactly why the delete is a layer sweep and not a type sweep.**
+
+### 3 · What was fixed
+
+> ### ⭐ The band implemented only **half** of `Line Type`
+> B.2.1 offers two kinds: standard lines *"the length of which is determined by projection"* and
+> **X-lines *"which always run up to the edge of the screen"***. The band held **13 `AcDbLine`
+> and no infinite lines at all.** Only the first kind had ever been built.
+
+Added, on `PS_Const` so the layer sweep still catches them:
+
+```
+PS_Const before:  AcDbLine 13
+PS_Const after :  AcDbLine 13 · AcDbXline 1 · AcDbRay 1
+```
+
+`AcDbXline` is the screen-edge kind (infinite both ways); `AcDbRay` is its half-open sibling,
+worth having beside it so the family is complete.
+
+### Still open
+* `Scale` — *"distance/spacing converted to the scale of your drawing… allows actual dimensions
+  to be used"*. Read but never exercised. Irrelevant while everything is modelled 1:1 in model
+  space; **it would matter the moment a drawing is set to a scale**, and that belongs to part C.
+* The `PS_CONST_*` commands remain off the `cmd` allowlist by design. The geometry they produce
+  is reachable without them, which is what matters.
+
+### ⭐ The takeaway that survives
+**`PS_CONST_DVD` is a layout tool, not a drafting aid.** Purlin spacings, bolt rows, stair
+stringers — anything at equal intervals — and **the start and end lines come free**. Measured:
+4000 / 5 = 800 per segment, **6** perpendiculars for 5 divisions.
+
+---
+
+## B.3 — 3D Object Views ✅ **an open claim explained, not by re-testing but by A.6**
+
+*Manual 2162–2494 (333 lines) · notes 102 lines · ratio 0.31, flagged for a hard look*
+
+### 1 · Was the chapter learned deeply?
+**Yes — the ratio was misleading.** The notes carry every sub-section and every detail that
+matters: `Object View` vs **`Centered Object View`** (origin at the centreline vs at the pick
+point), the alignment promise (*insertion direction parallel to the X-axis, so a slanted member
+reads horizontally*), the **ALT / RETURN** re-align hint, `Object-UCS` setting **only** the UCS,
+`PS_FACE_VIEW_CEN`, the **six** object-view directions versus the surface view's *any* face,
+the five global views, `vpoint 0,0,1`, `Flip`, **0 = no cut planes**, and the perspective
+camera's focal length.
+
+They also contain something better than completeness: an item marked **"NOT REPRODUCED, and not
+fairly tested"** rather than quietly dropped.
+
+### 2 · Does the API development have what it needs?
+**More than it did — because of A.2.** B.3.5 says the free view's clip distances *"can only be
+done using the **global settings**"*, and B.3.3 says the five global views are *"specified in
+the **Global Settings**"*. On 09/08 that was a dead end. It no longer is:
+
+```
+Ks_ComGlobalSettings.ObjCutPlaneDistance      500.0
+Ks_ComGlobalSettings.ObjCutPlaneDistanceRear  500.0
+Ks_ComGlobalSettings.SetGlobalViewDirection(Number, Coord, newVal)
+```
+
+### 3 · The open claim, explained
+
+The unresolved item was B.3.6's *"when switching to one of the standard views, these values are
+**overwritten**"* — set 1750/1250 on a view, switch with `view dir=front`, and they survived.
+
+**The reason is now visible: there are two different places, and I had only ever read one.**
+
+| | value | source |
+|---|---|---|
+| a **generated view's** clip distances | `0 / 0` | B.7, measured 09/08 |
+| the **global** cut-plane distances | **`500 / 500`** | A.6, measured today |
+
+⇒ B.3.6's *"0 = no cut planes are created"* + B.7's *"generated views arrive with clip 0/0"*
+means **a generated view has no clipping at all until distances are given**, and *"a standard
+view overwrites them"* means **the standard view applies the global pair over whatever the view
+held.** Four chapters — B.3.6, B.3.5, B.7 and A.6 — agree once the settings object is in hand.
+
+⛔ **The empirical half is not claimed.** Activating a work-frame view through `SetActive` and
+watching the distances become 500/500 is a **B.7** test, and it will be run in B.7's audit
+rather than here. One chapter at a time.
+
+### Model state
+Untouched. B.3 owns no band — it is view behaviour, and its measurements were `VIEWDIR` and
+clip values, both re-confirmed rather than rebuilt.
+
+### Still open
+* `SetGlobalViewDirection` — the five global views are **settable and never have been**. Doing
+  so changes Amir's installation defaults, so it goes on the same hold as the other A.6 writes.
+* The perspective view (`Focal Distance`, `Distance`) is display-only by the manual's own
+  statement — *"only a display view and does not allow any changes"* — so it has no API value
+  beyond screenshots.
+
+---
+
+## B.4 — Move and Copy Parts 🛑 **a CEILING entry retracted**
+
+*Manual 2495–2726 (232 lines) · notes 168 lines · band x ≈ 270 000*
+
+### 1 · Was the chapter learned deeply?
+**The reading was complete** — all seven sub-sections, including the alignment constraints
+(3D / 2D / X / Y / Z / Free), `Turn+Copy`, `Mirror+Copy`, `Align+Copy`, the surface and 3-point
+align methods, the rotate-with-vertical-offset that built the spiral staircase, and `Swap
+Effect`. The notes even **quote** B.4.5's position-number prerequisite.
+
+**But quoting a precondition is not honouring it**, and that is where the chapter failed.
+
+### 2 · The failure — and it was on THE CEILING, the expensive place to be wrong
+
+THE CEILING recorded: *"`PsDrillObject.TakeoverDrills` is the only transfer in the API and moves
+**nothing** — 5 call sequences with selections proven correct, `changed=0` every time."*
+
+**It transfers.** Measured on three fresh identical HE300B beams. `variant 1` is
+`SetToDefaults` + `SetObjectId(src)` + `TakeoverDrills` and **nothing else** — there is no
+fall-through to the composition, which is `variant 9`:
+
+```
+source  135E   hole y 150 → −150   z=1500  ⌀22
+ → 135F        hole y 1050 → 1350  z=1500  ⌀22     changed=1
+ → 1360        hole y 1450 → 1750  z=1500  ⌀22     changed=1
+ → 1361        hole y 1850 → 2150  z=1500  ⌀22     changed=1
+```
+
+Each hole at **its own beam's centre** — verified by reading start / end / diameter back, not
+by a count. Five of eight variants transferred; 6–8 have no `case` and correctly do nothing.
+
+⚠️ **And the hypothesis that explained it was itself disproved.** B.4.5's stated precondition is
+a matching position number, and the model carries **none** — so the 06/08 test was unfair. But
+the control shows the gate is not there either:
+
+| target | result |
+|---|---|
+| no position number | `changed=1` |
+| a **different** position number | `changed=1` |
+| the **same** position number | `changed=1` |
+
+⇒ **Why 06/08 returned zero is unknown, and is left unknown rather than guessed at.** What is
+established is that it works now, on identical parts, verified geometrically.
+
+> ### ⭐⭐ The lesson is worth more than the capability
+> *"Selections proven correct"* proved the **selection sets** were valid. It proved nothing
+> about whether the call had been given what the manual asks for.
+> **A "closed, do not retry" verdict is only as good as the preconditions the test honoured** —
+> and a wrong entry on THE CEILING is the most expensive kind, because its entire purpose is to
+> stop anyone looking again.
+> ⇒ **Everything on that list closed without checking the manual's stated preconditions should
+> be re-tested.**
+
+### 3 · What was fixed
+* THE CEILING's Clone entry **struck through**, with the measurement and an honest *"why it
+  failed before is unknown"*.
+* B.4's notes carry the same correction.
+* The skill's CEILING block carries the retraction and the general lesson.
+* ⚠️ **B.4.5's coordinate-system warning is confirmed in the data**: the source hole runs **−Y**
+  and every target's runs **+Y**. *"The transfer refers to the coordinate system of the parts."*
+  Immaterial for a through-hole; **it matters for a countersink or a slot**, and a mirrored
+  target receives a mirrored modification.
+
+### Model state
+All 16 test beams erased. 834 baseline + the 2 construction lines added in B.2 = **836**.
+
+### Still open
+* The other four Clone categories — **Cuts, PolyCut, Notches, Boolean** — genuinely have no API
+  entry point. `TakeoverDrills` remains the only transfer *method*; what changed is that it
+  works.
+* `clonedrills` still defaults to `variant 9`, the composition. **That default should probably
+  change**, but not before the API route is exercised on **rotated and mirrored** targets —
+  which is exactly where the coordinate-system warning bites.

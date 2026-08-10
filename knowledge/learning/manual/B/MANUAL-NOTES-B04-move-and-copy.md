@@ -166,3 +166,45 @@ Fixed by matching the dialog's process id against AutoCAD's (found from its main
 it never depends on an executable name). ⚠️ **This does not relax the guard** — a real AutoCAD or
 ProSteel dialog still blocks exactly as before, and if the pid cannot be determined it falls back to
 the old desktop-wide scan, because blocking wrongly is safer than running into a dialog.
+
+---
+
+# 🛑 CORRECTED BY THE AUDIT — 10/08/2026
+
+The section above, *"B.4.5 Clone — the transfer is dialog-only (established 06/08, still
+true)"*, is **wrong**. `PsDrillObject.TakeoverDrills` **transfers drill holes.**
+
+Measured on three fresh identical HE300B beams, `variant 1` — `SetToDefaults` +
+`SetObjectId(src)` + `TakeoverDrills(sSrc, sTgt)`, **nothing else, no fall-through to the
+composition** (that is `variant 9`):
+
+```
+source  135E   hole y 150 → −150   z=1500  ⌀22
+ → 135F        hole y 1050 → 1350  z=1500  ⌀22     changed=1
+ → 1360        hole y 1450 → 1750  z=1500  ⌀22     changed=1
+ → 1361        hole y 1850 → 2150  z=1500  ⌀22     changed=1
+variants 4 and 5 also transferred; 6, 7, 8 have no case and do nothing.
+```
+
+Each hole sits at **its own beam's centre** — real geometry, verified by reading start/end/⌀
+back, not by a count.
+
+**How the error happened.** Re-reading B.4.5 for the audit surfaced a precondition these very
+notes had **quoted** and the test had never **honoured** — *"a prerequisite for cloning is that
+the parts have a position number and that these match"* — and the model carries **no position
+numbers at all** (0 distinct `Posnum` across 400 parts).
+
+⚠️ **The control then disproved that hypothesis as well**: the transfer succeeds with no
+position number, with a different one, and with a matching one. **Why 06/08 returned
+`changed=0` is unknown, and is left unknown rather than guessed at.**
+
+⇒ **The lesson:** *"selections proven correct"* proved the **selection sets** were valid — not
+that the call had been given what the manual asks for. **A "closed, do not retry" verdict is
+only as good as the preconditions the test honoured.**
+
+⚠️ **And B.4.5's coordinate-system warning is real and visible in the data:** the source hole
+runs **−Y**, every target's runs **+Y**. Immaterial for a through-hole; **it matters for a
+countersink or a slot**, and a mirrored target receives a mirrored modification.
+
+**Unchanged:** the other four categories — Cuts, PolyCut, Notches, Boolean — still have no API
+entry point. `TakeoverDrills` remains the only transfer method; what changed is that it works.

@@ -39,9 +39,26 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > *data* but not the act of choosing what it connects.
 >
 > **Closed, do not retry:** bracing (13 configurations) · the `PSN_*` macros (all prompt) · gussets
-> (no creator; they come from the bracing) · Clone / `TakeoverDrills` · standalone weld flags ·
-> haunch placement at a point · the cope's ESC route · bolting with no pre-drilled holes ·
-> `PsCreateFastener`.
+> (no creator; they come from the bracing) · ~~Clone / `TakeoverDrills`~~ **RETRACTED, see below** ·
+> standalone weld flags · haunch placement at a point · the cope's ESC route · bolting with no
+> pre-drilled holes · `PsCreateFastener`.
+>
+> ### 🛑 `TakeoverDrills` WAS NEVER BROKEN — retracted 10/08 by the part-B audit
+> **It transfers drill holes.** Three fresh identical HE300B beams, `variant 1` = `SetToDefaults`
+> + `SetObjectId(src)` + `TakeoverDrills` and nothing else: each target received a ⌀22 hole **at
+> its own centre, same z** — real geometry, not a count. Five of eight variants worked.
+> **What I got wrong:** the 06/08 verdict rested on *"selections proven correct"*, which proved
+> the **selection sets** were valid and nothing about the call's preconditions. B.4.5 states one
+> plainly — *"a prerequisite… is that the parts have a position number and that these match"* —
+> and the model carries **no position numbers at all**.
+> ⚠️ **The control then disproved that hypothesis too**: it transfers with no posnum, a different
+> posnum and a matching one alike. Why 06/08 returned zero is **unknown, and left unknown**.
+> ⇒ ⭐⭐ **A "closed, do not retry" verdict is only as good as the preconditions the test
+> honoured** — and a wrong entry here is expensive, because its purpose is to stop anyone looking
+> again. **Re-test anything closed without checking the manual's stated preconditions.**
+> ⚠️ Real caveat, as B.4.5 warns: the source hole ran **−Y**, the targets **+Y**. *"The transfer
+> refers to the coordinate system of the parts"* — immaterial for a through-hole, **not for a
+> countersink or a slot**, and a mirrored target gets a mirrored modification.
 > **Parameters that never arrive** (the call works, the numbers are ignored, the template wins):
 > base plate · end plate · purlin. ⇒ **choose a template, do not pass numbers.**
 > **Never fairly tested, worth three strikes:** `CreateRotation` · `CreateHull` (needs `SetPoints`,
