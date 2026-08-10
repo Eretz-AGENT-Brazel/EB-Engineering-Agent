@@ -854,3 +854,56 @@ contrast pair is kept in the model, labelled, as the evidence and the starting p
 ⚠️ The first attempt built the beam starting at the column **face** and produced `polyCuts=0` on
 both — a cope needs the beam to run **through** the support, not butt against it. Worth recording:
 a cope that silently does nothing may be a geometry error, not an API refusal.
+
+---
+
+## B.13 — Plate Editor ⭐⭐ **all three open items answered; a new .NET-vs-COM disagreement found**
+
+*Manual 5434–5633 (~200 lines) · notes 102 lines · marked "closed hermetically"*
+
+### 1 · Was the chapter learned deeply?
+**Yes.** It is the chapter that turned *"214 polygons replaced by hand"* into three parameters,
+and it correctly identified `Selected Edge` numbering with `0-0` meaning all round, and Top/Bottom
+being independent. Its three open items were each stated **with the test that would close them** —
+which is why all three closed today.
+
+### 2 · The three items
+
+**① What are the SIX edge-processing kinds?** The manual says *"six"* and never lists them.
+
+```
+Bentley.ProStructures.EdgeLayout
+   kUnknownEdge, kFacet, kRadius, kRounded, kInverted, kFold, kNotch
+```
+⇒ **Six real kinds**, plus the undefined sentinel. **All six applied to six plates and read back
+correctly** (`layout=1…6`, `tv=25,25`, top and bottom both set) — proven, not quoted.
+
+⚠️ ⭐⭐ **NEW FINDING — the two APIs disagree.** The COM twin is **short by one**:
+
+```
+.NET  Bentley.ProStructures.EdgeLayout   kUnknownEdge kFacet kRadius kRounded kInverted kFold kNotch   (7)
+COM   PSCOMWRAPPERLib.KsEdgeLayout       kUnknownEdge kFacet kRadius kRounded kInverted kFold          (6)
+```
+
+**`kNotch` exists only in .NET.** This is B.6's enum trap in a new form: there, two enums with the
+same name in different assemblies; here, the *same* enum with **different members** across the two
+APIs. ⇒ **When the two APIs disagree, the .NET one is the complete one** — and `two-apis-com-wrapper`
+now needs the reverse caveat: COM rescues .NET when binding fails, but it can also be **behind** it.
+
+**② Is `PsEdgeChamfer` creatable on its own?** ⇒ **It is constructible but has no creator.** Its
+entire surface is a destructor plus properties — no `Create`, no `insert`, no `writeTo`. It is a
+**data payload** assigned to **`em.PlateBreakEdge`** on the edit-modification object. That is the
+only route, and it is the one the plugin already uses.
+
+**③ Are `Min. Radius` / `Max. Height` readable?** ⇒ **No.** The only `MinimumRadius` /
+`EffectiveMinimumRadius` in the whole API surface belong to **ISM's radial grid** and have nothing
+to do with plate edges. **They are dialog-side validation only** — the software will tell a human
+the limits and will not tell the code.
+
+### 3 · A loose thread worth following
+`PsEditPlateModification` exposes **`DisplayAsRaster`** — *Raster* again, the same word behind
+B.9.3's grating flag. It may be the read/write route for that flag on an existing plate, which
+`SetGrid` only offers at creation. **Not tested.**
+
+### What was added to the model
+Six plates at x = 410 000, one per edge kind, labelled — the enum made visible.

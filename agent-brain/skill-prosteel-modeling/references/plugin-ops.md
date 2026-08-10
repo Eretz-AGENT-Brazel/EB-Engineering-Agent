@@ -1421,3 +1421,26 @@ solid kind=rotate pts=200,0;500,0;500,400;200,400 at=370000,-9000,0 \
       axis1=370000,-9000,0 axis2=370000,-8000,0     ->  1000 x 400 x 1000
 ```
 ⚠️ **`rev` is ignored** — 90, 180 and 360 give identical solids.
+
+---
+
+## ⚠️ The two APIs can DISAGREE — `.NET` is the complete one
+
+Known: when .NET will not bind to an existing entity, COM does (`doc.HandleToObject`). The reverse
+caveat, found 10/08/2026 in B.13:
+
+```
+.NET  Bentley.ProStructures.EdgeLayout   kUnknownEdge kFacet kRadius kRounded kInverted kFold kNotch
+COM   PSCOMWRAPPERLib.KsEdgeLayout       kUnknownEdge kFacet kRadius kRounded kInverted kFold
+```
+
+**`kNotch` exists only in .NET.** Same enum name, different members. **When they disagree, trust
+.NET** — COM rescues .NET on binding and can be *behind* it on content.
+
+### `edgechamfer layout=` — the six kinds the manual promises and never names
+`1 kFacet · 2 kRadius · 3 kRounded · 4 kInverted · 5 kFold · 6 kNotch`
+All six verified: applied to six plates, read back as `layout=1…6` with top and bottom both set.
+
+`PsEdgeChamfer` is a **data payload, not a creator** — no `Create`/`insert`/`writeTo`; it is
+assigned to `em.PlateBreakEdge`. And `Min. Radius`/`Max. Height` are **dialog-side validation
+only**; nothing in the API surface exposes them.
