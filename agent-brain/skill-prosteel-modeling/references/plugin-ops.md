@@ -1291,3 +1291,69 @@ It now reports the split and takes the expected count from the caller.
 | **`PsEdgeChamfer`** | ⬅ next: `PsCutObjects.SetAsPlateBreakEdgeCut`. The *vertex* chamfer (`SetAsFacetCut`) is **done**; the *edge* one is not |
 | ~~**`PsCollisionCheck`**~~ | ✅ **CLOSED 06/08** — `op=collision`, see above |
 | ~~**`props`**~~ | ✅ **FIXED v57** — see below |
+
+---
+
+## Shape TYPES — 1 890 sections that were unreachable until 10/08/2026 (B.8 audit)
+
+ProSteel ships **five** shape databases and the `beam` op only ever reached the first.
+
+| `kind=` | database | catalogs | sections |
+|---|---|---:|---:|
+| `standard` *(default)* | `Data/Shapes` | 90 | the DIN/EURO/AISC catalogs |
+| `special` (= user / Sopro) | `Data/UserShapes` | 68 | **1 528** |
+| `roofwall` | `Data/RoofWall` | 20 | **270** |
+| `combi` | `Data/CombiShapes` | 15 | **88** |
+| `weld` | `Data/WeldShapes` | 3 | 4 — **only via `bendshape`** |
+
+**The folder is the `catalog=`, the `.psp` filename is the `name=`.** Some catalogs hold a
+**`.dbf` table** instead (`SCHRAG_z-pfetten`, `SCHRAG_c-riegel`, `Kantteile`, `Steel Deck`) —
+there the section name is the row's **`KEY`** field.
+
+⚠️ **Always address a section by its FILENAME.** `Dreiecksbinder/R273x28-H440.psp` reads back
+as `name='R244.5x22.2-H420'` while its W/H match the filename. The internal name field lies.
+
+```
+beam kind=special  catalog=SCHRAG_z-pfetten  name=Z140-15         Z purlin
+beam kind=special  catalog=Kranschienen_Form_A name=A_100         crane rail
+beam kind=special  catalog=halfen_hl         name=hl_2626         Halfen cast-in channel
+beam kind=roofwall catalog=Bardage           name=4-250-36bx100   cladding panel
+beam kind=combi    catalog=Dreiecksbinder    name=R273x28-H440    lattice girder
+```
+
+⭐ **Where to look first, by job:**
+* **cold-formed purlins / rails** — `SCHRAG_z-pfetten`, `SCHRAG_c-riegel`, `SCHRAG_cl-riegel`,
+  `SCHRAG_traufriegel`, `Sadef_zed/cee/sigma`, `sbe_c/z/zeta1/zeta2`, `ayrsh_zeta`, `ayrshire_eb`,
+  `rp_profile`. **This is what B.22 Purlins needed and never had.**
+* **crane runways** — `Kranschienen_Form_A`, `krupp_zr/ztg/zth`, `kbk_kran`
+* **cast-in channels** — `halfen_hl/hm/np/p`
+* **bent sheet** `Kantteile` · **decking** `Steel Deck` · **stairs** `stair`
+* **curtain wall** — `hueck_*`, `schueco*`, `jansen_*`, `wicona*`
+
+### `bendshape` — B.8.2 Bent Shapes
+
+`PsCreateBendShape`. **The only creator with `SelectWeldSections`** — the straight creator has
+four selectors, this one has five (measured identically in .NET and COM).
+
+```
+bendshape name="HE 200 B"  pts=0,0,0;0,2500,0;2000,4000,0     polyline path
+bendshape name="RO 88.9x5" circle=1500                        ring
+bendshape name=...         helix=r,angle,rising,resolution[,left]
+bendshape kind=weld catalog=I-Profile name=I950x300x30 pts=... welded plate girder
+```
+plus `catalog` `kind` `rot` `refaxis` `layer` `handle`.
+
+⚠️ **≥ 3 path points are required.** Two points create nothing — identical section name, 2 fails,
+3 succeeds.
+
+⚠️ **`handle=` (`ConvertFromPolyline`) does not follow arcs.** It builds a shape, and the shape
+is not the path: a 90° bulge left a vertex **650 mm outside** the result's bounding box, and
+`Update()` on the polyline changes nothing. Every call therefore reports
+
+```
+pathfit=ok                                          <- straight pts= paths
+pathfit=MISMATCH 1/3_vertices_outside_by_650mm      <- the bulged polyline
+```
+
+**Read `pathfit` on every `bendshape` call.** A route that silently produces different geometry
+from the one asked for is worse than one that refuses.

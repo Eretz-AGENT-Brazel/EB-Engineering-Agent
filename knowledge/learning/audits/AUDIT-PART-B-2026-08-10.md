@@ -435,3 +435,179 @@ not an open question left hanging.
   are the ones used.
 * B.6.9 user-defined blocks (`UserBlockNameX/Y`, `UserBlockPath`, scales) — writable over COM,
   **never exercised**. They are drawing presentation, not modelling.
+
+---
+
+## B.7 — Choose View ✅ **B.3's debt paid, and the claim resolved rather than refuted**
+
+*Manual 3531–3588 (58 lines) · notes 107 lines · ratio 1.84*
+
+### 1 · Was the chapter learned deeply?
+**Yes, and completely** — it is the shortest chapter in part B and the notes are twice its
+length. Every control is mapped: `Zoom Extents`, `Clipping-Plane`, the `Double Click` behaviour
+and its CTRL inversion, activate-view, **activate-only-the-UCS**, delete, create-by-rectangle,
+view-via-2-points, view-on-object and UCS-on-object.
+
+⭐ And the structural finding stands: **the whole chapter is `IKs_ComWorkFrame` — nothing in
+B.7 has a managed counterpart**, so it is reachable straight from Python through
+`doc.HandleToObject(handle)`. No plugin needed for any of it.
+
+### 2 · The debt from B.3, paid
+
+B.3.6 claims *"when switching to one of the standard views, these values are **overwritten**"*.
+On 09/08 that was tried with an **AutoCAD** view change and the distances survived; the note
+correctly recorded it as **untested** rather than refuted, because a ProSteel standard view is a
+work-frame view activated through `SetActive` — which is B.7's business, not B.3's.
+
+Tested properly today:
+
+```
+GLOBAL cut-plane pair          500 / 500      (A.6, Ks_ComGlobalSettings)
+work frame 2E8, as found       500 / 500
+after SetClipDistances         1750 / 1250
+after SetActive(True, True)    1750 / 1250    ← SURVIVED
+```
+
+⇒ **Not a refutation — a resolution.** The three chapters only disagree if one assumes a single
+set of numbers. There are two:
+
+| | |
+|---|---|
+| **B.3.6's `Distance`** | the **current session's** cut-plane distances |
+| **a view's `GetClipDistances`** | that **view's own stored pair** |
+| **the global pair** (A.6) | the default a fresh view inherits — **500 / 500** here |
+
+Activating a view **applies the view's own pair**, which is precisely what *"your entered values
+are overwritten"* describes from the dialog's side. B.3.6, B.3.5, B.6.5's *Distances
+Cut.Surfaces* and B.7's `Clipping-Plane` checkbox all describe the same machinery from four
+angles, and they agree once the three places are told apart.
+
+⭐ Which also confirms 09/08's other finding from the other side: **clipping is controlled by
+`SetActive`'s second argument, not by `EnableFrontClip`** — the toggle is the *act of
+activation*, while the distances are ordinary stored values that persist.
+
+### 3 · What was fixed
+Nothing needed fixing. The test frame's distances were **restored to 500 / 500** so the model
+is left exactly as found.
+
+### Still open
+* `SetXViews`/`SetYViews`/`SetZViews` not producing a view per axis — carried over from B.6,
+  still unexplained, still low value.
+
+---
+
+## B.8 — Insert Shapes ⭐⭐⭐ **the biggest gap found so far: 1 890 sections and a whole sub-chapter never touched**
+
+*Manual 3589–4152 (564 lines) · notes 153 lines (ratio 0.27, the lowest in part B) · band x −1000…16000*
+
+### 1 · Was the chapter learned deeply?
+**The notes cover all seven sub-sections** — B.8.1 Straight, B.8.2 Bent, B.8.3 Additional
+Settings, B.8.4 Shape Series, B.8.5 Shape Segment, B.8.6 Girder Position, B.8.7 Automatic
+Insertion. The low ratio was misleading, exactly as in B.5 and B.6.
+
+**But the reading was of the dialog, and the implementation reached one corner of it.** The band
+held 37 `Ks_Shape` and **two section names**: `HE 300 B` ×26 and `IPE 300` ×8, plus 3 flats.
+Zero `Ks_BendShape`.
+
+### 2 · Two real gaps, both fixed
+
+#### Gap 1 — four of the chapter's five shape types were unreachable
+
+`PsCreateShape` exposes **four selectors** and the `beam` op hardcoded the first:
+
+```
+SelectStandardSections()      <- the only one ever called
+SelectSpecialSections()       SelectRoofWallSections()      SelectCombinationSections()
+```
+
+The shipped databases are not empty. Counted on disk:
+
+| database | catalogs | **sections** |
+|---|---:|---:|
+| `UserShapes` (Special / Sopro) | 68 | **1 528** |
+| `RoofWall` | 20 | **270** |
+| `CombiShapes` | 15 | **88** |
+| `WeldShapes` | 3 | 4 |
+| | **106** | **1 890** |
+
+⇒ **1 890 section definitions shipped with the product, reachable, and never used — because of
+one hardcoded line.** Fixed: `beam kind=standard|special|roofwall|combi`.
+
+⚠️ **The storage layout had to be measured, not assumed.** The *folder* is the catalog and the
+`.psp` file is the section — my first five attempts passed the folder name as the section name
+and all failed. Some catalogs are **`.dbf` tables instead** (`SCHRAG_z-pfetten`, `Kantteile`,
+`Steel Deck`); there the section name is the row's **`KEY`** field.
+
+⚠️ **The internal name field is not the key.** `Dreiecksbinder/R273x28-H440.psp` reads back as
+`name='R244.5x22.2-H420'` while W/H = 273/440 match the *filename*. **Address sections by
+filename.**
+
+**Eleven built and read back**, all distinct, in a new strip at y −8000…−5000:
+
+| catalog | section | W×H | what it is |
+|---|---|---|---|
+| `ayrshire_eb` | `eb_16020+00` | 160×90 | cold-formed purlin, 6.3 kg/m |
+| `SCHRAG_z-pfetten` | `Z140-15` | — | **Z purlin** (`.dbf`) |
+| `SCHRAG_c-riegel` | `C105-15` | — | **C rail** (`.dbf`) |
+| `Kantteile` | `H200-B150` | — | bent sheet part |
+| `Kranschienen_Form_A` | `A_100` | — | **crane rail** |
+| `halfen_hl` | `hl_2626` | — | **Halfen cast-in channel** |
+| `stair` | `step10` | — | stair tread |
+| `Steel Deck` | `CFD3-22GA` | — | decking |
+| `Bardage` | `4-250-36bx100` | **1000**×38 | cladding panel (roof-wall) |
+| `Dreiecksbinder` | `R273x28-H440` | 273×440 | lattice girder, 225 kg/m (combination) |
+
+⭐ **This is the answer to `section-variety`, and it is bigger than the 357 standard catalogs.**
+The cold-formed purlin world — Z, C, Σ, zeta, from SCHRAG, Sadef, SBE, Ayrshire — is what
+**B.22 Purlins** needed and never had.
+
+#### Gap 2 — B.8.2 *Bent Shapes* had **no op at all**
+
+`PsCreateBendShape` appeared **nowhere in the plugin**. The `bend` op bends a **plate**
+(`PsCreateBendPlate`). So the whole sub-chapter was read and never built.
+
+⭐ **And it is the only route to the fifth shape type.** Measured across .NET and COM alike:
+
+| creator | selectors |
+|---|---|
+| `PsCreateShape` (straight) | Combination, RoofWall, Special, Standard — **4** |
+| `PsCreateBendShape` (bent) | Combination, RoofWall, Special, Standard, **Weld** — **5** |
+| `IKs_ComCreateBendShape`, `Ks_ComCreateBendShapeClass` | same 5 |
+
+New op **`bendshape`** — path from `pts=` / `circle=` / `helix=` / `handle=`, plus the same
+`kind=` selector. Five built in a strip at y −11000, including **two welded plate girders**
+(`I950x300x30`, `K900x400`) that were previously unreachable by any route.
+
+⚠️ **Measured rule: a bent shape needs ≥ 3 path points.** Two points return nothing at all —
+`K900x400` failed on 2 and succeeded on 3, the section name being identical.
+
+### 3 · A trap found and guarded, not papered over
+
+`handle=` uses `PsPolygon3d.ConvertFromPolyline`, the documented B.8.2 workflow — draw the path,
+then apply a section. It **creates a shape and the shape does not follow the polyline.** A
+polyline `(4000,−14000) → (4000,−11500) → (6500,−11500)` with a 90° bulge produced extents of
+**x 3950…5250, y −14000…−11500** — the third vertex at x = 6500 is not inside the result at all.
+Length read 5049 where a true quarter-circle predicts 5277 and a straight path reads 4985.
+Calling `Update()` on the polyline first changes nothing (identical to the millimetre).
+
+**Why it is not left as a footnote:** a route that silently builds *different* geometry from the
+one asked for is the worst kind of trap — worse than one that refuses. So `bendshape` now
+measures itself:
+
+```
+pts=   ->  pathfit=ok
+bulged ->  pathfit=MISMATCH 1/3_vertices_outside_by_650mm
+```
+
+Every vertex of the requested path must lie inside the created part's bounding box. The three
+unfaithful shapes and their source polylines were **deleted** — a reference model must not carry
+geometry that does not match its own input.
+
+### Still open
+* **Why `ConvertFromPolyline` drops the arc.** Measured precisely, not explained. `circle=` also
+  reads 9251 against 2πR = 9425 (98 %), so ProSteel appears to facet arcs — but that does not
+  account for a vertex falling 650 mm outside. Recorded with numbers; not guessed at.
+* `SetCrossSectionType(SectionType)` on the straight creator — a *sixth* axis of choice next to
+  the four selectors, never exercised.
+* B.8.4 Shape Series / B.8.5 Shape Segment / B.8.7 Automatic Insertion — read, and no API
+  entry point has been looked for yet.

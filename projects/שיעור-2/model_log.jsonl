@@ -1237,3 +1237,19 @@
 {"op": "beam", "args": {"name": "IPE300", "p1": "470000,1800,0", "p2": "470000,1800,2000", "dwg": "B08-insert-shapes.dwg"}, "handle": "1378", "ts": "13:58:37"}
 {"op": "beam", "args": {"name": "IPE300", "p1": "470000,2400,0", "p2": "470000,2400,2000", "dwg": "B08-insert-shapes.dwg"}, "handle": "1379", "ts": "13:58:37"}
 {"op": "beam", "args": {"name": "IPE300", "p1": "470000,3000,0", "p2": "470000,3000,2000", "dwg": "B08-insert-shapes.dwg"}, "handle": "137A", "ts": "13:58:37"}
+{"op": "beam", "args": {"kind": "special", "catalog": "ayrshire_eb", "name": "eb_16020+00", "p1": "14000,0,0", "p2": "14000,3000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "1392", "ts": "14:23:55"}
+{"op": "beam", "args": {"kind": "special", "catalog": "Echantignole", "name": "multibeam", "p1": "14900,0,0", "p2": "14900,3000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "1394", "ts": "14:23:55"}
+{"op": "beam", "args": {"kind": "roofwall", "catalog": "Bardage", "name": "4-250-36bx100", "p1": "15800,0,0", "p2": "15800,3000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "1396", "ts": "14:23:55"}
+{"op": "beam", "args": {"kind": "combi", "catalog": "Dreiecksbinder", "name": "R273x28-H440", "p1": "16700,0,0", "p2": "16700,3000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "1398", "ts": "14:23:55"}
+{"op": "beam", "args": {"kind": "standard", "catalog": "", "name": "HE 200 B", "p1": "17600,0,0", "p2": "17600,3000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "1399", "ts": "14:23:55"}
+{"op": "beam", "args": {"kind": "standard", "catalog": "", "name": "HE 300 B", "p1": "0,-8000,0", "p2": "0,-5000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "139D", "ts": "14:33:20"}
+{"op": "beam", "args": {"kind": "special", "catalog": "ayrshire_eb", "name": "eb_16020+00", "p1": "1200,-8000,0", "p2": "1200,-5000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "139E", "ts": "14:33:20"}
+{"op": "beam", "args": {"kind": "special", "catalog": "SCHRAG_z-pfetten", "name": "Z140-15", "p1": "2400,-8000,0", "p2": "2400,-5000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "13A0", "ts": "14:33:20"}
+{"op": "beam", "args": {"kind": "special", "catalog": "SCHRAG_c-riegel", "name": "C105-15", "p1": "3600,-8000,0", "p2": "3600,-5000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "13A2", "ts": "14:33:20"}
+{"op": "beam", "args": {"kind": "special", "catalog": "Kantteile", "name": "H200-B150", "p1": "4800,-8000,0", "p2": "4800,-5000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "13A4", "ts": "14:33:20"}
+{"op": "beam", "args": {"kind": "special", "catalog": "Kranschienen_Form_A", "name": "A_100", "p1": "6000,-8000,0", "p2": "6000,-5000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "13A6", "ts": "14:33:20"}
+{"op": "beam", "args": {"kind": "special", "catalog": "halfen_hl", "name": "hl_2626", "p1": "7200,-8000,0", "p2": "7200,-5000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "13A8", "ts": "14:33:20"}
+{"op": "beam", "args": {"kind": "special", "catalog": "stair", "name": "step10", "p1": "8400,-8000,0", "p2": "8400,-5000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "13AA", "ts": "14:33:21"}
+{"op": "beam", "args": {"kind": "special", "catalog": "Steel Deck", "name": "CFD3-22GA", "p1": "9600,-8000,0", "p2": "9600,-5000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "13AC", "ts": "14:33:21"}
+{"op": "beam", "args": {"kind": "roofwall", "catalog": "Bardage", "name": "4-250-36bx100", "p1": "11500,-8000,0", "p2": "11500,-5000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "13AD", "ts": "14:33:21"}
+{"op": "beam", "args": {"kind": "combi", "catalog": "Dreiecksbinder", "name": "R273x28-H440", "p1": "14000,-8000,0", "p2": "14000,-5000,0", "dwg": "B08-insert-shapes.dwg"}, "handle": "13AE", "ts": "14:33:21"}
