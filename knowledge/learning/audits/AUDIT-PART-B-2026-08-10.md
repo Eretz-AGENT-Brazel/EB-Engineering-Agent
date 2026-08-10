@@ -1062,3 +1062,52 @@ on disk and must be pulled in.
   nut) — **awaiting Amir's decision on those**, so not fired here.
 * `WriteStyleToFile` / `WriteToFile` — writing a style back to disk. Not in B.15.4's dialog list
   and not exercised.
+
+---
+
+## B.16 — Insert Stiffeners ⭐ **the chapter is excellent; its one open item closes with a NEGATIVE answer**
+
+*notes 255 lines · band x = 90 000*
+
+### 1 · Was the chapter learned deeply?
+**Yes — it is among the two or three best in part B.** It did not stop at the dialog: it derived
+the formula the manual only gestures at, decoded `Layout`/`ShapeType` **by the bulge rather than
+the vertex count**, and produced three findings that generalise:
+
+* ⭐ **`LengthType` is write-effective and read-broken.** Writing 0/1/2/3 gives full / exactly half
+  / by-length / square. But **reading it back from a template does not reflect the template** —
+  `half convex` and `full convex` both read `1`, `half rounded` and `full rounded` both read `2`.
+  ⇒ **The template NAMES are correct; the exposed property is not.**
+* ⛔ **A stiffener cannot be created without a template** — `template=none` gives `Create()=false`,
+  while `Check()` returns **1 either way**, so `Check()` predicts nothing.
+* ⭐ **Weld marks are real holes** — `CenterPunchType=1` puts 2 on the girder, one per stiffener.
+* **One command, two stiffeners** — `created=2` across **33 insertions** without exception.
+
+### 2 · The open item, closed
+
+> *the note:* *"The manual's third option exists in the dialog; its ordinal is not 2 and remains
+> unmeasured."*
+
+`CenterPunchType` is a plain `Int32` with **no declared enum**, so the ordinals were swept on six
+fresh IPE 400 girders, counting the holes the girder actually gains:
+
+| value | marks |
+|---|---|
+| 0, 2, 4, 5 | **none** |
+| 1, 3 | **2** |
+
+⚠️ **Counting was too coarse to conclude anything, so the positions were compared** — and `1` and
+`3` put their marks at **identical coordinates**: `dx 995 / 1005` (the two stiffeners, 10 mm
+apart = the plate thickness), `dy 1.5 / 4.3`, to the 0.1 mm.
+
+⇒ ⭐ **The ordinals collapse into two behaviours: none, and at-centre. No value in 0–5 reaches the
+dialog's third option.** *"At Edges" is not reachable through `CenterPunchType` from this API
+entry point* — a measured negative, not an unknown.
+
+⇒ And the method matters as much as the answer: **two values producing the same COUNT is not two
+values doing the same thing until the POSITIONS agree.** The count nearly closed this the wrong
+way round.
+
+### What was added to the model
+Six labelled IPE 400 girders at x 102 000, one per swept ordinal — the sweep itself is the
+evidence and is left in place.

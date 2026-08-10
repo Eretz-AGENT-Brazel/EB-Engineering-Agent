@@ -253,3 +253,26 @@ The manual's third option exists in the dialog; its ordinal is not 2 and remains
 
 **One command, two stiffeners.** `created=2` on every insertion into a symmetric section, without
 exception across 33 insertions.
+
+---
+
+## AUDIT 10/08/2026 — the `CenterPunchType` ordinal, closed
+
+The note left this open: *"the manual's third option exists in the dialog; its ordinal is not 2
+and remains unmeasured."* It is a plain `Int32` with no declared enum, so the values were swept on
+six fresh IPE 400 girders:
+
+| value | marks on the girder |
+|---|---|
+| 0, 2, 4, 5 | **none** |
+| **1, 3** | **2** — one per stiffener of the pair |
+
+⚠️ **The count alone would have closed this wrongly.** `1` and `3` were compared by POSITION and
+are identical to the 0.1 mm — `dx 995 / 1005` (the pair, 10 mm apart = the plate thickness),
+`dy 1.5 / 4.3`.
+
+⇒ ⭐ **Two behaviours only: none, and at-centre. "At Edges" is NOT reachable through
+`CenterPunchType`** from this API entry point. A measured negative, not an unknown.
+
+⇒ ⭐ **Method, worth more than the result:** two values giving the same COUNT are not doing the
+same thing until their POSITIONS agree.
