@@ -188,6 +188,12 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > ⚠️ **The API does NOT filter by part type — the dialog does.** A column happily reports
 > `KlemmLen=0 Tension=0 MountingBolt=False` with no error. Knowing which fields apply is the
 > caller's job.
+> 🛑 **AND `rw` DOES NOT MEAN THE VALUE WILL SURVIVE.** It means only that the .NET property has
+> a setter. Whether `writeTo` keeps it depends on the **part type**, and the API gives no signal
+> — `rc=0` either way. Measured on a `Ks_Grid`: `Note1`, `Name` and `Article` are all marked
+> `rw` and are all **silently discarded**, while `AreaClass` sticks; on a `Ks_Shape` all four
+> stick. ⇒ **`propset`'s read-back is not a nicety, it is the only thing that tells the two
+> apart.** (A.1, and it corrected this block's own first wording.)
 > ⚠️ **A plate's `Name` cannot be written** — it is *generated* from the dimensions (E.9.2 lists
 > `Name` twice for exactly this reason). Measured on 4 plates: ignored every time; the same call on
 > 3 shapes worked. **Label a plate with `Note1` / `Note2` / `Posnum`.**

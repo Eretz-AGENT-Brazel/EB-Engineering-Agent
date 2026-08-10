@@ -1,1 +1,1 @@
-﻿EB_OK vfy_size parts=820 limit=20000 oversize=0 (grids/frames skipped=47) largest=19500 (36D)  [run this after ANY op that can resize an existing member -- the haunch stretched a rafter to 317,000 mm and nothing noticed] -> eb_vfy_size.txt reqid=9643da9b
+﻿EB_OK save 'C:\Users\User\Desktop\EB PROSTEEL AGENT\projects\SANDBOX\A-dialogs-templates-settings.dwg' bytes=72065->73803 at=12:02:29 reqid=42fead27
