@@ -81,6 +81,52 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 >
 > **Model baseline, 09/08:** 835 parts · 194 bolts · 593 holes · 187 matched · 0 oversize.
 
+> ## 📝 THE PROPERTIES DIALOG IS A WRITE SURFACE (E.9, 10/08)
+> Full notes: **`knowledge/MANUAL-NOTES-E09-properties-dialogs.md`**.
+>
+> ⭐⭐ **Every field in ProSteel's properties dialog is a property on `PsObjectProperties`, and that
+> class has `writeTo(Int64 ObjId)`.** Measured: 14 fields set in one call, `writeTo.rc=0`, **14/14
+> survived a re-read from a fresh instance**, and AutoCAD drew the result (the column turned green
+> from `ColorIndex=3`, grew a centre line from `CenterLineMode=1`) — confirmation by a route
+> completely independent of the read-back.
+>
+> | op | what it does |
+> |---|---|
+> | **`propfull handle= [tab=]`** | all ~120 properties under the dialog's own tab headings, `rw`/`r-` marked |
+> | **`propset handle= <AnyProperty>=<v> …`** | writes any of them, then **re-reads and reports before → after per field** |
+> | **`propcopy src= dst= [tabs=4,6]`** | "match properties"; defaults to Data + Assignments so it does **not** carry geometry |
+> | **`changesection handle= key=HE400B`** | ⭐ **swap a section in place** — IPE300 → IPE500, length and position kept, weight recomputed correctly |
+>
+> ⚠️ **The API does NOT filter by part type — the dialog does.** A column happily reports
+> `KlemmLen=0 Tension=0 MountingBolt=False` with no error. Knowing which fields apply is the
+> caller's job.
+> ⚠️ **A plate's `Name` cannot be written** — it is *generated* from the dimensions (E.9.2 lists
+> `Name` twice for exactly this reason). Measured on 4 plates: ignored every time; the same call on
+> 3 shapes worked. **Label a plate with `Note1` / `Note2` / `Posnum`.**
+> 🧲 **`KlemmLen` is the bolt's GRIP LENGTH**, `Tension` its **pre-tension %**, `MountingBolt` the
+> site-vs-shop flag. Grip length against the summed thicknesses of the connected parts is
+> ProSteel's *own* answer to the iron rule — stronger than the proximity matcher, which is blind to
+> *which* part a hole belongs to. **Not yet built into a check; the best follow-up available.**
+> ⭐ Logical links live **on the part**: `PsEditLogicalLink.SetObjectId` binds (`PsEditConnection`
+> never did — that was last session's `connverify` failure, from the wrong end).
+
+> ## 🚨 CHANGING A SECTION BREAKS A CONNECTION — kill and rebuild (10/08)
+> Two identical column + beam + end-plate specimens; one given IPE300 → IPE400 by `changesection`.
+> Counted by **AutoCAD class**, not by the matcher:
+>
+> | | Ks_Shape | Ks_Plate | Ks_Bolt |
+> |---|---:|---:|---:|
+> | untouched | 4 | 8 | **6** |
+> | after the section change | 4 | 8 | **4** |
+>
+> **Two bolts destroyed, their two holes left abandoned in the end plate.** The section swap itself
+> is correct; the **joint** is silently wrong — and a silently wrong joint is a wrong shop drawing.
+>
+> ⇒ **`connkill` → change the section → rebuild the connection.** Proven: back to 6 bolts, 0 orphans.
+> `changesection` now **refuses** on a part carrying logical links and requires `force=1`.
+> ⚠️ **The general lesson: any op that can resize an existing member must be followed by `vfy_bolts`
+> on that bay.** Same family as the blast guard.
+
 > ## ✋ THREE STRIKES — AFTER 3 REFUSALS, STOP TRYING (adopted 09/08)
 > When a creator refuses, **try at most three configurations.** Then do one of:
 > **(a)** build the thing by **composition** from calls that are known to work · **(b)** ask Amir in

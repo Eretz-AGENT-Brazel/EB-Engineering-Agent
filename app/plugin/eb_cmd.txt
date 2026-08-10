@@ -1,3 +1,4 @@
-reqid=2d344075
-op=ping
+reqid=3ce5f7d7
+op=zoom
+handle=2BE
 dwg=E-structural-elements.dwg

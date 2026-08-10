@@ -1,1 +1,1 @@
-﻿EB_OK ping 09:09:40 reqid=2d344075
+﻿EB_OK zoom handle=2BE w=530.33 h=4021.246 margin=0.25 reqid=3ce5f7d7

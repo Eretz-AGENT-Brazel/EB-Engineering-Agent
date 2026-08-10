@@ -290,8 +290,24 @@ part weight it is not. Worth knowing which one a parts list is quoting.
 
 ## Outlets
 
-Types **0 / 1 / 2** (rectangular / wedge / circular) all apply to a shape; the `outlets` count
-climbs 0 → 1 → 2 → 3.
+> ### 🛑 RETRACTED 10/08/2026 — see `MANUAL-NOTES-E09-properties-dialogs.md`
+> This section used to read: *"Types 0 / 1 / 2 (rectangular / wedge / circular) all apply to a
+> shape; the `outlets` count climbs 0 → 1 → 2 → 3."* **Both halves of that are wrong.**
+>
+> **The type numbering.** `OutletType` is
+> `kUndefinedOutlet, kOutletRectangle, kOutletTriangle, kOutletArc, kOutletInversArc` — so
+> **0 is UNDEFINED**, and the real mapping is **1 = rectangle · 2 = triangle · 3 = arc ·
+> 4 = inverse arc**. Read off the surface dump. (The enum trap, again: values are measured,
+> never inferred from the order of the neighbouring names.)
+>
+> **The claim that it worked.** Not reproducible. On 10/08, all four types — with and without
+> `SetLength`, across three normals, on a clean beam and on a modified one — returned
+> `applyRc=0` with `outlets` unchanged at 0. **Downgraded to unverified.**
+>
+> Untried, worth three strikes when someone returns to it: `SetXYPlane(XAxis, YAxis)` (the same
+> zero-plane failure that stretched a rafter to 317,000 mm in B.26) ·
+> `SetXPosition/SetYPosition/SetZPosition(PositionSelection)` — which is E.9.16's own
+> **Insertion Position** field · `SetAutomatic(bool)` · `SetFlag(int)`.
 
 ## ⚠️ A composed section key fails silently-ish
 

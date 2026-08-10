@@ -1188,3 +1188,12 @@
 {"op": "miter", "args": {"cut": "10BD", "other": "10BE", "type": "1", "dwg": "B08-insert-shapes.dwg"}, "handle": null, "ts": "16:37:42"}
 {"op": "miter", "args": {"cut": "10D9", "other": "10DA", "type": "1", "dwg": "B08-insert-shapes.dwg"}, "handle": null, "ts": "16:37:45"}
 {"op": "miter", "args": {"cut": "1198", "other": "1199", "type": "1", "dwg": "B08-insert-shapes.dwg"}, "handle": null, "ts": "16:44:15"}
+{"op": "beam", "args": {"name": "HE300B", "p1": "0,0,0", "p2": "0,0,4000", "layer": "E09-props", "dwg": "E-structural-elements.dwg"}, "handle": "2BE", "ts": "09:30:01"}
+{"op": "beam", "args": {"name": "IPE300", "p1": "8000,0,0", "p2": "14000,0,0", "layer": "E09-props", "dwg": "E-structural-elements.dwg"}, "handle": "2C7", "ts": "09:31:22"}
+{"op": "beam", "args": {"name": "IPE300", "p1": "0,300,3500", "p2": "0,6300,3500", "layer": "E09-props", "dwg": "E-structural-elements.dwg"}, "handle": "2C9", "ts": "09:32:03"}
+{"op": "beam", "args": {"name": "HE300B", "p1": "20000,0,0", "p2": "20000,0,4000", "layer": "E09-props", "dwg": "E-structural-elements.dwg"}, "handle": "2E7", "ts": "09:33:09"}
+{"op": "beam", "args": {"name": "IPE300", "p1": "20000,300,3500", "p2": "20000,6300,3500", "layer": "E09-props", "dwg": "E-structural-elements.dwg"}, "handle": "2E8", "ts": "09:33:09"}
+{"op": "plate", "args": {"l": "400", "w": "300", "t": "20", "center": "30000,0,0", "layer": "E09-props", "dwg": "E-structural-elements.dwg"}, "handle": "313", "ts": "09:35:47"}
+{"op": "plate", "args": {"l": "400", "w": "300", "t": "20", "center": "31000,0,0", "layer": "E09-props", "dwg": "E-structural-elements.dwg"}, "handle": "314", "ts": "09:35:47"}
+{"op": "plate", "args": {"l": "400", "w": "300", "t": "20", "center": "32000,0,0", "layer": "E09-props", "dwg": "E-structural-elements.dwg"}, "handle": "315", "ts": "09:38:46"}
+{"op": "beam", "args": {"name": "IPE300", "p1": "40000,0,0", "p2": "44000,0,0", "layer": "E09-props", "dwg": "E-structural-elements.dwg"}, "handle": "316", "ts": "09:40:38"}
