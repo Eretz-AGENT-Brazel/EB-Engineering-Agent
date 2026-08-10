@@ -686,3 +686,64 @@ unimplemented sub-chapter, only an unverified claim. The band's 12 plates were n
   disk, and `PsCreatePlate` has **no database selector at all**. Both insert buttons are pick-based.
 * `CHECK BENT PLATE` — no API counterpart.
 * Whether `K` is settable anywhere but `CreateOfTwoPlates`' `KValue`.
+
+---
+
+## B.10 — Insert Solids ⭐⭐⭐ **both "never fairly tested" entries closed — and both WORK**
+
+*Manual 4529–… · notes 104 lines · band x = 370 000*
+
+### 1 · Was the chapter learned deeply?
+**Yes, and it earned its findings.** All ten commands, the warning about why ProSteel has its own
+solids, `CreateTorus`' undocumented **third mandatory argument** (`length = 0` fails *silently*),
+and ⭐⭐ **`SetPolygon` takes LOCAL coordinates** — caught because an extrusion came out
+5120 × 5552 instead of 600 × 400. Eight of ten built with exact dimensions, and a solid was
+proven to be a real ProSteel object by drilling it.
+
+Its "Still open" section was **precise about why** each item was open — which is what made them
+closable today.
+
+### 2 · `hull` — it was never a fair test, and it works
+
+> *the notes:* *"needs `SetPoints(PsDataPointArray)`, not `SetPolygon`; the op passes a polygon,
+> so this was never a fair test. **A plugin change is required to try it properly.**"*
+
+The plugin change was made (`solid dpts=…`, feeding a real `PsDataPointArray`) and **`CreateHull`
+builds**:
+
+| points | asked | measured |
+|---|---|---|
+| 6-point wedge | 800 × 600 × 600 | **800 × 600 × 600** ✅ |
+| 4-point tetrahedron | 600 × 500 × 500 | **600 × 500 × 500** ✅ |
+| 8-point **perfect box** | 600 × 600 × 500 | ❌ **nothing created** |
+| 8-point box, corners jittered ±10 | — | **610 × 610 × 500** ✅ |
+
+⚠️ **A perfect box defeats it.** Jitter the corners by 10 mm and the same eight points build.
+Exactly-planar faces appear to be degenerate for the hull algorithm. Use `box` for boxes.
+
+### 3 · `rotate` — closed, and the reason is geometry, not a refusal
+
+Two hypotheses, both confirmed:
+
+| | |
+|---|---|
+| ⭐ the polygon is **LOCAL 2D — `x,y` only** | the first axis-Z profile `200,0,0;500,0,0;500,0,400;200,0,400` collapsed to a **zero-area line** and failed; the same shape as `200,0;500,0;500,400;200,400` builds |
+| ⭐⭐ the **axis is in WORLD coordinates** while the polygon is local | the first success came out **761 000 mm** across — swept around the world origin, 370 000 away. Put the axis through the insert point and a 300 × 400 profile at radius 200…500 measures **1000 × 400 × 1000**, exactly right |
+
+⇒ ⭐ **And the axis must lie IN the profile's plane.** Axis Z is *perpendicular* to the local XY
+plane the polygon lives in, so the profile sweeps within itself — a degenerate revolve. **Not a
+bug; invalid geometry.** Every in-plane axis built.
+
+⚠️ **`rev` does not arrive.** 90°, 180° and 360° produce **identical** solids —
+1000 × 400 × 1000 all three. A full revolve every time. This is THE CEILING §2's signature: the
+call works and the number is ignored.
+
+### 4 · What this closes on THE CEILING
+`CreateHull` and `CreateRotation` both leave §3 *"never fairly tested"* — **both work.** The
+lesson is the same one B.4 taught in July and again this morning: **a verdict is only as good as
+the test that produced it**, and "never fairly tested" is an honest label that must actually be
+acted on rather than carried forward.
+
+### Still open
+* Why a **perfect box** defeats `CreateHull` — measured, not explained.
+* Whether `rev` is degrees at all, or an enum/flag whose values I have not found.

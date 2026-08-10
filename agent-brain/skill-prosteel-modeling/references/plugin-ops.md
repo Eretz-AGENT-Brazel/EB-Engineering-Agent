@@ -1391,3 +1391,33 @@ no position at all.
   carries the gross figure; the reduction belongs to the parts list.
 * `PsCreatePlate` has **no grating-database selector**; `Data/Plates/ImpGrating.mdb` and
   `Platten-Bleche-Roste.mdb` are dialog-only.
+
+---
+
+## `solid` — `hull` and `rotate` both work (closed 10/08/2026)
+
+Both sat on THE CEILING under *"never fairly tested"*. Both build.
+
+### `kind=hull` — use `dpts=`, not `pts=`
+`CreateHull` takes `SetPoints(PsDataPointArray)`. The polygon route was the wrong input.
+
+```
+solid kind=hull dpts=-400,-300,0;400,-300,0;400,300,0;-400,300,0;-100,0,600;100,0,600
+   ->  800 x 600 x 600, exact
+```
+⚠️ **A perfect box creates nothing.** Jitter the corners 10 mm and the same eight points build —
+exactly-planar faces are degenerate. Use `kind=box` for boxes.
+
+### `kind=rotate` — three rules
+1. **The polygon is LOCAL 2D (`x,y` only).** `200,0,0;500,0,0;500,0,400;200,0,400` collapses to a
+   zero-area line and fails. Write `200,0;500,0;500,400;200,400`.
+2. **The axis is in WORLD coordinates** while the polygon is local — pass it through the insert
+   point or the profile sweeps around the world origin (first success measured **761 000 mm**).
+3. **The axis must lie IN the profile's plane.** A Z axis is perpendicular to the local XY plane
+   → degenerate revolve. Geometry, not a refusal.
+
+```
+solid kind=rotate pts=200,0;500,0;500,400;200,400 at=370000,-9000,0 \
+      axis1=370000,-9000,0 axis2=370000,-8000,0     ->  1000 x 400 x 1000
+```
+⚠️ **`rev` is ignored** — 90, 180 and 360 give identical solids.

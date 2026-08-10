@@ -102,3 +102,38 @@ same shape as `-300,-200 … 300,200`, it measured **600 × 400 × 700** exactly
 - **`rotate`** — refused with a world polygon and with a local one; the axis framing is untested.
 - **`hull`** — needs **`SetPoints(PsDataPointArray)`**, not `SetPolygon`; the op passes a polygon,
   so this was never a fair test. A plugin change is required to try it properly.
+
+---
+
+## AUDIT 10/08/2026 — both open items closed
+
+### `hull` works — it needed `SetPoints(PsDataPointArray)`
+
+New parameter **`dpts=`** on the `solid` op (the `pts=` polygon route was never what `CreateHull`
+wanted):
+
+```
+solid kind=hull dpts=-400,-300,0;400,-300,0;400,300,0;-400,300,0;-100,0,600;100,0,600
+   ->  800 x 600 x 600, exact
+```
+
+⚠️ **A perfect box fails.** Eight points forming an exact box create nothing; jitter the corners
+by 10 mm and the same eight build. Exactly-planar faces are degenerate here — use `kind=box`.
+
+### `rotate` works — three rules, all measured
+
+1. ⭐ **The polygon is LOCAL 2D (`x,y` only).** A profile given as `200,0,0;500,0,0;500,0,400;…`
+   collapses to a zero-area line and fails. Write it as `200,0;500,0;500,400;200,400`.
+2. ⭐⭐ **The axis is in WORLD coordinates** while the polygon is local. Pass the axis through the
+   insert point, or the profile sweeps around the world origin — the first success measured
+   **761 000 mm** across.
+3. ⭐ **The axis must lie IN the profile's plane.** A Z axis is perpendicular to the local XY plane
+   and gives a degenerate revolve — that is geometry, not a refusal.
+
+```
+solid kind=rotate pts=200,0;500,0;500,400;200,400 at=370000,-9000,0 \
+      axis1=370000,-9000,0 axis2=370000,-8000,0
+   ->  1000 x 400 x 1000, exactly a 300x400 profile revolved at radius 200..500
+```
+
+⚠️ **`rev` is ignored** — 90, 180 and 360 give identical solids. A full revolve every time.

@@ -110,8 +110,8 @@ values did nothing).
 
 | what | why it is open |
 |---|---|
-| `CreateRotation` (rotational solid) | Refused with a world polygon **and** a local one; the axis framing was never varied |
-| `CreateHull` | Needs **`SetPoints(PsDataPointArray)`**, and the op passed a `PsPolygon`. **Never a fair test** |
+| ~~`CreateRotation`~~ | 🛑 **CLOSED 10/08 — IT WORKS.** The polygon is **local 2D (x,y only)**, the **axis is WORLD**, and the axis must lie **in the profile's plane**. A 300x400 profile at radius 200-500 measures 1000x400x1000 exactly. ⚠️ `rev` is ignored: 90/180/360 all give a full revolve |
+| ~~`CreateHull`~~ | 🛑 **CLOSED 10/08 — IT WORKS.** Fed a real `PsDataPointArray` (`solid dpts=`) it builds exactly: 6-point wedge 800x600x600, 4-point tetra 600x500x500. ⚠️ A **perfect box** creates nothing; jitter the corners 10 mm and it builds |
 | Clone's other four categories | Only Drill Holes was attempted. Cuts, PolyCut, Notches, Boolean untried |
 | `ClsParameters.ReadFromTemplate` / `WriteToTemplate` | ⭐ The one PSN route not tried — it may bypass the pick |
 | `PsEditConnection.LinkType` | Always `kUndefinedLink`; there may be a binder that was not found |
