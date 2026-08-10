@@ -1181,3 +1181,57 @@ this chapter's own base-plate / end-plate / purlin finding. **Set, confirmed, ig
 * **B.17.2's DAST load-based connection selector — PHASE 2, LOCKED.** Knowing the tool exists is
   phase 1; using it to rule on a design is not, and it was not touched.
 * Writing to the connection databases — reachable, and Amir's call.
+
+---
+
+## B.18 — Base Plates ⚠️ **two items left alone on instruction; the third is NOT closed, and says so**
+
+*notes 125 lines*
+
+### 1 · Was the chapter learned deeply?
+**Yes.** It measured the column shortening and found *both* earlier accounts partial; it explained
+**why the anchor length is "graphic only"** — a property of the software, not a choice of Amir's;
+and it decoded `Use Dowel` correctly against the model: *"dowel elements are created as **volume
+bodies**"* matches the `Ks_VolBody` anchors measured in Amir's own model, **Dübel = dowel**, and
+`Data\Bolts\Duebel.mdb` is that database.
+
+### 2 · Two items deliberately untouched
+
+* **`Duebel.mdb`'s structure and how to name it as the `Input Field`** — ⏸️ **deferred by Amir**,
+  verbatim: *"תעבור למחברי קורות, אל תתעכב על זה."* Recorded so it is not lost; **not chased.**
+* **`Standard Definitions` — load-based base-plate selection.** 🔒 **Phase 2, locked.** Same line
+  as B.17.2's DAST selector.
+
+### 3 · The third item — measured, and it did NOT resolve
+
+> *the note:* *"`connbase` returns `host_holes=0 anchors_with_body=0` even when it reports
+> `create=True` — the holes in the column are a separate matter that needs checking."*
+
+Run on a fresh HE 300 B with `template=default/Standard`:
+
+```
+connbase host=15CA added=1 check=1 create=True host_holes=0 anchors_with_body=103
+         anchor_bbox=50x0x0
+column holes after       : 0
+plates found in the footprint (±600 mm of the column): 0
+Ks_VolBody found in the footprint                    : 0
+```
+
+⚠️ **Three numbers that do not reconcile.** The op reports 103 anchors with bodies while an
+independent scan of the same footprint finds **no plate and no volume body**, and
+`anchor_bbox=50x0x0` is degenerate. At least one of these is measuring the wrong thing —
+`anchors_with_body=103` looks like a model-wide count rather than this connection's.
+
+⇒ **NOT CLOSED, and deliberately not written up as though it were.** The next step is specific:
+**find out what `anchors_with_body` actually counts** before trusting any base-plate report, since
+it is the number that would tell us whether the iron rule is satisfied.
+
+⚠️ **And the iron-rule question behind it is still unanswered:** an anchor connects the base
+**plate** to the concrete, so `host_holes=0` on the *column* may well be correct — a column is not
+an element the anchor passes through. **The plate is the element that must carry the holes**, and
+this run did not produce a plate the scan could find.
+
+### Method note
+This chapter is written as an **open item with a named next step**, not as a closure. Three
+conclusions were withdrawn today because reasoning had been filed as a finding; a fourth will not
+be added by rounding a confusing measurement up to an answer.
