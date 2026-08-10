@@ -167,5 +167,19 @@ finding.
 
 ⇒ **The capability is proven; the scheme is Amir's.**
 
-## Model state
-The six test beams were erased afterwards.
+## Model state — **measured, not assumed**
+
+An independent verification pass caught this line originally standing as a bare assertion
+(*"the six test beams were erased afterwards"*) with **nothing in the audit record to support
+it** — the exact measurement-versus-explanation failure this whole audit exists to correct. So it
+was measured instead of argued.
+
+The six B.5 test beams stood at **x = 470 000**. Scanning the final census of 10/08
+(`eb_model.txt`, 356 `SHAPE` rows) for anything in **x 468 000 – 472 000**:
+
+```
+0 shapes found
+```
+
+⇒ ✅ **They are gone.** The strip is empty, and that is a reading of the model rather than a
+recollection of having deleted them.
