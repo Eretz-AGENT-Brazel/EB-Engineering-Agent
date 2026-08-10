@@ -139,16 +139,34 @@ indirection. Worth checking the COM twin before concluding.
 Only beam bolts appear — the plate is welded to the support and bolted to the connected shape,
 exactly as a shear plate should be.
 
-⭐ **Plate length is derived from the bolt count: 135 for two rows, 210 for three.** The 75
-difference is the same pitch B.19's angles used. **Both chapters share one derivation rule.**
+> ### 🛑 CORRECTED 10/08/2026 — this paragraph used to read:
+> *"⭐ **Plate length is derived from the bolt count: 135 for two rows, 210 for three.** The 75
+> difference is the same pitch B.19's angles used. **Both chapters share one derivation rule.**"*
+>
+> **The length is 70 in both.** `props`: `717 L=70 W=135 H=10` · `71E L=70 W=210 H=10`. What the
+> bolt count drives is the **section width** — the plate's depth — at a **fixed 70 mm stick-out**.
+>
+> ⚠️ **And the two chapters do NOT share one rule.** B.19's angles were re-measured the same day
+> rather than edited to match: `L 90x9`, **`L=135` / `L=210`, `W=90 H=90`** — a **catalogue**
+> section cut to length, its section never changing. B.19's sentence is **true**; only this one
+> was false.
+>
+> ⇒ ⭐⭐ **That difference is the whole reason the FL/BRFL/Plate problem exists here and not
+> there.** A web angle always lands on a real catalogue entry because only its length varies. A
+> shear plate **re-derives its section for every joint** and can land on a width no mill rolls.
 
 ## ⭐⭐ `Poly-Plates` changes the ENTITY CLASS
 
-`Ks_Shape` → **`Ks_Plate`**, with the geometry unchanged at 70×10×135.
+`Ks_Shape` → **`Ks_Plate`**, with the geometry unchanged at 70 long × 135 wide × 10 thick.
 
 The default product is a **`Ks_Shape`** — i.e. a **catalogue flat bar**, not a plate. That is what
 the manual means by *"poly-plates are inserted **instead of flats**"*, and it is what makes
 `Turn Flat` (FL vs BRFL) a real ordering decision.
+
+⇒ ⭐ **And when the derived width is not stock, `Poly-Plates` is the HONEST representation.** The
+part is called `Plate 135x10` because it will be cut from plate; modelling it as a `Ks_Plate` says
+the same thing in the entity class. *(Reasoning, offered as reasoning — the parts-list half was
+not tested.)*
 
 ⚠️ **This is the same trap as B.19's `Use Flat` → `Ks_BendShape`.** Two consecutive chapters each
 hide an entity-class switch behind a checkbox. **Any parts-list or audit query filtered by entity
@@ -210,3 +228,125 @@ namespace — is the remaining candidate, and belongs with **B.12.6 Notch betwee
 - ⚠️ **The load database is empty again**: `get_PlateDataCount()` = **0**, the same as B.19. So the
   `H(kN)` / `Hz(kN)` selection and the `MaH / MaHz` capacities have no data behind them on this
   installation — this is a **product-wide gap, not a B.19 quirk**.
+
+---
+
+# AUDITED 10/08/2026 — what changed
+
+*Full record: `knowledge/learning/audits/AUDIT-PART-B-2026-08-10.md` § B.20. Plugin v156 → v160.*
+
+## 🛑 CORRECTED — "plate length is derived from the bolt count"
+
+The 09/08 note read: *"⭐ Plate length is derived from the bolt count: 135 for two rows, 210 for
+three."*
+
+**The length is 70 in both.** Read back with `props`:
+
+```
+717   name='Plate 135x10'  L=70   W=135  H=10
+71E   name='Plate 210x10'  L=70   W=210  H=10
+```
+
+What the bolt count drives is the **section width** — the plate's depth — not its length. The
+distinction is not pedantry: the FL / BRFL / Plate decision below is made on **exactly that
+number**, so calling it "length" points the reader at the one dimension that does not matter.
+
+## ⭐⭐⭐ The part's NAME states its mill product
+
+| `name` | `key` | `cat` | meaning |
+|---|---|---|---|
+| `FL 150x10` | `150X10` | `DIN.DIN_FLACH` | in **`DIN FLACHEISEN`** — flat bar, stock |
+| `BRFL 160x15` | `160X15` | `DIN.DIN_FLACH` | in **`DIN_BREITFLACHEISEN`** — wide flat, stock |
+| **`Plate 135x10`** | `135X10` | `DIN.DIN_FLACH` | ⚠️ **in neither — the part is cut from plate** |
+
+⚠️ **`key` and `cat` are identical in all three and tell you nothing.** `DIN.DIN_FLACH` is the
+stored family label, not a resolvable catalogue — `dumpcat DIN_FLACH` returns nothing. The real
+catalogues are `DIN FLACHEISEN` (419 names, widths 10…150) and `DIN_BREITFLACHEISEN` (338 names,
+widths 160, 180, 200, 220, 240, 250 … 1200). They are disjoint, and **neither holds 135 or 210.**
+
+**Proved by prediction**, three fresh bays, each name declared before the connection was run:
+
+| `holevert` | depth | predicted | measured |
+|---:|---:|---|---|
+| 110 | 150 | `FL 150x10` | ✅ |
+| 120 | 160 | `BRFL 160x10` | ✅ |
+| 125 | **165** | `Plate 165x10` | ✅ |
+
+165 sits *inside* the wide-flat range and is not a stock width ⇒ **the test is catalogue
+MEMBERSHIP, not a size range.**
+
+## `Turn Flat` — closed, as a measured negative
+
+`Ks_ComShearPlateLinkData` and `PsShearPlateLinkDataMgd` carry **identical property sets**
+(COM adds `GetData`/`SetData` blobs, .NET adds `UnmanagedObject`). **Neither has `Turn Flat`.**
+The 09/08 note's *"worth checking the COM twin before concluding"* is now done.
+
+⇒ From code the only lever on FL-vs-BRFL-vs-Plate is the **hole geometry**, and the `name` field
+is how the result is checked. ⛔ What a **parts list** prints was not tested — that is part C.
+
+## ⭐ `Position` — the ordinals, swept
+
+| `pos` | plates | where | bolt |
+|---|---:|---|---|
+| **0** | 1 | +9.30 from web centre | M16 × 45 |
+| **1** | 1 | −9.30 | M16 × 45 |
+| **2** | **2** | **both sides** | **M16 × 55** |
+| 3 · 4 · 5 | 0 | — | `Create()` returned **True** and built nothing |
+
+⭐ At `pos=2` the **bolt lengthened by itself, 45 → 55** — one more 10 mm plate in the packet, one
+step up the table, no bolt parameter touched.
+
+## ⭐⭐ The joint's link topology — who owns what
+
+```
+beam   (connected)  type=17/kConnectWithSchearPlate     parts=<plates>  bolts=<bolts>  target=<column>
+column (support)    type=12/kConnectedBy                empty                          target=<beam>
+plate               type=18/kSchearPlateConnectionLink  empty                          target=<beam>
+bolt                NO LINK AT ALL
+```
+
+⇒ **The connected shape owns the joint.** It is the only member holding the roster and the only
+one pointing at the support. **A bolt cannot be traced to its connection from the bolt's side.**
+
+⇒ **`LinkObjectCount` is always 2 — one slot per side of the web.** `pos` chooses which slot is
+filled; `pos=2` fills both. The dialog's `left / right / Both` *is* the data structure.
+
+## `GetPlateId` — still returns 0, and it no longer matters
+
+The 09/08 measurement stands. The plates are reachable through the logical link instead, and the
+**settings are readable back** through the getter that works:
+
+| call | result |
+|---|---|
+| `PsLogicalLink.GetShearPlateLinkData()` | ⛔ `PlateThickness=0` on every joint member |
+| **`PsShearPlateConnection.GetLink().GetLinkData(0)`** | ✅ `t=18 pos=2 nV=2 nH=2 dV=140 dia=22` |
+
+⚠️ Only straight after `Create()`. There is no binder to an existing joint.
+
+## ⛔⛔ `dia=` DROPS THE BOLTS — a drilled, unbolted joint that reported success
+
+| | plates | bolts |
+|---|---:|---:|
+| `t=10 dia=16` | 2 | 4 ✅ |
+| `t=10` **`dia=22`** | 2 | **0** |
+| `t=18 dia=16` | 2 | 4 ✅ |
+| `t=18` **`dia=22`** | 2 | **0** |
+
+**The diameter is the killer; the thickness is irrelevant.** `HoleDiameter` names the *hole*; the
+bolt comes from `BoltStyle`. A ⌀22 hole against the default `8.8S` has no bolt to match and the
+connection **drops it silently** — iron rule 1 violated, and `EB_OK` returned, because the op's
+success test was "the census grew".
+
+⇒ **Rule: set the diameter through the STYLE. Leave `dia` = bolt + workloose.**
+⇒ **Fixed in v160:** `shearplate` now answers `EB_ERR ⛔IRON-RULE` when it makes plates and no
+bolts. Verified both ways.
+
+⚠️ **`webangle`, `splice`, `haunch` and `connbase` take the same parameter and were NOT tested.**
+That is a task for their chapters, not a finding about them.
+
+## Band, after the audit
+
+x = 130 000. Seven joints, **every one bolted** (checked with the fixed `connscan`):
+y 12 000 / 15 000 / 18 000 = ordinal sweep · y 30 000 / 33 000 / 36 000 = naming prediction ·
+y 39 000 = link read-out. The three no-result bays and every y ≥ 42 000 strip were erased —
+three of the latter were drilled and unbolted. Census 1 115 → 1 087.

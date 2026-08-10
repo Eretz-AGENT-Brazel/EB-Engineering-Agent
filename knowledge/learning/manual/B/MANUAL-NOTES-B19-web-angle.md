@@ -168,6 +168,18 @@ One command drilled the beam **and** cut it back. Nothing else was asked for.
 ⭐ **The angle length is derived from the bolt count**: 135 for two rows, 210 for three — a
 difference of **75**, which is exactly the templates' own `vertOff = 75`.
 
+> ### ✅ RE-MEASURED 10/08/2026 during the B.20 audit — this sentence is TRUE, and B.20's twin of
+> ### it was not
+> The B.20 audit retracted *"plate length is derived from the bolt count"* and the consistency
+> guard immediately flagged this line for the shared fragment. **The angles were measured rather
+> than edited**: `665/666 L=135`, `670/671 L=210`, every one `name='L 90x9' key=L90X9 W=90 H=90`.
+>
+> ⇒ **A web angle is a CATALOGUE section cut to length** — `L90X9` never changes, only the length.
+> **A shear plate is a section INVENTED per joint** at a fixed 70 mm stick-out: `L=70` always,
+> `W=135/210`. ⚠️ **The chapters do not share a derivation rule**, and that is exactly why a shear
+> plate can be ordered as a width no mill rolls and a web angle cannot. See
+> `AUDIT-PART-B-2026-08-10.md` § B.20.
+
 ⭐⭐ **`Use Flat` changes the ENTITY CLASS**, not just the shape: `Ks_BendShape` instead of
 `Ks_Shape`. **A model audit that counts only `Ks_Shape` will not see these cleats at all.**
 

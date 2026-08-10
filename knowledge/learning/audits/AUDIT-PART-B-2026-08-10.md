@@ -1268,3 +1268,172 @@ neighbouring chapter does.** Linked in both directions now.
 ### Nothing was built
 The chapter needs no new op. Its DAST half is untestable here (`get_PlateDataCount()=0`) **and**
 phase-2 regardless, and that is the correct place to leave it.
+
+---
+
+## B.20 — Shear Plates ⭐⭐⭐ **the part tells you what it is made of, and nothing was reading the field**
+
+*notes 213 lines · band x = 130 000 · plugin v156 → **v160***
+
+### 1 · Was the chapter learned deeply?
+**Yes.** All six dialog pages, the entity-class switch behind `Poly-Plates`, the cut-type
+difference from B.19 (`cutPlanes` vs `polyCuts`), the three templates with their DIN 7969
+default, and the cope-template naming convention found by probing eight candidate names. It also
+left three items **named with the test that would close them**, which is why they closed.
+
+### 2 · `Turn Flat` — the named check, made, and it turned into something bigger
+
+> *the note:* *"⚠️ **No property for `Turn Flat`.** … Dialog-only unless it hides behind
+> `BoltType`-style indirection. **Worth checking the COM twin before concluding.**"*
+
+**Checked. The COM twin is property-for-property identical** — `Ks_ComShearPlateLinkData` and
+`PsShearPlateLinkDataMgd` differ only by COM's `GetData`/`SetData` blob accessors and .NET's
+`UnmanagedObject` pointers. **There is no `Turn Flat` in either API.** A measured negative.
+
+But the question underneath it — *what does this checkbox change about what gets ordered?* — is
+answerable, and the answer was sitting in a field nothing was reading.
+
+> ### ⭐⭐⭐ The part's own NAME states its mill product
+>
+> | `name` | `key` | `cat` | what it means |
+> |---|---|---|---|
+> | **`FL 150x10`** | `150X10` | `DIN.DIN_FLACH` | an entry in **`DIN FLACHEISEN`** — flat bar, stock |
+> | **`BRFL 160x15`** | `160X15` | `DIN.DIN_FLACH` | an entry in **`DIN_BREITFLACHEISEN`** — wide flat, stock |
+> | **`Plate 135x10`** | `135X10` | `DIN.DIN_FLACH` | ⚠️ **in neither catalogue — it will be cut from plate** |
+>
+> **`key` and `cat` are identical in all three cases and tell you nothing.** Only `name` does.
+
+The two catalogues shipped here are disjoint, and both were enumerated rather than assumed:
+
+```
+DIN FLACHEISEN        419 names   widths 10,11,…,140,150                  (no 135)
+DIN_BREITFLACHEISEN   338 names   widths 160,180,200,220,240,250,…,1200   (no 210)
+```
+
+**And the rule was proved by prediction, not by observation.** Three fresh bays, the derived
+plate depth driven onto a stock FL width, a stock BRFL width, and a width that is stock in
+neither — **each part's name stated in advance, before the connection was run**:
+
+| `holevert` | derived depth | predicted | **measured** |
+|---:|---:|---|---|
+| 110 | 150 | `FL 150x10` | ✅ **`FL 150x10`** |
+| 120 | 160 | `BRFL 160x10` | ✅ **`BRFL 160x10`** |
+| 125 | **165** | `Plate 165x10` | ✅ **`Plate 165x10`** |
+
+⭐ **165 is the probe that discriminates**: it lies *inside* the wide-flat width range and is not
+a stock width. It got `Plate`. ⇒ **the test is catalogue MEMBERSHIP, not a size range.**
+
+⇒ ⚠️ **The fabrication consequence, measured on the band as it already stood:** the shear plate
+derives its depth from the bolt count — **135 for two rows, 210 for three** — and neither is
+stock. Two of the four plates in B.20's own band are `Plate`, not bar. `Turn Flat` is exactly the
+control that would swap which dimension gets tested, and **it cannot be reached from code.**
+What *can* be reached is the hole geometry, and `name` is how you check the result.
+
+⛔ **Not claimed:** what a parts list prints. The manual puts `Turn Flat` in ordering terms and
+the object's name agrees with it, but the parts-list half is **part C** and was not run.
+
+### 3 · `Position` — a whole capability that was read and never exercised
+
+Every shipped template has `pos=0`. `PlatePosition` is a bare `Int32` with no declared enum, so
+the ordinals were swept on six identical fresh bays — **count *and* position, because B.16 showed
+that a count decides nothing**:
+
+| `pos` | new objects | plate at | bolt |
+|---|---:|---|---|
+| **0** | 5 | **+9.30** from the web centre | M16 × 45 |
+| **1** | 5 | **−9.30** | M16 × 45 |
+| **2** | **6** | **+9.30 *and* −9.30** — a plate each side | **M16 × 55** |
+| 3 · 4 · 5 | **0** | — | — |
+
+⭐ **`pos=2` is `Both`, and the bolts grew by themselves: 45 → 55 mm.** Ten more millimetres of
+packet, one step up the bolt table, no bolt parameter touched. *Bolts follow the packet.*
+
+⚠️ **`Create()` returned `True` on 3, 4 and 5 and built nothing** — B.12's rule, a fourth time.
+
+### 4 · `GetPlateId` — the measurement stands; what was inferred from it does not
+
+The note's *"a method that does not work on either class"* is **true and stays**: `GetPlateId(i)`
+returns 0 for every index, on every run, still. What was missing is that the plate is
+**attributable anyway**, and the whole joint with it:
+
+```
+beam   15EE  type=17/kConnectWithSchearPlate    parts=1610,1611  bolts=1612…1615  target=15ED
+column 15ED  type=12/kConnectedBy               (empty)                           target=15EE
+plate  1610  type=18/kSchearPlateConnectionLink (empty)                           target=15EE
+bolt   1612  NO LINK AT ALL
+```
+
+⇒ ⭐⭐ **The connected shape is the joint's owner** — the only member holding the roster and the
+only one pointing at the support. Everything else holds a back-pointer. **A bolt carries no link,
+so a bolt cannot be traced to its connection from the bolt's side.**
+
+⇒ ⭐ **`LinkObjectCount` is always 2, and the two slots are the two sides of the web.** `pos=0`
+fills slot 0, `pos=1` fills slot 1, `pos=2` fills both. The dialog's `left / right / Both` is
+literally the shape of the data structure — and it was invisible until the empty slot was printed
+as `-` instead of as `0`.
+
+**And the settings ARE readable back — through one getter of two that look alike:**
+
+| call | result |
+|---|---|
+| `PsLogicalLink.GetShearPlateLinkData()` on any joint member | ⛔ `PlateThickness=0` — reads nothing |
+| **`PsShearPlateConnection.GetLink().GetLinkData(0)`** | ✅ `t=18 pos=2 nV=2 nH=2 dV=140 dia=22` — **exactly what was set** |
+
+`GetLinkData(1)` and `(2)` are zeroed; index 0 is the live one. ⚠️ Only reachable straight after
+`Create()` — `PsShearPlateConnection` has no binder to an existing joint, the same structural dead
+end B.6 found in `PsGrid`.
+
+### 5 · ⛔ AND THE OP SHIPPED A DRILLED, UNBOLTED JOINT — reporting `EB_OK`
+
+The read-back test used `dia=22` and produced **two plates and not one bolt.** Isolated on four
+fresh bays:
+
+| | plates | bolts |
+|---|---:|---:|
+| `t=10 dia=16` | 2 | **4** ✅ |
+| `t=10` **`dia=22`** | 2 | **0** ⛔ |
+| `t=18 dia=16` | 2 | **4** ✅ |
+| `t=18` **`dia=22`** | 2 | **0** ⛔ |
+
+⇒ **The diameter is the killer; the thickness is irrelevant.** `HoleDiameter` names the *hole*;
+the bolt comes from `BoltStyle`. A ⌀22 hole against the default `8.8S` has no bolt to match, and
+the connection **drops the bolt instead of refusing.**
+
+> ### ⛔⛔ This is B.15's ~400 failed bolts arriving through a connection class
+> B.15: *"a grip that has no row in the bolt table fails silently."* Here it is a **diameter**
+> that has no row in the **style** — and the product is precisely what iron rule 1 forbids:
+> **holes with nothing through them.**
+>
+> ⚠️ **And my own op called it `EB_OK`, because its success test was "the census grew".** The same
+> failure as B.9's `dumpmodel` and B.14's `plate9`: **a summary number standing in for the thing
+> it was summarising.**
+
+### 6 · What was fixed — plugin v156 → v160
+
+| | |
+|---|---|
+| ⛔ **iron-rule guard** | `shearplate` now returns **`EB_ERR`** when it creates plates and zero bolts, and says why. Verified: fires on `dia=22`, silent on `dia=16` |
+| **`connscan` printed raw 64-bit pointers** | `parts=140688488454768,0` → **handles**, empty slots as `-`. Unusable output made usable — **and it is what exposed the two-slot structure** |
+| ⚠️ **`GetXxxLinkData() != null` is NOT a type test** | every getter returns a live object on every link, full of zeros. One shear-plate joint was tagged `t17/BASEPLATE/RIB/SPLICE/SHEARPLATE/WEBANGLE/COPE`. The type now comes from **`lk.Type`**, and a block of zeros is not printed at all |
+| `SHEARPLATE[present]` ×3 | three words true of every link ever scanned. Replaced with real parameters |
+| link type printed as a bare ordinal | now **`17/kConnectWithSchearPlate`** — read from the software instead of counted by hand |
+| `shearplate` reports its own product | `own:[ links=1 [kConnectWithSchearPlate parts=… bolts=…] GetLink()=ok readback[0]: … ]` |
+
+**This matters beyond B.20:** `connscan` is the instrument B.21 – B.26 are audited with.
+
+### Model state
+Band x = 130 000. **Seven joints kept, every one bolted** — checked with the fixed `connscan`,
+not assumed: y 12 000 / 15 000 / 18 000 = the ordinal sweep · y 30 000 / 33 000 / 36 000 = the
+naming prediction · y 39 000 = the link read-out. **Erased:** the three bays whose ordinal
+produced nothing, and every y ≥ 42 000 strip — **three of which were drilled and unbolted.**
+Census 1 115 → **1 087**, saved.
+
+### Still open
+* **What `Turn Flat` does to a parts list** — the object's name is measured; the list is part C.
+* **`get_PlateDataCount() = 0`** — the load database is empty here as in B.19. Product-wide, and
+  phase-2 regardless.
+* **The cope** — unchanged from 09/08, still not reachable from this connection's link data.
+  `PsCopeConnection` is the route and **B.12 proved it works**; linked now, as B.19 was.
+* ⚠️ **`dia=` on the other connection ops has NOT been swept.** The bolt-drop was measured on
+  `shearplate` alone. `webangle`, `splice`, `haunch` and `connbase` take the same parameter and
+  **were not tested**, so this is a **task for their chapters, not a finding about them.**

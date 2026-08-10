@@ -1653,3 +1653,157 @@ reads back `True`** — and the connection is identical either way (the same eig
 ⇒ Another **parameter that never arrives**. ⚠️ Its other route, `connset`'s generic reflection
 setter, is **QUARANTINED** — it crashed AutoCAD four times and once left the drawing unsaveable.
 Do not un-quarantine it to reach a property that does nothing.
+
+---
+
+## ⛔ `dia=` ON A CONNECTION DROPS THE BOLTS — B.20 audit, 10/08/2026 (v156 → v160)
+
+**Measured on four fresh bays, `shearplate`, `default/Standard`:**
+
+| | plates | bolts |
+|---|---:|---:|
+| `t=10 dia=16` | 2 | **4** ✅ |
+| `t=10` **`dia=22`** | 2 | **0** ⛔ |
+| `t=18 dia=16` | 2 | **4** ✅ |
+| `t=18` **`dia=22`** | 2 | **0** ⛔ |
+
+**The diameter is the killer. The thickness is irrelevant.** `HoleDiameter` names the **hole**;
+the bolt comes from **`BoltStyle`**. A ⌀22 hole against the default `8.8S` has no bolt to match,
+and the connection **drops the bolt instead of refusing** — plates made, holes drilled, nothing
+through them. That is iron rule 1 broken, silently.
+
+> ⭐ **This is B.15's ~400 failed bolts arriving through a connection class.** There it was a
+> *grip* with no row in the table; here it is a *diameter* with no row in the style.
+
+**Rule: choose the diameter through the STYLE. Leave `dia` = bolt + workloose.**
+
+**Guard added (v160):** `shearplate` returns **`EB_ERR … ⛔IRON-RULE`** when it creates plates and
+zero bolts, naming the likely cause. Verified: fires on `dia=22`, silent on `dia=16`. The geometry
+is **not** rolled back — deleting a caller's parts behind their back is worse — it is reported.
+
+⚠️ **`webangle`, `splice`, `haunch`, `connbase` take the same parameter and were NOT tested.**
+Assume nothing about them; sweep `dia` when their chapter comes up.
+
+---
+
+## 🔗 `connscan` — two defects fixed, and the fix is what found the structure (v157 → v158)
+
+**Before:** `parts=140688488454768,0` — raw 64-bit ObjectId pointers. Unusable by any other op,
+different every session, and the `0` read like data.
+**After:** handles, with an empty slot printed as `-`:
+
+```
+MEMB  15EE  0  parts=1610,1611 (2/2 filled)  bolts=1612,1613,1614,1615 (4/4 filled)  target=15ED
+MEMB  15EA  0  parts=1600,-    (1/2 filled)  bolts=1601,1602,1603,1604 (4/4 filled)  target=15E9
+MEMB  15EC  0  parts=-,1608    (1/2 filled)  bolts=1609,160A,160B,160C (4/4 filled)  target=15EB
+```
+
+⇒ ⭐⭐ **`LinkObjectCount` is always 2 and the two slots are the two sides of the web.** `pos=0`
+fills slot 0, `pos=1` fills slot 1, `pos=2` fills both. The dialog's `left / right / Both` **is**
+the data structure — invisible until the empty slot stopped printing as `0`.
+
+### ⚠️⚠️ `GetXxxLinkData() != null` IS NOT A TYPE TEST
+
+Every one of `GetBasePlateLinkData` / `GetStiffenerLinkData` / `GetSpliceJointLinkData` /
+`GetShearPlateLinkData` / `GetWebAngleLinkData` / `GetCopeLinkData` **returns a live object on
+every link, full of zeros.** One shear-plate joint was therefore tagged
+`t17/BASEPLATE/RIB/SPLICE/SHEARPLATE/WEBANGLE/COPE` and the whole type histogram was noise.
+
+**The type is `lk.Type`, and it always was.** Now printed as `17/kConnectWithSchearPlate`, and a
+block of zeros is not printed at all — a block of zeros is not information, it is a false reading.
+
+### The joint's link topology — who owns what
+
+```
+connected shape   type=17/kConnectWithSchearPlate     parts=<plates>  bolts=<bolts>  target=<support>
+support shape     type=12/kConnectedBy                empty                          target=<connected>
+each plate        type=18/kSchearPlateConnectionLink  empty                          target=<connected>
+each bolt         NO LINK AT ALL
+```
+
+⇒ **The connected shape owns the joint** — the only member holding the roster, the only one
+pointing at the support. ⚠️ **A bolt carries no link, so it cannot be traced to its connection
+from the bolt's side.**
+
+---
+
+## ⭐⭐⭐ THE PART'S NAME STATES ITS MILL PRODUCT — B.20, and it applies to every flat any connection makes
+
+| `name` | means |
+|---|---|
+| **`FL 150x10`** | an entry in **`DIN FLACHEISEN`** — flat bar, widths 10…150. **Stock.** |
+| **`BRFL 160x15`** | an entry in **`DIN_BREITFLACHEISEN`** — wide flat, 160/180/200/220/240/250…1200. **Stock.** |
+| **`Plate 165x10`** | ⚠️ **in neither catalogue. The part will be cut from plate.** |
+
+⚠️ **`key` and `cat` are identical in all three** — every one reads `key='165X10' cat='DIN.DIN_FLACH'`.
+`DIN.DIN_FLACH` is a stored family label, not a resolvable catalogue (`dumpcat DIN_FLACH` returns
+nothing; the lookup names are `DIN FLACHEISEN` and `DIN_BREITFLACHEISEN`). **Only `name` tells you.**
+
+**Proved by prediction**, three bays, each name declared before the run: `holevert` 110 → depth
+150 → `FL 150x10` ✅ · 120 → 160 → `BRFL 160x10` ✅ · **125 → 165 → `Plate 165x10`** ✅.
+165 lies *inside* the wide-flat range and is not a stock width ⇒ **the test is catalogue
+MEMBERSHIP, not a size range.**
+
+⚠️ **`shapeinfo catalog=… name=…` CANNOT be used as an existence test** — `GetSectionPolygon`
+generates the rectangle from the name and answers for `135x10` and `210x10`, which no catalogue
+holds. **`dumpcat` enumerates the real names; that is the authority.**
+
+### Why it matters, and where it bites
+
+A shear plate derives its depth from the bolt count — **135 for two rows, 210 for three** — and
+**neither is a stock width.** Move a hole 5 mm and a `Plate` becomes an `FL`. ⚠️ Two of the four
+plates in B.20's own band are `Plate`, not bar.
+
+⭐ **A web angle cannot have this problem** and the contrast is the point: `L 90x9` is a
+**catalogue** section cut to length (`L=135` / `L=210`, section fixed), while a shear plate is a
+section **invented per joint** at a fixed 70 mm stick-out (`L=70`, `W=135/210`).
+**The two chapters do not share a derivation rule.**
+
+⛔ **Not claimed:** what a parts list prints. The object's name is measured; the list is part C.
+
+---
+
+## `shearplate` — the ordinals, and the read-back that works
+
+```
+pos=0  one plate, +9.30 from the web centre     M16 x 45
+pos=1  one plate, -9.30                          M16 x 45
+pos=2  TWO plates, both sides                    M16 x 55   <- the bolt grew by itself
+pos=3,4,5   nothing built, and Create() returned True
+```
+
+⭐ **`pos=2` is `Both`.** Ten more millimetres of packet moved the bolt one step up the table with
+no bolt parameter touched — *bolts follow the packet.*
+
+**Reading a connection's own settings back — two getters that look alike, one works:**
+
+| call | result |
+|---|---|
+| `PsLogicalLink.GetShearPlateLinkData()` on any joint member | ⛔ `PlateThickness=0` |
+| **`PsShearPlateConnection.GetLink().GetLinkData(0)`** | ✅ `t=18 pos=2 nV=2 nH=2 dV=140 dia=22` |
+
+Index 0 is the live one; 1 and 2 are zeroed. ⚠️ **Only straight after `Create()`** — there is no
+binder to an existing joint (the same structural dead end as `PsGrid` in B.6).
+
+**`GetPlateId(i)` still returns 0 on every index.** It is not the route; the link is.
+
+---
+
+## 🔨 BUILDING THE PLUGIN — the exact command (recorded 10/08/2026)
+
+Four `/r:` references, and **two of them are easy to miss**: the source uses
+`PSN_HollowShapeBracing` (B.24), and it does **not** need the COM interop assembly.
+
+```powershell
+$csc  = "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+$acad = "C:\Program Files\Autodesk\AutoCAD 2015"
+$prg  = "C:\Program Files\Bentley\ProStructures Ss6 R1\AutoCAD 2015\Prg"
+$plug = "C:\Users\User\Desktop\EB PROSTEEL AGENT\app\plugin"
+& $csc /nologo /target:library /platform:x64 /out:"$plug\EBAgentApi<N>.dll" `
+  /r:"$acad\acmgd.dll" /r:"$acad\acdbmgd.dll" /r:"$acad\accoremgd.dll" `
+  /r:"$prg\ProStructuresNet.dll" /r:"$prg\PSN_HollowShapeBracing.dll" `
+  "$plug\EBAgentApi<N>.cs"
+```
+
+Bump **five** tokens in the copied source — `EB_RUN<N>` (×2), `ApiCmds<N>` (×2), `EBApp<N>` (×2) —
+then set `DLL` and `RUN_CMD` in `app/eb_api.py`, which is the **only** authority for the version.

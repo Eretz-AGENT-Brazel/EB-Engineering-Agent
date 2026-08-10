@@ -44,3 +44,15 @@ date	phrase	why it is false
 #
 2026-08-10	Never fairly tested	CreateRotation and CreateHull were both closed on 10/08. A third wording of 'never a fair test'.
 2026-08-10	never fairly tested	Same claim, lower case, as it appears in THE CEILING's section title.
+#
+# --- added 10/08/2026, B.20 audit.
+# --- ⚠️ AND A LESSON ABOUT THIS FILE ITSELF. The first draft of these rows also listed the bare
+# --- fragment "135 for two rows, 210 for three", and the guard immediately flagged B.19 for it.
+# --- B.19 was then MEASURED rather than edited: its angles read L=135 / L=210 with a fixed
+# --- L90x9 section, so B.19's sentence is TRUE and only B.20's was false. The over-broad row was
+# --- withdrawn. ⭐ A retraction phrase must be narrow enough to catch only the false claim --
+# --- a fragment shared with a true one turns the guard into a source of new errors.
+#
+2026-08-10	Plate length is derived from the bolt count	The LENGTH is 70 in both cases (props: 717 L=70 W=135, 71E L=70 W=210). The bolt count drives the SECTION WIDTH, which is the number the FL/BRFL/Plate decision is made on. B.20 audit.
+2026-08-10	plate length is derived from the bolt count	Same claim, lower case.
+2026-08-10	Both chapters share one derivation rule	They do not. A web angle is a CATALOGUE section cut to length (L90x9, L=135/210, section fixed). A shear plate is a section INVENTED per joint at a fixed 70 mm stick-out (L=70, W=135/210). That difference is exactly why the shear plate can miss stock and the angle cannot. B.20 audit.
