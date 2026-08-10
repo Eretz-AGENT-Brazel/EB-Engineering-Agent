@@ -16,6 +16,23 @@ family needs one place to look before calling anything unfamiliar.*
 |---|---|---|---|
 | **`computeObjectWeigth(bool)`** | `PsPlate` | B.9, 08/08 | reproduced twice; the second time with a marker file written immediately before the call, which survived reading *"about to run: weight on 501"* |
 | **`checkHoleEdgeDistance(int)`** | `PsVolume` | **B.14 audit, 10/08** | isolated in stages — plate created **and saved**, hole drilled **and saved**, both survived; the call **alone**, on a saved model, killed the process |
+| **`addUserXaxis(PsPoint, PsPoint)`** | **`PsGrid`**, on a grid bound through `PsTransaction.GetObject` | **B.23 audit, 10/08** | killed it **twice**. First with four calls in one run; then **isolated to this call alone**, on a freshly saved model, with `probe=addx` — dead again |
+
+### ⚠️ The third one is a different shape from the first two, and that matters
+
+`addUserXaxis` is **not** a `check*`/`compute*` method. It is an ordinary-looking mutator on an
+ordinary-looking object. What it has in common with the other two is the *route*: a managed
+wrapper reaching into native code that expects a context the .NET caller has not established.
+
+⭐ **Reading a `PsTransaction`-bound object is safe** — `PsGrid`, `PsGussetConnection`, `PsPlate`
+and `PsShape` were all read back with correct values, repeatedly, with no incident. **Writing
+through one killed the session on the first attempt.**
+
+⇒ ⚠️ **Treat every MUTATOR on a `PsTransaction`-bound object as suspect.** Untested neighbours on
+`PsGrid` alone: `addUserYaxis`, `deleteUserXaxisAt`, `deleteUserYaxisAt`, `setAxisLength`,
+`createAxisDescriptions`, `insert`. **`getUserXaxis` / `getUserYaxis` were never reached** — the
+first run called them after the add, and the add is what died, so **their status is UNKNOWN, not
+safe.**
 
 ---
 
@@ -51,20 +68,43 @@ Paid for twice. Follow it:
 
 ## Recovery, when it happens anyway
 
+### ⭐ CORRECTED 10/08/2026 — pass the DRAWING, not a template
+
+The procedure below used to launch with `/t <template>`, which creates a **new** `Drawing1` — and
+a new drawing makes ProStructures raise a modal **"Measurement Unit"** prompt (*"this setting is
+persistent and cannot be changed at a later date"*). That dialog blocks everything, and it
+**cannot be dismissed programmatically**: `BM_CLICK` and `WM_COMMAND`/`BN_CLICKED` to its Metric
+button were both ignored, six attempts. The session had to be killed and started again.
+
+**Put the drawing on the command line instead. Opening an existing drawing never asks.**
+
 ```powershell
 Stop-Process -Name acad -Force
-Start-Process 'C:\Program Files\Autodesk\AutoCAD 2015\acad.exe' -ArgumentList `
-  '/p','"C:\Program Files\Bentley\ProStructures Ss6 R1\AutoCAD 2015\Prg\ProStructures_SS6.1ACAD_E001_409.arg"',`
-  '/t','Ps191_Metric','/ld','ProStructuresLoader.arx' `
-  -WorkingDirectory 'C:\Program Files\Bentley\ProStructures Ss6 R1\AutoCAD 2015\Dwg'
+Start-Sleep -Seconds 5
+$acad = 'C:\Program Files\Autodesk\AutoCAD 2015\acad.exe'
+$arg  = 'C:\Program Files\Bentley\ProStructures Ss6 R1\AutoCAD 2015\Prg\ProStructures_SS6.1ACAD_E001_409.arg'
+$dwg  = 'C:\Users\User\Desktop\EB PROSTEEL AGENT\projects\SANDBOX\B08-insert-shapes.dwg'
+$wd   = 'C:\Program Files\Bentley\ProStructures Ss6 R1\AutoCAD 2015\Dwg'
+Start-Process $acad -ArgumentList "`"$dwg`"",'/p',"`"$arg`"",'/ld','ProStructuresLoader.arx' -WorkingDirectory $wd
+Start-Sleep -Seconds 75
 ```
 
-That is the **ProStructures shortcut's own** profile, template and loader — anything else starts
-plain AutoCAD with no ProSteel. Then reopen the drawing over raw COM (`eb_api._app_doc()` refuses
-while the wrong drawing is open), close the empty `Drawing1`, and `NETLOAD` the plugin again.
+That is the **ProStructures shortcut's own** profile and loader — anything else starts plain
+AutoCAD with no ProSteel. Then `enforce_metric()`, `_netload()`, `ping`, and a census.
+**No second document is created, so nothing has to be closed.**
 
-⚠️ **A crash dialog may appear titled *"AutoCAD Error Report"*.** Close it with `WM_CLOSE`.
-**Never press its send button** — that transmits data to Autodesk.
+### The dialogs that appear afterwards, and what to do with each
+
+| dialog | do |
+|---|---|
+| **`AutoCAD Error Report`** | `WM_CLOSE`. ⛔ **Never press *Send Report*** — that transmits data to Autodesk |
+| **`Error Report - Cancelled`** | follows the above; click **OK** |
+| **`Drawing Recovery`** | click **Close**. ⚠️ **Do not recover** — the disk file was saved immediately before the lethal call and is the good one; an autosave is older |
+| **`Measurement Unit`** | ⛔ **avoid it entirely** by passing the drawing, as above. It cannot be closed from code |
+
+⚠️ **`Get-Process acad` is not the test.** The third lethal call left the process alive and
+`Responding=True` while the op never returned. **Check `modal_dialogs()`** — an
+*"AutoCAD Error Report"* window means it died even though the process is still listed.
 
 ---
 

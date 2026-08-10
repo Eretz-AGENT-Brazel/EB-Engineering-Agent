@@ -1,5 +1,3 @@
-reqid=ff907892
-op=purlin
-dump=1
-template=Default/Example-Purlinshape
+reqid=f2dc8b8a
+op=list
 dwg=B08-insert-shapes.dwg

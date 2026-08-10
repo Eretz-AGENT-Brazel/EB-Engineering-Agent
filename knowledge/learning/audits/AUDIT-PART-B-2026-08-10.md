@@ -1684,3 +1684,126 @@ holes, plus their throwaway girder — was erased. Census **1 201**, saved.
   Amir's call.
 * `kCleat` still has **no shipped template**; the `WeldToSupportShape=False` cleat defect stands as
   recorded — **always set it explicitly.**
+
+---
+
+## B.23 — Gusset Plates ⭐⭐⭐ **the chapter is right about gussets, and it uncovered the binder every other chapter had been looking for in the wrong place**
+
+*notes 199 lines · band x = 170 000 · plugin v162 → **v165** · one CEILING entry retracted, one
+new LETHAL call*
+
+### 1 · Was the chapter learned deeply?
+**Yes, and it is the chapter that did the most with the least.** Its central command has no API
+route at all, so Amir had it built from primitives instead — two complete connections, an angle
+node and a shaped-gusset SHS/channel node, every dimension measured, two mistakes caught by
+measuring, and a collision check run as proof rather than asserted.
+
+Its verdict — *"a gusset plate can be **read and edited** from code, but **not created**"* — was
+half measured. The **not created** half was: `PsGussetConnection` has no `Create`, no `insert`, no
+`SetConnectionObjectId`. **The read-and-edit half was inference from a property list**, and nothing
+had ever bound the class to anything.
+
+### 2 · ⭐⭐⭐ `PsTransaction.GetObject` — 57 overloads, used nowhere
+
+Looking for the gusset's read route turned up one line:
+
+```
+Bentley.ProStructures.Drawing.PsTransaction
+   M  Boolean GetObject(Int64 Id, PsOpenMode Mode, PsGussetConnection& entObject)
+```
+
+…and **fifty-six more overloads beside it** — `PsGrid`, `PsEditConnection`, `PsWeldFlag`,
+`PsPositionFlag`, `PsBoltStyle`, `PsShape`, `PsPlate`, `PsBolt`, `PsAssembly`, `PsBracing`,
+`PsPortalFrame`, `PsStairs`, `PsJoist`, `PsTruss`, `PsHandrail`, `PsLadder`, `PsWorkframe`,
+`PsBendPlate`, `PsBendShape`, `PsArcPlate`…
+
+> ### ⭐⭐ THE BINDER IS NOT ON THE CLASS. IT IS ON THE TRANSACTION.
+> Every chapter that asked *"can I bind this class to an existing object?"* asked it of the
+> **class** — does `PsGrid` have `SetObjectId`, does `PsShearPlateConnection` have `readFrom`.
+> The answer was always no, and the question was always in the wrong place.
+> **Nothing in the plugin had ever used `PsTransaction`.**
+
+**New op `bind`, and it works** — measured on objects whose identity was already known:
+
+```
+2F1  Ks_Grid   grid=True  [name='A' len=24000 wide=15000 type=kRectangle lenDiv=4 wideDiv=3 …]
+456  Ks_Plate  plate=True [name='B9_RECT 400x250x12' L=400 H=12 verts=5 rect=True]
+2C6  Ks_Shape  shape=True [key='HE300B' cat='DIN.DIN_HEB']
+```
+
+### 3 · 🛑 B.6's CEILING entry is retracted
+
+B.6's audit recorded, and put on THE CEILING: *"`PsGrid` cannot bind to an existing frame — no
+`SetObjectId`, no `readFrom`, **no binder of any kind**… the two halves never meet in the API."*
+
+**Grid `2F1` is a real `Ks_Grid` and it bound on the first attempt, with correct values.**
+The claim is withdrawn in the B.6 notes, on THE CEILING, and in `qc/retracted.tsv` in all three
+wordings it was written in.
+
+### 4 · ⛔⛔ And the meeting point is LETHAL — a third entry on the list
+
+With the grid bound, `addUserXaxis` was called on it. **AutoCAD died** — `EB_TIMEOUT`,
+*"AutoCAD Error Report"*. Then, following the protocol exactly: model saved immediately before,
+**one call, its own run**, `probe=addx` running `addUserXaxis` and nothing else.
+
+**Dead again.**
+
+⇒ **`PsGrid.addUserXaxis` on a `PsTransaction`-bound grid is the third lethal call**, after
+`PsPlate.computeObjectWeigth` and `PsVolume.checkHoleEdgeDistance`.
+
+⚠️ **And it is a different shape from the first two.** They were `check*`/`compute*` methods; this
+is an ordinary mutator. What they share is the route — a managed wrapper into native code that
+expects a context the caller has not established.
+
+⇒ ⭐ **Reading a bound object is safe** (grid, plate, shape, all read back correctly, repeatedly).
+**Writing through one killed the session on the first attempt.** Every mutator on a bound object
+is now suspect, and `getUserXaxis`/`getUserYaxis` are **UNKNOWN, not safe** — the add died before
+they were reached.
+
+⇒ **B.6.7 stays closed, for a far better reason than before:** not *"the halves never meet"*, but
+*"they meet, and the meeting point kills the session."*
+
+### 5 · ⛔⛔ `GetObject` does NOT type-check — and that is worse than a crash
+
+Asked for a `Ks_Shape` as a `PsGrid`, it returned **`True`** and handed back a reinterpreted
+pointer:
+
+```
+bind 2C6 cls=grid -> grid=True [name='HE 300 B' len=281474976713490 wide=NaN
+                                lenDiv=0 wideDiv=0 xDesc=234 yDesc=140]
+```
+
+A **read** gives nonsense that looks like data. A **write** through that handle would corrupt the
+object. ⇒ `bind` now reads the entity's real class first and **refuses** a mismatch, quoting the
+measurement.
+
+### 6 · The gusset itself — the chapter's own verdict stands and is now complete
+* **Not creatable:** unchanged. `PsGussetConnection` has no creator, and there is no COM twin.
+* **Readable and editable:** now **measured, not inferred** — `bind cls=gusset` is the route, via
+  `PsTransaction`. ⚠️ There is no `kGussetPlate` object in this model to bind (the band's gussets
+  are hand-built `Ks_Plate`), so the route is proven on its siblings and **not yet on a gusset**.
+  Named as a task, not claimed as a finding.
+* ⭐ The indirect route — **a bracing connection produces gusset plates, and `PsBracing.insert()`
+  exists** — is untouched here and belongs to **B.24**, which is next. The `LogicalLinkType` enum
+  supports it: `kBracingPlate`, `kBracingLasche`, `kBracingConnect`, `kBracingFiller`.
+
+### Model state
+**Nothing was built and nothing was changed.** Two crashes, both recovered with nothing lost —
+the model had been saved immediately before each. Census **1 203**, matching the pre-crash state.
+
+⭐ **The recovery procedure itself was corrected**, at the cost of a wasted restart: launching with
+`/t <template>` creates a new `Drawing1`, which makes ProStructures raise a modal **Measurement
+Unit** prompt that **cannot be dismissed from code** (`BM_CLICK` and `WM_COMMAND`/`BN_CLICKED`
+both ignored, six attempts). **Pass the DWG path on the command line instead** — opening an
+existing drawing never asks, and no second document is created.
+
+⚠️ **And `Get-Process acad` is not the test.** The second crash left the process alive and
+`Responding=True` while the op never returned. **`modal_dialogs()` is the test.**
+
+### Still open
+* **Binding an actual `kGussetPlate`** — no such object exists in this model yet.
+* **Which other mutators on bound objects are lethal** — `addUserYaxis`, `deleteUserXaxisAt`,
+  `setAxisLength`, `createAxisDescriptions`, and `getUserXaxis`/`getUserYaxis` whose status is
+  genuinely unknown. **Each costs a crash to find out; none is worth it without a reason.**
+* `*2`-style distances (a multiple of the **bolt diameter**, not a repeat count) — dialog grammar,
+  and with no creation route there is nothing to send it to.

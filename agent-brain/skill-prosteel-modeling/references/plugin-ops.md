@@ -723,16 +723,28 @@ insert):
 addedX=0  addedY=0  readBackX=0  readBackY=0   census 836 -> 836
 ```
 
-`addUserXaxis` returns **false** on an un-inserted grid and `insert()` creates nothing. Two claims
-were re-verified rather than assumed: `IKs_ComGrid` genuinely has no user-axis equivalent (no
-`AddUserXaxis`, no `GetUserXaxis`) and `PsGrid` genuinely cannot bind to an existing frame (no
-`SetObjectId`, no `readFrom`, no binder of any kind).
+`addUserXaxis` returns **false** on an un-inserted grid and `insert()` creates nothing.
+`IKs_ComGrid` genuinely has no user-axis equivalent (no `AddUserXaxis`, no `GetUserXaxis`) —
+re-verified and still true.
 
-⇒ ⭐ **`PsCreateGrid` is the creator and has no user-axis methods; `PsGrid` has the user axes and
-has neither a creator nor a binder. The two halves never meet in the API.** So building a grid
-from an architect's 2D axis plan is genuinely unreachable — a **tested** closure, not an open
-question. `gridaxes` is kept because it *is* the evidence, and it reads every axis back rather
-than trusting `addUserXaxis`' boolean.
+> ### 🛑🛑 RETRACTED 10/08/2026 (B.23 audit) — the second half of this was wrong
+> This used to continue: *"`PsGrid` genuinely cannot bind to an existing frame — no `SetObjectId`,
+> no `readFrom`, **no binder of any kind**. `PsCreateGrid` is the creator and has no user-axis
+> methods; `PsGrid` has the user axes and has **neither a creator nor a binder**. **The two halves
+> never meet in the API.**"*
+>
+> **`PsTransaction.GetObject(Int64, PsOpenMode, PsGrid&)` binds a live `PsGrid` to an existing
+> `Ks_Grid`.** Measured: `[name='A' len=24000 wide=15000 type=kRectangle lenDiv=4 wideDiv=3]`.
+> **The binder is not on the class — it is on the transaction**, and `GetObject` has 57 overloads.
+> See the `PsTransaction` section at the end of this file.
+>
+> ⇒ ⛔ **B.6.7 stays unreachable, for a better reason:** with the grid bound, **`addUserXaxis`
+> KILLS AutoCAD** — reproduced twice, the second time isolated to that single call on a freshly
+> saved model. It is the third entry in `LETHAL-CALLS-do-not-invoke.md`. **The halves meet, and
+> the meeting point is lethal.**
+
+`gridaxes` is kept because it *is* the evidence, and it reads every axis back rather than trusting
+`addUserXaxis`' boolean.
 B.6.9 user blocks (`UserBlockNameX/Y`, `UserBlockPath`, scales) are writable over COM, untested.
 
 ## 🔩 B.15.1 — BOLTING PARTS: AMIR'S ACTUAL DAILY WORKFLOW (v85)
@@ -1950,3 +1962,84 @@ never arrived at all.
 | **purlin** | all three | ✅ `8.8S` / `DIN7990`, real CRCs |
 | shear plate | `default/Standard` | ✅ `8.8S` |
 | web angle · haunch · base plate | — | **not checked** |
+
+---
+
+## ⭐⭐⭐ `PsTransaction.GetObject` — THE BINDER, AND IT IS NOT ON THE CLASS (B.23, 10/08/2026)
+
+Every chapter that asked *"can I bind this class to an existing object?"* asked the **class** —
+does `PsGrid` have `SetObjectId`, does `PsShearPlateConnection` have `readFrom`. The answer was
+always no, and **the question was in the wrong place.**
+
+```
+Bentley.ProStructures.Drawing.PsTransaction        (using Bentley.ProStructures.Drawing;)
+   Boolean GetObject(Int64 Id, PsOpenMode Mode, T& obj)      -- 57 OVERLOADS
+```
+
+`PsGrid` · `PsGussetConnection` · `PsEditConnection` · `PsWeldFlag` · `PsWeldFlagStyle` ·
+`PsPositionFlag` · `PsPositionFlagStyle` · `PsBoltStyle` · `PsUniversalStyle` · `PsShape` ·
+`PsPlate` · `PsBolt` · `PsAssembly` · `PsBracing` · `PsPortalFrame` · `PsHandrail` · `PsLadder` ·
+`PsStairs` · `PsCircularStairs` · `PsJoist` · `PsTruss` · `PsWorkframe` · `PsBendPlate` ·
+`PsBendShape` · `PsArcPlate` · `PsArcShape` · `PsPrimitive` · `PsSolidReference` ·
+`PsPartFamilyData` · `PsDwgPartList` · `PsMesh` · the whole concrete/rebar family …
+
+**Op: `bind handle=<h> cls=grid|gusset|plate|shape|editconn|weldflag|posflag`.** Measured:
+
+```
+2F1 Ks_Grid  -> [name='A' len=24000 wide=15000 type=kRectangle lenDiv=4 wideDiv=3 xDesc=3 yDesc=4]
+456 Ks_Plate -> [name='B9_RECT 400x250x12' L=400 H=12 verts=5 rect=True]
+2C6 Ks_Shape -> [key='HE300B' cat='DIN.DIN_HEB']
+```
+
+### ⛔⛔ TWO RULES, BOTH PAID FOR
+
+**① READ ONLY. Writing through a bound object killed AutoCAD.**
+`PsGrid.addUserXaxis` on a bound grid: dead. Isolated — saved immediately before, one call in its
+own run — **dead again.** It is the third entry in `LETHAL-CALLS-do-not-invoke.md`, and unlike the
+first two it is not a `check*`/`compute*` method but an **ordinary mutator**.
+⇒ **Reading is safe and proven. Every MUTATOR on a bound object is suspect.**
+⚠️ `getUserXaxis`/`getUserYaxis` are **UNKNOWN, not safe** — the add died before they ran.
+
+**② `GetObject` DOES NOT TYPE-CHECK.**
+```
+bind <a Ks_Shape> cls=grid  ->  grid=True  [len=281474976713490  wide=NaN  xDesc=234]
+```
+It returns **`True`** and hands back a reinterpreted pointer. A read gives nonsense that looks
+like data; a write would corrupt the object. **Always check the entity's real class first** —
+`bind` now refuses a mismatch.
+
+### 🛑 What this retracts
+
+B.6 concluded and put on THE CEILING that *"`PsGrid` … has **no binder of any kind** … the two
+halves never meet in the API."* **Withdrawn.** They meet — at a call that kills the session.
+B.6.7 stays closed for that reason instead.
+
+---
+
+## ⛔ RECOVERY AFTER A CRASH — corrected 10/08/2026
+
+**Pass the DRAWING on the command line. Never `/t <template>`.**
+
+A template creates a new `Drawing1`, and a new drawing makes ProStructures raise a modal
+**"Measurement Unit"** prompt (*"persistent and cannot be changed at a later date"*). It blocks
+everything and **cannot be dismissed from code** — `BM_CLICK` and `WM_COMMAND`/`BN_CLICKED` to its
+Metric button were both ignored, six attempts. Opening an existing drawing never asks, and no
+second document is created, so nothing has to be closed afterwards.
+
+```powershell
+Stop-Process -Name acad -Force ; Start-Sleep -Seconds 5
+Start-Process 'C:\Program Files\Autodesk\AutoCAD 2015\acad.exe' -ArgumentList `
+  '"<full path to the .dwg>"','/p','"…\ProStructures_SS6.1ACAD_E001_409.arg"', `
+  '/ld','ProStructuresLoader.arx' `
+  -WorkingDirectory 'C:\Program Files\Bentley\ProStructures Ss6 R1\AutoCAD 2015\Dwg'
+```
+
+| dialog afterwards | do |
+|---|---|
+| `AutoCAD Error Report` | `WM_CLOSE`. ⛔ **never *Send Report*** |
+| `Error Report - Cancelled` | click **OK** |
+| `Drawing Recovery` | click **Close** — ⚠️ **do not recover**, the disk file is the good one |
+
+⚠️ **`Get-Process acad` IS NOT THE TEST.** A crash can leave the process listed and
+`Responding=True` while the op never returns. **`modal_dialogs()` is the test** — an
+*"AutoCAD Error Report"* window means it died.

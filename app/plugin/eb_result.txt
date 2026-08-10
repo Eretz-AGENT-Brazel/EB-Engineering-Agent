@@ -1,1 +1,1 @@
-﻿EB_OK purlin dump templates=3 properties=27 -> eb_purlin.txt reqid=ff907892
+﻿EB_OK list 1203 entities -> eb_list.txt reqid=f2dc8b8a

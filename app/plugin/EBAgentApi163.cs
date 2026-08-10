@@ -6,7 +6,7 @@
 //
 // Protocol (file-based, avoids command-line quoting + supports Hebrew):
 //   1. Python writes  eb_cmd.txt  (key=value lines, op=... first)
-//   2. Python sends command  EB_RUN162
+//   2. Python sends command  EB_RUN163
 //   3. Plugin executes, writes eb_result.txt: "EB_OK {info}" or "EB_ERR {reason}"
 // C# 5 compatible (csc v4.0.30319).
 
@@ -44,14 +44,14 @@ using Bentley.ProStructures;
 using Bentley.ProStructures.Modeling;
 // PsShapeLoader lives in Steel.Shape (already imported)
 
-[assembly: CommandClass(typeof(EBAgent.ApiCmds162))]
-[assembly: ExtensionApplication(typeof(EBAgent.EBApp162))]
+[assembly: CommandClass(typeof(EBAgent.ApiCmds163))]
+[assembly: ExtensionApplication(typeof(EBAgent.EBApp163))]
 
 namespace EBAgent
 {
     // Registers an assembly resolver so ProSteel's managed assemblies are found
     // in the Prg folder even from a cold AutoCAD session (before any ProSteel cmd).
-    public class EBApp162 : IExtensionApplication
+    public class EBApp163 : IExtensionApplication
     {
         const string PrgDir = @"C:\Program Files\Bentley\ProStructures Ss6 R1\AutoCAD 2015\Prg";
         public void Initialize() { AppDomain.CurrentDomain.AssemblyResolve += Resolve; }
@@ -349,7 +349,7 @@ namespace EBAgent
         }
     }
 
-    public class ApiCmds162
+    public class ApiCmds163
     {
         const string Dir = @"C:\Users\User\Desktop\EB PROSTEEL AGENT\app\plugin";
         static string CurReqId = "";
@@ -439,7 +439,7 @@ namespace EBAgent
             return oid.OldIdPtr.ToInt64();
         }
 
-        [CommandMethod("EB_RUN162", CommandFlags.Modal)]
+        [CommandMethod("EB_RUN163", CommandFlags.Modal)]
         public void Run()
         {
             var kv = ReadCmd();
@@ -6357,7 +6357,43 @@ namespace EBAgent
             string want = Get(kv, "cls", "").ToLowerInvariant();
             long oid = IdFromHandle(h);
             if (oid == 0) { Result("EB_ERR bind: bad handle " + h); return; }
+
+            // ⛔⛔ MEASURED 10/08/2026, AND IT IS THE MOST IMPORTANT THING ON THIS OP:
+            // GetObject DOES NOT TYPE-CHECK. Asked for a Ks_Shape as a PsGrid it returned
+            // TRUE and handed back a reinterpreted pointer -- len=281474976713490, wide=NaN,
+            // xDesc=234. A read gives nonsense; a WRITE through that handle would corrupt the
+            // object. So the entity's real class is checked here first, and a mismatch is
+            // refused rather than reported.
+            string realCls = "?";
+            try
+            {
+                Document doc0 = Application.DocumentManager.MdiActiveDocument;
+                ObjectId id0 = new ObjectId(new System.IntPtr(oid));
+                using (Transaction t0 = doc0.Database.TransactionManager.StartTransaction())
+                {
+                    t0.GetObject(id0, OpenMode.ForRead);
+                    if (id0.ObjectClass != null) realCls = id0.ObjectClass.Name;
+                    t0.Commit();
+                }
+            }
+            catch { }
+            var expect = new Dictionary<string, string>() {
+                { "grid", "Grid" }, { "gusset", "Gusset" }, { "plate", "Plate" },
+                { "shape", "Shape" }, { "weldflag", "WeldFlag" }, { "posflag", "PosFlag" },
+            };
+            if (want.Length > 0 && expect.ContainsKey(want)
+                && realCls.IndexOf(expect[want], StringComparison.OrdinalIgnoreCase) < 0)
+            {
+                Result("EB_ERR bind REFUSED handle=" + h + " is a " + realCls + ", not a '" + want
+                     + "'. GetObject does NOT type-check -- it would return True and hand back a"
+                     + " reinterpreted pointer (measured: a Ks_Shape read as a PsGrid gives"
+                     + " wide=NaN and len=281474976713490). Reading it is nonsense; writing"
+                     + " through it would corrupt the object.");
+                return;
+            }
+
             StringBuilder sb = new StringBuilder();
+            sb.Append(" cls=" + realCls);
             PsTransaction tr = null;
             try
             {
@@ -6371,6 +6407,51 @@ namespace EBAgent
                     try { got = tr.GetObject(oid, PsOpenMode.kForRead, ref g); }
                     catch (System.Exception e) { sb.Append(" grid!EX:" + One(e.Message)); }
                     sb.Append(" grid=" + got + (g == null ? "(null)" : ""));
+                    // ⭐⭐ B.6.7, reopened. Its audit concluded: "PsCreateGrid is the creator and
+                    // has no user-axis methods; PsGrid has the user axes and no creator and no
+                    // binder. The two halves never meet in the API." They meet HERE. The 10/08
+                    // test called addUserXaxis on an UN-INSERTED grid and got false; this calls
+                    // it on a grid that already exists in the drawing.
+                    string ax = Get(kv, "addx", ""), ay = Get(kv, "addy", "");
+                    if (got && g != null && (ax.Length > 0 || ay.Length > 0))
+                    {
+                        int bx = 0, by = 0;
+                        try { bx = g.UserXaxisCount; by = g.UserYaxisCount; } catch { }
+                        foreach (string spec in new string[] { ax, ay })
+                        {
+                            if (spec.Length == 0) continue;
+                            string[] pp = spec.Split(';');
+                            if (pp.Length < 2) { sb.Append(" badAxisSpec"); continue; }
+                            bool okAdd = false;
+                            try
+                            {
+                                okAdd = (spec == ax) ? g.addUserXaxis(Pt(pp[0]), Pt(pp[1]))
+                                                     : g.addUserYaxis(Pt(pp[0]), Pt(pp[1]));
+                            }
+                            catch (System.Exception e) { sb.Append(" addAxis!EX:" + One(e.Message)); }
+                            sb.Append((spec == ax ? " addUserXaxis=" : " addUserYaxis=") + okAdd);
+                        }
+                        int cx = 0, cy = 0;
+                        try { cx = g.UserXaxisCount; cy = g.UserYaxisCount; } catch { }
+                        sb.Append(" userAxes " + bx + "/" + by + " -> " + cx + "/" + cy);
+                        // read the axis geometry back -- a count is not evidence
+                        for (int i = 0; i < cx && i < 4; i++)
+                        {
+                            PsPoint s0 = new PsPoint(0, 0, 0), e0 = new PsPoint(0, 0, 0);
+                            bool r0 = false;
+                            try { r0 = g.getUserXaxis(i, s0, e0); } catch { }
+                            sb.Append(" X[" + i + "]=" + r0 + "(" + F(s0.x) + "," + F(s0.y) + ")->("
+                                    + F(e0.x) + "," + F(e0.y) + ")");
+                        }
+                        for (int i = 0; i < cy && i < 4; i++)
+                        {
+                            PsPoint s0 = new PsPoint(0, 0, 0), e0 = new PsPoint(0, 0, 0);
+                            bool r0 = false;
+                            try { r0 = g.getUserYaxis(i, s0, e0); } catch { }
+                            sb.Append(" Y[" + i + "]=" + r0 + "(" + F(s0.x) + "," + F(s0.y) + ")->("
+                                    + F(e0.x) + "," + F(e0.y) + ")");
+                        }
+                    }
                     if (got && g != null)
                     {
                         try { sb.Append(" [name='" + g.Name + "' len=" + F(g.Length) + " wide=" + F(g.Wide)
@@ -10701,7 +10782,7 @@ namespace EBAgent
             { "edgecheck", "|block|handle|" },
             { "holefields", "|handle|" },
             { "killholefield", "|handle|field|dryrun|" },
-            { "bind", "|handle|cls|" },
+            { "bind", "|handle|cls|addx|addy|" },
             { "vfy_touch", "|a|b|tol|" },
             { "vfy_size", "|max|maxx|minx|" },
             { "classify", "|maxx|minx|out|set|value|visible|" },

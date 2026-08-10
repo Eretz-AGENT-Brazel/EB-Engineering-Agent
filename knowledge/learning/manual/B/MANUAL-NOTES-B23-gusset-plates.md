@@ -196,3 +196,77 @@ joined, give a gusset cut square at each member and tapered between them.
    now start at **t = 200** and the gusset lengthens along them.
    ⇒ Proven, not assumed: `collision box='169800,19800,1500;171500,20200,3600'` →
    **`parts=17 collisions=0`**. ⚠️ The op takes a **box**, not handles.
+
+---
+
+# AUDITED 10/08/2026 — the gusset verdict stands, and looking for its read route found the binder
+
+*Full record: `AUDIT-PART-B-2026-08-10.md` § B.23. Plugin v162 → v165. One CEILING entry
+retracted, one new entry on `LETHAL-CALLS-do-not-invoke.md`.*
+
+## The chapter's verdict, completed
+
+*"A gusset plate can be **read and edited** from code, but **not created**."*
+
+| half | status |
+|---|---|
+| **not created** | ✅ **measured and unchanged** — `PsGussetConnection` has no `Create`, no `insert`, no `SetConnectionObjectId`, and no COM twin |
+| **read and edited** | ⚠️ was **inference from a property list**. The route is now found and proven on siblings — but **not yet on a gusset**, because this model contains no `kGussetPlate` object (the band's gussets are hand-built `Ks_Plate`). **A task, not a finding.** |
+
+## ⭐⭐⭐ `PsTransaction.GetObject` — the binder, with 57 overloads, used nowhere
+
+```
+Bentley.ProStructures.Drawing.PsTransaction
+   Boolean GetObject(Int64 Id, PsOpenMode Mode, PsGussetConnection& entObject)
+   … and 56 more: PsGrid, PsEditConnection, PsWeldFlag, PsPositionFlag, PsBoltStyle,
+     PsShape, PsPlate, PsBolt, PsAssembly, PsBracing, PsPortalFrame, PsStairs, PsJoist,
+     PsTruss, PsHandrail, PsLadder, PsWorkframe, PsBendPlate, PsBendShape, PsArcPlate …
+```
+
+> ⭐⭐ **The binder is not on the class. It is on the transaction.** Every chapter that asked
+> *"can this class bind to an existing object?"* asked the **class**, and the class was the wrong
+> place to ask.
+
+New op **`bind`**, measured on objects of known identity:
+
+```
+2F1  Ks_Grid   -> [name='A' len=24000 wide=15000 type=kRectangle lenDiv=4 wideDiv=3 …]
+456  Ks_Plate  -> [name='B9_RECT 400x250x12' L=400 H=12 verts=5 rect=True]
+2C6  Ks_Shape  -> [key='HE300B' cat='DIN.DIN_HEB']
+```
+
+## ⛔⛔ AND WRITING THROUGH A BOUND OBJECT KILLED AUTOCAD — TWICE
+
+`addUserXaxis` on the bound grid: dead. Isolated per the protocol — saved immediately before, one
+call in its own run, `probe=addx` — **dead again.** Third entry on `LETHAL-CALLS-do-not-invoke.md`.
+
+⭐ **Reading a bound object is safe.** Grid, plate and shape all read back correctly, repeatedly.
+**Writing killed it on the first attempt.** ⚠️ `getUserXaxis` / `getUserYaxis` are **UNKNOWN, not
+safe** — the add died before they were reached.
+
+## ⛔⛔ `GetObject` DOES NOT TYPE-CHECK
+
+```
+bind 2C6 (a Ks_Shape) cls=grid -> grid=True [len=281474976713490 wide=NaN xDesc=234]
+```
+
+`True`, with a reinterpreted pointer. A read gives nonsense that looks like data; a write would
+corrupt the object. **`bind` now reads the entity's real class first and refuses a mismatch.**
+
+## 🛑 What this retracts in B.6
+
+B.6's *"`PsGrid` … no `SetObjectId`, no `readFrom`, **no binder of any kind** … the two halves
+never meet in the API"* is **withdrawn** — see `MANUAL-NOTES-B06` and `qc/retracted.tsv`.
+**B.6.7 stays closed**, but because the halves meet at a call that kills the session, not because
+they never meet.
+
+## The lead this hands to B.24
+
+A bracing connection is what produces gusset plates, and `PsBracing.insert()` exists. The
+`LogicalLinkType` enum backs it: **`kBracingPlate`, `kBracingLasche`, `kBracingConnect`,
+`kBracingFiller`**. That is B.24's business and it is the next chapter.
+
+## Model state
+
+**Nothing was built and nothing was changed.** Two crashes, nothing lost — saved immediately
+before each. Census **1 203**.

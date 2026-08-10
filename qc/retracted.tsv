@@ -56,3 +56,10 @@ date	phrase	why it is false
 2026-08-10	Plate length is derived from the bolt count	The LENGTH is 70 in both cases (props: 717 L=70 W=135, 71E L=70 W=210). The bolt count drives the SECTION WIDTH, which is the number the FL/BRFL/Plate decision is made on. B.20 audit.
 2026-08-10	plate length is derived from the bolt count	Same claim, lower case.
 2026-08-10	Both chapters share one derivation rule	They do not. A web angle is a CATALOGUE section cut to length (L90x9, L=135/210, section fixed). A shear plate is a section INVENTED per joint at a fixed 70 mm stick-out (L=70, W=135/210). That difference is exactly why the shear plate can miss stock and the angle cannot. B.20 audit.
+#
+# --- added 10/08/2026, B.23 audit. The binder claim, in every wording it was written in.
+#
+2026-08-10	no binder of any kind	PsTransaction.GetObject(Int64, PsOpenMode, PsGrid&) binds a live PsGrid to an existing Ks_Grid -- measured on grid 2F1, name='A' 24000x15000 read back. The binder is not on the class, it is on the transaction, and GetObject has 57 overloads. B.23 audit.
+2026-08-10	neither a creator nor a binder	Same claim, second wording. The binder exists on PsTransaction.
+2026-08-10	The two halves never meet	They meet through PsTransaction.GetObject. What is true is that the meeting point is LETHAL -- addUserXaxis on a bound grid killed AutoCAD twice, isolated.
+2026-08-10	two halves never meet in the API	Same claim, third wording.

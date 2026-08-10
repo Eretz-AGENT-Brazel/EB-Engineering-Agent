@@ -269,16 +269,34 @@ what assuming costs:
 | claim | re-checked |
 |---|---|
 | *"`IKs_ComGrid` has no user-axis equivalent"* | ✅ **true** — no `AddUserXaxis`, no `GetUserXaxis` |
-| *"`PsGrid` cannot bind to an existing frame"* | ✅ **true** — no `SetObjectId`, no `readFrom`, no binder of any kind |
+| *"`PsGrid` cannot bind to an existing frame"* | 🛑 **RETRACTED — see below** |
 | the untried `insert()` route | ❌ **fails** |
 
-⇒ ⭐ **The difficulty is structural, and it can now be named.**
-**Measured:** `PsCreateGrid` is the creator and has **no user-axis methods**; `PsGrid` has the user
-axes and has **neither a creator nor a binder**.
-**The reading those two absences support — stated as an explanation, not as a further
-measurement:** the two halves never meet in the API, which is why every route out of this chapter
-dead-ends. **B.6.7 is genuinely dialog-only**, and that is now a **tested** closure rather than an
-open question left hanging.
+> ### 🛑🛑 RETRACTED 10/08/2026 during the B.23 audit — the binder EXISTS
+>
+> This paragraph used to read: *"`PsGrid` has the user axes and has **neither a creator nor a
+> binder** — no `SetObjectId`, no `readFrom`, **no binder of any kind**. The two halves never meet
+> in the API."* It went onto THE CEILING in that form.
+>
+> **`Bentley.ProStructures.Drawing.PsTransaction.GetObject(Int64, PsOpenMode, PsGrid&)` binds a
+> live `PsGrid` to an existing `Ks_Grid`.** Measured on grid `2F1`:
+>
+> ```
+> bind handle=2F1 cls=grid -> grid=True [name='A' len=24000 wide=15000 type=kRectangle
+>                                        lenDiv=4 wideDiv=3 userX=0 userY=0 xDesc=3 yDesc=4]
+> ```
+>
+> ⭐⭐ **The binder is not on the class. It is on the transaction** — and `GetObject` has **57
+> overloads** covering nearly every ProSteel type. Every chapter that asked *"can this class bind?"*
+> asked the class, and the class was the wrong place to ask.
+>
+> ⇒ ⛔ **B.6.7 stays closed — but for a completely different and much better reason.** With the
+> grid bound, `addUserXaxis` was called on it. **It killed AutoCAD.** Isolated to that single call
+> on a freshly saved model and it killed it again. It is now the third entry in
+> `LETHAL-CALLS-do-not-invoke.md`.
+>
+> ⇒ So: **the two halves DO meet, and the meeting point is lethal.** *"Dialog-only"* remains the
+> practical answer; *"they never meet"* was false.
 
 ⭐ `gridaxes` is **kept, because it IS the evidence** — and it reads **every axis back** instead of
 trusting `addUserXaxis`' boolean.
