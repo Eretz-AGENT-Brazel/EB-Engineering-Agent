@@ -81,26 +81,41 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 >
 > **Model baseline, 09/08:** 835 parts · 194 bolts · 593 holes · 187 matched · 0 oversize.
 >
-> ### 🧲 `vfy_grip` — the iron rule answered by ProSteel, not by proximity (10/08)
-> `vfy_bolts` says in every result line that it cannot tell **which part** a hole belongs to.
-> That blind spot is where a real violation hides: a bolt clamping one drilled plate and one
-> **undrilled** one looks perfect to a proximity matcher.
+> ### 🛑 `KlemmLen` IS NOT THE PACKET — a check built on it was retracted the same day (10/08)
+> E.9.3 calls `KlemmLen` *"the calculated clamping length of the bolt"*, so `vfy_grip` was built
+> to compare it against the summed depths of a bolt's holes and call a shortfall *"the bolt
+> clamps undrilled material"*. It flagged **20 bolts**. **All 20 were withdrawn before being
+> reported**, because two measurements killed the premise:
+> - `F82` is an **M16×75 reporting klemm=50**, and the only steel on its axis is an L90×9 leg
+>   (9 mm) plus a 10 mm gusset. **There is no 50 mm of material there.**
+> - **Every** M20×70 DIN6914 in the drawing reports 39; **every** M20×70 Mu DIN7990 reports 42 —
+>   identical within a type, across different joints.
 >
-> **`KlemmLen`** (E.9.3, the bolt's *grip length*) is ProSteel's own figure for the thickness of
-> the packet the bolt clamps, and every hole's `Start`/`End` gives its depth. So:
-> **sum(matched hole depths) vs KlemmLen** — equal is clean, **less means the bolt clamps
-> undrilled material**. And it prints the owning part and thickness of every hole it counted.
+> ⇒ **`KlemmLen` is a property of the bolt TYPE and LENGTH.** It equalled the packet exactly
+> (39 = 19+20) on the one joint it was first calibrated against **because ProSteel had chosen
+> the bolt to suit that packet.** ⭐⭐ **One calibration case is not a calibration** — the rule
+> was already written three lines above and still got applied one step too late.
 >
-> Calibrated exactly: twelve M20×70 in end-plate joints, `klemm=39 drilled=39 diff=0`,
-> `owners=340:19,344:20` — a 19 mm HE300B flange plus a 20 mm end plate.
-> ⚠️ **The UNDRILLED branch is NOT calibrated**, and here is why it could not be:
+> ### 🔧 What replaced it — `vfy_fit` and `vfy_dupes` (judge only measured geometry)
+> | op | judges | blind to |
+> |---|---|---|
+> | **`vfy_fit`** | `spare = nominal length − packet` — **oversized / short bolts** | over-counts when two bolt rows sit closer than `tol` |
+> | **`vfy_dupes`** | bolts at the same point · holes at the same point in one part | nothing else; it is pure coincidence detection |
 >
-> ⭐ **ProSteel itself refuses to bolt across an undrilled element.** Three plates 20+15+20,
-> faces touching, outer two drilled, middle solid → `boltparts` refuses, *"holes further apart
-> than 'Gap distance'"*. **Part of the iron rule is enforced by the software at bolting time.**
-> ⇒ Violations therefore come from **editing afterwards**, not from bolting badly — which is
-> exactly how both real ones arrived (4 orphaned bolts after a rebuild; 2 destroyed by a section
-> change). **Run the checks after every edit, not after the modelling.**
+> ⭐ **The model calibrates the threshold, not me.** Across ten healthy bolt types, `spare` sits
+> in a tight **22–31 mm** band — a nut, a washer and a few protruding threads. The outlier was
+> M16×75 on a 19 mm packet: **56 mm**, i.e. 30 mm of bolt hanging out.
+> ⭐⭐ **A DUPLICATE BOLT IS INVISIBLE TO EVERY BOLT-VS-HOLE CHECK** — each copy matches the same
+> hole perfectly, so `vfy_bolts` calls it clean. It surfaces in the **parts list**, not the
+> geometry. B.26's apex was bolted **three times over**, 8 redundant bolts, undetected for a day.
+>
+> ⭐ **ProSteel itself refuses to bolt across an undrilled element** — three plates 20+15+20,
+> outer two drilled, middle solid → `boltparts` refuses (*"holes further apart than 'Gap
+> distance'"*). **Part of the iron rule is enforced by the software at bolting time.**
+> ⇒ Violations come from **editing afterwards**, not from bolting badly. Every one found so far
+> arrived that way: 4 orphans after a rebuild (09/08), 2 destroyed by a section change (10/08),
+> 4 more orphans at B.26's apex (10/08). **Run the checks after every edit, not after the
+> modelling.** Full audit: `knowledge/AUDIT-B08-bolts-2026-08-10.md`.
 >
 > ### ⚠️ OPEN — `boltparts` refused geometry that measures perfect (10/08)
 > Two 20 mm plates, `vfy_touch` → TOUCHING with **Z separation 0**, holes `…,10→…,−10` and

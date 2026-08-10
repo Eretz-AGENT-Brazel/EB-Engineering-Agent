@@ -1,1 +1,1 @@
-﻿EB_OK zoom all w=148413.52 h=91312.247 margin=0.06 reqid=8407b5ea
+﻿EB_ERR vfy_dupes bolts=194  DUP-BOLT positions=4 redundant=8  DUP-HOLE parts=2 redundant=10  tol=3  [a duplicate is invisible to every bolt-vs-hole check -- each copy matches the same hole happily. It shows up in the PARTS LIST, not in the geometry] -> eb_vfy_dupes.txt reqid=fccce409

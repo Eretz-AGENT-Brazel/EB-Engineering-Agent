@@ -1,5 +1,3 @@
-reqid=8407b5ea
-op=zoom
-all=1
-margin=0.06
-dwg=E-structural-elements.dwg
+reqid=fccce409
+op=vfy_dupes
+dwg=B08-insert-shapes.dwg
