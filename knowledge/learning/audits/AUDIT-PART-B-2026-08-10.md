@@ -611,3 +611,78 @@ geometry that does not match its own input.
   the four selectors, never exercised.
 * B.8.4 Shape Series / B.8.5 Shape Segment / B.8.7 Automatic Insertion — read, and no API
   entry point has been looked for yet.
+
+---
+
+## B.9 — Insert Plates ⭐⭐ **the chapter is well learned; the AUDIT found the bug in my own tooling**
+
+*Manual 4153–4529 (376 lines) · notes 268 lines (ratio 0.71) · band x 69 800 – 91 126*
+
+### 1 · Was the chapter learned deeply?
+**Yes, and honestly.** All five sub-sections, the seven insertion methods, the `CL` warning, where
+a plate's reported Length and Width come from, the ALT arc > 180°, B.9.4's **segment tree** and
+`Correction Value Unwinding` K, the `Insert Edge` values the manual refuses to list, a section
+titled **"Four places this API lies, all measured"**, and a **⛔ call that must never be made**
+(`PsPlate.computeObjectWeigth` kills AutoCAD outright — reproduced twice, once with a marker file
+that survived). That last one is the kind of note that pays for itself.
+
+### 2 · ⭐⭐⭐ The real finding: `dumpmodel` had been blind to every plate and every bolt
+
+```
+before:  shapes=349  plates=0    bolts=0    other=152  err=357
+after :  shapes=349  plates=178  bolts=179  other=152  err=0
+```
+
+**178 plates and 179 bolts — the entire plate and bolt population of the part-B model — were
+written as `ERR` rows** with *"Object reference not set to an instance of an object."* Every time
+this session I "measured the model" with `dumpmodel`, plates and bolts were absent, and the loss
+was reported only as an `err=` count that I never opened.
+
+⚠️ **This is the same failure mode as B.4's retraction, in my own code:** a number that looked
+like a summary was hiding the thing it was summarising.
+
+**The cause is one unguarded dereference.** `InsertPoint` was fetched *inside* a `try` and read
+*outside* it:
+
+```csharp
+PsPoint ip = null;
+try { ip = pl.InsertPoint; } catch { }     // survives
+if (ip == null) ip = new PsPoint(0,0,0);   // not null...
+...F(ip.x)...                              // ...and throws anyway
+```
+
+A `PsPoint` handed back with a dead native handle **is not null and throws when read**. Shapes
+escaped because they use `GetMidLine` into locally constructed points. Fixed at both sites.
+
+⚠️ **And half a fix was not a fix.** With the crash guarded, all 178 plates came back carrying
+`InsertPoint = 0,0,0` and a polygon in **local** coordinates — present in the dump and with no
+world position at all. `PLATE` and `BOLT` rows now carry the **world bounding box** as well.
+
+### 3 · B.9.3 Gratings — closed, where the notes had left it UNVERIFIED
+
+The notes concluded the weight-reduction claim was untestable, because the only weight call known
+kills the session. **It is testable.** `props` reads a plate's weight through
+**`PsObjectProperties`** — E.9's surface — and never goes near `computeObjectWeigth`.
+
+| what | measured |
+|---|---|
+| the setting | ⭐ **`Ks_ComGlobalSettings.PlateRasterWeightReduction`** — *Raster* is German for grating. **Shipped at 10 %** |
+| does the `Grid` flag stick? | ✅ **yes, and it is readable**: `DisplayFlagsLong` **16436 → 24628** (bit **8192**) and `PitchLineMode` **False → True** |
+| does the weight move? | ❌ **no.** 1000×500×30 reads **117.75 kg** — plain, flagged, at 0 %, at 10 % and at 35 % alike. 0.015 m³ × 7850 exactly |
+
+⇒ **The `Grid` flag is a real, settable, readable property, and the raster reduction does not
+touch the object's weight.** The object carries the gross figure. The manual places the reduction
+in *"the weight for the parts list"* — **that half is still untested**, and is not claimed here.
+
+⚠️ The global setting was changed to 35 % for the test and **restored to the shipped 10 %**; the
+first restore attempt was rejected while AutoCAD was busy and was retried until it read back 10.
+
+### 4 · What was left alone
+`SetGrid` / `SetGridDirection` were already implemented in `plate9` — B.9.3 was **not** an
+unimplemented sub-chapter, only an unverified claim. The band's 12 plates were not modified.
+
+### Still open (unchanged from the notes, honestly)
+* The grating **catalogue** — `Data/Plates/ImpGrating.mdb` and `Platten-Bleche-Roste.mdb` exist on
+  disk, and `PsCreatePlate` has **no database selector at all**. Both insert buttons are pick-based.
+* `CHECK BENT PLATE` — no API counterpart.
+* Whether `K` is settable anywhere but `CreateOfTwoPlates`' `KValue`.

@@ -1357,3 +1357,37 @@ pathfit=MISMATCH 1/3_vertices_outside_by_650mm      <- the bulged polyline
 
 **Read `pathfit` on every `bendshape` call.** A route that silently produces different geometry
 from the one asked for is worse than one that refuses.
+
+---
+
+## ⚠️ `dumpmodel` was blind to plates and bolts until 10/08/2026
+
+```
+before:  shapes=349  plates=0    bolts=0    other=152  err=357
+after :  shapes=349  plates=178  bolts=179  other=152  err=0
+```
+
+Every plate and every bolt was written as an `ERR` row. **If you read a `dumpmodel` result from
+before this date, its plate and bolt counts are zero and the parts were there.** `err=` is not
+noise — open it.
+
+`PLATE` and `BOLT` rows now also carry a **world bounding box** as their last column: a plate's
+`InsertPoint` reads `0,0,0` and its polygon is in **local** coordinates, so without it a plate has
+no position at all.
+
+## Plate weight — safe route vs lethal route
+
+⛔ **`PsPlate.computeObjectWeigth(bool)` kills AutoCAD** — process gone, no exception, no dialog.
+
+✅ **`op=props` reads the weight safely**, through `PsObjectProperties`:
+`props handle=<plate>` → `wt=117.75` for 1000×500×30 (0.015 m³ × 7850).
+
+### Gratings (B.9.3)
+* `plate9 grid=1 [griddir=x,y,z]` — the flag **sticks and is readable**: `DisplayFlagsLong`
+  gains bit **8192** and `PitchLineMode` becomes **True**.
+* `Ks_ComGlobalSettings.PlateRasterWeightReduction` is the settings/plate percentage
+  (*Raster* = grating), **shipped at 10 %**.
+* ❌ **It does not move the object's weight** — 117.75 kg at 0 %, 10 % and 35 % alike. The object
+  carries the gross figure; the reduction belongs to the parts list.
+* `PsCreatePlate` has **no grating-database selector**; `Data/Plates/ImpGrating.mdb` and
+  `Platten-Bleche-Roste.mdb` are dialog-only.

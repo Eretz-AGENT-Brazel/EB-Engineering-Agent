@@ -266,3 +266,34 @@ it moves the weight cannot be tested through this call.
   to the lethal call).
 - `CHECK BENT PLATE` — no API counterpart identified.
 - Whether `K` is settable anywhere other than `CreateOfTwoPlates`'s `KValue` argument.
+
+---
+
+## AUDIT 10/08/2026 — B.9.3 closed, and a tooling bug found
+
+### ⭐ Plate weight IS readable — the lethal call is not the only route
+
+`PsPlate.computeObjectWeigth` still kills AutoCAD; **do not call it.** But `op=props` reads the
+weight through **`PsObjectProperties`** and is safe:
+
+```
+props handle=<plate>   ->   wt=117.75   (1000x500x30 = 0.015 m3 x 7850)
+```
+
+⇒ The B.9.3 weight claim was testable after all. **A "cannot be verified" verdict is only as
+good as the routes that were tried** — the same lesson B.4 taught about preconditions.
+
+### B.9.3 Gratings — measured
+
+| | |
+|---|---|
+| the setting | `Ks_ComGlobalSettings.PlateRasterWeightReduction`, **shipped at 10 %** (*Raster* = grating) |
+| `grid=1` sticks? | ✅ `DisplayFlagsLong` 16436 → **24628** (bit **8192**) and `PitchLineMode` → **True** |
+| weight moves? | ❌ **no** — 117.75 kg at 0 %, 10 % and 35 % alike |
+
+⇒ **The object carries the gross weight.** The reduction is a reporting-time transform; the
+manual puts it in the parts list, and that half is untested.
+
+⚠️ `PsCreatePlate` has **no grating-database selector** — `Data/Plates/ImpGrating.mdb` and
+`Platten-Bleche-Roste.mdb` are on disk and both insert buttons are pick-based. Catalogue gratings
+stay dialog-only; the `Grid` flag is the code route.
