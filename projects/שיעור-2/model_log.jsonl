@@ -1210,3 +1210,4 @@
 {"op": "beam", "args": {"name": "HE300B", "p1": "120000,0,0", "p2": "120000,0,4000", "layer": "A03-templates", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "156", "ts": "12:53:34"}
 {"op": "beam", "args": {"name": "HE300B", "p1": "120000,6000,0", "p2": "120000,6000,4000", "layer": "A03-templates", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "15E", "ts": "12:53:34"}
 {"op": "beam", "args": {"name": "IPE300", "p1": "180000,0,0", "p2": "180000,4000,0", "layer": "A04-input", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "17F", "ts": "12:59:15"}
+{"op": "beam", "args": {"name": "HE300B", "p1": "240000,0,0", "p2": "240000,0,3000", "layer": "A05-project", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "193", "ts": "13:02:53"}
