@@ -224,3 +224,32 @@ anything and report nothing. To change the section, the template must be changed
 `DIN WINKEL GLEICH`; the model stores `DIN.DIN_WINK_GL` — a `<library>.<catalog>` form. A key that
 reads back one way is not the string you look it up with. (Same for `DIN FLACHEISEN` ↔
 `DIN.DIN_FLACH`, which is how B.20/B.21's default "plates" show up as catalogue flat bars.)
+
+---
+
+## AUDIT 10/08/2026 — the "likely route" was proved, three chapters later, and never linked back
+
+This chapter's dead end #2 ends: *"the cope is not reachable from this dialog's data. There is a
+dedicated `PsCopeConnection` in the same namespace, **which is the likely real route**."*
+
+✅ **It is the real route, and it was proved in B.12** — `Bentley.ProStructures.Connection.Standard.
+PsCopeConnection`, driven **from a template**, with a **support mandatory**. The proof was not the
+return value but `mods`: **`polyCuts` 0 → 1** on the beam. It is on THE CEILING's workaround table
+as *"a cope → `PsCopeConnection` from a template, support mandatory"*.
+
+⇒ ⭐ **The finding here is the gap between the two notes, not the capability.** B.19 named the
+route and marked it *likely*; B.12 confirmed it; nothing ever came back to say so. A reader
+landing on B.19 — which is where you land when a web angle will not cope — still reads *"likely"*
+and has to rediscover a solved problem.
+
+⇒ **That is the same failure the whole 10/08 audit exists for**, in its mildest form: not a false
+claim, just an un-propagated true one. `qc/consistency.py` catches contradictions; it does not
+catch a *"likely"* that has since become certain. **Only reading the neighbouring chapter does.**
+
+### Two things confirmed as still correct
+* **The DAST database really is empty on this installation** (`get_PlateDataCount() = 0`), so
+  whether `ShearX/Y/Z` and `MomentX/Y/Z` *select* or merely *record* is genuinely unmeasurable
+  here — not an untested claim, an untestable one. And it is **phase-2 territory regardless.**
+* **`SetKey` / `SetKatalog` are no-ops.** Four connections, one with no key at all, all produced
+  `L90X9` @ `DIN.DIN_WINK_GL`. **The angle comes from the template**; to change the section, change
+  the template.

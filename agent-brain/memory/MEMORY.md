@@ -29,3 +29,4 @@
 - [PSN macro assemblies](psn-macro-assemblies.md) — ⚡ 62 assemblies של Connection Center מעבר ל-ProStructuresNet (ייצוב, גאסטים, מדרגות, מעקות) · כולן אינטראקטיביות · שחזור מסשן תקוע = ENTER ולא ESC
 
 - [Lesson strips](lesson-strips.md) — כל שיעור ברצועה מוגדרת עם הפרדה גלויה; מקצב 60,000 וגבול `Ks_Grid` בשם השיעור
+- [No written standard](no-written-standard.md) — ⚡ אין מסמך פרטים בארץ ברזל; הכל מניסיון אמיר ולפי דרישה ⇒ תקן = פרויקט חילוץ, לא תרגום

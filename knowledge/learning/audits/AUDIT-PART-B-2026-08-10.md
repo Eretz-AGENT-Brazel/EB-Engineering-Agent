@@ -1235,3 +1235,36 @@ this run did not produce a plate the scan could find.
 This chapter is written as an **open item with a named next step**, not as a closure. Three
 conclusions were withdrawn today because reasoning had been filed as a finding; a fourth will not
 be added by rounding a confusing measurement up to an answer.
+
+---
+
+## B.19 — Web Angle ✅ **nothing to fix; the finding is a link that was never made**
+
+*notes 226 lines · every claim measured*
+
+### 1 · Was the chapter learned deeply?
+**Yes, and it is unusually rigorous.** Three dead ends closed with evidence, the catalogue naming
+trap found (`DIN WINKEL GLEICH` for lookup vs `DIN.DIN_WINK_GL` as stored — *"a key that reads
+back one way is not the string you look it up with"*), and the load-driven selection correctly
+identified as value-engineering material **and left alone as phase 2**.
+
+⭐ **`SetKey` and `SetKatalog` are complete no-ops** — four connections, including one with no key
+at all, every one produced `L90X9` @ `DIN.DIN_WINK_GL`. The section comes from the **template**.
+
+### 2 · The one thing worth changing
+
+Dead end #2 ends: *"there is a dedicated `PsCopeConnection` in the same namespace, **which is the
+likely real route**."*
+
+✅ **B.12 proved it** — from a template, support mandatory, `polyCuts` 0 → 1 — and it sits on THE
+CEILING's workaround table. **Nothing ever came back to B.19 to say so.** A reader who lands here,
+which is exactly where you land when a web angle will not cope, still reads *"likely"* and
+rediscovers a solved problem.
+
+⇒ ⭐ **Not a false claim — an un-propagated true one**, and the guard cannot see it: a stoplist
+catches contradictions, not a *"likely"* that has since become certain. **Only reading the
+neighbouring chapter does.** Linked in both directions now.
+
+### Nothing was built
+The chapter needs no new op. Its DAST half is untestable here (`get_PlateDataCount()=0`) **and**
+phase-2 regardless, and that is the correct place to leave it.
