@@ -147,3 +147,65 @@ all four gussets.
 ⭐ And note `Weld Bracing` is the one legitimate no-hole case in this chapter: it suppresses the
 drilling **because there are no bolts at all**, while still sizing the gussets *as if* there were.
 That is not an exception to the iron rule — it is a joint with nothing to bolt.
+
+---
+
+# AUDITED 10/08/2026 — the 31 mm gap is diagnosed, and one word above is too strong
+
+*Full record: `AUDIT-PART-B-2026-08-10.md` § B.25.*
+
+## ⚠️ CORRECTED — *"refuted"* is too strong
+
+The section above says both leads — the static flag and the corrected XZ plane — were **refuted**
+by seven `insert()=False` runs. **B.24's audit found that `PsBracing` never receives its system
+line at all.** Re-run here with `dynamic=0` and the line read back:
+
+```
+static bracing, XZ plane   insert()=False   line1=(NaN,NaN,NaN)->(NaN,NaN,NaN)
+```
+
+⇒ The static case fed the creator the same NaN as the dynamic one. **A lead is not refuted by a
+test that could not have succeeded whatever its merit.** `insert()` remains unusable — thirteen
+configurations agree — but **the static flag and the XZ plane are UNTESTED, not disproved.**
+
+⭐ The chapter's UCS explanation stands: `insert(Origin, X_axis, Y_axis)` takes the plane **as
+arguments**, so the active UCS was never going to matter.
+
+## ⭐⭐⭐ The 31 mm gap — all eight bolts, and the cause
+
+```
+GAP-IN-PACKET   F82…F89   M 16x75 Mu DIN7990   nominal 75  packet 19  spare 56  gap 31
+                          owners F72:10,F76:9 · F75:10,F76:9 · F74:10,F77:9 · F73:10,F77:9
+```
+
+**Eight bolts, four joints, 31 mm of air in every one.** `BOLT-NO-HOLE=0`, `OVERSIZED=0`,
+`SHORT=0` — the iron rule is satisfied and the bolt lengths are right for the packet as modelled.
+**The fault is the packet.**
+
+```
+gusset F72   y  −55.0 … −65.0    a 10 mm plate centred on y = −60
+rod    F76   y −105.0 … −15.0    an L 90x9 -- a 90 mm ENVELOPE centred on y = −60
+             drilled leg          y −96 … −105
+                                  −65 → −96  =  31 mm
+```
+
+⇒ ⭐⭐ **The rod's AXIS was set to ±60 to match the gusset, but an angle's material is at the edges
+of its envelope, not at its axis.** The drilled leg sits 96 mm out.
+
+> 🛑 **B.23 had already written the rule, the same day:** *"an `L90x9`'s envelope is 90 wide
+> centred on its axis. To land its face on a 12 mm gusset straddling y = 0, the axis goes to
+> y = 6 + 45 = 51"* — **axis = gusset face + 45**. Here the gusset face is at −65, so the axis
+> belongs at **−110**, not −60. **A true finding that does not travel is worth nothing.**
+
+## ⏳ NOT FIXED — Amir's decision, now with the arithmetic
+
+| option | cost |
+|---|---|
+| **move the rods** to axis ±110 so each leg face seats on its gusset | changes the stagger — and the stagger is what stops the two diagonals colliding, so the crossing clearance must be re-checked |
+| **pack the joint** with a 31 mm packer at each of the four ends | keeps the scheme; adds eight parts and an operation |
+
+⚠️ Leaving it is not an option: a bolted lap with an air gap puts the bolt in bending and cannot
+be fabricated as drawn. **The bay is left exactly as found**, and `vfy_fit` reports it in one line.
+
+## Model state
+Nothing built, nothing changed. Census 1 203.

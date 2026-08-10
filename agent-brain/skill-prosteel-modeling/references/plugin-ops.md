@@ -2082,3 +2082,69 @@ its geometry**.
 `crossp1=` / `crossp2=` — the second diagonal of a cross stay, i.e. B.24's whole `Cross Bracing`
 field, previously unreachable from code at all. `ptmode=new|api`. Both system lines and
 `crossedMode` are printed before `insert()` decides.
+
+---
+
+## ⭐⭐⭐ AN ANGLE'S MATERIAL IS AT THE EDGE OF ITS ENVELOPE, NOT AT ITS AXIS (B.25, 10/08/2026)
+
+**The seating rule, and what happens when it is not applied.**
+
+An `L 90x9` occupies a **90 × 90 envelope centred on its axis**. Its two legs are at the *edges*
+of that envelope. So a gusset that lands on the axis lands **in the air between the legs**.
+
+```
+axis  =  gusset face  ±  45          (for an L90x9: half the envelope)
+```
+
+**Measured in B.25's braced bay, where the rule was NOT applied:**
+
+```
+gusset F72   y  −55.0 … −65.0     a 10 mm plate, centred on the rod axis at −60
+rod    F76   y −105.0 … −15.0     the L 90x9 envelope, also centred on −60
+             drilled leg           y  −96 … −105
+                                   −65 → −96  =  31 mm OF AIR
+```
+
+⇒ **All eight bolts in that bay read `GAP-IN-PACKET`, 31 mm each.** `BOLT-NO-HOLE=0` and the bolt
+lengths are correct *for the packet as modelled* — the iron rule is satisfied and the joint is
+still unbuildable. **A bolted lap with an air gap puts the bolt in bending.**
+
+⚠️ ⭐ **`vfy_fit` is the instrument that catches it**, and it separates the two very different
+meanings of a large spare:
+
+```
+GAP-IN-PACKET  the plies do NOT touch   <- a scheme error
+OVERSIZED      the bolt is too long     <- a bolt error
+```
+
+**A bolt-length check alone would have reported these eight as fine.**
+
+> ⭐⭐ **The pattern, three times in this audit:** B.19's *"likely"* that had become certain,
+> B.24's `NaN`, and now B.23's seating rule — derived on 09/08 and not applied to a bay built on
+> 09/08. **A true finding that does not travel is worth nothing, and no guard can see it** — a
+> stoplist catches contradictions, not silence. Only reading the neighbouring chapter does.
+
+---
+
+## `PsBracing` — 13 configurations, and what they actually prove
+
+B.24 and B.25 between them tried thirteen. **Every one fed `insert()` a system line that reads
+back `(NaN,NaN,NaN)`** — see the B.24 section above. So:
+
+* ✅ **`insert()` is unusable** — that conclusion is safe and repeatedly measured.
+* ⚠️ **The individual hypotheses are NOT refuted** — the static flag (`setDynamicStatus(false)`),
+  the XZ-vs-XY plane, the layout, the welded and no-gusset variants. **A lead is not refuted by a
+  test that could not have succeeded whatever its merit.**
+
+⭐ And the UCS question is settled by the signature, not by experiment:
+**`insert(Origin, X_axis, Y_axis)` takes the plane AS ARGUMENTS.** The active UCS was never going
+to matter.
+
+⇒ **Build a static bracing by COMPOSITION** — the manual says to, and B.25's six separable buttons
+are the design: a shape along the system line, `PsDrillObject` at each end, gusset plates, then
+bolt the drilled parts. ⭐ Measure the holes **inward from the rod's front edge**
+(`Edge–1st Hole`, then `Hole–Hole`), **never spread about the joint centre** — doing the latter
+puts one hole of each pair past the end of the rod and leaves an unfilled hole in the gusset.
+
+⭐ **And shorten the rod deliberately** (`setShapeShorting`): B.25's dialog says the rod is cut
+short *"thus the rod will be kept in tension"*. Nothing in the geometry hints at it.

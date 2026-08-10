@@ -1899,3 +1899,114 @@ saved. The 09/08 host frames (welded `HE200B`+`IPE300`, bolted `UC203`+`UB305`) 
   unchanged and still the most operationally useful line in this chapter.
 * **Bracing catalogues** (dBASE files for the three rod types) — read in the manual, never located
   on disk. B.17.3's `dbase` op could read them if the files were found.
+
+---
+
+## B.25 — Static Bracing ⭐⭐⭐ **the 31 mm gap is diagnosed: B.23's own seating rule, written the same day and not applied**
+
+*notes 150 lines · band x = 310 000 · no plugin change needed*
+
+### 1 · Was the chapter learned deeply?
+**Yes, and it produced the best single piece of fabrication knowledge in part B:**
+⭐ *"specify by which value the bracing rod has to be **shortened** after its insertion. **Thus,
+the rod will be kept in tension**."* Nothing in the geometry hints at it. It also found the one
+class that serves both chapters (`setDynamicStatus`), read the six separable buttons as an
+instruction to **compose**, and then composed the bay by hand.
+
+### 2 · ⚠️ CORRECTED — nothing was refuted, because nothing was tested
+
+The note reads: *"Both leads this chapter suggested — the static flag, and the corrected XZ plane —
+were **refuted**."* Seven configurations, all `insert()=False`.
+
+**B.24's audit found that `PsBracing` never receives its system line at all.** Re-run here with
+`dynamic=0`, the static case, with the line now read back:
+
+```
+static bracing, XZ plane   insert()=False   line1=(NaN,NaN,NaN)->(NaN,NaN,NaN)
+```
+
+⇒ **The static configuration fed the creator the same NaN as the dynamic one.** *"Refuted"* is
+too strong: a lead is not refuted by a test that could not have succeeded whatever the lead's
+merit. ⇒ **`insert()` remains unusable — thirteen configurations agree — but the static flag and
+the XZ plane are back to UNTESTED, not disproved.**
+
+⭐ The chapter's own explanation of the UCS still stands and is still good:
+**`insert(Origin, X_axis, Y_axis)` takes the plane as arguments**, so the active UCS was never
+going to matter.
+
+### 3 · ⭐⭐⭐ The 31 mm gap — measured, systematic, and now explained
+
+The handoff carries it as ⏳ *awaiting Amir's decision*. It is measured here and **not touched**.
+
+**It is not one bolt. It is all eight:**
+
+```
+verdict         bolt name                nominal packet spare gap klemm holes owners
+GAP-IN-PACKET   F82  M 16x75 Mu DIN7990    75     19     56   31   50    2   F72:10,F76:9
+GAP-IN-PACKET   F83  …                     75     19     56   31   50    2   F72:10,F76:9
+GAP-IN-PACKET   F84 F85                    75     19     56   31   50    2   F75:10,F76:9
+GAP-IN-PACKET   F86 F87                    75     19     56   31   50    2   F74:10,F77:9
+GAP-IN-PACKET   F88 F89                    75     19     56   31   50    2   F73:10,F77:9
+```
+
+**Eight bolts, four joints, 31 mm of air in every one.** `BOLT-NO-HOLE=0`, `OVERSIZED=0`,
+`SHORT=0` — the iron rule itself is satisfied and the bolt lengths are right for the packet as
+modelled. The fault is the packet.
+
+**And the geometry names the cause:**
+
+```
+gusset F72   y  −55.0 … −65.0     a 10 mm plate, centred on y = −60
+rod    F76   y −105.0 … −15.0     an L 90x9 -- a 90 mm ENVELOPE, centred on y = −60
+             its drilled leg:  y −96 … −105
+                               −65 → −96  =  31 mm of air
+```
+
+⇒ ⭐⭐ **The rod's AXIS was put at ±60 to match the gusset. But an angle's material is at the
+edges of its envelope, not at its axis** — the drilled leg sits 96 mm out, not 60.
+
+> ### 🛑 And B.23 had already written the rule down, on the same day
+> B.23's hand-built node records: *"⭐ **The seating rule:** an `L90x9`'s envelope is 90 wide
+> **centred on its axis**. To land its face on a 12 mm gusset straddling y = 0, the axis goes to
+> **y = 6 + 45 = 51**."* — i.e. **axis = gusset face + 45**.
+>
+> Applied here: the gusset face is at **−65**, so the rod axis belongs at **−110**, not −60.
+> **The rule was derived on 09/08 and not applied to a bay built on 09/08.**
+>
+> ⇒ ⭐ **Third instance of the same pattern this audit keeps finding** — after B.19's *"likely"*
+> that had become certain, and B.24's NaN. **A true finding that does not travel is worth
+> nothing**, and the guard cannot see it: a stoplist catches contradictions, not silence.
+
+### 4 · ⏳ NOT FIXED — and this is the right place to stop
+
+Moving a rod in a braced bay is a **scheme** change. Two ways out, both Amir's:
+
+| | |
+|---|---|
+| **move the rods** to axis ±110 so each leg face seats on its gusset | changes the stagger, and the stagger is what keeps the two diagonals from colliding — the crossing clearance would have to be re-checked |
+| **pack the joint** with a 31 mm packer at each of the four ends | keeps the scheme, adds eight parts and a fabrication operation |
+
+⚠️ The one thing that is **not** an option is leaving it: a bolted lap with an air gap puts the
+bolt in bending and cannot be fabricated as drawn.
+
+⇒ **The bay is left exactly as found**, and `vfy_fit` reports it in one line for whenever Amir
+wants to decide.
+
+### 5 · What the chapter got right and keeps
+* ⭐ **Compose, don't wait for the command.** The manual says so outright and the bay proves it:
+  17 objects — 3 frame shapes, 2 rods, 4 gussets, 8 bolts — every one from a call that works.
+* ⭐ **Holes measured inward from the rod's front edge**, never spread about the joint centre.
+  The first pass did the latter and produced an unfilled gusset hole — the same defect `kBoltet`
+  produces in B.22.
+* ⭐ `Weld Bracing` is the one legitimate no-hole case: it suppresses drilling **because there are
+  no bolts**, while still sizing the gussets *as if* there were. Not an exception to the iron rule.
+
+### Model state
+**Nothing built, nothing changed.** One extra `insert()` attempt (still `False`), census
+**1 203**. The bay at x = 310 000 is untouched, including the gap.
+
+### Still open
+* ⏳ **The 31 mm gap — Amir's decision**, now with the arithmetic and two costed options.
+* ⚠️ **The static flag and the XZ plane are UNTESTED again**, not refuted. They can only be
+  retested once `PsBracing` can be given a system line — which is B.24's open item.
+* `Resolution` and `Shape Class` on the Shape Definition page — read, never exercised.
