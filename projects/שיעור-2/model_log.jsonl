@@ -1206,3 +1206,4 @@
 {"op": "plate", "args": {"l": "300", "w": "200", "t": "20", "center": "122000,0,0", "layer": "E11-grip", "dwg": "E-structural-elements.dwg"}, "handle": "387", "ts": "10:18:10"}
 {"op": "plate", "args": {"l": "300", "w": "200", "t": "20", "center": "122000,0,20", "layer": "E11-grip", "dwg": "E-structural-elements.dwg"}, "handle": "388", "ts": "10:18:11"}
 {"op": "beam", "args": {"name": "HE300B", "p1": "0,0,0", "p2": "0,0,3000", "layer": "A01-env", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "12A", "ts": "12:00:50"}
+{"op": "plate", "args": {"l": "400", "w": "300", "t": "20", "center": "60000,0,0", "layer": "A02-language", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "13F", "ts": "12:46:47"}

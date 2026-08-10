@@ -126,6 +126,29 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > through 79 mm of contiguous steel, and 6 more leaving 11 mm for a 16 mm nut. Neither can be
 > assembled, and nothing but this check would have said so.
 
+> ## ⚙️ THE WHOLE SETTINGS DIALOG IS AN OBJECT — `Ks_ComGlobalSettings` (A.2, 10/08)
+> ⭐⭐ ProSteel's **global settings** (the A.6 dialog) are reachable with no dialog and no
+> command. It is an **in-process** COM server, so `Dispatch()` from outside fails with
+> *"Invalid class string"* — **AutoCAD has to hand it over**:
+> ```python
+> gs = GetActiveObject('AutoCAD.Application').GetInterfaceObject('PSCOMWRAPPER.Ks_ComGlobalSettings')
+> ```
+> It carries `TemplatePath()` · `TempPath()` · `GetDataPath()` · `SetProjectPath()` ·
+> `ApplicationPath` · `BlockCenterPath` plus dozens of settings (`ArcResolution`,
+> `BodyResolution`, `BoltResolution`, `AreaClassCount`, `CheckDWG`…).
+>
+> ⭐⭐ **THE TEMPLATES ARE FILES.** `TemplatePath(True)` →
+> `…\localised\`**`english`**`\Varia\`**`Metric`**, full of `.tpl` files — `BasePlate.tpl`,
+> `KsxBasePlate.tpl`, `KssStairs.tpl`, `KssTruss.tpl`… That is A.3.2's Template Manager on disk,
+> and its IMPORT/EXPORT just moves them. ⇒ **Amir can configure Eretz Barzel's standard detail
+> once in the dialog, save it as a template, and the agent then loads it by name from code —
+> and the file can be backed up and version-controlled.**
+> ⚠️ The configuration is keyed on **language × unit system**, and the language is literally in
+> the path (`Localised\` holds Australia · Deutsch · English · NewZealand · USA_Canada).
+> Changing the language swaps the templates, the blocks **and the generated part names** — a
+> plate is `PLATE 400x300x20` here and would be `BLECH 400x300x20` under Deutsch. **Never change
+> it; it is a whole-installation decision.**
+
 > ## 🔩 TWO CORRECTIONS TO EARLIER NOTES, both found while fixing (10/08)
 >
 > ### ✅ HOLES **CAN** BE REMOVED — B.26's note was wrong
