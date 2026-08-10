@@ -17,6 +17,7 @@ family needs one place to look before calling anything unfamiliar.*
 | **`computeObjectWeigth(bool)`** | `PsPlate` | B.9, 08/08 | reproduced twice; the second time with a marker file written immediately before the call, which survived reading *"about to run: weight on 501"* |
 | **`checkHoleEdgeDistance(int)`** | `PsVolume` | **B.14 audit, 10/08** | isolated in stages — plate created **and saved**, hole drilled **and saved**, both survived; the call **alone**, on a saved model, killed the process |
 | **`addUserXaxis(PsPoint, PsPoint)`** | **`PsGrid`**, on a grid bound through `PsTransaction.GetObject` | **B.23 audit, 10/08** | killed it **twice**. First with four calls in one run; then **isolated to this call alone**, on a freshly saved model, with `probe=addx` — dead again |
+| **binding + reading a `PsEditConnection`** | `PsTransaction.GetObject(Int64, PsOpenMode, PsEditConnection&)` | **B.27 audit, 10/08** | **first call**, on beam `15EE`. Not isolated: bind-then-read is one call, so which half is the killer is unknown |
 
 ### ⚠️ The third one is a different shape from the first two, and that matters
 
@@ -24,15 +25,24 @@ family needs one place to look before calling anything unfamiliar.*
 ordinary-looking object. What it has in common with the other two is the *route*: a managed
 wrapper reaching into native code that expects a context the .NET caller has not established.
 
-⭐ **Reading a `PsTransaction`-bound object is safe** — `PsGrid`, `PsGussetConnection`, `PsPlate`
-and `PsShape` were all read back with correct values, repeatedly, with no incident. **Writing
-through one killed the session on the first attempt.**
+### 🛑 And the FOURTH one corrected the rule the third one produced
 
-⇒ ⚠️ **Treat every MUTATOR on a `PsTransaction`-bound object as suspect.** Untested neighbours on
-`PsGrid` alone: `addUserYaxis`, `deleteUserXaxisAt`, `deleteUserYaxisAt`, `setAxisLength`,
-`createAxisDescriptions`, `insert`. **`getUserXaxis` / `getUserYaxis` were never reached** — the
-first run called them after the add, and the add is what died, so **their status is UNKNOWN, not
-safe.**
+B.23 wrote: *"⭐ **Reading** a `PsTransaction`-bound object **is safe** — `PsGrid`,
+`PsGussetConnection`, `PsPlate` and `PsShape` all read back correctly, repeatedly. **Writing**
+through one killed the session on the first attempt. ⇒ treat every **mutator** as suspect."*
+
+**`PsEditConnection` is a plain READ, and it is lethal.** Three safe types were three data points,
+not a law.
+
+> ⇒ ⭐⭐ **SAFETY IS PER TYPE, NOT PER OPERATION.**
+> Read-safe **so far**: `PsGrid`, `PsGussetConnection`, `PsPlate`, `PsShape` — measured repeatedly.
+> Read-**lethal**: `PsEditConnection`.
+> Everything else among `GetObject`'s 57 overloads is **unknown**, and each answer costs a crash.
+
+⇒ ⚠️ Untested mutators on `PsGrid` alone: `addUserYaxis`, `deleteUserXaxisAt`,
+`deleteUserYaxisAt`, `setAxisLength`, `createAxisDescriptions`, `insert`.
+**`getUserXaxis` / `getUserYaxis` were never reached** — the add died first, so **their status is
+UNKNOWN, not safe.**
 
 ---
 

@@ -2209,3 +2209,79 @@ vfy_fit                     -> bolts=301 OK=261 BOLT-NO-HOLE=0 🧲 OVERSIZED=0
 ⚠️ **`GAP-IN-PACKET` and `SHORT` are not the same problem.** A gap is a **scheme** error (the
 plies do not touch — B.25); SHORT is a **bolt-length** error. `vfy_fit` separates them because a
 large "spare" means one of two very different things.
+
+---
+
+## 🛑 CORRECTION TO THE `PsTransaction` RULE ABOVE — safety is per TYPE (B.27, 10/08/2026)
+
+The `PsTransaction` section above says *"**READ ONLY.** Reading is safe and proven; every MUTATOR
+on a bound object is suspect."* That was three data points — `PsGrid`, `PsPlate`, `PsShape` — and
+it does not generalise.
+
+**`bind cls=editconn` — a plain READ of a `PsEditConnection` — killed AutoCAD on the first call.**
+
+| | |
+|---|---|
+| **read-safe, measured repeatedly** | `PsGrid` · `PsGussetConnection` · `PsPlate` · `PsShape` |
+| ⛔ **read-LETHAL** | **`PsEditConnection`** |
+| ⛔ **write-LETHAL** | `PsGrid.addUserXaxis` |
+| **unknown** | the other ~52 overloads — **each answer costs a crash** |
+
+⇒ ⭐⭐ **SAFETY IS PER TYPE, NOT PER OPERATION.** `bind cls=editconn` is behind `force=1`.
+
+---
+
+## ⭐⭐⭐ THE WHOLE-MODEL CONNECTION INVENTORY WORKS — B.27
+
+B.27 retracted its own `connverify` on two grounds. **One was wrong.**
+
+> *"`getBoltObjectId(0)` and `getLinkObjectId(0)` returned **0 on every link**."*
+
+They return the real objects. Measured on four joints of known content plus an unconnected
+control:
+
+```
+15EE shear plate  parts=1610,1611 (2/2)  bolts=1612…1615 (4/4)   target=15ED
+16F9 splice       parts=16FB…16FE (4/4)  bolts=16FF…170E (16/16) target=16FA
+A45  unconnected  links=0                                        <- the control
+```
+
+The zero was `connverify`'s, not the API's — and it stayed hidden because `connscan` was printing
+those ids as **raw 64-bit pointers**, where a 0 among them read as *"nothing there"*.
+
+**And the chapter's real question — *"what type is this link?"* — is answered on
+`PsLogicalLink.Type`, not on `PsEditConnection`:**
+
+```
+connscan   scanned=1147  withlinks=307  links=405  err=0
+kShapeWithRip 94 · kStiffenerLink 102 · kConnectedBy 56 · kLascheConnectionLink 26 ·
+kWebAngleConnectionLink 18 · kSchearPlateConnectionLink 13 · kConnectWithSchearPlate 11 ·
+kConnectWithPurlin 11 · kAngleCutLink 10 · kConnectWithWebAngle 9 · … 20 types in all
+```
+
+⇒ **That is B.27's Group Display, from code.** Every link typed, with its owner, target, plates
+and bolts. **The editor's INVENTORY half is fully reachable. Only its EDIT half is not** — and
+that half is the lethal type.
+
+⚠️ The traffic light 🟢 correct / 🟡 hole distances / 🔴 collisions lives on
+`PsEditConnection.Status` and stays out of reach. **Judge by geometry instead:** `vfy_fit` for the
+packet, `collision` for the red light.
+
+---
+
+## ⚠️ `connkill` REMOVES BY NUMBER, FROM A LIST THAT RENUMBERS
+
+```
+connkill handle=C7A number=0 deleteparts=0   ->   links 5->4
+```
+
+…and the link that was asked for **is still there**, now numbered **−1** with type
+`kUndefinedLink`, while a different, real joint's owner-side link has gone. `number=-1` refuses,
+so the stub cannot be removed.
+
+✅ The **geometry** was unharmed — checked, not assumed: `vfy_fit` over the band read 22 bolts,
+OK=22, `BOLT-NO-HOLE=0`.
+
+⇒ ⭐ **Same trap as B.26's hole fields. Delete from the HIGHEST index down, and READ THE LIST BACK
+afterwards** — the numbers are indices into a list that renumbers, and a removal can leave a stub
+nothing removes.

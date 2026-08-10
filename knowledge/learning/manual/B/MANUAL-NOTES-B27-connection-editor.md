@@ -119,3 +119,72 @@ B.25 were judged — not by an API field that returns a default.
 `PsEditLogicalLink.SetObjectId(id)` + `get_LogicalLinkCount()` works: over the bands built today
 (x 200000–400000), **321 parts, 74 of them carrying 98 logical links**. That much is real, and it
 is enough to find every part that participates in a joint.
+
+---
+
+# AUDITED 10/08/2026 — the retraction above was half wrong
+
+*Full record: `AUDIT-PART-B-2026-08-10.md` § B.27. Plugin v169 → v171.*
+
+## 🛑 RETRACTED — the link readers do NOT return 0
+
+The section above says *"`getBoltObjectId(0)` and `getLinkObjectId(0)` returned 0 on every link"*.
+Measured on four parts of known content plus an unconnected control:
+
+```
+15EE  shear plate   parts=1610,1611 (2/2)   bolts=1612…1615 (4/4)    target=15ED
+16F9  splice        parts=16FB…16FE (4/4)   bolts=16FF…170E (16/16)  target=16FA
+C7A   purlin girder 5 links, three of them 1 plate + 4 bolts each
+A45   unconnected   links=0                                     ← the control
+```
+
+⇒ **They return the real objects.** The zero was `connverify`'s, not the API's. B.20's `connscan`
+fix is what made it visible — that op printed the same ids as **raw 64-bit pointers**, so a 0
+among them read as *"nothing there"*.
+
+## ⛔⛔ The other half — the binder EXISTS and using it KILLS AutoCAD
+
+*"`PsEditConnection` has no binder"* — B.23 found it: `PsTransaction.GetObject(Int64, PsOpenMode,
+PsEditConnection&)`. **The first call, on beam `15EE`, took the process down.** Fourth entry on
+`LETHAL-CALLS-do-not-invoke.md`; `bind cls=editconn` is now behind `force=1`.
+
+⚠️⚠️ **And it narrows B.23's own rule.** That audit concluded *"reading a bound object is safe;
+every mutator is suspect"* on the evidence of `PsGrid`, `PsPlate` and `PsShape`.
+**`PsEditConnection` is a plain read and it is lethal.** ⇒ **Safety is per TYPE, not per
+operation.**
+
+## ⭐⭐⭐ But the chapter's question IS answered — on `PsLogicalLink.Type`
+
+*"There is no way to ask what type this link is"* — there is, just not on `PsEditConnection`:
+
+```
+connscan  scanned=1147  withlinks=307  links=405  err=0
+
+kShapeWithRip 94 · kStiffenerLink 102 · kConnectedBy 56 · kLascheConnectionLink 26 ·
+kWebAngleConnectionLink 18 · kSchearPlateConnectionLink 13 · kConnectWithSchearPlate 11 ·
+kConnectWithPurlin 11 · kAngleCutLink 10 · kConnectWithWebAngle 9 · kPlateConnectionLink 7 ·
+kConnectWithFreePlate 7 · kConnectWithLasche 6 · kBooledByLink 6 · kBooledLink 6 ·
+kCopedByLink 5 · kCutToLink 5 · kPurlinConnectionLink 5 · kConnectWithFootPlate 4 ·
+kCuttedByLink 4
+```
+
+⇒ **B.27's Group Display, working, from code** — every link typed, with owner, target, plates and
+bolts. **The INVENTORY half is fully reachable; only the EDIT half is not, and that one is lethal.**
+
+⚠️ The traffic light 🟢🟡🔴 lives on `PsEditConnection.Status` and stays unreachable.
+**Judge by geometry** — `vfy_fit` for the packet, `collision` for the red light.
+
+## ⚠️ `connkill` removes by NUMBER, from a list that RENUMBERS
+
+`C7A` carried an empty link left by this audit's B.22 work — exactly what B.26 warns about.
+
+```
+connkill handle=C7A number=0 deleteparts=0  ->  links 5->4
+```
+
+**The empty link is still there**, now numbered **−1**, type `kUndefinedLink`, while a real
+joint's owner-side link has gone from the list. `connkill number=-1` refuses. ✅ **The geometry is
+unharmed** — `vfy_fit` over the band reads 22 bolts, OK=22, `BOLT-NO-HOLE=0`.
+
+⇒ ⭐ **Same trap as hole fields: delete from the HIGHEST index down and read the list back.** And
+a removal can leave a stub nothing removes.

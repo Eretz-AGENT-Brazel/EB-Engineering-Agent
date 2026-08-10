@@ -6,7 +6,7 @@
 //
 // Protocol (file-based, avoids command-line quoting + supports Hebrew):
 //   1. Python writes  eb_cmd.txt  (key=value lines, op=... first)
-//   2. Python sends command  EB_RUN169
+//   2. Python sends command  EB_RUN171
 //   3. Plugin executes, writes eb_result.txt: "EB_OK {info}" or "EB_ERR {reason}"
 // C# 5 compatible (csc v4.0.30319).
 
@@ -44,14 +44,14 @@ using Bentley.ProStructures;
 using Bentley.ProStructures.Modeling;
 // PsShapeLoader lives in Steel.Shape (already imported)
 
-[assembly: CommandClass(typeof(EBAgent.ApiCmds169))]
-[assembly: ExtensionApplication(typeof(EBAgent.EBApp169))]
+[assembly: CommandClass(typeof(EBAgent.ApiCmds171))]
+[assembly: ExtensionApplication(typeof(EBAgent.EBApp171))]
 
 namespace EBAgent
 {
     // Registers an assembly resolver so ProSteel's managed assemblies are found
     // in the Prg folder even from a cold AutoCAD session (before any ProSteel cmd).
-    public class EBApp169 : IExtensionApplication
+    public class EBApp171 : IExtensionApplication
     {
         const string PrgDir = @"C:\Program Files\Bentley\ProStructures Ss6 R1\AutoCAD 2015\Prg";
         public void Initialize() { AppDomain.CurrentDomain.AssemblyResolve += Resolve; }
@@ -349,7 +349,7 @@ namespace EBAgent
         }
     }
 
-    public class ApiCmds169
+    public class ApiCmds171
     {
         const string Dir = @"C:\Users\User\Desktop\EB PROSTEEL AGENT\app\plugin";
         static string CurReqId = "";
@@ -439,7 +439,7 @@ namespace EBAgent
             return oid.OldIdPtr.ToInt64();
         }
 
-        [CommandMethod("EB_RUN169", CommandFlags.Modal)]
+        [CommandMethod("EB_RUN171", CommandFlags.Modal)]
         public void Run()
         {
             var kv = ReadCmd();
@@ -6605,11 +6605,29 @@ namespace EBAgent
                 }
                 if (want == "editconn")
                 {
-                    // ⭐⭐ v170 (B.27 audit). B.27 retracted its own connverify with the reason
-                    // "LinkType always read kUndefinedLink -- PsEditConnection HAS NO BINDER, so
-                    // a fresh instance just reports its default. There is no way to ask what type
-                    // THIS link is." B.23 found the binder: it is on PsTransaction, not on the
-                    // class. This is the measurement that settles it.
+                    // ⛔⛔ MEASURED 10/08/2026: THIS KILLS AUTOCAD.
+                    // B.27 retracted its own connverify with the reason "LinkType always read
+                    // kUndefinedLink -- PsEditConnection HAS NO BINDER". B.23 found the binder on
+                    // PsTransaction, so this was the measurement that would settle it. The first
+                    // call, on beam 15EE, took the process down: EB_TIMEOUT, "AutoCAD Error
+                    // Report". Nothing was lost -- the model had not been modified since its last
+                    // save -- but nothing was learned either.
+                    //
+                    // ⚠️ AND IT NARROWS B.23's RULE. That audit concluded "reading a bound object
+                    // is safe; every MUTATOR is suspect", on the evidence of PsGrid, PsPlate and
+                    // PsShape. PsEditConnection is a counter-example: a plain READ is lethal.
+                    // ⇒ Safety is per TYPE, not per operation.
+                    //
+                    // Not isolated: bind-then-read is one call here, so whether GetObject or the
+                    // property read is the killer is UNKNOWN. Each isolation costs a crash.
+                    if (Get(kv, "force", "") != "1")
+                    {
+                        Result("EB_ERR bind REFUSED cls=editconn -- binding a PsEditConnection"
+                             + " KILLED AutoCAD on 10/08/2026, on the first call. See"
+                             + " knowledge/learning/findings/LETHAL-CALLS-do-not-invoke.md."
+                             + " SAVE FIRST, then force=1 if you have a reason.");
+                        return;
+                    }
                     PsEditConnection ec = null;
                     got = false;
                     try { got = tr.GetObject(oid, PsOpenMode.kForRead, ref ec); }

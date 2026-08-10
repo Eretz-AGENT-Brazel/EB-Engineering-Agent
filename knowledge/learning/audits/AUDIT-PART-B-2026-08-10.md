@@ -2126,3 +2126,117 @@ erased. Census **1 193**, saved.
 * `StiffenerAtSupport` / `StiffenerAtConnected` take **B.16's stiffener templates**. The link is
   recorded in both chapters and has never been driven.
 * ⏳ **32 SHORT bolts** — Amir's, now counted properly.
+
+---
+
+## B.27 — Connection Editor ⭐⭐⭐ **its retraction was half wrong: the inventory works completely, and the other half is lethal**
+
+*notes 122 lines · no band · plugin v169 → **v171** · one retraction withdrawn, one new LETHAL call*
+
+### 1 · Was the chapter learned deeply?
+**Yes, and it did the rarest thing in the programme: it retracted its own op.** `connverify`
+reported `flagged=32` and **every one of the 32 was false**, and the chapter said so, disabled the
+verdict, and wrote the lesson — *"an audit is only as honest as its instrument."*
+
+Its retraction rested on two claims. **One is now refuted. The other is lethal to test.**
+
+### 2 · 🛑 RETRACTED — the link readers do NOT return 0
+
+> *the note:* *"`getBoltObjectId(0)` and `getLinkObjectId(0)` **returned 0 on every link**, so bolts
+> and parts always counted zero."*
+
+Measured on four parts of known content, plus a control:
+
+```
+15EE  shear plate   parts=1610,1611 (2/2)   bolts=1612,1613,1614,1615 (4/4)   target=15ED
+16F9  splice        parts=16FB…16FE (4/4)   bolts=16FF…170E (16/16)           target=16FA
+C7A   purlin girder 5 links, three of them 1 plate + 4 bolts each
+A45   unconnected   links=0                                        ← the control
+```
+
+⇒ **They return the real objects.** The zero was `connverify`'s, not the API's — and B.20's
+`connscan` fix is what made it visible: that op was printing the same ids as **raw 64-bit
+pointers**, which read as noise, and one of them being 0 read as "nothing there".
+
+### 3 · ⛔⛔ The other half: the binder EXISTS, and using it kills the session
+
+> *the note:* *"`LinkType` always read `kUndefinedLink` — **`PsEditConnection` has no binder**, so
+> a fresh instance just reports its default. **There is no way to ask what type *this* link is.**"*
+
+**The binder exists** — B.23 found `PsTransaction.GetObject(Int64, PsOpenMode, PsEditConnection&)`
+among its 57 overloads. So this was the measurement that would settle it.
+
+**The first call, on beam `15EE`, took AutoCAD down.** `EB_TIMEOUT`, *"AutoCAD Error Report"*.
+Nothing was lost — the model had not been modified since its last save — and nothing was learned.
+
+⇒ **Fourth entry on `LETHAL-CALLS-do-not-invoke.md`**, and `bind cls=editconn` is now behind
+`force=1`.
+
+> ### ⚠️⚠️ AND IT NARROWS B.23's OWN RULE, ONE CHAPTER LATER
+> B.23 concluded: *"**Reading** a bound object is safe; every **MUTATOR** is suspect."* That was
+> measured on `PsGrid`, `PsPlate` and `PsShape` — three types, all fine, repeatedly.
+> **`PsEditConnection` is a plain read, and it is lethal.**
+> ⇒ ⭐ **Safety is per TYPE, not per operation.** The read/write split was a real pattern in three
+> data points and it does not generalise.
+>
+> ⚠️ Not isolated: bind-then-read is one call, so whether `GetObject` or the property read is the
+> killer is **unknown**. Each isolation costs a crash and there is no reason to pay it.
+
+### 4 · ⭐⭐⭐ But the chapter's question is ANSWERED — just not where it was looking
+
+*"There is no way to ask what type this link is"* — there is. **It is on `PsLogicalLink.Type`,
+not on `PsEditConnection`**, and since v157 it prints as a name. The whole-model inventory:
+
+```
+connscan  scanned=1147  withlinks=307  links=405  err=0
+
+kShapeWithRip 94 · kStiffenerLink 102 · kConnectedBy 56 · kLascheConnectionLink 26 ·
+kWebAngleConnectionLink 18 · kSchearPlateConnectionLink 13 · kConnectWithSchearPlate 11 ·
+kConnectWithPurlin 11 · kAngleCutLink 10 · kConnectWithWebAngle 9 · kPlateConnectionLink 7 ·
+kConnectWithFreePlate 7 · kConnectWithLasche 6 · kBooledByLink 6 · kBooledLink 6 ·
+kCopedByLink 5 · kCutToLink 5 · kPurlinConnectionLink 5 · kConnectWithFootPlate 4 ·
+kCuttedByLink 4
+```
+
+⇒ ⭐⭐ **That is B.27's Group Display, working, from code.** 405 links across 1 147 parts, every
+one typed, with its owner, its target, its plates and its bolts. **The editor's INVENTORY half is
+fully reachable; only its EDIT half — the arrow-symbol object — is not, and that one is lethal.**
+
+⚠️ What is still *not* reachable is the traffic light: 🟢 correct / 🟡 hole distances / 🔴
+collisions. That verdict lives on `PsEditConnection.Status`. ⇒ **Judge by geometry instead** —
+`vfy_fit` for the packet and `collision` for the red light, which is what B.22, B.25 and B.26 did.
+
+### 5 · ⚠️ `connkill` removes by NUMBER, from a list that RENUMBERS
+
+Girder `C7A` carried an **empty link** — `parts= bolts= target=-` — left by this audit's own B.22
+work, exactly as B.26 warned: *"deleting a connection's parts does not delete the connection."*
+B.27's `connkill` is the tool for it, so it was used.
+
+```
+connkill handle=C7A number=0 deleteparts=0   ->   links 5->4   census unchanged
+```
+
+**But the empty link is still there**, now reporting number **−1** and type `kUndefinedLink`,
+while the owner-side link of a *real* joint has gone from the list. `connkill number=-1` refuses
+(`links 4->4`), so the stub cannot be removed.
+
+✅ **The geometry is unharmed** — checked, not assumed: `vfy_fit` over the purlin band reads
+**22 bolts, OK=22, `BOLT-NO-HOLE=0`**, and the four bolts of that station are still through their
+holes. What is damaged is **link bookkeeping**, which is not fabrication-visible.
+
+⇒ ⭐ **Same trap as B.26's hole fields: the number is an index into a list that renumbers.**
+**Delete from the highest index down, and read the list back afterwards.** And a removal can leave
+a `kUndefinedLink` stub that nothing removes.
+
+### Model state
+Census **1 194**, saved. One empty logical link removed, one `kUndefinedLink` stub left behind and
+recorded. Two crashes' worth of recovery, nothing lost. No geometry created or destroyed.
+
+### Still open
+* 🟢🟡🔴 **The verify traffic light** — `PsEditConnection.Status`, unreachable because the type is
+  lethal to bind. **Judge by geometry.**
+* **CLONE**, including the type change (*"replace a plate connection by a web angle connection"*)
+  — read, never attempted, and the class that would carry it is the lethal one.
+* ⚠️ **The `kUndefinedLink` stub on `C7A`** — cannot be removed by number. Whether
+  `RemoveAllLogicalLinks` clears it was **not tried**: it would take the girder's three good
+  purlin joints with it.
