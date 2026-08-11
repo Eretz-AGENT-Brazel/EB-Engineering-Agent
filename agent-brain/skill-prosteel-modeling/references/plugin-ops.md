@@ -3146,3 +3146,49 @@ cage · `SideExit…` = lateral climbing out. ⭐ **`CutSprosseAtHolm` IS the ch
 and a boolean subtraction of each rung out of each upright is the composition equivalent — 26 cuts
 took the band from 31 collisions to 5.
 ⚠️ **`CageDeepth` is misspelled** while `CageDepthLower` is not. Copy these names; do not type them.
+
+
+---
+
+## ✅ E.8 JOIST — the last chapter in part E, and a product to know rather than reach for
+
+> ### ⭐⭐⭐ IT IS AN AMERICAN CATALOGUE PRODUCT.
+> *"a joist as it is often used in the **USA** … a **pre-fabricated element** in lightweight
+> construction that is offered in different executions and lengths."*
+> **Factory-welded, bought by designation, not detailed member by member.** ארץ ברזל fabricates to
+> EN — this element carries an American product standard behind it and cannot be quoted or made from
+> this dialog. **The first sentence of the chapter is the most useful thing in it.**
+> ⭐ It matters for exactly one route: **E.6's purlin course can host one** (`UseJoists` +
+> `JoistTemplateName`).
+
+⛔ **"NO CREATOR AT ALL" — THIRD INSTANCE.** `PsJoist` has no `insert`, no `Insert`, no `init`, no
+`Create`; there is no `PsCreateJoist` and no `Ks_ComJoist` COM twin, so the COM escape hatch that
+rescued `PsGrid` is absent too. After `PsTruss` (E.5) and `PsPurlinDistribution` (E.6).
+⭐ **`calculatePoints()` returns `PsJoistPoints`** — the geometry generator is present while the
+creator is not. **You can compute a joist and never build one.**
+⭐ The enums confirm the dialog 1:1: `JoistLayout` = the five layout types in order;
+`JoistWhatShape` = the six rod areas (`kTopChoord kDownChoord kVertical kDiagonal kTopSeat
+kDownSeat`).
+
+### ⭐⭐ `Wide` CAN POINT IN −X — READ THE SIGN, NOT JUST THE AXIS
+
+The seat bolt failed three times, and the third reason is the one worth keeping:
+
+```
+support rot=90 -> Wide 100 along +z, Height 200 along +x   the beam was LYING ON ITS SIDE
+support rot=0  -> Wide 100 along −x, Height 200 along +z   depth vertical, correct...
+                  ...but the flange width extends in −x, so the support occupied x 539900..540000
+                  while the seat and its bolt line sat at x 540075 — ENTIRELY OUTSIDE IT.
+```
+
+⇒ **`propfull` gives the axis AND its sign, and the sign decides which side of the origin the
+material is on.** That is B.22's *"do not generalise the sign"* wearing a new costume. Reading
+`XAxis=−1/0/0` as "x" and not as "−x" cost a whole pass.
+
+### ⭐ AND ONLY THE FIRST `collision` AFTER A CLEAN IS A NUMBER
+
+After 40 web-into-chord cuts the band read **214** against 53 before — which looked like the fix
+making things worse. It was `Ks_VolBody` residue from repeated runs: **the checker counting its own
+leftovers**, the non-idempotence measured in E.2. A clean run gave **23**.
+⚠️ **E.2 wrote that rule down and E.8 still nearly drew the opposite conclusion from a contaminated
+number.** Clear the VolBody, *then* read.
