@@ -181,7 +181,7 @@ baluster  RO 42.4x3.2                    through a 44 mm hole, 4° off the arm
 |---|---|
 | `vfy_fit` (model-wide) | **`bolts=184 OK=184 BOLT-NO-HOLE=0 GAP-IN-PACKET=0 OVERSIZED=0 SHORT=0`** |
 | step tops | 175 … 2800, **all 15 gaps exactly 175.0** |
-| `collision` in the E.02 band | **16 — every one on the baluster line, r = 1099.9…1100.1.** See below |
+| `collision` in the E.02 band | **0** — after the 16 baluster penetrations were cut with `boolean`. See below |
 | `collision` in the E.1 band | **0** — untouched |
 
 ## ⭐⭐ `polyplate` AND `plate9 mode=poly` ARE NOT THE SAME OP
@@ -250,6 +250,33 @@ treated differently — E.1's 128 bolts all sit in drilled holes and report **0*
 ⚠️ **So a non-zero collision count is not automatically a defect**, and this is the case that
 proves it. The 16 here are the manual's own banister detail. **They are reported, not hidden, and
 not "fixed" by abandoning the detail the chapter describes.**
+
+### ⭐⭐⭐ RESOLVED IN E.3 — AND THE MECHANISM HAS A NAME: `hf` IS NOT `s`
+
+*Added 11/08/2026 while working E.3.* B.12 p.204 names both the detail and the cure:
+
+> *"You can also subtract one shape from an other to create penetrations, e.g. to obtain slotted
+> tubes, **penetrated handrail posts** or others."*
+
+`op=boolean handle=<step> tool=<baluster> mode=sub`, applied to all 16 — **E.02 collisions 16 → 0**,
+model-wide 40 → 24. And the modification signature says exactly why:
+
+```
+mods[f0 c0 hf3 o0 p0 s0 ...] -> [f0 c0 hf3 o0 p0 s1 ...]
+            ^^^ 3 HOLE FEATURES        ^^^ 1 SUBTRACTION
+```
+
+> ### ⭐⭐ A DRILLED HOLE AND A BOOLEAN SUBTRACTION ARE DIFFERENT MODIFICATION KINDS.
+> `hf` is a **fabrication instruction** — it tells the shop to drill. `s` actually **removes solid
+> volume**. **The collision checker honours `s` and ignores `hf`** — which is the precise form of
+> what was measured above, and it is why the hole was real, full depth, and still flagged.
+> Bolts are the exception: ProSteel pairs a bolt with its own hole, so E.1's 128 report 0.
+
+⚠️ **The weight does NOT move on a boolean** — `wt=16.128->16.128`. The modification inventory is
+the only witness, exactly as the plugin's own `DetailCut` comment says for detail cuts.
+
+⇒ **The band now verifies at `collisions=0` with the manual's banister detail intact.** Both facts
+were needed: the detail was never wrong, and neither was the checker — they measure different things.
 
 ## Model state
 Band `E.02-WINDING-STAIR`, grid at x = 180 000 (handle `42C`). **Five `insert()` attempts created

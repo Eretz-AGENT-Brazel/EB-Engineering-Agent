@@ -1577,3 +1577,5 @@
 {"op": "beam", "args": {"name": "RO 42.4x3.2", "catalog": "DIN RUNDROHR", "kind": "standard", "p1": "181043.16,-349.04,2792.00", "p2": "181043.16,-349.04,3800.00", "dwg": "E-structural-elements.dwg"}, "handle": "992", "ts": "11:53:04"}
 {"op": "beam", "args": {"name": "RO 42.4x3.2", "catalog": "DIN RUNDROHR", "kind": "standard", "p1": "181296.83,90.68,167.00", "p2": "181296.83,90.68,1175.00", "dwg": "E-structural-elements.dwg"}, "handle": "AE6", "ts": "11:56:10"}
 {"op": "beam", "args": {"name": "RO 42.4x3.2", "catalog": "DIN RUNDROHR", "kind": "standard", "p1": "181097.32,76.73,167.00", "p2": "181097.32,76.73,1175.00", "dwg": "E-structural-elements.dwg"}, "handle": "B27", "ts": "11:57:00"}
+{"op": "beam", "args": {"name": "RO 48.3x3.6", "catalog": "DIN RUNDROHR", "kind": "standard", "p1": "186000.0,0,1000", "p2": "186000.0,0,2000", "dwg": "E-structural-elements.dwg"}, "handle": "BAD", "ts": "12:08:38"}
+{"op": "beam", "args": {"name": "RO 26.9x2.6", "catalog": "DIN RUNDROHR", "kind": "standard", "p1": "185500.0,0,1500", "p2": "186500.0,0,1500", "dwg": "E-structural-elements.dwg"}, "handle": "BAE", "ts": "12:08:38"}

@@ -2679,3 +2679,97 @@ baluster  RO 42.4x3.2 through a 44 mm hole, 4° off the arm   (E.2 §5's own det
 
 vfy_fit  bolts=184 OK=184 BOLT-NO-HOLE=0 GAP-IN-PACKET=0 OVERSIZED=0 SHORT=0
 ```
+
+---
+
+## ⭐⭐⭐ THE HANDRAIL — THE CREATOR IS ALMOST EMPTY (E.3, 11/08/2026)
+
+```
+PsCreateHandrail   6 methods     SetToDefaults · SetPolygon · SetConnectionType
+                                 SetOutside · SetSideOffset · Create()
+PsHandrail        ~70 properties PostSpace · PostShape* · RailHeight · Upper/Middle/LowerHeight
+                                 FootStatus · FootShape* · RailPlate* · EdgeSpace · KneeRadius
+                                 StartOffset · EndOffset · EndPostInside · AddRail(ShapeId)
+```
+
+> ### ⭐⭐⭐ THE CREATOR BUILDS FROM DEFAULTS; THE CONFIGURATION IS ON THE PRODUCT.
+> Different from every other `PsCreate*` class, where the parameters sat on the **creator**.
+> Without a binder you can make *a* handrail but never *the* handrail you wanted.
+> ⇒ **v178 adds `bind cls=handrail`** via `GetObject(Int64, PsOpenMode, PsHandrail&)`.
+
+⛔ **A `Ks_HandRail` is the entity that killed AutoCAD on 10/08/2026** — but it was killed by the
+old no-`cls` path reinterpreting it as a grid/gusset/plate/shape. The real-class guard runs BEFORE
+any bind. Verified as a control: `bind 3FD cls=plate` → **REFUSED**; `cls=handrail` → the full
+property set. ⭐ **The lethal call was the WRONG TYPE, not the bind.**
+
+### ⭐⭐ TWO NUMBER CONVENTIONS THAT WILL CATCH YOU
+
+**① Course heights are to the tube's UNDERSIDE, from the polyline.** Four confirmations, 0.01 mm,
+two diameters: `LOWER 250→1263.45 · MIDDLE 500→1513.45 · UPPER 750→1763.45 · RAIL 1000→2024.15`
+(each = polyline + h + OD/2).
+
+**② `PostSpace` is a TARGET, not the spacing.**
+```
+run − 2 × EdgeSpace, divided into the FEWEST gaps ≤ PostSpace
+4000 − 400 = 3600 -> 4 gaps of 900   (asked for 1000)
+5259.6 − 400 = 4859.6 -> 5 gaps of 971.9
+```
+⚠️ **Never quote `PostSpace` as the built spacing — read the posts.**
+
+### ⛔⛔ A HELICAL / FINELY-SEGMENTED PATH YIELDS RAILS ONLY
+
+Each polyline segment is its own run and `EdgeSpace` is set back from **both ends of it**. 32 chords
+at r=1100 → chords of 233.9 mm; `233.9 − 2×200 < 0` → **zero posts, zero base plates** (classified
+by measurement: `VERTICAL members = 0`).
+
+> ⭐ **Posts survive only where `chord > 2 × EdgeSpace`.** Fewer, longer chords buy posts; more,
+> shorter chords buy a smoother curve and lose them. And E.2's **chord trap** applies to the path
+> itself — dip = `r·(1 − cos(half the segment angle))`.
+
+⭐ On a spiral stair that already has balusters, rails-only is the **right** answer: put the
+vertices ON the posts so every chord spans post to post.
+
+### ⚠️ RAIL HEIGHT ON A RAKED PATH IS UNRESOLVED
+
+`RailHeight=1000` is exact on a horizontal path. On a rake it is neither vertical nor perpendicular:
+`0° → 1024.15 · 22.18° → 965.85 · 34.78° → 1034.15`. **Not monotonic**, and all seven handrails in
+the model bind with **identical** properties, so it is a geometric convention, not a property.
+**No formula — none was proven.**
+
+---
+
+## ⭐⭐⭐ PENETRATIONS: `boolean` IS THE MECHANISM, AND THE MANUAL SAYS SO
+
+B.12 p.204: *"subtract one shape from an other to create penetrations, e.g. to obtain slotted tubes,
+**penetrated handrail posts**."*
+
+```
+op=boolean handle=<post> tool=<rail> mode=sub      -> collision 1 -> 0, BOTH PARTS SURVIVE
+```
+
+⚠️ **The weight does NOT move** (`3.976 -> 3.976`). The **modification signature** is the witness:
+`s0 -> s1`.
+
+> ### ⭐⭐ `hf` IS NOT `s`. A DRILLED HOLE AND A BOOLEAN SUBTRACTION ARE DIFFERENT MODIFICATIONS.
+> `mods[... hf3 ... s0]` → `[... hf3 ... s1]`. **`hf` is a fabrication instruction** (tell the shop
+> to drill); **`s` actually removes solid volume**. **The collision checker honours `s` and ignores
+> `hf`** — which is why E.2's banister post sat in a real, measured, full-depth 44 mm hole and was
+> still flagged. Bolts are the exception: ProSteel pairs a bolt with its own hole.
+> ⇒ **This retro-fixes E.2: 16 collisions → 0 with the manual's detail left intact.**
+
+⭐ **ProSteel's own handrail leaves its infill penetrations UNCUT** — the specimen reported exactly
+`5 posts × 3 infill = 15`. But it terminates the **top** rail correctly: middle posts stop at the
+rail underside (2000.000 exactly), end posts run to its top.
+
+⭐ **LOOP UNTIL DRY.** Each post meets two adjacent rail chords at its vertex plus several infill
+chords, and cutting one can expose the next: `181 → 78 → 24`. Pair by **measured bbox overlap**,
+never by assuming which chord crosses which post.
+
+### ⭐ BUILDING A RAIL ON A STAIR — the path is the STRINGER'S TOP EDGE
+
+```
+axis (120000,−495,0) -> (124320,−495,3000), FL300x10 rot=90 => 300 mm in the rake plane
+unit along = (0.82135,0,0.57038)   normal = (−0.57038,0,0.82135)
+top edge   = axis + 150 × normal = axis + (−85.56, 0, 123.20)
+```
+⭐ **The rail follows the rake exactly (rise/run 0.6944) and the posts stay plumb.** Verified.
