@@ -3219,6 +3219,46 @@ number.** Clear the VolBody, *then* read.
 *"Measurement Unit"* prompt, which is documented here as undismissable from code (six attempts).
 **Copying a DWG on disk and opening it by full path never asks** — measured, first try, no dialog.
 
+## D.6 analysis lines — no op needed, it is all COM from Python
+
+⭐⭐ **A shape's effective static analysis line is on the COM object, not on the .NET surface** —
+another "when .NET cannot, COM can", after `PsGrid` in B.6. Straight from Python:
+
+```python
+o = doc.HandleToObject(handle)          # IKs_ComAnalysis
+s, e = o.GetAnalysisLine()              # SetAnalysisLine(start, end)
+o.GetAnalysisIsConnected()              # SetAnalysisIsConnected(bool)
+o.GetAnalysisIsChanged()                # SetAnalysisIsChanged(bool)
+o.GetAnalysisIsProtected()              # SetAnalysisIsProtected(bool)
+o.GetAnalysisVectors()                  # SetAnalysisVectors(a, b)
+app.GetInterfaceObject('PSCOMWRAPPER.Ks_ComAnalysis')   # Enable/SetAnalysisDisplay/UpdateAnalysisColor
+```
+
+**Measured on a deliberately eccentric portal** (beam 300 mm off the columns' plane):
+* the effective line **equals the centre line** until modified — the manual, confirmed;
+* `connected=False` on all three ends — **correct**, the node really is open;
+* **`SetAnalysisLine` writes, reads back exactly, and the STEEL DOES NOT MOVE** (the beam's `ext`
+  is byte-identical before and after) — which is the chapter's whole promise, *"modify the
+  effective lines independently of the insertion of a shape"*;
+* ⭐⭐ **`GetAnalysisVectors` returned `((0,−300,0),(0,−300,0))`** — the offset from the centre line
+  to the analysis line at each end. Derived, not supplied. **That is the eccentricity as a vector**,
+  and it is useful as a model-audit quantity even if nothing is ever exported.
+* all three flags write and read back (False → True).
+
+⚠️ `UpdateAnalysisColor()` does **not** set `connected`, and should not: the manual separates
+*"here the program only checks"* from `Automatic`, which *"tries to create a connection and can
+also modify the effective line"*. ⇒ **The flags are DATA.** Whoever performs the operation sets
+them — which means from code you can assert `connected=True` on a node that is geometrically open.
+**Label the specimen; do not let a flag stand in for geometry.**
+⛔ `PsAnalysisDisplay.PerformAutomaticConnection()` — the chapter's central button — is managed-only
+and was **mapped, not measured**.
+
+The .NET class maps 1:1 to the dialog: `CheckColor` · `CheckConnection` · `HideFrames`/`HideObjects`/
+`HidePlates`/`HideBolts`/`HideSubs` · **`SubCantilever` + `MaxCantileverOffset`** (= *Shorten
+offsets* / *Max. Offset*) · `PerformAutomaticConnection` · `UpdateAnalysisColor` ·
+`PerformSetLinkBetween(id1,id2)` · `CollectShapesFromDrawing`/`FromSelection` ·
+`LoadFromTemplate`/`WriteToTemplate`.
+
 ## `block` — D.2 BlockCenter, i.e. a 3D library across drawings (v183)
 
 ```
