@@ -3095,3 +3095,54 @@ after E.3's `PostSpace` (asked 1000, got 900) and E.5's `Segment Dist.`
 carries `setBorderShapes(id1,id2)` + `isSecondaryBeams()` — the manual's *"secondary beams between
 two main girders"* — plus `ConnectionType` (B.22's enum) and `UseJoists`/`JoistTemplateName`.
 **E.6 is the chapter that ties B.22 to E.8.**
+
+
+---
+
+## ✅ E.7 LADDER — and a contradiction in our own notes
+
+⛔ **`PsLadder.insert` is declared `Void`** — `insert(PsPoint, PsVector, PsVector, PsPoint End)`.
+There is no boolean to read; **the census is the only verdict.** `715 → 715`, **re-measured in the
+E.07 band** rather than cited (E.1 had probed it exactly once at defaults, where `PsStairs` got
+seven configurations).
+
+> ### 🛑 THE THREE CATEGORIES — and `SKILL.md` had this wrong until 11/08/2026
+> The old line listed `PsBracing.insert()`, `PsLadder.insert()` and `PsPortalFrame.init()+insert()`
+> under ✅. **That was a map of METHOD EXISTENCE read as capability** (it came from B.23's table).
+> ✅ **works:** `PsCreateHandrail.Create()` — the only structural creator, still.
+> ⛔ **refuses / no-ops:** `PsStairs.Insert`=False · `PsCircularStairs.insert`=True-and-builds-nothing
+> · `PsPortalFrame.init()+insert()`=0 · `PsBracing.insert()`=False · `PsLadder.insert()`=Void.
+> ⛔ **nothing to call:** `PsTruss` · `PsPurlinDistribution` · `PsGussetConnection`.
+
+### ⭐⭐ TWO PARTS THIN IN DIFFERENT DIRECTIONS CAN NEVER LAP
+
+Two bolting passes were lost to assuming what `rot` does:
+```
+upright rot=90   Wide 60 along +y · Height 10 along −x   => THIN IN X
+bracket rot=0    Wide 60 along −y · Height 10 along +z   => THIN IN Z
+```
+A bolt needs **one common thin direction** — and **a member running along X can never be thin in
+X**, since its cross-section lives in the Y–Z plane. Measured table:
+
+| member | axis | `rot=0` | `rot=90` |
+|---|---|---|---|
+| upright | z | **thin in Y** | thin in X |
+| bracket | x | thin in Z | **thin in Y** |
+
+⭐ **The section is CENTRED on the origin** — a 10-thick part whose face must sit at y=−5 needs its
+origin at y=−10.
+⭐ **`propfull` should be the FIRST call, not the third.** `Wide` runs along the part's XAxis,
+`Height` along its YAxis, and `rot` turns both about the member axis.
+
+### ⭐ "ASK FOR A SPACING, GET A ROUNDED ONE" — FOURTH INSTANCE
+`Riser` → **`Actual Riser`**, and here the rounded value gets **its own read-only field** — the
+clearest statement of the pattern in the manual. After E.3 `PostSpace`, E.5 `Segment Dist.`,
+E.6 `Effective Grid`. ⚠️ **`PsLadder` has no `compute*` method at all**, so `Actual Riser` must be
+reproduced by hand: `usable / round(usable / asked)`.
+
+### ⭐ THE GERMAN CONTINUES
+`Holm` = upright · `Sprosse` = rung · `Knick` = bend · `Back…` = wall mounting · `Cage…` = safety
+cage · `SideExit…` = lateral climbing out. ⭐ **`CutSprosseAtHolm` IS the chapter's `Fit… Rungs`**,
+and a boolean subtraction of each rung out of each upright is the composition equivalent — 26 cuts
+took the band from 31 collisions to 5.
+⚠️ **`CageDeepth` is misspelled** while `CageDepthLower` is not. Copy these names; do not type them.

@@ -926,10 +926,17 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 >
 > **`PsGussetConnection` has no creator at all** — getters and setters only, no `Create()`, no
 > `insert()`, no template API, no COM twin. A gusset can be read and edited, never created.
-> The boundary in `StructuralObject` is worth knowing before planning work:
-> ✅ `PsCreateHandrail.Create()` · `PsBracing.insert()` · `PsLadder.insert()` ·
-> `PsPortalFrame.init()+insert()` — ❌ `PsStairs`, `PsCircularStairs`, `PsJoist`, `PsTruss`,
-> `PsGussetConnection`.
+> 🛑 **CORRECTED 11/08/2026 — the old line here listed `PsBracing.insert()`, `PsLadder.insert()`
+> and `PsPortalFrame.init()+insert()` under ✅. That was a map of METHOD EXISTENCE, not of
+> capability, and every one of those three has since been MEASURED to create nothing.**
+> The real boundary, from part E:
+> ✅ **`PsCreateHandrail.Create()` — the ONLY structural creator that builds** (E.3).
+> ⛔ **refuses / no-ops:** `PsStairs.Insert`=False · `PsCircularStairs.insert`=True-and-builds-nothing
+> (E.2) · `PsPortalFrame.init()+insert()`=0, census unmoved (E.4) · `PsBracing.insert()`=False (B.24)
+> · **`PsLadder.insert()` is `Void` and the census is the only verdict — 82→82 in E.1 and 715→715
+> re-measured in the E.07 band on 11/08** (E.7).
+> ⛔ **no creator at all:** `PsTruss` (E.5) · `PsPurlinDistribution` (E.6) · `PsGussetConnection`.
+> ⇒ **Three categories, not two: works · refuses · nothing to call.**
 
 > ## 🧱 WELDS ARE OBJECTS, AND A SPLICE IS NOT WHAT THE CHECKBOXES SAY (B.21, measured 09/08)
 > - **Six plate checkboxes produce EIGHT plates.** `Upper Inside` and `Lower Inside` each become
