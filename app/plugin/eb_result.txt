@@ -1,1 +1,1 @@
-﻿EB_OK list 99 entities -> eb_list.txt reqid=b10ac9de
+﻿EB_OK collision parts=179 collisions=0 newSolids=0 agree applyRc=0 minvol=1 secs=0.5 reqid=ab4e5cde

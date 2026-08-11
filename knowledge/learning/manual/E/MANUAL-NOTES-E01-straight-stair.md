@@ -209,3 +209,126 @@ attempts — census 82 → 82 throughout**, so the band holds only its grid. Sav
   measured until a stair can be created.
 * ⚠️ Binding a real `Ks_Stairs` — needs one to exist. **A stair drawn by Amir in the dialog would
   close this in one call**, and would also settle the two inferred fields above.
+
+---
+
+# ⭐ STEP 2 — THE STAIR IS BUILT. By composition, 11/08/2026.
+
+*Band `E.01-STRAIGHT-STAIR`, x = 120 000 → 124 320.*
+
+The API's own creator refuses (seven configurations above), so the stair was built from parts —
+the same route B.23's gusset and B.25's braced bay took when their commands were unreachable.
+**A chapter is not closed by proving the command is unreachable. It is closed by the artefact.**
+
+## The scheme, taken from E.1's own Dimensions page
+
+```
+Height 3000 · Riser wanted ~180  ->  17 risers of 176.47   (the manual: the count is COMPUTED)
+Treads = risers - 1 = 16 · 2R + T = 623  ->  T = 270
+Run = 16 x 270 = 4320 · Angle = 34.78 deg · Width 1000 across the outer steel edge
+```
+
+## The parts
+
+| part | section | count |
+|---|---|---|
+| stringer | **`FL 300×10`**, `rot=90`, axis y = ±495 → occupies ±490…±500 | 2 |
+| cleat | **`L 60×6`**, 250 long, **L: `rot=270` · R: `rot=180`**, axis y = ±460, z = tread-top − 38 | 32 |
+| tread | plate **980 × 270 × 8**, top at the riser level, bottom on the cleat's horizontal leg | 16 |
+| bolts | **M12 `DIN7990`**, 2 per joint | **128** |
+
+## Verified, not asserted
+
+```
+vfy_fit    bolts=128  OK=128  BOLT-NO-HOLE=0 🧲  GAP-IN-PACKET=0  OVERSIZED=0  SHORT=0
+collision  parts=179  collisions=0  newSolids=0
+```
+
+---
+
+## ⭐⭐ Four things this build measured
+
+### 1 · 🛑 `stair/step10` is NOT a stair tread — B.8 is corrected
+
+B.8's audit listed catalogue `stair`, section `step10` as *"stair tread"*. **Measured:**
+`L=925 W=10.125 H=2` — a 2 mm × 10 mm line-like symbol. **The entry was read from the catalogue
+NAME, never built.** It cannot carry anyone. The treads here are plates.
+
+### 2 · The stringers were built lying flat — B.26's weak-axis error, again
+
+First attempt: `FL 300×10` came out with its **300 mm dimension in Y** (`ext y −645…−345`) — a
+stringer bending about its weak axis. **`rot=90`** puts the 300 mm in Z where it belongs.
+⇒ Exactly B.26's *"the columns were bending about their WEAK axis"*, in a new chapter.
+
+### 3 · ⭐⭐ THE ANGLE ORIENTATION SWEEP — measured, and the depth is the instrument
+
+An `L 60×6` placed by its axis tells you nothing about where its legs are. Swept `rot` and drilled
+each probe from +Y at mid-height, reading the **hole depth**:
+
+| `rot` | vertical leg | horizontal leg | proof |
+|---:|---|---|---|
+| **0** | −Y side | **bottom** | depth **6** = one leg |
+| **90** | +Y side | bottom | depth 6 |
+| **180** | +Y side | **TOP** | depth **60** = across the full leg |
+| **270** | −Y side | **TOP** | depth 60 |
+
+⇒ **6 mm means the drill met one leg; 60 mm means it ran along a leg.** The depth is the
+orientation probe — the same instrument B.22 used to find the channel web and B.26 used to find a
+column's strong axis.
+
+⇒ **A left-hand cleat is `rot=270`; a right-hand cleat is `rot=180`.**
+⚠️ **The right side is NOT mirrored automatically** — B.22's *"do not generalise the sign"*, third
+time.
+
+### 4 · ⭐⭐ B.25's seating rule, third instance — 14 mm of air
+
+With the cleat axis at y = −490 (on the stringer face) the vertical leg landed at **−514…−520**
+while the stringer is at **−490…−500**: **14 mm of air between the two holes**, and `boltparts`
+said so — *"holes further apart than Gap distance"*.
+
+```
+leg spans (axis-30)..(axis-24)   ->   for the leg to seat on the face at -490:  AXIS = -460
+```
+
+⇒ **An angle's material is at the EDGE of its envelope, not at its axis** — B.25 wrote this rule
+after the 31 mm gap, and it applies unchanged here.
+
+---
+
+## ⛔⛔ THE COLLISIONS, AND WHAT CAUSED THEM
+
+A first bolted attempt produced **64 collisions**. Measured, rather than reasoned about:
+
+```
+60E  cleat->stringer   x 120048..120072   y -524..-476   z 126.47..150.47
+610  tread->cleat      x 120048..120072   y -472..-448   z 141.47..184.47
+```
+
+**Identical x, overlapping z, and four millimetres apart in y.** Two bolt groups on the same
+station line, fouling each other.
+
+⇒ ⭐ **THE FIX IS THE DETAILER'S: STAGGER THE GROUPS ALONG THE MEMBER.**
+`cleat→stringer` at `x_c ± 80`, `tread→cleat` at `x_c ± 30` — **50 mm clear**. Collisions **0**.
+
+### ⚠️ And the second cause was mine: repeated `boltparts` over the same joints
+
+Four bolting passes each **re-drilled** the same parts. **Holes cannot be removed**, so every part
+accumulated stale holes and duplicate bolts — the stringers reached 66 holes each.
+
+⇒ **The only clean fix was to delete all 50 parts and rebuild in ONE pass**, drilling each hole
+exactly once with `drill hosts=A,B` and calling `boltparts` once per joint. That is precisely what
+B.25 and B.26 both had to do.
+
+> ### ⭐⭐ THE RULE THIS LEAVES
+> **Never re-run a drilling or bolting pass over parts that already carry holes.** Fix the
+> geometry first, on a throwaway probe, and only then run the real pass once.
+> A re-run is not idempotent — it is destructive and irreversible.
+
+## Still open
+* ⚠️ **No handrail on the stair.** E.1's Handrail page says the rail is *"created as a structural
+  element of its own"* — and `PsCreateHandrail` works (E.3). Bolting it to these stringers is
+  **not done**.
+* ⚠️ **No landings.** `Lower`/`Upper Landing` and the stair foot were read and not built — this is
+  a single straight flight.
+* ⚠️ The treads are plain plates. E.1 offers **standard / shape / block** steps, and a real EB
+  tread would be **grating** (`Web Grating`) or folded chequer plate.

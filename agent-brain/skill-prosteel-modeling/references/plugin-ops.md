@@ -2525,3 +2525,83 @@ minutes lost to what looked like a plugin failure.
 
 ⇒ **Never override `DLL`/`RUN_CMD` in a script.** Edit `app/eb_api.py`. That is what "the canonical
 version is `eb_api.py` and nothing else" is for.
+
+---
+
+## ⭐⭐ BUILDING A STRAIGHT STAIR BY COMPOSITION — E.1, 11/08/2026
+
+The API's creator refuses, so the stair is built from parts, the way B.23's gusset and B.25's
+braced bay were. **Verified: 128 bolts, `OK=128`, `BOLT-NO-HOLE=0`, `GAP-IN-PACKET=0`,
+`collisions=0`.**
+
+```
+Height 3000 · riser wanted 180 -> 17 risers of 176.47 · 16 treads · 2R+T=623 -> T=270
+Run 4320 · angle 34.78 deg · width 1000 across the outer steel edge
+
+stringer  FL 300x10  rot=90        axis y = +-495   -> occupies +-490..+-500
+cleat     L 60x6, 250 long         L: rot=270 · R: rot=180
+                                   axis y = +-460, z = tread_top - 38
+tread     plate 980 x 270 x 8      bottom seats on the cleat's horizontal leg
+bolts     M12 DIN7990, 2 per joint · cleat->stringer at x_c +-80 · tread->cleat at x_c +-30
+```
+
+### ⭐⭐ THE ANGLE ORIENTATION SWEEP — and the hole DEPTH is the instrument
+
+An angle placed by its axis tells you nothing about where its legs are. Measured by drilling each
+`rot` from +Y at mid-height and reading the **depth**:
+
+| `rot` | vertical leg | horizontal leg | depth read |
+|---:|---|---|---|
+| **0** | −Y | **bottom** | **6** = one leg |
+| **90** | +Y | bottom | 6 |
+| **180** | **+Y** | **TOP** | **60** = along a leg |
+| **270** | **−Y** | **TOP** | **60** |
+
+⇒ **Left-hand cleat `rot=270`; right-hand cleat `rot=180`.**
+⚠️ **The right side is NOT mirrored for you** — B.22's *"do not generalise the sign"*, third time.
+⭐ **6 mm = the drill met one leg. 60 mm = it ran along one.** Same instrument as B.22's channel
+web and B.26's column strong axis.
+
+### ⭐⭐ B.25's SEATING RULE, THIRD INSTANCE
+
+Cleat axis on the stringer face (y = −490) put its vertical leg at **−514…−520** while the
+stringer is at −490…−500 — **14 mm of air**, and `boltparts` refused with *"holes further apart
+than Gap distance"*.
+
+```
+the leg spans (axis-30)..(axis-24)  ->  to seat it on the face at -490:  AXIS = -460
+```
+
+⇒ **An angle's material is at the EDGE of its envelope, not at its axis.**
+
+---
+
+## ⛔⛔ TWO CAUSES OF BOLT COLLISIONS, BOTH MEASURED
+
+**① Two bolt groups on the same station line.** 64 collisions, and the geometry named it:
+
+```
+cleat->stringer   x 120048..120072   y -524..-476   z 126.47..150.47
+tread->cleat      x 120048..120072   y -472..-448   z 141.47..184.47
+```
+
+Identical x, overlapping z, **4 mm apart in y**.
+⇒ ⭐ **STAGGER THE GROUPS ALONG THE MEMBER** — ±80 and ±30 gives 50 mm clear. Collisions → **0**.
+
+**② Re-running `boltparts` over parts that already carry holes.** Four bolting passes each
+**re-drilled**; the stringers reached 66 holes each and the model filled with duplicate bolts.
+**Holes cannot be removed.**
+
+> ### ⭐⭐ NEVER RE-RUN A DRILLING OR BOLTING PASS OVER PARTS THAT ALREADY CARRY HOLES.
+> Fix the geometry on a **throwaway probe** first, then run the real pass **once** — `drill
+> hosts=A,B` for one hole through both parts, `boltparts` once per joint.
+> **A re-run is not idempotent. It is destructive and irreversible**, and the only cure is to
+> delete every affected part and rebuild — which is exactly what B.25 and B.26 also had to do.
+
+---
+
+## 🛑 `stair/step10` IS NOT A STAIR TREAD — B.8 corrected
+
+B.8's audit listed catalogue `stair` / `step10` as *"stair tread"*. **Measured: `L=925 W=10.125
+H=2`** — a 2 × 10 mm line-like symbol read from the catalogue NAME and never built. It carries
+nothing. **Use a plate, grating, or a real tread section.**
