@@ -1,1 +1,1 @@
-﻿EB_OK save 'C:\Users\User\Desktop\EB PROSTEEL AGENT\projects\SANDBOX\B08-insert-shapes.dwg' bytes=2212446->2212543 at=09:01:36 reqid=e718d53c
+﻿EB_OK list 99 entities -> eb_list.txt reqid=b10ac9de

@@ -6,7 +6,7 @@
 //
 // Protocol (file-based, avoids command-line quoting + supports Hebrew):
 //   1. Python writes  eb_cmd.txt  (key=value lines, op=... first)
-//   2. Python sends command  EB_RUN172
+//   2. Python sends command  EB_RUN173
 //   3. Plugin executes, writes eb_result.txt: "EB_OK {info}" or "EB_ERR {reason}"
 // C# 5 compatible (csc v4.0.30319).
 
@@ -44,14 +44,14 @@ using Bentley.ProStructures;
 using Bentley.ProStructures.Modeling;
 // PsShapeLoader lives in Steel.Shape (already imported)
 
-[assembly: CommandClass(typeof(EBAgent.ApiCmds172))]
-[assembly: ExtensionApplication(typeof(EBAgent.EBApp172))]
+[assembly: CommandClass(typeof(EBAgent.ApiCmds173))]
+[assembly: ExtensionApplication(typeof(EBAgent.EBApp173))]
 
 namespace EBAgent
 {
     // Registers an assembly resolver so ProSteel's managed assemblies are found
     // in the Prg folder even from a cold AutoCAD session (before any ProSteel cmd).
-    public class EBApp172 : IExtensionApplication
+    public class EBApp173 : IExtensionApplication
     {
         const string PrgDir = @"C:\Program Files\Bentley\ProStructures Ss6 R1\AutoCAD 2015\Prg";
         public void Initialize() { AppDomain.CurrentDomain.AssemblyResolve += Resolve; }
@@ -349,7 +349,7 @@ namespace EBAgent
         }
     }
 
-    public class ApiCmds172
+    public class ApiCmds173
     {
         const string Dir = @"C:\Users\User\Desktop\EB PROSTEEL AGENT\app\plugin";
         static string CurReqId = "";
@@ -439,7 +439,7 @@ namespace EBAgent
             return oid.OldIdPtr.ToInt64();
         }
 
-        [CommandMethod("EB_RUN172", CommandFlags.Modal)]
+        [CommandMethod("EB_RUN173", CommandFlags.Modal)]
         public void Run()
         {
             var kv = ReadCmd();
@@ -504,6 +504,7 @@ namespace EBAgent
                     case "align": Align(kv); break;
                     case "spiral": Spiral(kv); break;
                     case "stair": Stair(kv); break;
+                    case "structprobe": StructProbe(kv); break;
                     case "purlintype": PurlinTypeDump(kv); break;
                     case "copeinfo": CopeInfo(kv); break;
                     case "cope": Cope(kv); break;
@@ -3683,6 +3684,84 @@ namespace EBAgent
             Result(((after > before) ? "EB_OK" : "EB_ERR") + " stair census=" + before + "->" + after +
                    " newObjects=" + n + (n <= 30 ? " handles:" + made : "") +
                    applied + readback + msg);
+        }
+
+        // ===================================================================
+        //  v174 — THE FAMILY PROBE.  Does ANY StructuralObject create from code?
+        //
+        //  PsStairs.Insert() refused seven configurations while reading wide/height/len back
+        //  EXACTLY -- so the geometry arrives and something else is missing. Before hunting that
+        //  something field by field, ask the cheaper question: is this a PsStairs problem or a
+        //  StructuralObject-family problem? B.24 already found PsBracing.insert() refusing, and
+        //  B.23 recorded PsGussetConnection with no creator at all.
+        //
+        //  Three creators, one run, all read back:
+        //     PsStairs.Insert   (capital I)   PsLadder.insert   PsPortalFrame.init()+insert
+        //
+        //  op=structprobe at=x,y,z [kind=stairs|ladder|portal|all]
+        // ===================================================================
+        void StructProbe(Dictionary<string, string> kv)
+        {
+            System.Globalization.CultureInfo IC = System.Globalization.CultureInfo.InvariantCulture;
+            string want = Get(kv, "kind", "all").ToLowerInvariant();
+            double[] a = Nums(Get(kv, "at", "0,0,0"));
+            StringBuilder sb = new StringBuilder();
+
+            if (want == "all" || want == "stairs")
+            {
+                string h0, c0; int b0 = Census(out h0, out c0);
+                bool ok = false; string ex = "";
+                try
+                {
+                    PsStairs s = new PsStairs();
+                    PsPoint p = new PsPoint(a[0], a[1], a[2]);
+                    PsVector vx = new PsVector(1, 0, 0), vy = new PsVector(0, 1, 0);
+                    ok = s.Insert(p, vx, vy, 1000.0, 3000.0, 4000.0);
+                    System.GC.KeepAlive(p); System.GC.KeepAlive(vx); System.GC.KeepAlive(vy);
+                }
+                catch (System.Exception e) { ex = " !EX:" + One(e.Message); }
+                string h1, c1; int b1 = Census(out h1, out c1);
+                sb.Append(" | PsStairs.Insert=" + ok + " census=" + b0 + "->" + b1 + ex);
+            }
+
+            if (want == "all" || want == "ladder")
+            {
+                string h0, c0; int b0 = Census(out h0, out c0);
+                string ex = "";
+                try
+                {
+                    PsLadder l = new PsLadder();
+                    PsPoint p = new PsPoint(a[0] + 3000, a[1], a[2]);
+                    PsPoint e2 = new PsPoint(a[0] + 3000, a[1], a[2] + 4000);
+                    PsVector vx = new PsVector(1, 0, 0), vy = new PsVector(0, 1, 0);
+                    l.insert(p, vx, vy, e2);          // Void -- the census is the only verdict
+                    System.GC.KeepAlive(p); System.GC.KeepAlive(e2);
+                    System.GC.KeepAlive(vx); System.GC.KeepAlive(vy);
+                }
+                catch (System.Exception e) { ex = " !EX:" + One(e.Message); }
+                string h1, c1; int b1 = Census(out h1, out c1);
+                sb.Append(" | PsLadder.insert(Void) census=" + b0 + "->" + b1 + ex);
+            }
+
+            if (want == "all" || want == "portal")
+            {
+                string h0, c0; int b0 = Census(out h0, out c0);
+                int rc = -999; string ex = "";
+                try
+                {
+                    PsPortalFrame f = new PsPortalFrame();
+                    f.init();                          // ⭐ the one class that documents an init
+                    PsPoint p = new PsPoint(a[0] + 6000, a[1], a[2]);
+                    PsVector vx = new PsVector(1, 0, 0), vy = new PsVector(0, 1, 0);
+                    rc = f.insert(p, vx, vy);
+                    System.GC.KeepAlive(p); System.GC.KeepAlive(vx); System.GC.KeepAlive(vy);
+                }
+                catch (System.Exception e) { ex = " !EX:" + One(e.Message); }
+                string h1, c1; int b1 = Census(out h1, out c1);
+                sb.Append(" | PsPortalFrame.init+insert=" + rc + " census=" + b0 + "->" + b1 + ex);
+            }
+
+            Result("EB_OK structprobe" + sb.ToString());
         }
 
         void Spiral(Dictionary<string, string> kv)
@@ -11203,6 +11282,7 @@ namespace EBAgent
             { "macrobrace", "|h1|h2|" },
             { "align", "|copy|handles|o1|o2|x1|x2|y1|y2|" },
             { "spiral", "|about|angle|axis|dz|handles|method|n|" },
+            { "structprobe", "|at|kind|" },
             { "stair", "|at|b|between|c|d|drill|dynamic|e|etages|ex|ey|fitpodesttop|foothcut|footlen|footvcut|frameoffset|framename|grating|height|holeaxis|holedia|holedist|len|makepodestdown|notoppodest|podestdown|podestoffset|podesttop|railbolt|railboltstyle|railconn|railend|railleft|railright|railside|railsimple|railstart|rise|stepbolt|stepboltstyle|stepcat|stepgroup|stepkey|stepoffset|steps|stepsize|steptype|tread|upperinsert|usdef|views|wangecat|wangekey|wide|" },
             { "purlintype", "||" },
             { "copeinfo", "||" },

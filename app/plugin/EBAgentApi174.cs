@@ -6,7 +6,7 @@
 //
 // Protocol (file-based, avoids command-line quoting + supports Hebrew):
 //   1. Python writes  eb_cmd.txt  (key=value lines, op=... first)
-//   2. Python sends command  EB_RUN172
+//   2. Python sends command  EB_RUN174
 //   3. Plugin executes, writes eb_result.txt: "EB_OK {info}" or "EB_ERR {reason}"
 // C# 5 compatible (csc v4.0.30319).
 
@@ -44,14 +44,14 @@ using Bentley.ProStructures;
 using Bentley.ProStructures.Modeling;
 // PsShapeLoader lives in Steel.Shape (already imported)
 
-[assembly: CommandClass(typeof(EBAgent.ApiCmds172))]
-[assembly: ExtensionApplication(typeof(EBAgent.EBApp172))]
+[assembly: CommandClass(typeof(EBAgent.ApiCmds174))]
+[assembly: ExtensionApplication(typeof(EBAgent.EBApp174))]
 
 namespace EBAgent
 {
     // Registers an assembly resolver so ProSteel's managed assemblies are found
     // in the Prg folder even from a cold AutoCAD session (before any ProSteel cmd).
-    public class EBApp172 : IExtensionApplication
+    public class EBApp174 : IExtensionApplication
     {
         const string PrgDir = @"C:\Program Files\Bentley\ProStructures Ss6 R1\AutoCAD 2015\Prg";
         public void Initialize() { AppDomain.CurrentDomain.AssemblyResolve += Resolve; }
@@ -349,7 +349,7 @@ namespace EBAgent
         }
     }
 
-    public class ApiCmds172
+    public class ApiCmds174
     {
         const string Dir = @"C:\Users\User\Desktop\EB PROSTEEL AGENT\app\plugin";
         static string CurReqId = "";
@@ -439,7 +439,7 @@ namespace EBAgent
             return oid.OldIdPtr.ToInt64();
         }
 
-        [CommandMethod("EB_RUN172", CommandFlags.Modal)]
+        [CommandMethod("EB_RUN174", CommandFlags.Modal)]
         public void Run()
         {
             var kv = ReadCmd();
@@ -504,6 +504,8 @@ namespace EBAgent
                     case "align": Align(kv); break;
                     case "spiral": Spiral(kv); break;
                     case "stair": Stair(kv); break;
+                    case "structprobe": StructProbe(kv); break;
+                    case "handrail": Handrail(kv); break;
                     case "purlintype": PurlinTypeDump(kv); break;
                     case "copeinfo": CopeInfo(kv); break;
                     case "cope": Cope(kv); break;
@@ -3683,6 +3685,173 @@ namespace EBAgent
             Result(((after > before) ? "EB_OK" : "EB_ERR") + " stair census=" + before + "->" + after +
                    " newObjects=" + n + (n <= 30 ? " handles:" + made : "") +
                    applied + readback + msg);
+        }
+
+        // ===================================================================
+        //  v174 — THE FAMILY PROBE.  Does ANY StructuralObject create from code?
+        //
+        //  PsStairs.Insert() refused seven configurations while reading wide/height/len back
+        //  EXACTLY -- so the geometry arrives and something else is missing. Before hunting that
+        //  something field by field, ask the cheaper question: is this a PsStairs problem or a
+        //  StructuralObject-family problem? B.24 already found PsBracing.insert() refusing, and
+        //  B.23 recorded PsGussetConnection with no creator at all.
+        //
+        //  Three creators, one run, all read back:
+        //     PsStairs.Insert   (capital I)   PsLadder.insert   PsPortalFrame.init()+insert
+        //
+        //  op=structprobe at=x,y,z [kind=stairs|ladder|portal|all]
+        // ===================================================================
+        void StructProbe(Dictionary<string, string> kv)
+        {
+            System.Globalization.CultureInfo IC = System.Globalization.CultureInfo.InvariantCulture;
+            string want = Get(kv, "kind", "all").ToLowerInvariant();
+            double[] a = Nums(Get(kv, "at", "0,0,0"));
+            StringBuilder sb = new StringBuilder();
+
+            if (want == "all" || want == "stairs")
+            {
+                string h0, c0; int b0 = Census(out h0, out c0);
+                bool ok = false; string ex = "";
+                try
+                {
+                    PsStairs s = new PsStairs();
+                    PsPoint p = new PsPoint(a[0], a[1], a[2]);
+                    PsVector vx = new PsVector(1, 0, 0), vy = new PsVector(0, 1, 0);
+                    ok = s.Insert(p, vx, vy, 1000.0, 3000.0, 4000.0);
+                    System.GC.KeepAlive(p); System.GC.KeepAlive(vx); System.GC.KeepAlive(vy);
+                }
+                catch (System.Exception e) { ex = " !EX:" + One(e.Message); }
+                string h1, c1; int b1 = Census(out h1, out c1);
+                sb.Append(" | PsStairs.Insert=" + ok + " census=" + b0 + "->" + b1 + ex);
+            }
+
+            if (want == "all" || want == "ladder")
+            {
+                string h0, c0; int b0 = Census(out h0, out c0);
+                string ex = "";
+                try
+                {
+                    PsLadder l = new PsLadder();
+                    PsPoint p = new PsPoint(a[0] + 3000, a[1], a[2]);
+                    PsPoint e2 = new PsPoint(a[0] + 3000, a[1], a[2] + 4000);
+                    PsVector vx = new PsVector(1, 0, 0), vy = new PsVector(0, 1, 0);
+                    l.insert(p, vx, vy, e2);          // Void -- the census is the only verdict
+                    System.GC.KeepAlive(p); System.GC.KeepAlive(e2);
+                    System.GC.KeepAlive(vx); System.GC.KeepAlive(vy);
+                }
+                catch (System.Exception e) { ex = " !EX:" + One(e.Message); }
+                string h1, c1; int b1 = Census(out h1, out c1);
+                sb.Append(" | PsLadder.insert(Void) census=" + b0 + "->" + b1 + ex);
+            }
+
+            if (want == "all" || want == "portal")
+            {
+                string h0, c0; int b0 = Census(out h0, out c0);
+                int rc = -999; string ex = "";
+                try
+                {
+                    PsPortalFrame f = new PsPortalFrame();
+                    f.init();                          // ⭐ the one class that documents an init
+                    PsPoint p = new PsPoint(a[0] + 6000, a[1], a[2]);
+                    PsVector vx = new PsVector(1, 0, 0), vy = new PsVector(0, 1, 0);
+                    rc = f.insert(p, vx, vy);
+                    System.GC.KeepAlive(p); System.GC.KeepAlive(vx); System.GC.KeepAlive(vy);
+                }
+                catch (System.Exception e) { ex = " !EX:" + One(e.Message); }
+                string h1, c1; int b1 = Census(out h1, out c1);
+                sb.Append(" | PsPortalFrame.init+insert=" + rc + " census=" + b0 + "->" + b1 + ex);
+            }
+
+            Result("EB_OK structprobe" + sb.ToString());
+        }
+
+        // ===================================================================
+        //  v175 — E.3 STRUCTURAL ELEMENT: HANDRAIL  (PsCreateHandrail)
+        //
+        //  ⭐⭐ THE SPLIT THIS TESTS. Three StructuralObject classes that insert THEMSELVES all
+        //  refused (PsStairs.Insert=False, PsLadder.insert created nothing, PsPortalFrame
+        //  init+insert=0, and B.24's PsBracing.insert=False). PsCreateHandrail is a different
+        //  shape entirely -- a SEPARATE creator class with SetToDefaults() + Create(), which is
+        //  the signature of the family that has always worked (PsCreateShape, PsCreatePlate,
+        //  PsCreateBolt, PsCreateGrid...).
+        //
+        //  ⭐ And its precondition is explicit in the surface: SetPolygon(Int64 PolygonId).
+        //  A handrail is built ALONG AN EXISTING PATH -- the same workflow as B.8.2's bent
+        //  shapes, where you draw the polyline first and then apply a section to it.
+        //
+        //  op=handrail pts=x,y,z;x,y,z;...  [conn=] [outside=0|1] [sideoffset=]
+        //     The polyline is created here and its handle reported, so the path is auditable.
+        // ===================================================================
+        void Handrail(Dictionary<string, string> kv)
+        {
+            System.Globalization.CultureInfo IC = System.Globalization.CultureInfo.InvariantCulture;
+            string ptsSpec = Get(kv, "pts", "");
+            if (ptsSpec.Length == 0) { Result("EB_ERR handrail: pts= is required (the path)"); return; }
+
+            string h0, c0; int before = Census(out h0, out c0);
+            List<string> pre = HandleSet();
+            string applied = "", msg = "", polyH = "";
+            bool ok = false;
+            long madeId = 0;
+
+            Document doc = Application.DocumentManager.MdiActiveDocument;
+            Database db = doc.Database;
+
+            // ---- 1. the path, as a real AcDb 3d polyline -------------------------------
+            long polyId = 0;
+            try
+            {
+                string[] pp = ptsSpec.Split(';');
+                using (Transaction tr = db.TransactionManager.StartTransaction())
+                {
+                    BlockTable bt = (BlockTable)tr.GetObject(db.BlockTableId, OpenMode.ForRead);
+                    BlockTableRecord ms = (BlockTableRecord)tr.GetObject(bt[BlockTableRecord.ModelSpace], OpenMode.ForWrite);
+                    Polyline3d pl = new Polyline3d();
+                    ms.AppendEntity(pl);
+                    tr.AddNewlyCreatedDBObject(pl, true);
+                    foreach (string s in pp)
+                    {
+                        if (s.Trim().Length == 0) continue;
+                        double[] q = Nums(s);
+                        PolylineVertex3d vx = new PolylineVertex3d(
+                            new Point3d(q[0], q.Length > 1 ? q[1] : 0, q.Length > 2 ? q[2] : 0));
+                        pl.AppendVertex(vx);
+                        tr.AddNewlyCreatedDBObject(vx, true);
+                    }
+                    polyId = pl.ObjectId.OldIdPtr.ToInt64();
+                    polyH = pl.Handle.ToString();
+                    tr.Commit();
+                }
+                applied += " path=" + polyH + "(" + ptsSpec + ")";
+            }
+            catch (System.Exception e) { msg += " polyline!EX:" + One(e.Message); }
+
+            // ---- 2. the handrail along it ---------------------------------------------
+            try
+            {
+                PsCreateHandrail hr = new PsCreateHandrail();
+                hr.SetToDefaults();                       // ⭐ the family signature that works
+                hr.SetPolygon(polyId);
+                applied += " SetPolygon(" + polyH + ")";
+                string v;
+                v = Get(kv, "conn", "");       if (v.Length > 0) { hr.SetConnectionType(int.Parse(v)); applied += " conn=" + v; }
+                v = Get(kv, "outside", "");    if (v.Length > 0) { hr.SetOutside(v == "1"); applied += " outside=" + v; }
+                v = Get(kv, "sideoffset", ""); if (v.Length > 0) { hr.SetSideOffset(double.Parse(v, IC)); applied += " sideOffset=" + v; }
+                ok = hr.Create();
+                applied += " Create()=" + ok;
+                try { madeId = hr.ObjectId; } catch { }
+                applied += " ObjectId=" + (madeId == 0 ? "0" : HandleOf(madeId));
+            }
+            catch (System.Exception ex) { msg += " EX:" + One(ex.Message); }
+
+            string h1, c1; int after = Census(out h1, out c1);
+            StringBuilder made = new StringBuilder();
+            int n = 0;
+            foreach (string h in HandleSet())
+                if (!pre.Contains(h)) { made.Append(" " + h); n++; }
+            Result(((after > before + 1) ? "EB_OK" : "EB_ERR") + " handrail census=" + before + "->" + after +
+                   " newObjects=" + n + " (1 of them is the path itself)" +
+                   (n <= 40 ? " handles:" + made : "") + applied + msg);
         }
 
         void Spiral(Dictionary<string, string> kv)
@@ -11203,6 +11372,8 @@ namespace EBAgent
             { "macrobrace", "|h1|h2|" },
             { "align", "|copy|handles|o1|o2|x1|x2|y1|y2|" },
             { "spiral", "|about|angle|axis|dz|handles|method|n|" },
+            { "structprobe", "|at|kind|" },
+            { "handrail", "|conn|outside|pts|sideoffset|" },
             { "stair", "|at|b|between|c|d|drill|dynamic|e|etages|ex|ey|fitpodesttop|foothcut|footlen|footvcut|frameoffset|framename|grating|height|holeaxis|holedia|holedist|len|makepodestdown|notoppodest|podestdown|podestoffset|podesttop|railbolt|railboltstyle|railconn|railend|railleft|railright|railside|railsimple|railstart|rise|stepbolt|stepboltstyle|stepcat|stepgroup|stepkey|stepoffset|steps|stepsize|steptype|tread|upperinsert|usdef|views|wangecat|wangekey|wide|" },
             { "purlintype", "||" },
             { "copeinfo", "||" },

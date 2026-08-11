@@ -2410,3 +2410,118 @@ it.
 ⚠️ **Two corrections B.29 made to itself, worth keeping:** `SetColumnTol`/`SetBeamTol` are **angle**
 tolerances, not dimensional; and `SetHolesTol` is the drill **AXIS deviation**, not the diameter —
 *"the detailed section overrides the summary."*
+
+---
+
+# 🏗️ PART E — STRUCTURAL ELEMENTS. The rule that governs all eight chapters.
+
+*Measured 11/08/2026, E.1 + E.3.*
+
+## ⭐⭐⭐ A structural element is creatable from code ONLY where a SEPARATE `PsCreate*` class exists
+
+| class | route | measured |
+|---|---|---|
+| **`PsCreateHandrail`** | ⭐ separate creator · `SetToDefaults()` + `Create()` | ✅ **WORKS — `Create()=True`, 16 objects, a complete handrail** |
+| `PsStairs` | self-insert · `Insert(...)` | ⛔ **False**, seven configurations |
+| `PsLadder` | self-insert · `insert(...)` *(Void)* | ⛔ nothing created |
+| `PsPortalFrame` | self-insert · `init()` + `insert(...)` | ⛔ returns 0, nothing created |
+| `PsBracing` | self-insert · `insert(...)` | ⛔ False, ten configurations (B.24) |
+| `PsGussetConnection` · `PsTruss` · `PsJoist` | — | ⛔ **no creator at all** |
+
+⇒ **`PsCreateHandrail` is the only `PsCreate*` in the entire `StructuralObject` namespace, and it
+is the only structural element that builds from code.** Everything else in part E is interactive
+by design — B.24's conclusion, reached again from a different chapter.
+
+> ### ⚠️⚠️ B.23's TABLE IS A MAP OF METHOD EXISTENCE, NOT OF CAPABILITY
+> It listed `PsLadder`, `PsPortalFrame` and `PsBracing` under *"creation route ✅"* because the
+> **method exists**. All three refuse. **Existence ≠ works**, and the difference is seven refusals
+> on `PsStairs` alone.
+
+## 🛑 AND `PsStairs` DOES HAVE A CREATOR — B.23 said it had none
+
+The reason is **capitalisation**:
+
+```
+PsStairs          Boolean Insert(...)   ← CAPITAL I
+PsLadder          Void    insert(...)
+PsBracing         Boolean insert(...)
+PsPortalFrame     Int32   insert(...)
+PsCircularStairs  Boolean insert(...)
+```
+
+**A grep for `insert(` misses `Insert(`.** Same family as B.13's .NET-vs-COM enum split and B.21's
+`HoleWorkloose` / `HoleWorkLoose`. ⇒ **Search case-insensitively, always.**
+✅ Confirmed genuinely creatorless: `PsTruss`, `PsJoist`.
+
+## ⭐⭐ THE API IS IN GERMAN WHILE THE DIALOG IS IN ENGLISH
+
+`PsStairs` is unreadable from the English dialog alone:
+
+| dialog | API | |
+|---|---|---|
+| `Riser` | `setSteigung` | *Steigung* = rise |
+| `Treading` | `setAuftritt` | *Auftritt* = tread |
+| `Landing` | `setPodestDown` / `setPodestTop` | *Podest* |
+| the stair **cheeks** | `setWangenShape(Katalog, Key)` | *Wange* = stringer |
+| `Web Grating` | `setGitterRost` | *Gitterrost* |
+| `No. of Platforms` | `setEtageCount` / `getEtage(i)` | *Etage* = storey |
+
+⇒ **When an English dialog word finds nothing in the API surface, search the GERMAN construction
+term.**
+
+## ⚠️ AN OUT-PARAMETER THAT WAS NEVER WRITTEN IS NOT ZERO
+
+`computeSteigung(0, ref stepCount)` on a stair that does not exist returns garbage —
+`-2010406392`, a **different** huge negative each run — and `computeAngle(0)` returns a constant
+**0.785 rad (π/4)**, a default rather than a computation.
+⇒ **A "computed" field is not a measurement until the object exists.**
+
+---
+
+## `handrail` — the one that works (E.3)
+
+```
+handrail pts=x,y,z;x,y,z;...  [conn=] [outside=0|1] [sideoffset=]
+```
+
+⭐ **`PsCreateHandrail.SetPolygon(Int64 PolygonId)` is the precondition: a handrail is built ALONG
+AN EXISTING PATH.** The op draws the `Polyline3d` itself and reports its handle, so the path stays
+auditable. Same workflow as B.8.2's bent shapes — draw the path, then apply the section.
+
+**Measured on a 4 000 mm straight path — 14 shapes, read back from the model:**
+
+```
+5 posts     RO48.3x3.6   x 120200,121100,122000,122900,123800   z 1008->2000/2048   <- 900 mm pitch
+5 base pl.  FL 60x8      150 long, one under each post, z 1004
+1 top rail  RO48.3x3.6   z 2024, 3648.1 long   <- inset: it stops at the END POSTS, not the path ends
+3 infill    RO26.9x2.6   z 1263 / 1513 / 1763, 4000 long, 250 apart
+```
+
+⇒ A proper industrial rail: **48.3 CHS posts and top rail, 26.9 CHS infill, ~1 040 mm high**.
+⚠️ **The top rail is shorter than the path** (3 648 vs 4 000) because it spans post-to-post; the
+infill rails run the full 4 000. **Two different length rules in one object** — a parts list that
+assumes one will be wrong.
+
+---
+
+## ⛔⛔ `bind` WITHOUT `cls=` KILLED AUTOCAD — my own op bypassing my own guard
+
+B.23 recorded that `PsTransaction.GetObject` **does not type-check**, and gave `bind` a guard that
+refuses a mismatch. But with `cls=` **omitted** the op used to try grid, gusset, plate and shape in
+turn — **walking straight past the guard.** Pointed at a `Ks_HandRail` it took the process down.
+
+⇒ **`cls=` is now MANDATORY. There is no "try them all" mode.**
+⇒ ⭐ **A guard with a bypass is not a guard.** When you write one, check every path into the
+function, not the path you were thinking about.
+
+---
+
+## ⚠️ THE PLUGIN VERSION LIVES IN `app/eb_api.py` AND NOWHERE ELSE — including scripts
+
+A test script did `E.DLL = E.DLL.replace("174", "175")` to avoid editing `eb_api.py`. `eb_api.py`
+was still on **173**, so the `replace` silently did nothing while `E.RUN_CMD` was forced to
+`EB_RUN175`. Result: `Unknown command "EB_RUN175"`, a netload loop that never converged, and ten
+minutes lost to what looked like a plugin failure.
+
+⇒ **Never override `DLL`/`RUN_CMD` in a script.** Edit `app/eb_api.py`. That is what "the canonical
+version is `eb_api.py` and nothing else" is for.
