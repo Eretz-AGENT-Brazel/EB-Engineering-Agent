@@ -3018,3 +3018,38 @@ fault; 6 worked because it started from the joint. **A node is detailed once —
 distances, packet thickness, bolt length, set-back, which way the outstanding leg points — then
 built.** Same root as E.4: there a green `vfy_fit` replaced looking at the thing; here the next
 measurement replaced designing it.
+
+---
+
+## ⏸️ E.6 PURLIN COURSE — chapter read, connections NOT working (11/08/2026)
+
+⭐ **Command name `PS_Pfette`** — the first part-E chapter to print one.
+
+### ⭐ "NO CREATOR" — SECOND INSTANCE
+`PsPurlinDistribution`: **no `insert()`, no `init()`, no `Create()`**, and no `PsCreatePurlin*`. Same
+third category as `PsTruss`. But it carries `setBorderShapes(id1, id2)` and `isSecondaryBeams()`,
+which ARE the manual's *"secondary beams within two main girders"* mode, plus
+⭐ **`ConnectionTemplate` + `ConnectionType`** (B.22's `kBoltet`/`kShoe`/`kCleat`/`kShapeBased`) and
+⭐ **`UseJoists` + `JoistTemplateName`**. ⇒ **E.6 is the chapter that ties B.22 to E.8.**
+
+### ⭐⭐ "ASK FOR A SPACING, GET A ROUNDED ONE" — THIRD INSTANCE
+`Fixed Grid` → **`Effective Grid`**: *"the value is rounded up or down correspondingly. The actual
+distances then are displayed in the Effective Grid field."* Same as **E.3's `PostSpace`** (asked
+1000, got 900) and **E.5's `Segment Dist.`**.
+⇒ **Never quote a requested spacing as the built spacing. Read the members back.** Three chapters.
+
+### ⛔ AND THE BOOLEAN IS USELESS IN BOTH DIRECTIONS ON `op=purlin`
+
+```
+10 of 14 calls returned EB_OK  ->  band contains 0 plates, 0 bolts, 0 Ks_WeldFlag
+ 4 of 14 returned EB_ERR       ->  plates=0, create=False
+```
+B.22 had already measured that *"`Create()` returned False on every single successful connection"*.
+Combined with this, `create` is meaningless either way.
+⇒ ⭐ **The only witnesses on a purlin connection are the PLATE COUNT and the JOINT AUDIT.**
+
+⭐⭐ **And the JOINT AUDIT caught it before Amir did** — all 9 members reported FLOATING. That is
+exactly what check 9 was written for after E.4's rafters, working as intended on the next chapter.
+
+⚠️ `set=WeldToSupportShape=1` produced **no weld flags at all**, so that route does not reach the
+template on this path — B.22's fix for *"a cleat attached to NOTHING"* is not reachable this way yet.
