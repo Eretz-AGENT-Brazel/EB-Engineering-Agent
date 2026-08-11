@@ -3053,3 +3053,45 @@ exactly what check 9 was written for after E.4's rafters, working as intended on
 
 ⚠️ `set=WeldToSupportShape=1` produced **no weld flags at all**, so that route does not reach the
 template on this path — B.22's fix for *"a cleat attached to NOTHING"* is not reachable this way yet.
+
+
+---
+
+## ✅ E.6 CLOSED — and two witnesses that lie
+
+⭐⭐ **A HOLE FIELD IS NOT A HOLE.**
+```
+mods  on the girder ->  holeFields=5
+holes on the girder ->  count=0
+```
+The purlin connection registered five hole FIELDS and drilled nothing. `op=holes` counts real holes
+only — which is why `holes`, the JOINT AUDIT and the bolt count all read zero while `mods` showed
+activity. **Two different witnesses. Check both.**
+
+⭐ **`create` IS USELESS IN BOTH DIRECTIONS ON `op=purlin`.** B.22 measured *"`Create()` returned
+False on every single successful connection"*; E.6 supplied the other half — **ten `EB_OK` results
+that built nothing at all.** ⇒ **The only witnesses on a purlin connection are the PART COUNT, the
+weld flags and the JOINT AUDIT.**
+
+### ✅ THE CONFIGURATION THAT WORKS
+```
+Default/Standard ships   PurlinType = kBoltet        <- NOT kCleat
+                         WeldToSupportShape = False  <- B.22's "cleat attached to NOTHING"
+
+set = "PurlinType=kCleat;WeldToSupportShape=1"
+```
+⇒ 14 connections, each `census +5`: **14 cleats FL 100×10 + 48 `Ks_WeldFlag`**, JOINT AUDIT clean.
+⚠️ **B.22's rule confirmed a second time: the template NAME does not set the TYPE.** Both must be set.
+
+> ### ⭐⭐ AND HERE THE WELDS ARE **PROVEN**, NOT DECLARED.
+> Every other part-E chapter closed its welded joints with a `--welded` declaration, because B.23
+> established welds are not creatable from code. **This connection creates 48 real `Ks_WeldFlag`
+> entities** — the weld exists in the model. Stronger evidence than a declaration, and the first
+> time it has been available in part E.
+
+⭐ **"ASK FOR A SPACING, GET A ROUNDED ONE", third instance** — `Fixed Grid` → **`Effective Grid`**,
+after E.3's `PostSpace` (asked 1000, got 900) and E.5's `Segment Dist.`
+⭐ **`PsPurlinDistribution` has no creator either** (second instance of E.5's third category), but
+carries `setBorderShapes(id1,id2)` + `isSecondaryBeams()` — the manual's *"secondary beams between
+two main girders"* — plus `ConnectionType` (B.22's enum) and `UseJoists`/`JoistTemplateName`.
+**E.6 is the chapter that ties B.22 to E.8.**

@@ -1,10 +1,9 @@
 # E.6 Structural Element — Purlin Course
 
-> ## ⏸️ **NOT CLOSED.** The members stand; the connections produced nothing.
-> 9 members in the band (2 main girders + 7 purlins) and **the JOINT AUDIT reports all 9 FLOATING**.
-> 10 of 14 `purlin` calls returned `EB_OK` and the band contains **0 plates, 0 bolts, and the model
-> contains 0 `Ks_WeldFlag`** — so nothing was actually connected.
-> ⭐ **The guard caught this before Amir saw it.** That is what check 9 was written for after E.4.
+> ## ✅ CLOSED 11/08/2026.
+> **23 members · 14 cleats · 48 `Ks_WeldFlag` · JOINT AUDIT CLEAN · 0 collisions in the band.**
+> It closed on the second pass, and the first pass is kept below because the diagnosis is the
+> chapter's real content.
 
 *Read 11/08/2026, pages 1104–1108 (fulltext lines 28531–28669). Band `E.06-PURLIN-COURSE`, grid
 `1A78` at x = 420 000. Plugin v178.*
@@ -87,46 +86,90 @@ hands off to E.8. E.6 is the chapter that ties B.22 and E.8 together.
 
 ---
 
-# WHAT IS IN THE BAND — AND WHY IT IS NOT ENOUGH
+# THE BUILD — AND THE DIAGNOSIS BETWEEN THE TWO PASSES
 
-The detail was fixed **before** the first build call, per E.5's method rule:
+The detail was fixed **before** the first build call, per E.5's method rule, and the geometry came
+out exactly as designed:
 
 ```
 girders   IPE300 rot=90, axis z=0 -> spans z −150…+150, top flange at z=+150
           along x 420000…429000, at y=0 and y=6000
-purlins   U160 @ DIN_U, spanning y 0…6000, LOWER EDGE FLUSH at z=+150 -> axis z = 230
+purlins   U160 @ DIN_U, LOWER EDGE FLUSH at z=+150 -> axis z = 230   (the chapter's own words)
 grid      1500 over 9000 -> 7 purlins, 6 gaps
-joint     B.22's `purlin` op + template, with WeldToSupportShape=1
 ```
 
+## ⛔ PASS 1 CONNECTED NOTHING — AND SAID `EB_OK` TEN TIMES
+
 ```
-band          9 shapes (2 × IPE300, 7 × U160) · 0 plates · 0 bolts
-JOINT AUDIT   *** 9 FLOATING MEMBERS ***
-Ks_WeldFlag   0 in the entire model
+10 of 14 `purlin` calls -> EB_OK,  band: 0 plates, 0 bolts, 0 Ks_WeldFlag
+JOINT AUDIT -> *** 9 FLOATING MEMBERS ***
+```
+
+⭐⭐ **The JOINT AUDIT caught it before Amir saw the model.** Check 9 was written after E.4 was
+committed with two rafters joined to nothing; on the very next chapter it caught the same failure
+mode. That is the whole purpose of it.
+
+## ⭐⭐ A HOLE FIELD IS NOT A HOLE
+
+The witness that explained pass 1:
+
+```
+mods  on the girder ->  holeFields=5
+holes on the girder ->  count=0
+```
+
+⇒ **The connection registered five hole FIELDS and drilled nothing.** `op=holes` counts real holes
+only, which is why `holes`, the JOINT AUDIT and the bolt count all read zero while `mods` showed
+activity. **Two different witnesses; check both.**
+
+## ⭐ AND `create` IS USELESS IN BOTH DIRECTIONS ON THIS OP
+
+B.22 had already measured *"`Create()` returned False on every single successful connection"*.
+Pass 1 added the other half: **ten `EB_OK` results that built nothing.**
+⇒ **On a purlin connection the only witnesses are the PART COUNT, the weld flags and the JOINT
+AUDIT.** Never the boolean.
+
+## ✅ PASS 2 — B.22's MEASURED-GOOD CONFIGURATION
+
+The template dump named the two faults precisely:
+
+```
+Default/Standard ships   PurlinType = kBoltet        <- NOT kCleat
+                         WeldToSupportShape = False  <- B.22: "a cleat plate attached to NOTHING"
+```
+
+⚠️ **B.22's rule, confirmed here: *the template NAME does not set the TYPE*.** Both had to be set:
+
+```
+set = "PurlinType=kCleat;WeldToSupportShape=1"
+```
+
+All 14 calls returned `EB_OK` with `census +5` each, and this time the model agrees:
+
+```
+band          23 members: 2 × IPE300, 7 × U160, 14 × FL 100×10 cleats
+cleats        171.4 long, from the girder's top flange (z 3.55) to the purlin underside (z 175)
+              4 holes each
+welds         48 Ks_WeldFlag
+JOINT AUDIT   CLEAN
 collision     0 in the band
-vfy_fit       bolts=252 OK=252 (unchanged -- this band contributed none)
+vfy_fit       bolts=252 OK=252 BOLT-NO-HOLE=0 GAP-IN-PACKET=0 SHORT=0
 ```
 
-⚠️ **10 of 14 `purlin` calls returned `EB_OK` and connected nothing.** `plates=0` on the four that
-reported `EB_ERR`, and no plates from the ten that reported OK either.
+> ### ⭐⭐ THE WELDS HERE ARE **PROVEN**, NOT DECLARED.
+> Every other chapter closed its welded joints with a declaration to `vfy_joined`, because B.23
+> established welds are not creatable from code. **E.6's connection creates 48 real `Ks_WeldFlag`
+> objects** — the weld exists in the model as an entity. That is a stronger form of evidence than a
+> declaration, and it is the first time in part E it has been available.
 
-⭐ **And `create=False` is NOT the signal here** — B.22 measured that *"`Create()` returned False on
-every single successful connection"*. So the boolean is useless in both directions on this op, and
-**the only witnesses are the plate count and the joint audit.**
-
-## What B.22 already knew that this must respect
-* ⚠️ *"`Default/Standard` builds a cleat plate attached to NOTHING"* — it ships
-  `WeldToSupportShape = False`. Setting it to 1 was attempted here and produced **no weld flags at
-  all**, so the `set=` route did not take on this path.
-* ⚠️ *"The template NAME does not set the TYPE"* — `ConnectionType` must be set separately.
-* ⭐ *"A second purlin is NOT required"* — a single purlin on a support is a valid input.
+⚠️ **The cleats carry 4 holes each and there are no bolts** — holes waiting for fasteners, B.22's
+*"`kBoltet` drills more holes than it bolts"* family. Recorded, not papered over.
 
 ---
 
-# ⏸️ What E.6 needs before it can close
-* ⛔ **The connection route.** Either `set=WeldToSupportShape=1` reaches the template and the plate
-  gets built, or the course's own `ConnectionTemplate`/`ConnectionType` must be driven through a
-  bound `PsPurlinDistribution` — which needs a distribution to exist first, and there is no creator.
+# Still open
+* ⚠️ **The 14 cleats carry 56 holes and no bolts.** Whether the fasteners should come from the
+  template or be added separately is unresolved.
 * ⬜ **`PS_Pfette`** — the chapter names the command. The interactive route is untested and the `cmd`
   allow-list is capped at 9 entries by Amir's decision.
 * ⬜ `Angle` (diagonal courses), `Cut at Edge`, and the `Free Grid` distance list — read, not built.
