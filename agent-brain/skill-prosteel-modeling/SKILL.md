@@ -147,6 +147,32 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > through 79 mm of contiguous steel, and 6 more leaving 11 mm for a 16 mm nut. Neither can be
 > assembled, and nothing but this check would have said so.
 
+> ## 📦 BUILD ONCE, PLACE IT ANYWHERE — ACROSS DRAWINGS. B.28's VERDICT IS RETRACTED (D.2, 11/08)
+> Amir's central principle — *"I modelled once and then replicated, that is the whole principle"* —
+> now has a **cross-drawing** route, measured end to end. This file's B.28 note said the feature
+> did not exist. It does; it is **D.2 BlockCenter**, and the manual states the point in one line:
+> *"the behaviour of these construction groups after insertion **is the same as if they had just
+> been created out of individual components**."*
+>
+> ```
+> block action=createfile handles=…  file=X.dwg        -> a real 35,996-byte DWG
+> block action=insert     file=<FULL PATH .dwg> name='' at=…  -> returnedId≠0
+> block action=explode    handle=… keep=1              -> parts=6
+> read back: 2 Ks_Plate 300x200x20, 4 HOLES EACH + 4 Ks_Bolt M22x70 DIN7990
+>            centre 480000,5000 exactly ;  vfy_fit bolts=4 OK=4 BOLT-NO-HOLE=0
+> ```
+> ⭐ **The recipe:** `CreateBlockFile` → measure the block's base **once** by inserting at `0,0,0` →
+> `origin = target − blockBase` → insert → `BlockExplode(keepProperties=true)` → **delete the
+> leftover block reference**, which the explode does *not* consume and which otherwise duplicates
+> the whole assembly.
+> ⚠️⚠️ **`InsertBlock` wants the FULL PATH TO THE .DWG in `PathToBlock` and an EMPTY `BlockName`.**
+> Three sane-looking spellings all return 0. B.15's `MaxObjectDistance` lesson again: the parameter
+> whose name reads like the answer is not the answer.
+> ⭐ **Why the original verdict was wrong, and it is the transferable part:** the type surface was
+> searched for a class called *BlockCenter*, none was found, and absence of the name was read as
+> absence of the capability. It lives on **`PsBlock`** — named after the AutoCAD concept, not the
+> ProSteel feature. ⇒ **Search for the CAPABILITY, never for the product's name for it.**
+
 > ## 🏭 EB CAN DEFINE ITS OWN SECTIONS FROM CODE — 34 PARAMETRIC TYPES (D.1.4, 11/08)
 > **D.1 is the chapter that PRODUCES what B.8 learnt to consume.** B.8 found four shape databases
 > and could only insert from them; `PsUserShapeManager` is the other side, and it carries **exactly

@@ -462,11 +462,28 @@ delete **3→0 with all three parts still alive** ✅ *(a group is dissolved, th
    (centre 100,100,100, extents 0,0,0…200,200,200) nowhere near its members. Default it to the
    members' centre.
 
-### "Model once, place it 40 times" — the feature does not exist; the method does
+### 🛑🛑 RETRACTED 11/08/2026 (D.2) — "Model once, place it 40 times"
 
-There is **no** export-a-group-as-a-block, no Favorites, no template folder for 3D. The
-manual's *"deposited in a library in the form of a block"* is **DetailCenter**, i.e. 2D
-detailing output, not model reuse.
+> This section used to read: ***"Model once, place it 40 times" — the feature does not exist;
+> the method does.** There is **no** export-a-group-as-a-block, no Favorites, no template folder
+> for 3D. The manual's "deposited in a library in the form of a block" **is DetailCenter, i.e. 2D
+> detailing output, not model reuse.***
+>
+> **All of that is withdrawn.** The feature is **D.2 BlockCenter**, it is **3D**, and the manual
+> states its whole point in one sentence: *"as it is a matter of ProSteel-blocks, the behaviour of
+> these construction groups after insertion **is the same as if they had just been created out of
+> individual components**."* Measured end to end on `PsBlock`:
+> ```
+> CreateBlockFile(sel of 6 parts, dwg)  ->  a real 35,996-byte DWG on disk
+> InsertBlock(fullDwgPath, "", matrix)  ->  returnedId != 0, blockDim=300x200x70
+> BlockExplode(id, keepProperties=true) ->  parts=6
+> read back: 2 Ks_Plate 300x200x20 (4 HOLES EACH) + 4 Ks_Bolt M22x70 DIN7990
+>            centre exactly 480000,5000 ;  vfy_fit bolts=4 OK=4 BOLT-NO-HOLE=0
+> ```
+> **The error was scanning the type surface for a "BlockCenter" class, finding none, and concluding
+> the capability was absent.** The dialog has no class; everything under it does — on a class named
+> after the AutoCAD concept, not the ProSteel feature. ⇒ ⭐ **Search for the CAPABILITY, not for the
+> product's name for it.**
 
 **What works is what Amir said from the start: build it once, then replicate.** Verified — a
 grouped detail (column + base plate + rib + a 2×2 ⌀27 field) replicated with `replicate`:
@@ -3201,6 +3218,53 @@ number.** Clear the VolBody, *then* read.
 ⚠️ **Never create a new drawing to start a part.** A new drawing raises ProStructures' modal
 *"Measurement Unit"* prompt, which is documented here as undismissable from code (six attempts).
 **Copying a DWG on disk and opening it by full path never asks** — measured, first try, no dialog.
+
+## `block` — D.2 BlockCenter, i.e. a 3D library across drawings (v183)
+
+```
+block action=createfile handles=h,h,… file=<full path .dwg>
+block action=insert     file=<FULL PATH TO THE .dwg>  name=<EMPTY>  at=x,y,z [layer=] [color=]
+block action=explode    handle=<blockref> [keep=1]
+block action=info       handle=<blockref>
+```
+
+⚠️⚠️ **THE PARAMETER TRAP, measured over four spellings.** `InsertBlock(PathToBlock, BlockName, …)`
+wants the **full path to the .dwg in `PathToBlock`** and **`BlockName` EMPTY**. Every readable
+spelling returns 0:
+```
+file=<dir>  name=EB-block-boltedlap        -> returnedId=0
+file=<dir>  name=EB-block-boltedlap.dwg    -> returnedId=0
+file=<dir\> name=EB-block-boltedlap        -> returnedId=0
+file=<dir\EB-block-boltedlap.dwg> name=''  -> returnedId!=0, blockDim=300x200x70   ✅
+```
+Same family as B.15's `MaxObjectDistance`: **the parameter whose name reads like the answer is not
+the answer.**
+
+⭐⭐ **The insert matrix is a PURE TRANSLATION, and it is honoured exactly** — but it is added to the
+block's own internal base, which is *not* the source parts' world position. Measure the base once:
+```
+insert at (0,0,0)          -> parts land at blockBase = (454123.0, −136839.7, 0)
+insert at (480000,5000,0)  -> parts land at blockBase + (480000, 5000, 0)   exactly
+⇒ origin = target − blockBase
+```
+Placed that way, the plates read back at **centre = 480000, 5000** to the millimetre.
+
+⭐⭐⭐ **`BlockExplode(id, keepProperties=true)` yields REAL ProSteel parts** — `Ks_Plate` and
+`Ks_Bolt`, **with their holes** (4 per plate) and `M 22x70 Mu DIN7990` names intact, and the band
+passes `vfy_fit bolts=4 OK=4 BOLT-NO-HOLE=0`. That is the manual's sentence, measured.
+
+⚠️ **The block reference is NOT consumed by the explode.** It survives at the block base and
+duplicates the geometry — delete it, or the model carries the assembly twice. ⚠️ And the two
+instruments disagree about it: `props` on that handle answers `rc=3` (reads dead) while `op=list`
+still shows it. **The census is the one that was right**; the leftover was real and deleting it took
+the count 80 → 79.
+⚠️ `PsBlockReference.BlockName` and `.BlockPath` are **WRITE-ONLY** — sixth instance of that trap;
+only `PartsCount` reads back.
+⭐ `Ks_ComGlobalSettings.BlockCenterPath` = `…\Localised\`**`English`**`\UserBlocks` — the library is
+**language-scoped**, exactly like A.2's templates. 13 subdirectories, 165 system DWGs (WeldFlags,
+PositionFlags, StairSteps, Handrail, HoleDisplayBlocks…), and **no database file**: BlockCenter's DB
+has never been created on this machine.
+⛔ The BlockCenter **dialog** itself has no managed class. Everything useful sits on `PsBlock`.
 
 ## `usershape` — D.1, the producing side of B.8 (v180 → v182)
 

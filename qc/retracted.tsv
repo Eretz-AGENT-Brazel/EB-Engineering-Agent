@@ -63,3 +63,7 @@ date	phrase	why it is false
 2026-08-10	neither a creator nor a binder	Same claim, second wording. The binder exists on PsTransaction.
 2026-08-10	The two halves never meet	They meet through PsTransaction.GetObject. What is true is that the meeting point is LETHAL -- addUserXaxis on a bound grid killed AutoCAD twice, isolated.
 2026-08-10	two halves never meet in the API	Same claim, third wording.
+2026-08-11	"Model once, place it 40 times" -- the feature does not exist	D.2 BlockCenter IS that feature, and it is 3D. PsBlock.CreateBlockFile wrote a real 35,996-byte DWG from a 6-part selection; InsertBlock placed it; BlockExplode(keepProperties=true) returned 6 REAL Ks_Plate/Ks_Bolt with their 4 holes each, at the requested point, vfy_fit bolts=4 OK=4.
+2026-08-11	There is no export-a-group-as-a-block	PsBlock.CreateBlockFile(PsSelection, dwgPath) does exactly that, measured 11/08/2026 in the D.02 band.
+2026-08-11	is DetailCenter, i.e. 2D detailing output, not model reuse	D.2's blocks are ProSteel 3D blocks: the manual says an inserted block behaves as if built from individual components, and the explode was measured to yield real parts with holes.
+2026-08-11	a member is JOINED if it carries bolt holes	Carrying holes is not being bolted. 14 plates whose boltparts had refused -- 4 holes each, zero bolts -- were all reported bolted by that definition. vfy_joined now requires a bolt through a hole and has a DRILLED-NOT-BOLTED state.

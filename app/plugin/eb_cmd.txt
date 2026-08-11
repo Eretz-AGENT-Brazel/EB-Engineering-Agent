@@ -1,3 +1,5 @@
-reqid=7e9fe7ad
-op=list
+reqid=a51b5645
+op=vfy_fit
+minx=479000
+maxx=481000
 dwg=D-miscellaneous.dwg
