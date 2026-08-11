@@ -1,10 +1,12 @@
 # E.5 Structural Element — Truss Girder
 
-> ## ⏸️ THIS CHAPTER IS **NOT CLOSED**.
-> The band holds a truss and the JOINT AUDIT is clean, but **12 bolts have a negative `spare` —
-> they cannot be assembled — and 16 real member interferences remain at the nodes.**
-> `PROGRESS.md` carries it as ⬜. The findings below are measured and stand on their own; the
-> artefact does not.
+> ## ✅ CLOSED 11/08/2026, on Amir's call — *"סיימנו סופית עם פרק E.5, אפשר לסמן בירוק"*.
+> The node was re-detailed once and rebuilt once, and the defect that mattered is gone:
+> **`bolts=252 OK=252 BOLT-NO-HOLE=0 GAP-IN-PACKET=0 SHORT=0 OVERSIZED=0`** — the twelve
+> unassemblable bolts no longer exist. **JOINT AUDIT CLEAN.**
+> ⚠️ **Residual, stated plainly:** 51 collisions in the band, 31 of them on a bolt axis (the class
+> E.4 proved the checker over-reports) and **20 others that were not chased down**. Amir owns the
+> "good enough for us" call; this file owns being true about it.
 
 *Read 11/08/2026, pages 1100–1103 (fulltext lines 28446–28531) — **85 lines, the shortest chapter in
 part E**. Band `E.05-TRUSS-GIRDER`, grid `1588` at x = 360 000. Plugin v178.*
@@ -124,44 +126,75 @@ position exactly.
 
 ---
 
-# WHAT IS IN THE BAND, AND WHAT IS WRONG WITH IT
+# ⭐⭐⭐ THE NODE, DETAILED ONCE — THE THREE-BAND RULE
+
+Five passes failed because of ONE fact I never checked: **chords and web members were both placed
+with their axes at y = 0, so both had their legs in y −30…−24 — the same volume.** That single error
+produced every symptom: the interferences, the three-ply packets, the twelve short bolts, and the
+look Amir called appalling.
+
+The detail, worked out before touching the model this time — **three y-bands that touch and do not
+interpenetrate**:
 
 ```
-length 6000 · 4 segments × 1500 · side height 800 · roof 10° · ridge z 1328.9
-3 chords L100X10 · 9 web members L60X6 (2 end posts + 3 verticals + 4 diagonals)
-10 gussets 320×320×10 seated at y −40…−30 · 40 bolts M16 DIN7990        = 62 parts
-
-JOINT AUDIT   CLEAN -- every member bolted or declared welded
-vfy_fit       bolts=252  OK=240  BOLT-NO-HOLE=0   ⛔ SHORT=12, worst spare = −5 mm
-collision     48 in band -- 32 on a bolt axis, ⛔ 16 REAL member interferences
-chord joints  8 of ~11 bolted
+chord       leg  y −30 … −24        axis y = 0
+gusset           y −40 … −30        welded to the chord leg's face at −30
+web member  leg  y −46 … −40        seated on the gusset's outer face at −40
 ```
 
-⛔ **12 bolts with a negative `spare` cannot be assembled** — the same class Amir's B08 audit flagged
-("12 bolts in B.26 that cannot be assembled"). ⛔ **16 interferences remain** even after the web
-members were set back 60 mm from each node.
+> ### ⭐⭐ AN ANGLE HAS TWO LEGS, AND ITS ENVELOPE IS SQUARE.
+> Seating one leg is not enough. The **outstanding** leg sweeps the full 60 mm of the envelope, and
+> at `axis y = −16` it ran from −46 all the way to **+14** — straight through the gusset and into the
+> chord. That was the 29 collisions sitting exactly on the gusset mid-plane.
+>
+> ⇒ **Place an angle by its ENVELOPE (`axis ± half the leg`), not by the one leg you care about.**
+> `axis y = −70` puts the envelope at −100…−40, and `rot=180` puts the seated leg on the **+y** edge
+> at −46…−40, so the outstanding leg points away from the joint.
 
-## 🛑 THE PROCESS LESSON, WHICH MATTERS MORE THAN THE GEOMETRY
+⚠️ **And the probe could not tell me this either.** An L60×6 envelope is **square**, so the
+y-footprint reads −30…+30 for `rot` 0, 90, 180 **and** 270 — four rotations, one answer. Both
+instruments (hole depth at the axis, footprint by drilling) are blind to rotation on an equal angle.
+**Only `propfull`'s XAxis/YAxis answers it.**
 
-Five build passes on one truss. Each fixed what the last measurement shouted, and each exposed the
-next fault: seating → bolt axis → missing end posts → node interference → short bolts.
-
-> **That is convergence by trial inside the model, not detailing.** A truss node is detailed **once**
-> — edge distances, packet thickness, bolt length, member set-back from the chord, leg orientation —
-> and then built. Amir's verdict on the result was *"appalling"*, and he was right. The cause was
-> method, not knowledge.
-
-⚠️ **It is the same root as E.4's frame**: there, a green `vfy_fit` replaced looking at the thing;
-here, the next measurement replaced designing the thing.
+⇒ Every bolt now crosses **exactly two plies**: gusset + chord = 20 mm, gusset + web = 16 mm. That
+is why `SHORT` went from 12 to 0.
 
 ---
 
-# ⏸️ What E.5 needs before it can close
-* ⏸️ **Amir's node detail.** There is no EB details document — the detail is his. Two questions
-  stand: single angles on a one-sided gusset or **pairs** with the gusset between them, and how much
-  **set-back from the chord face**. And whether EB welds its trusses at all, which would remove the
-  bolt discussion entirely.
-* ⛔ The 12 unassemblable bolts and the 16 interferences.
+# WHAT IS IN THE BAND
+
+```
+length 6000 · 4 segments × 1500 · side height 800 · roof 10° · ridge z 1328.9
+3 chords L100X10 (axis y 0) · 9 web members L60X6 (axis y −70, rot=180, set back 60 from each node)
+   2 end posts + 3 verticals + 4 diagonals
+10 gussets 320×320×10 (y −40…−30) · 40 bolts M16 DIN7990          = 62 parts
+
+vfy_fit       bolts=252  OK=252  BOLT-NO-HOLE=0  GAP-IN-PACKET=0  SHORT=0  OVERSIZED=0
+JOINT AUDIT   CLEAN -- every member bolted or declared welded
+collision     51 in band: 31 on a bolt axis, 20 others NOT chased down
+```
+
+---
+
+# 🛑 THE PROCESS LESSON, WHICH OUTLASTS THE CHAPTER
+
+Six build passes on one truss. Passes 1–5 each fixed what the last measurement shouted and each
+exposed the next fault: seating → bolt axis → missing end posts → node interference → short bolts.
+**Pass 6 worked because it started from the joint instead of from the last error message.**
+
+> A truss node is detailed **once** — envelope bands, edge distances, packet thickness, bolt length,
+> set-back from the chord, which way the outstanding leg points — and then built.
+> Amir's verdict on pass 5 was *"appalling"*, and he was right. The cause was **method, not
+> knowledge**, and the same root as E.4's frame: there a green `vfy_fit` replaced looking at the
+> thing, here the next measurement replaced designing it.
+
+---
+
+# Still open
+* ⚠️ **20 collisions in the band were not chased down** — closed on Amir's call, recorded here.
+* ⬜ **Amir's own node detail** is still unstated: single angles on a one-sided gusset (what is built)
+  or **pairs** with the gusset between them, and whether EB welds its trusses at all.
+* ⬜ **4 web ends and 3 chord joints did not bolt** — the shared-gusset hole accumulation.
 * ⬜ `Fit Shape Ends` and the four distance fields — read, and they are precisely the fields that
   encode the node offsets this build guessed at.
 * ⬜ The twin-shape (`Plate Width`, `Front`/`Back`) chord variant — read, not built.

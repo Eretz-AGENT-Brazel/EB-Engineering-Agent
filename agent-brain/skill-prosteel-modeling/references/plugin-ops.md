@@ -2982,3 +2982,39 @@ next fault: seating → bolt axis → missing end posts → node interferences �
 > edge distances, packet thickness, bolt length, member set-back from the chord, leg orientation —
 > and then built. Amir's verdict on the result was "appalling", and he was right; the cause was
 > method, not knowledge.
+
+---
+
+## ✅ E.5 CLOSED — and the one fact that made pass 6 work
+
+⭐⭐⭐ **THE THREE-BAND RULE FOR A GUSSETED JOINT.** Five passes failed on ONE unchecked fact: chords
+and web members were both placed with their axes at y = 0, so both had their legs in the same
+volume. Detail the bands first:
+
+```
+chord       leg  y −30 … −24        axis y = 0
+gusset           y −40 … −30        welded to the chord leg's face
+web member  leg  y −46 … −40        seated on the gusset's outer face   -> axis y = −70, rot=180
+```
+⇒ **Every bolt then crosses exactly TWO plies** — 20 mm and 16 mm. `SHORT` went 12 → **0**.
+
+> ### ⭐⭐ AN ANGLE HAS TWO LEGS, AND ITS ENVELOPE IS SQUARE.
+> Seating one leg is not enough: the **outstanding** leg sweeps the full leg length. At `axis y=−16`
+> it ran −46 → **+14**, through the gusset and into the chord — 29 collisions on the gusset
+> mid-plane. **Place an angle by its ENVELOPE (`axis ± half the leg`), not by the leg you care about.**
+
+⚠️ **Both orientation probes are blind on an equal angle.** Hole depth at the axis reads the leg
+thickness in every direction; the y-footprint reads `axis ± 30` for `rot` 0/90/180/270 because the
+envelope is **square**. ⇒ **`propfull`'s XAxis/YAxis is the only instrument that answers rotation.**
+
+⭐ **A bolt group is laid out along the MEMBER'S own axis** — offsetting in world X bolted every
+vertical and failed every diagonal.
+
+⭐ **When `boltparts` refuses, READ THE HOLES.** Both E.4's far-flange drilling and E.5's seating
+error were diagnosed in one `holes` call each, from holes already in the model.
+
+🛑 **AND THE METHOD RULE.** Six passes: 1–5 each fixed the last error message and exposed the next
+fault; 6 worked because it started from the joint. **A node is detailed once — envelope bands, edge
+distances, packet thickness, bolt length, set-back, which way the outstanding leg points — then
+built.** Same root as E.4: there a green `vfy_fit` replaced looking at the thing; here the next
+measurement replaced designing it.
