@@ -21,3 +21,5 @@ E.10	command reference -- lists bolt commands, builds nothing. Likely a false tr
 E.11	own notes -- not a manual chapter; cites bolt counts from other bands.
 B.26	haunches -- TWO portal frames built and audited in B08-insert-shapes.dwg. ⚠️ PRIORITY: this is the chapter E.4 inherited its detail from, and it has never had a joint audit.
 E.1	straight stair -- 128 bolts, 179 parts, cleat->stringer and tread->cleat. ⚠️ PRIORITY: a real bolted assembly. Run app/vfy_joined.py 119000 126000 and paste the result into its notes.
+B.15	bolts -- the chapter that IS about bolting. Row added to the table 11/08/2026; never joint-audited. ⚠️ PRIORITY.
+B.23	gusset plates -- bolted gussets, and the chapter E.5's truss nodes lean on. Row added 11/08/2026; never joint-audited. ⚠️ PRIORITY.

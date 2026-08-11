@@ -33,3 +33,22 @@ B.11	ACIS body reference -- unreviewed
 B.12	3D modifications -- unreviewed
 B.22	purlins -- purlins WERE built; the notes do not cite the count. Cite it.
 E.11	own notes -- not a manual chapter at all; unreviewed
+B.9	insert plates -- was NEVER IN THE TABLE until 11/08/2026; the row was added from its notes file, and the guard could not see it before. Unreviewed.
+B.6	work frames -- row added to the table 11/08/2026 from its notes file; the guard could not see it before. Unreviewed.
+B.8	insert shapes -- row added 11/08/2026. ⚠️ This is the chapter the whole B08 model is named after and it has 820 parts; the notes simply do not cite them. Cite the count.
+#
+# --- The B.13..B.21 block, added 11/08/2026 -------------------------------------------
+# Every one of these had NO ROW IN THE TABLE until today, so no guard could ever see them.
+# The rows were reconstructed from the notes files that do exist. B.20 and B.21 were even
+# AUDITED in this session -- their notes simply do not state a part count, a vfy_fit line or a
+# collision result in any form the guard recognises. That is a citation gap, not necessarily a
+# build gap, and each one has to be opened and checked before it can be deleted from here.
+B.13	plate editor -- row added 11/08/2026; notes cite no measurement
+B.14	drilling -- row added 11/08/2026; the chapter that established holes are irreversible, and it cites no count
+B.15	bolts -- row added 11/08/2026; cites no count. See also joints-legacy.tsv
+B.16	stiffeners -- row added 11/08/2026; notes cite no measurement
+B.17	plate connections -- row added 11/08/2026; notes cite no measurement
+B.18	baseplates -- row added 11/08/2026; the base for the anchorage research, and it cites no count
+B.19	web angle -- row added 11/08/2026; notes cite no measurement
+B.20	shear plates -- AUDITED 10/08 in this programme, yet the notes state no part count. Cite it.
+B.21	splice joints -- AUDITED 10/08, same gap. Cite it.

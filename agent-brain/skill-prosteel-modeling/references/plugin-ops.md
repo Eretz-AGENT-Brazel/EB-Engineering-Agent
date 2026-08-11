@@ -2913,3 +2913,72 @@ M22-through-a-rolled-flange bolts do not is UNRESOLVED** — not explained, not 
 
 ⚠️ **Do not "fix" these by cutting the column.** E.2's rule: *a fix applied to a checker artefact
 destroys good geometry.* The bolts sit in real, measured, full-depth holes.
+
+---
+
+## ⏸️ E.5 TRUSS GIRDER — findings from an OPEN chapter (11/08/2026)
+
+⚠️ **E.5 is NOT closed.** The band holds 62 parts and a clean JOINT AUDIT, but **12 bolts have a
+negative `spare` (unassemblable)** and **16 real member interferences** remain at the nodes. The
+findings below are measured and stand on their own; the artefact does not.
+
+### ⭐ A THIRD CATEGORY, BESIDE "WORKS" AND "REFUSES"
+
+```
+PsStairs.Insert        False        refuses
+PsCircularStairs.insert True        lies -- returns True, builds nothing
+PsPortalFrame.insert   0            refuses
+PsTruss                --           NO insert(), NO init(), NO PsCreateTruss.  NOTHING TO CALL.
+```
+`PsTruss` is a pure property bag: `copyFrom` · `computeHeightAt` · `retrieveGeometrie` ·
+`get_ControledElements`. ⇒ **"no creator" is a different finding from "the creator refuses"**, and
+only the second one is worth probing.
+
+⭐ `PSN_TRUSS.StartAutoCAD.CreateTruss()` **does** exist. **NOT CALLED.** The plugin's own B.24
+record measured `PSN_HollowShapeBracing.InitialCall()` printing a prompt and parking the session,
+with the note *"NEVER call it unattended"* — and `CreateTruss()` is the same kind of entry.
+
+### ⭐⭐⭐ `propfull` IS THE ORIENTATION INSTRUMENT — NOT THE HOLE DEPTH
+
+The hole-depth trick (E.1, B.26, E.4) answers *"did the drill land where I meant"*. It does **not**
+answer *"which way is this section facing"* — for an **equal angle** both legs are the same
+thickness, so drilling at the axis reads `10` in every direction for every `rot`:
+
+```
+L100X10 / L60X6 at the axis:  from +Y = 10,  from +Z = 10,  for rot 0 / 90 / 180 / 270
+```
+
+`propfull` answers it directly, in one call, with no drilling:
+
+```
+rot=0    XAxis +x   YAxis +y  |  rot=180  XAxis -x  YAxis -y
+rot=90   XAxis +y   YAxis -x  |  rot=270  XAxis -y  YAxis +x     ZAxis = the member axis, always
+```
+⇒ ⭐ **`rot` rotates the part's XAxis/YAxis about its ZAxis.** Read it; do not infer it.
+
+### ⭐ A BOLT GROUP IS LAID OUT ALONG THE MEMBER'S OWN AXIS
+
+Offsetting the two bolt positions in **world X** bolted every vertical and failed every diagonal —
+because a diagonal's leg runs along the diagonal. Same family as E.1's *"stagger the groups along
+the member"*. **6 of 12 ends, purely from choosing the wrong axis to walk along.**
+
+### ⭐ AND THE SEATING RULE CAUGHT ME WITH IT WRITTEN DOWN
+
+```
+L60X6 leg measured in situ:  y -30 .. -24
+gusset as first placed:      y  +5 .. +15      -> 35 mm apart, 12 refusals
+```
+E.1's sentence is in this very file — *"an angle's material is at the EDGE of its envelope, not at
+its axis"* — and the information was already in the model: the holes on the failed members named
+the leg position exactly. ⇒ ⭐ **When `boltparts` says "holes further apart than Gap distance",
+READ THE HOLES. They give you the answer.**
+
+### 🛑 THE PROCESS LESSON, WHICH MATTERS MORE THAN THE GEOMETRY
+
+Five build passes on one truss, each fixing what the last measurement shouted and each exposing the
+next fault: seating → bolt axis → missing end posts → node interferences → short bolts.
+
+> **That is convergence by trial inside the model, not detailing.** A truss node is detailed ONCE —
+> edge distances, packet thickness, bolt length, member set-back from the chord, leg orientation —
+> and then built. Amir's verdict on the result was "appalling", and he was right; the cause was
+> method, not knowledge.

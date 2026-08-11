@@ -1,1 +1,1 @@
-﻿EB_OK save 'C:\Users\User\Desktop\EB PROSTEEL AGENT\projects\SANDBOX\E-structural-elements.dwg' bytes=3628161->7108452 at=15:26:06 reqid=158436be
+﻿EB_OK whoami doc=C:\Users\User\Desktop\EB PROSTEEL AGENT\projects\SANDBOX\E-structural-elements.dwg entities=618 reqid=4a780d45
