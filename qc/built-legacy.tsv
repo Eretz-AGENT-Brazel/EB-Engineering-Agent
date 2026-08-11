@@ -1,0 +1,35 @@
+# CHAPTERS CLOSED BEFORE THE BUILD-PROOF RULE EXISTED (11/08/2026)
+#
+# Check 8 in consistency.py demands that every ✅ chapter carry a BUILD PROOF -- a part count, a
+# vfy_fit line, a collision check -- or an explicit "NO MODEL ARTEFACT -- <why>" line saying it has
+# nothing to build. The rule was written the day E.1 was caught closed with no staircase in the
+# model.
+#
+# These 24-minus-7 rows predate it. They are NOT declared correct. They are declared UNREVIEWED,
+# out loud, on every single run of the guard. Each one needs someone to open its notes and decide:
+#   - it has an artefact that simply is not cited -> cite it, delete the line here
+#   - it is a dialog / settings / views chapter with nothing to build -> write the NO MODEL
+#     ARTEFACT line in its notes, delete the line here
+#   - it was closed on reading alone -> demote it to 🟡 and build it
+#
+# ⚠️ THIS LIST MAY ONLY SHRINK. Adding a row to it to make the guard go green is the exact
+# failure it was written to prevent. A new chapter that cannot clear check 8 is not finished.
+#
+# chapter	why it is here
+A.1	part A: general information -- reference chapter, unreviewed
+A.2	part A: language selection -- unreviewed
+A.3	part A: dialog framework -- unreviewed
+A.4	part A: input options -- unreviewed
+A.5	part A: project manager -- unreviewed
+A.6	part A: global settings -- read off the running installation, not cited as a build
+B.1	layer functions -- an operation, not an element; unreviewed
+B.2	construction utilities -- unreviewed
+B.3	3D object views -- unreviewed
+B.4	move and copy -- an operation on existing parts; unreviewed
+B.5	display / assign parts -- unreviewed
+B.7	choose view -- unreviewed
+B.10	insert solids -- unreviewed
+B.11	ACIS body reference -- unreviewed
+B.12	3D modifications -- unreviewed
+B.22	purlins -- purlins WERE built; the notes do not cite the count. Cite it.
+E.11	own notes -- not a manual chapter at all; unreviewed

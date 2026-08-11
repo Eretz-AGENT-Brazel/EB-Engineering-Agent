@@ -384,6 +384,91 @@ def check_version_claims():
     print("  live build v%d ; %d contradicting claims" % (live, hits))
 
 
+# ----------------------------------------------------------------- 8. built, not just learned
+def check_built():
+    """A chapter marked closed must point at an ARTEFACT, not only at a lesson.
+
+    ⚡ WHY THIS EXISTS. On 11/08/2026 E.1 was committed with a ✅ in PROGRESS.md, a full set of
+    chapter notes, an embedded skill section and a pushed commit -- and NO STAIRCASE IN THE
+    MODEL. The API's creator refuses, that refusal was measured and written up, and the write-up
+    was mistaken for the implementation. Amir found it by opening the drawing.
+
+    Step 2 of the five-step procedure is "build it in a dedicated band and read every result back
+    FROM THE MODEL". Proving a command unreachable is a finding. It is not a build.
+
+    So: every chapter row marked ✅ must have a notes file that cites real evidence -- a handle,
+    a census, a part count or a verification line. A row that cites nothing measurable is a row
+    that closed on reading alone.
+    """
+    prog = os.path.join(REPO, "PROGRESS.md")
+    if not os.path.isfile(prog):
+        warn("built", "no PROGRESS.md")
+        return
+    rows = re.findall(r"^\|\s*✅\s*\|\s*([A-Z]\.\d+)\s*\|", read(prog), re.M)
+    if not rows:
+        warn("built", "no closed chapters found in PROGRESS.md")
+        return
+
+    # ⚠️ THE FIRST VERSION OF THIS CHECK WOULD NOT HAVE CAUGHT E.1. It asked for "a measurement",
+    # and E.1's bad notes were FULL of measurements -- seven refusal configurations, census 100
+    # before and 100 after. Measuring a refusal precisely is still not building anything. So the
+    # evidence demanded here is specifically a BUILD PROOF: parts that exist in the band, counted
+    # or verified. Nothing else clears a chapter.
+    BUILT = (r"vfy_fit", r"collisions?\s*=\s*\d+", r"\bparts\s*=\s*\d+",
+             r"BOLT-NO-HOLE\s*=\s*\d+", r"\bbuilt\b.{0,40}\bband\b", r"נבנה")
+    # ...and a chapter with genuinely nothing to build (a dialog, a settings page, a command list)
+    # clears by SAYING SO, in one line, on the record. Declaring it is documentation. Leaving it
+    # silent is what went wrong.
+    DECLARED = r"NO MODEL ARTEFACT"
+
+    legacy = {}
+    lp = os.path.join(HERE, "built-legacy.tsv")
+    if os.path.isfile(lp):
+        for l in read(lp).splitlines():
+            if l.strip() and not l.startswith("#") and "\t" in l:
+                k, _, v = l.partition("\t")
+                legacy[k.strip()] = v.strip()
+
+    missing, unreviewed = [], []
+    for ch in sorted(set(rows)):
+        part, num = ch.split(".")
+        pdir = os.path.join(NOTES_DIR, part)
+        pat = re.compile(r"(MANUAL-NOTES-)?%s0?%s[-.]" % (part, num))
+        note = None
+        if os.path.isdir(pdir):
+            for f in sorted(os.listdir(pdir)):
+                if pat.match(f):
+                    note = os.path.join(pdir, f)
+                    break
+        if note is None:
+            missing.append("%s is marked ✅ but has no notes file at all" % ch)
+            continue
+        body = read(note)
+        if re.search(DECLARED, body):
+            continue
+        if not any(re.search(p, body, re.I) for p in BUILT):
+            if ch in legacy:
+                unreviewed.append("%-5s %s" % (ch, legacy[ch]))
+                continue
+            missing.append(
+                "%s is marked ✅ but its notes show NO BUILD PROOF -- no part count, no vfy_fit, "
+                "no collision check. Either build it in its band, or write the line "
+                "'NO MODEL ARTEFACT -- <why>' in %s."
+                % (ch, os.path.relpath(note, REPO)))
+    for m in missing:
+        fail("built", m)
+    print("  %d chapters marked closed, %d proven or declared, %d unreviewed backlog"
+          % (len(set(rows)), len(set(rows)) - len(unreviewed) - len(missing), len(unreviewed)))
+    if unreviewed:
+        # printed on EVERY run, never silently -- this backlog is meant to itch
+        print("  ⚠️  closed before the build-proof rule, still unreviewed:")
+        for u in unreviewed:
+            print("       %s" % u)
+    stale = sorted(set(legacy) - set(rows) - set(u.split()[0] for u in unreviewed))
+    for s in stale:
+        warn("built", "built-legacy.tsv lists %s, which no longer needs it -- delete the row" % s)
+
+
 CHECKS = [
     ("1. retractions  ", check_retractions),
     ("2+3. memory     ", check_memory),
@@ -391,6 +476,7 @@ CHECKS = [
     ("5. plugin       ", check_plugin),
     ("6. chapter sync ", check_chapters),
     ("7. version drift", check_version_claims),
+    ("8. built not read", check_built),
 ]
 
 
