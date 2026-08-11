@@ -2773,3 +2773,68 @@ unit along = (0.82135,0,0.57038)   normal = (−0.57038,0,0.82135)
 top edge   = axis + 150 × normal = axis + (−85.56, 0, 123.20)
 ```
 ⭐ **The rail follows the rake exactly (rise/run 0.6944) and the posts stay plumb.** Verified.
+
+---
+
+## 🛑 E.3 CORRECTIONS — after reading the chapter properly (11/08/2026)
+
+The first E.3 pass was written from measurement plus a partial reading. Four researchers had been
+sent to read the 27-page chapter and **their output was never opened**. Reading it overturned two
+statements and sharpened a third.
+
+### ⭐⭐⭐ THE ELEMENT CAN CUT ITS OWN PENETRATIONS — it was a SETTING, not a limitation
+
+`Post ▸ Post-Knee-high Guardrail` → `Layout`:
+> **`Drill`** *"the posts are drilled so that the shapes can run through them as a whole"*
+> **`Boolean`** *"exactly adapted to the posts by means of a boolean cut"*
+> also `Leave` (the default that produced 15 collisions) · `Straight Cut` · `Complex Cut`
+
+`Post ▸ Post-Handrail` → `Layout`: `Leave` / ⭐ **`Straight Cut`** *"the post is shortened up to the
+lower edge of the handrail"* / `Complex Cut` / `With Rod` / **`Boolean`**.
+⭐ **`Straight Cut` is what the measured 2000.000 post-top IS** — the sentence, measured.
+
+⇒ **The hand-applied `op=boolean` reached the right geometry by the long road.** It remains the only
+route until writing a `PsHandrail` property is proven to rebuild geometry.
+⭐ Same shape at `Filler Rods ▸ If Collision` = `Ignore` / `Divide` / **`Perforate`**.
+⛔ **`Ignore` is the fabrication trap — it leaves interpenetrating solids on purpose.**
+
+### 🛑 THE MANUAL SAYS *CENTRE*; THE SOFTWARE DELIVERS *UNDERSIDE*
+
+> `Upper/Middle/Lower Rail Height` — *"The **center** distance … measured perpendicular to the polyline."*
+
+Measured: `250 → 1263.45`, i.e. **underside** at `polyline + h`, off by exactly OD/2 on all three
+courses. ⭐ **`Railing Height` is the exception and matches the manual exactly** — it is the *"upper
+edge of the newel posts"*: `1000 + 1000 = 2000.000`, measured.
+⇒ **`RailHeight` is a POST-TOP dimension, not a rail dimension.**
+
+### ⭐⭐⭐ THERE IS NO POST AT A CORNER — THERE ARE TWO, ONE `EdgeSpace` EITHER SIDE
+
+Measured on a three-segment path (straight → 90° → 45°), 13 posts:
+```
+...242850  243800 |corner 244000|  244000,200  ...244000,2800 |corner|  244141.4,3141.4 ...
+        200 short of it              200 past it                  200 ALONG the 45 deg leg
+                                                                  = 141.4 in x and in y
+```
+Which is `Edge Offset`, verbatim: *"the spacing of the corner posts between two handrail segments
+**starting with the intersection of the polyline segments**."* The offset is measured **along the
+path**, not in coordinates.
+
+⇒ ⭐⭐ **This independently explains the helical zero-post result**: each segment needs
+`2 × EdgeSpace` before a post can exist, and 233.9 mm chords cannot pay 400 mm. Two unrelated
+geometries, one arithmetic.
+
+⚠️ **Unexplained and recorded:** on the multi-segment path the OUTER ends carry a post at the
+polyline end exactly; on single-segment paths they were set back 200. Both bind `EdgeSpace=200`.
+
+### ⭐ THE TABS WORTH KNOWING EXIST
+
+**`Segments`** — length cap + `Gap` = **shippable rail sections**; for a fabricator this is the tab
+with money in it. **`Zinc Hole Dia`** — a galvanising drain hole the element generates.
+**`w (vertical)` = 0 → only two holes** (which is why the specimen's base plates have two).
+**`For Diagonals`** — *"other dimensions for diagonal handrail segments **e.g. at a stringer**;
+only available for **vertical** connections"* ← the stair-rail case, named by the manual.
+**`Filler Rods`** and **`Kick plate`** are whole features, each gated: *"the kick plate will only be
+created **if you have added kick plates as shapes**."*
+⛔ **Stated limit:** *"only **one** deviating intermediate angle is possible… not corners of 45° and
+30° at the same time."*
+⭐ **ALT at shape selection takes over the previous type**, including the on/off status.
