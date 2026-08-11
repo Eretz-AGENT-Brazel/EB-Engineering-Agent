@@ -1,1 +1,1 @@
-﻿EB_OK save 'C:\Users\User\Desktop\EB PROSTEEL AGENT\projects\SANDBOX\E-structural-elements.dwg' bytes=4044869->6874538 at=17:37:12 reqid=e32e3802
+﻿EB_OK cmd allowlist=PS_POS,PS_POS_SNG,PS_POS_BGR,PS_POS_DIFF,PS_COLLISION,PS_EXPLODE,PS_REGEN,PS_EDIT_CONNECTIONS,UCS reqid=a8d245d4
