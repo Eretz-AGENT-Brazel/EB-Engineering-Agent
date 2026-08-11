@@ -147,6 +147,95 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > through 79 mm of contiguous steel, and 6 more leaving 11 mm for a 16 mm nut. Neither can be
 > assembled, and nothing but this check would have said so.
 
+> ## 💥 A BOLT IN A CORRECT HOLE CAN REPORT A COLLISION — AND IT IS TESSELLATION (D.5.1, 11/08)
+> **E.4's open question is closed, and the mechanism is mechanical.** E.4 recorded *"why E.1's M12
+> bolts report 0 and these M22-through-a-rolled-flange bolts do not is UNRESOLVED"*. Reproduced in
+> a controlled band with the bolt size as the only variable:
+>
+> | specimen | bolt in hole | collisions |
+> |---|---|---|
+> | M12 in ⌀13 · M16 in ⌀17 · M24 in ⌀27 · M12 in ⌀15 | clearance ≥ 0.5 mm radial | **0** |
+> | **M22 in ⌀23** | **0.25 mm radial** | **8** (4 bolts × 2 plies) |
+>
+> ⭐⭐ **`minvol` is a MEASURING INSTRUMENT, not just a filter.** The API never returns a per-hit
+> volume — but raising the threshold until the count dies brackets it: **8 hits at `minvol=50`,
+> 0 at `minvol=70` ⇒ the interference is 50–70 mm³.** An M22 shank inside a 20 mm ply is
+> **7,600 mm³** — a hundred times more. The facets of the shank cylinder and the facets of the hole
+> cylinder are out of phase and one facet corner pokes ~0.15 mm through.
+>
+> > ### ⭐⭐ THE RULE: run `collision minvol=100` on any band containing bolts.
+> > A hit under ~100 mm³ on a bolt axis is **tessellation noise, not a defect**. A real clash — a
+> > beam through a column — is 10⁴–10⁶ mm³ and is untouched. **Our default of `minvol=1` is far too
+> > sensitive for a model with bolts**, and it is what produced E.4's 24 phantom hits.
+>
+> 🛑 **And a bbox is not a volume.** The solid's bounding box reads 21.7×21.8×20 = 9,456 mm³, which
+> says "the whole shank" and is wrong — the solid is a thin shell whose *envelope* is the shank.
+> Reading the bbox produced one premature conclusion and then a premature retraction of the right
+> one. **Only the threshold bisection gave the number.**
+>
+> ⛔ **Measured dead ends on `PsCollisionCheck`, so nobody re-investigates:** the **Options pairing
+> filter is inert from code** (`pairs=ss` on a specimen containing no shape at all still returns 8);
+> **`UseBoltMountSpace` is inert** (0/0, 8/8, 0/0 across three specimens) — so the chapter's own
+> promise of a *"can this bolt be mounted"* check is **dialog-only**; `Verbose=true` prints nothing;
+> and `Highest Resolution` has no property on the class at all.
+> ⚠️⚠️ **Every setting on the class is WRITE-ONLY** — `MinVolume`, `UseBoltMountSpace` and all ten
+> `Check*To*` pairings have no getter (the compiler says so; the dump prints them as plain
+> properties). **A run's configuration cannot be verified from inside**, so the op echoes what it
+> *sent* and says so. Fifth instance of *the compiler beats the dump*.
+> ⭐ The collision layer is **`PS_Crash`** — that is what the manual's cleanup button keys on, and
+> `clean=1` (`DeleteAllExistingBodies`) is the API route.
+> ⭐ **A `box=`-scoped run does NOT accumulate its own residue in the count** — 8/8/8 over three runs
+> with no clean. E.2's 71→207 climb was a **whole-model** run; the box selection never collects
+> `Ks_VolBody`. The solids still pile up in the drawing; the *number* is stable.
+
+> ## 🛑 THE HOLE SELECTS THE BOLT — `dia=` IS NOT THE BOLT YOU GET (D.5.1, 11/08)
+> Asked for `drillfield dia=20 play=3` (a ⌀23 hole) and read the result back out of the model:
+> ```
+> bolt 20E   dia=22.0   name='M 22x70 Mu DIN7990'
+> ```
+> **M22, not M20.** `boltparts` looks up the **hole diameter** in the bolt style's own table and
+> takes whatever row matches. `dia=` in `drillfield` sizes the *hole*; the bolt is chosen later,
+> independently. *(E.4's own note says "M22x75 through a drilled ⌀23 hole" — the same pair, and that
+> 0.25 mm clearance is why it collided.)*
+>
+> ⇒ **This is why `boltparts` "refuses geometry that measures perfect"** — the long-standing open
+> item in this file. Thirteen specimens, identical geometry, one variable at a time:
+> ```
+> DIN7990   hole 12 ⛔   hole 13 ✅   hole 15 ⛔   hole 17 ✅   hole 19 ⛔   hole 23 ✅   hole 27 ✅
+> DIN6914   hole 15 ⛔            DIN931   hole 15 ✅
+> packet 12 / 16 / 20 / 40 at hole 15: ⛔ every time  (the grip-window hypothesis is REFUTED)
+> ```
+> **No row for that hole diameter ⇒ no bolt, silently**, and the canned message blaming *"Gap
+> distance / Angle difference"* is wrong in all six refusals — the holes were coaxial and met
+> exactly at the contact face. Same mechanism as **B.20's `dia=22` dropping the bolts** and
+> **B.15's ~400 silent failures**: three doors, one cause.
+>
+> ⛔⛔ **AND IT COLLIDES WITH THE SHOP PRACTICE RECORDED IN THIS FILE.** *"M16 → hole ⌀19 · M20 →
+> hole ⌀23, 3 mm clearance"* is Amir's stated practice. Measured: **⌀19 + DIN7990 → zero bolts**,
+> **⌀23 + DIN7990 → an M22, not an M20.** Modelling his practice with that style yields either
+> drilled-and-unbolted steel or a bolt one size up. ⏳ **His call, not mine — asked, not resolved.**
+>
+> ⭐ **The discipline that caught it:** the first version of this finding was a clearance table built
+> on the assumption that the bolt I got was the bolt I asked for. **Reading the bolt back out of the
+> model destroyed it.** *Read back what you gave it* applies to the thing the software chose, too.
+
+> ## ⛔⛔ `vfy_joined` CALLED A DRILLED, UNBOLTED PLATE "BOLTED" — fixed 11/08 (D.5)
+> The joint audit written after E.4 defined a member as joined **if it carries bolt holes**. That is
+> in its docstring as well as its code, so it was a mistake of reasoning, not a slip.
+> **Carrying holes is not being bolted.** Measured: fourteen plates on which `boltparts` refused —
+> 4 real holes each, zero bolts — were **every one reported "bolted"**.
+>
+> That is exactly **B.20's dropped bolt** (`dia=22` → plates and holes, no bolts) and **B.21's empty
+> splice** (`BoltStyleCRC = 0` → drilled and empty). **Both would have passed.** The guard written so
+> that a green check could not stand in for looking was itself a green check.
+>
+> **Now:** a member is bolted only if a bolt **actually passes through one of its holes**, matched
+> geometrically. Three states — `FLOATING` (no holes: the E.4 rafter) · **`DRILLED-NOT-BOLTED`**
+> (holes, none filled: the B.20/B.21 defect) · `WELDED (declared)`.
+> **Calibrated on a known-bad and a known-good case in the same band:** 12 bolted plates `filled=4`,
+> 14 refused plates `filled=0`, 2 floating members — and 24 bolts × 2 plies = 48 fills = 12 × 4.
+> ⇒ ⭐ **Every "JOINT AUDIT clean" recorded before 11/08/2026 was answering a weaker question.**
+
 > ## ⚙️ THE WHOLE SETTINGS DIALOG IS AN OBJECT — `Ks_ComGlobalSettings` (A.2, 10/08)
 > ⭐⭐ ProSteel's **global settings** (the A.6 dialog) are reachable with no dialog and no
 > command. It is an **in-process** COM server, so `Dispatch()` from outside fails with

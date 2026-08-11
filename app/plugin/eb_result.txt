@@ -1,1 +1,1 @@
-﻿EB_OK cmd allowlist=PS_POS,PS_POS_SNG,PS_POS_BGR,PS_POS_DIFF,PS_COLLISION,PS_EXPLODE,PS_REGEN,PS_EDIT_CONNECTIONS,UCS reqid=a8d245d4
+﻿EB_OK holes handle=313 count=0 -> eb_holes.txt reqid=ebc46b47

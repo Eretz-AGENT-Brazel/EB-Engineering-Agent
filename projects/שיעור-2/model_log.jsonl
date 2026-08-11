@@ -1756,3 +1756,32 @@
 {"op": "beam", "args": {"name": "RO 26.9x2.6", "catalog": "DIN RUNDROHR", "kind": "standard", "p1": "548000.0,0,10.0", "p2": "548000.0,0,610.0", "dwg": "E-structural-elements.dwg"}, "handle": "1D9B", "ts": "17:29:24"}
 {"op": "beam", "args": {"name": "IPE200", "catalog": "DIN_IPE", "kind": "standard", "p1": "540000.0,-600,-100", "p2": "540000.0,600,-100", "rot": 0, "dwg": "E-structural-elements.dwg"}, "handle": "1DB2", "ts": "17:30:45"}
 {"op": "beam", "args": {"name": "IPE200", "catalog": "DIN_IPE", "kind": "standard", "p1": "548000.0,-600,-100", "p2": "548000.0,600,-100", "rot": 0, "dwg": "E-structural-elements.dwg"}, "handle": "1DB3", "ts": "17:30:45"}
+{"op": "beam", "args": {"name": "HE300B", "p1": "900000,0,0", "p2": "900000,0,3000", "rot": 0, "dwg": "D-miscellaneous.dwg"}, "handle": "1FF", "ts": "18:07:18"}
+{"op": "plate", "args": {"center": "362000,5000,10", "l": 300, "w": 200, "t": 20, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "207", "ts": "18:16:42"}
+{"op": "plate", "args": {"center": "362000,5000,30", "l": 300, "w": 200, "t": 20, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "208", "ts": "18:16:42"}
+{"op": "plate", "args": {"center": "366000,5000,10", "l": 300, "w": 200, "t": 20, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "20C", "ts": "18:16:45"}
+{"op": "plate", "args": {"center": "366000,5000,30", "l": 300, "w": 200, "t": 20, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "20D", "ts": "18:16:46"}
+{"op": "plate", "args": {"center": "370000,5000,10", "l": 300, "w": 200, "t": 20, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "215", "ts": "18:18:47"}
+{"op": "plate", "args": {"center": "370000,5000,30", "l": 300, "w": 200, "t": 20, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "216", "ts": "18:18:47"}
+{"op": "plate", "args": {"center": "374000,5000,10", "l": 300, "w": 200, "t": 20, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "217", "ts": "18:18:49"}
+{"op": "plate", "args": {"center": "374000,5000,30", "l": 300, "w": 200, "t": 20, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "218", "ts": "18:18:49"}
+{"op": "plate", "args": {"center": "378000,5000,10", "l": 300, "w": 200, "t": 20, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "21D", "ts": "18:18:50"}
+{"op": "plate", "args": {"center": "378000,5000,30", "l": 300, "w": 200, "t": 20, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "21E", "ts": "18:18:50"}
+{"op": "plate", "args": {"center": "382000,5000,10", "l": 300, "w": 200, "t": 20, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "21F", "ts": "18:18:52"}
+{"op": "plate", "args": {"center": "382000,5000,30", "l": 300, "w": 200, "t": 20, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "220", "ts": "18:18:52"}
+{"op": "plate", "args": {"center": "386000,5000,5.0", "l": 300, "w": 200, "t": 10, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "228", "ts": "18:19:56"}
+{"op": "plate", "args": {"center": "386000,5000,15.0", "l": 300, "w": 200, "t": 10, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "229", "ts": "18:19:56"}
+{"op": "plate", "args": {"center": "390000,5000,4.0", "l": 300, "w": 200, "t": 8, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "22A", "ts": "18:19:58"}
+{"op": "plate", "args": {"center": "390000,5000,12.0", "l": 300, "w": 200, "t": 8, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "22B", "ts": "18:19:58"}
+{"op": "plate", "args": {"center": "394000,5000,3.0", "l": 300, "w": 200, "t": 6, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "22C", "ts": "18:20:00"}
+{"op": "plate", "args": {"center": "394000,5000,9.0", "l": 300, "w": 200, "t": 6, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "22D", "ts": "18:20:00"}
+{"op": "plate", "args": {"center": "398000,5000,3.0", "l": 300, "w": 200, "t": 6, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "22E", "ts": "18:20:02"}
+{"op": "plate", "args": {"center": "398000,5000,9.0", "l": 300, "w": 200, "t": 6, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "22F", "ts": "18:20:02"}
+{"op": "plate", "args": {"center": "402000,5000,10", "l": 300, "w": 200, "t": 20, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "237", "ts": "18:21:02"}
+{"op": "plate", "args": {"center": "402000,5000,30", "l": 300, "w": 200, "t": 20, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "238", "ts": "18:21:02"}
+{"op": "plate", "args": {"center": "406000,5000,10", "l": 300, "w": 200, "t": 20, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "23D", "ts": "18:21:03"}
+{"op": "plate", "args": {"center": "406000,5000,30", "l": 300, "w": 200, "t": 20, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "23E", "ts": "18:21:03"}
+{"op": "plate", "args": {"center": "410000,5000,10", "l": 300, "w": 200, "t": 20, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "243", "ts": "18:21:04"}
+{"op": "plate", "args": {"center": "410000,5000,30", "l": 300, "w": 200, "t": 20, "normal": "0,0,1", "dwg": "D-miscellaneous.dwg"}, "handle": "244", "ts": "18:21:04"}
+{"op": "beam", "args": {"name": "RO219.1X8", "catalog": "", "p1": "412000,5000,0", "p2": "412000,5000,1000", "rot": 0, "dwg": "D-miscellaneous.dwg"}, "handle": "311", "ts": "18:36:07"}
+{"op": "beam", "args": {"name": "HE200B", "catalog": "DIN_HEB", "p1": "414000,5000,0", "p2": "414000,5000,1000", "rot": 0, "dwg": "D-miscellaneous.dwg"}, "handle": "313", "ts": "18:36:08"}

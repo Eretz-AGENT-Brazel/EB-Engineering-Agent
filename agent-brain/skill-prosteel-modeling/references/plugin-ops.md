@@ -3192,3 +3192,132 @@ making things worse. It was `Ks_VolBody` residue from repeated runs: **the check
 leftovers**, the non-idempotence measured in E.2. A clean run gave **23**.
 ⚠️ **E.2 wrote that rule down and E.8 still nearly drew the opposite conclusion from a contaminated
 number.** Clear the VolBody, *then* read.
+
+---
+
+# 🧰 PART D — MISCELLANEOUS
+
+*Model: `projects/SANDBOX/D-miscellaneous.dwg`, created 11/08/2026 by COPYING an existing drawing.*
+⚠️ **Never create a new drawing to start a part.** A new drawing raises ProStructures' modal
+*"Measurement Unit"* prompt, which is documented here as undismissable from code (six attempts).
+**Copying a DWG on disk and opening it by full path never asks** — measured, first try, no dialog.
+
+## `cog` — D.5.2 centre of gravity (v179)
+
+```
+cog [box=x1,y1,z1;x2,y2,z2] [handles=h,h,…] [group=<member handle>]
+```
+
+**There is no centre-of-gravity class in the whole surface.** The `WeightCenter` that sits next to
+`Weight`/`Posnum` in the type dump belongs to **`Bentley.ProStructures.Entity.PsVolume`**, not to
+`PsObjectProperties` — attributing a property to a class by the company it keeps in a text file is
+not a reading, and the compiler refused it. `PsShape.COGPoint` was already measured **null**.
+
+So it is composed — `COG = Σ(wᵢ·cᵢ)/Σwᵢ` from each part's `Weight` and extents centre — with
+ProSteel's own `PsObjectGroup` answer reported beside it when `group=` names a member.
+
+⭐ **Sixth instance of the indexer rule:** `WeightCenterOfGroup` is really
+**`get_WeightCenterOfGroup(long)`** — it takes the part id. The dump prints it as a plain property.
+*(After `get_ParentFlangeIndex(int)`, `get_WeldStyleName(int)`, `get_BoltStyleName(int)`,
+`get_Entry(short)`, `get_EdgePoint(…)`.)*
+
+**Verified against closed-form hand arithmetic, exactly:**
+```
+2 × PLATE 300x200x20 → 9.42 kg each     0.3·0.2·0.02·7850 = 9.42   ✅
+4 × M22x70           → 0.454 kg each
+total                → 20.657           2(9.42)+4(0.454) = 20.656  ✅
+cog z                → 19.296           (18.84·20 + 1.816·12)/20.656 = 19.296  ✅
+```
+⚠️ The extents centre is **exact for a prismatic part and approximate for anything else** (an angle,
+an I-section). The op says so in its own output rather than hiding it.
+
+## `unwind` — D.5.3 tube unfold (v179)
+
+```
+unwind handle=<h> [resolution=1..360] [acis=1] [inner=1] [tessel=1]
+```
+
+The manual describes a **mouse pick** — *"you have to click the shape … supplied sticking to the
+crosshairs"* — which under the standing rule would put it on THE CEILING. **It is not there:**
+`PsCreateUnfold` exposes `SetObjectId(Int64)` and `Create()`.
+
+**Measured on `RO 219.1x8` × 1000, at resolutions 16 / 64 / 360:**
+```
+Create() = False    newEntities = 0    but    GetOuterGeo() → lines=102
+```
+⇒ ⭐⭐ **the development is COMPUTED from code; only its PLACEMENT needs the mouse.** Same family as
+`PsJoist.calculatePoints()` in E.8 — *you can compute one and never build it*.
+⚠️ `SetResolution` changed nothing (102 lines at all three).
+⚠️ **Not established that those 102 lines ARE the development** rather than the source contour.
+**Named next test:** read the line endpoints and check the long side against `π·D = 688.32`
+(or `π·(D−t) = 663.19`).
+
+## `collision` — extended (v179)
+
+```
+collision [box=] [clean=1] [minvol=] [mount=0|1] [pairs=ss,sp,sb,sy,pp,pb,py,bb,by,yy]
+```
+
+⚠️⚠️ **EVERY setting on `PsCollisionCheck` is WRITE-ONLY.** `MinVolume`, `UseBoltMountSpace` and all
+ten `Check*To*` pairings have no get accessor — the compiler says so while the dump prints them as
+plain properties. **A run's configuration cannot be read back**, so the op prints
+`SENT[…] (write-only class: not verified)` instead of implying a verification it cannot perform.
+
+⛔ **`pairs=` is INERT.** `pairs=ss` — shape-to-shape — on a specimen holding **two plates and four
+bolts and no shape at all** still returns 8. All five combinations tried return the same number.
+⛔ **`mount=` is INERT.** `UseBoltMountSpace` 0 vs 1 on three specimens: 0/0, 8/8, 0/0.
+⇒ **The Options filter and the Mounting Area are dialog-only in practice**, and with them goes the
+chapter's own promise of a *"can this bolt be mounted"* buildability check.
+⛔ `Verbose = true` puts **nothing** on the command line — `eb_log.problems()` came back empty around
+a full run. Not a diagnostic channel; recorded so it is not chased.
+⚠️ `Highest Resolution` (an Options checkbox) has **no property on the class at all**.
+
+⭐ **`minvol` used as an instrument** — see SKILL.md. 8 hits at 50, 0 at 70 ⇒ the interference is
+**50–70 mm³**, against 7,600 mm³ for the shank itself. **Use `minvol=100` on any band with bolts.**
+⭐ The collision layer is **`PS_Crash`**; `clean=1` is `DeleteAllExistingBodies()`, and a census
+back to the hand-computed 69 proved it.
+⭐ **A box-scoped run does not accumulate its own residue in the count** (8/8/8, three runs, no
+clean) — E.2's 71→207 climb was a whole-model run, and the box selection never collects
+`Ks_VolBody`.
+
+## `acis` — D.5.5, and the wider route
+
+```
+acis handle=<h>        →  from=313 newId=317 census=71->72 new:317 class=AcDb3dSolid
+```
+The original survives (`props handle=313` still reads `HE 200 B`, L=1000, 61.3 kg) — the manual's
+*"the body is inserted **additionally** and the original is only **hidden**"*, verbatim.
+
+⭐ The full API route is wider than the op: **`PsMiscTools.CreateAcis(PsSelection, InGroups,
+KeepResolution, DeleteConverted, KeepLayer, CreateDrvFile)`** — the first five are exactly the batch
+dialog's checkboxes and **the sixth appears nowhere in the manual**. And on the same class, absent
+from D.5 entirely: **`CreateSatFile(s)`** (ACIS .SAT) and **`CreateStlFile(s)`** (STL mesh), per part
+or per selection, with a filename template and a `Transform` flag.
+
+⛔ **D.5.6 `PS_CLEAN_PROXY` / `PS_BATCH_CLEAN_DWG` was NOT run — a choice, not a limit.** It converts
+every object to plain AutoCAD graphics and the manual says the ProSteel intelligence is
+*"irretrievably lost"*; it acts on the whole drawing, and the only drawing available to point it at
+was the live one. The safe shape is **batch, source folder → target folder**, with Amir present.
+⛔ **D.5.4 `PS_KINEMATIK`** — a movement *simulation*, no managed class in the surface, and both of
+its inputs are mouse picks. Not run: an interactive macro in an unattended session is exactly what
+parks a session.
+⛔ **D.5.7 `PS_CONVERT_ADTSHAPES`** — the manual says it exists *"only in a specific version of
+ProSteel for Autodesk Architectural Desktop"*; no managed class, no trace in the surface. Consistent.
+
+## `app/vfy_joined.py` — the joint audit was WRONG, and D.5 is where it was caught
+
+It defined a member as joined **if it carries bolt holes** — in the docstring as well as the code.
+**Carrying holes is not being bolted.** Fourteen plates whose `boltparts` had refused (4 holes each,
+zero bolts) were every one reported `bolted`.
+
+That is **B.20's dropped bolt** and **B.21's empty splice**, both of which it would have passed.
+Now a member counts as bolted only when a bolt **passes through one of its holes**, matched
+geometrically (hole midpoint inside the bolt body, tol 2 mm), and there is a third failure state:
+
+```
+*** FLOATING ***           no holes at all              (the E.4 rafter)
+*** DRILLED-NOT-BOLTED     holes, none of them filled   (the B.20 / B.21 defect)
+WELDED (declared)          legitimate; the declaration is the price
+```
+**Calibrated in one band on both a known-bad and a known-good case:** 12 bolted plates `filled=4`,
+14 refused plates `filled=0`, 2 floating members; 24 bolts × 2 plies = 48 fills = 12 × 4.
