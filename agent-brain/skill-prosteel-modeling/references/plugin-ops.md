@@ -2605,3 +2605,77 @@ Identical x, overlapping z, **4 mm apart in y**.
 B.8's audit listed catalogue `stair` / `step10` as *"stair tread"*. **Measured: `L=925 W=10.125
 H=2`** — a 2 × 10 mm line-like symbol read from the catalogue NAME and never built. It carries
 nothing. **Use a plate, grating, or a real tread section.**
+
+---
+
+## ⭐⭐ `polyplate` AND `plate9 mode=poly` ARE NOT THE SAME OP — E.2, 11/08/2026
+
+`polyplate` refused every sector with `create=False`. Six configurations — square, triangle, coarse
+sector, reversed winding, at the origin and at x=186 000 — **all failed; the identical contour at
+z = 0 built.**
+
+```
+polyplate        AppendEdgePoint only           -> contour MUST lie at z=0
+plate9 mode=poly SetInsertMatrix(at,ex,ey,ez)   -> points are LOCAL, at= places it in the world
+```
+
+⇒ ⭐ **For a poly plate anywhere except z = 0, use `plate9 mode=poly`.**
+⭐ **`at` is the plate's MID-PLANE**, not its underside: `at z=167, t=8` measured back as `163…171`.
+
+## ⭐⭐ THE CHORD TRAP — approximating an arc with too few points
+
+A step's inner edge built from two points at r=110 is a **chord**, and a chord across 22.5° dips to
+`110·cos(11.25°) = 107.89`. The central post `RO 219.1` has an outer radius of `109.55`, so all 16
+steps cut **1.66 mm** into it — and the collision points came back at **radius 107.90**.
+
+> ### ⭐ SUBDIVIDE **BOTH** ARCS, NOT JUST THE OUTER ONE.
+> A polygonised arc always falls **inside** the true radius. On an outer edge that is 1 mm of lost
+> tread; on an inner edge running against a column it is interference. Formula for the dip:
+> `r·(1 − cos(half the segment angle))`.
+
+## ⛔⛔ `collision` IS NOT IDEMPOTENT — IT COUNTS ITS OWN LEFTOVERS
+
+The check **creates a `Ks_VolBody` per collision and leaves it in the drawing**; the next run treats
+those solids as parts.
+
+```
+run 1   parts=355  collisions=71   newSolids=71
+run 2   parts=426  collisions=207  newSolids=207     <- 71 solids became 71 new parts
+```
+
+> ### ⭐ ERASE EVERY `Ks_VolBody` AFTER EVERY RUN. ONLY THE FIRST RUN AFTER A CLEAN IS A NUMBER.
+> A collision count that climbs across repeated runs is the checker's own residue, not a worsening
+> model. E.1 hit this as "crash solids" without naming the mechanism.
+
+## ⭐⭐ THE COLLISION CHECK DOES NOT SUBTRACT A DRILLED HOLE FROM A PLAIN SHAPE
+
+A `RO 42.4x3.2` post seated in a hole measured at `dia=44, z 175→167, depth 8.0` — **0.8 mm of
+clearance all round** — is still reported as a collision. Proven, not assumed:
+
+| | E.02 collisions |
+|---|---|
+| baseline | **16** |
+| that one post deleted | **15** |
+| same post rebuilt free-standing, clear of the step | **15** |
+
+⇒ **Bolts are treated differently** — E.1's 128 bolts all sit in drilled holes and report **0**.
+
+⚠️ ⭐ **A non-zero collision count is therefore not automatically a defect.** Locate every hit and
+name it before touching the model; a "fix" applied to a checker artefact destroys good geometry.
+
+## ⭐ BUILDING A WINDING STAIR BY COMPOSITION
+
+`PsCircularStairs.insert()` returns **True** and creates **nothing** (five configurations, census
+unchanged). Built from parts instead, following the chapter's own `kSinglePost` layout:
+
+```
+16 steps · step angle 22.5° · one full turn · rise/step 175 · outer r 1150 · inner r 115
+post      RO 219.1x8  z 0…3200
+arm       FL 120x10   rot=0 = FLAT (hole depth 10 -- the E.1 instrument again)
+                      r 115…1150 at the step mid-angle, axis z = top-13
+step      poly plate 8, true sector, at z = top-4
+bolts     M12 DIN7990 x2 per step, step->arm at r 400 and 1000
+baluster  RO 42.4x3.2 through a 44 mm hole, 4° off the arm   (E.2 §5's own detail)
+
+vfy_fit  bolts=184 OK=184 BOLT-NO-HOLE=0 GAP-IN-PACKET=0 OVERSIZED=0 SHORT=0
+```

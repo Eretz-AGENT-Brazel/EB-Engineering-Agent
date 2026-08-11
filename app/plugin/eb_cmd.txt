@@ -1,4 +1,3 @@
-reqid=ab4e5cde
-op=collision
-box=119900,-600,-200;124500,600,3200
+reqid=f94e82dc
+op=save
 dwg=E-structural-elements.dwg
