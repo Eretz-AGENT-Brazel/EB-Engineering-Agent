@@ -1,4 +1,3 @@
-reqid=12cb0afc
-op=posnum
-out=eb_posnum.txt
+reqid=06d16a40
+op=vfy_fit
 dwg=B08-insert-shapes.dwg
