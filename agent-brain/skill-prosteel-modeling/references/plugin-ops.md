@@ -3202,6 +3202,57 @@ number.** Clear the VolBody, *then* read.
 *"Measurement Unit"* prompt, which is documented here as undismissable from code (six attempts).
 **Copying a DWG on disk and opening it by full path never asks** — measured, first try, no dialog.
 
+## `usershape` — D.1, the producing side of B.8 (v180 → v182)
+
+```
+usershape list=1
+usershape kind=<one of 34> args=a,b,c,… [key= name= catalog= article= note= material=]
+          [draw=1] [write=<path>] [load=<path>]
+usershape kind=weld_i args=topW,topT,webW,webT,botW,botT [singles=1] [flats=1] [segments=1]
+```
+
+**`PsUserShapeManager` carries exactly 34 `BuildUserShape_*` methods** — the manual's own count,
+and `ParametricUserShapeType` has the same 34 members. Plus three `BuildCombiShape*` for D.1.2.
+
+**Verified by closed-form area** (`CutArea` is readable on the manager, so a `True` becomes a
+measurement): `flat 100x10` → 1,000 mm² · `rectangle 200x120` → 24,000 · `i_symetric 300,200,10,15`
+→ 8,700 · `i_unsymetric 400,200,20,12,300,16` → 13,168 · `t_symetric 200,150,12,8` → 3,304 ·
+`rectpipe 200x100x6` → 3,456 · `pipe 219.1,203.1` → 5,305.5. Eight types, all consistent.
+
+⚠️⚠️ **UNIT TRAP: `PsUserShapeManager.CutArea` is m²; `PsObjectProperties.CutArea` is cm².** Same
+name, two classes. Pinned by the two exact readings (`1,000 → 0.001`, `24,000 → 0.024`).
+⭐ `paintArea = 1.38` on that I-section, against a hand perimeter of `420+420+540 = 1,380 mm` —
+**exact, and per metre of length.**
+⭐ **`Draw()` = the dialog's preview**: `AcDbBlockReference` on layer 0, census +1. Not a `Ks_Shape`.
+⭐ **`WriteFile` → a real 1,748-byte `.psp`; `LoadFile` round-trips it.** ⚠️ **The access key comes
+back as the FILENAME**, not the `Key` that was set — B.8's filename rule, confirmed from the
+producing side.
+⭐ `poly=1/0/0` — only NORMAL is generated; LOW and HIGH *"must be created individually"* (manual).
+⛔ **Nothing is ever written into `Data\UserShapes`** by this op unless an explicit `write=` path is
+given. That folder is the installation, and changing it is Amir's call (same rule as A.5 / A.6).
+
+### ⛔ `kind=weld_i` — the I-form weld shape REFUSES, three configurations
+
+`PsCreateUserShape` is the D.1.3 dialog one-to-one — `SetUpperPolygon` (top flange),
+**`SetFlangePolygon` (the WEB — the product's naming, not a typo here)**, `SetLowerPolygon`,
+`SetTreatAsSingles` (= *Treat Parts*), `SetExplodeToPlates` (= *Check Flats*), `SetCreateSegments`
+(= *Create Flange*), `SetWeight` (= *"it is also possible to change the calculated weight"*).
+
+```
+1) three plates + TreatParts=1                                   Create()=False  census 73->73
+2) three plates + TreatParts=0                                   Create()=False  census 73->73
+3) + SetHeight/SetWidth/SetCutArea/SetWeight/SetCrossSection      Create()=False  census 73->73
+```
+**ProSteel said nothing on the command line in all three** (`eb_log` bracketed the run). All three
+failed the SAME way, which is this file's own tell for *closed*, not *still learning*. Recorded and
+not permuted further; `PS_CREATE_SOPRO` is the dialog route.
+⭐ **Consuming a weld shape still works** — B.8's `bendshape` is the only creator with
+`SelectWeldSections` and reaches `Data\WeldShapes`. Only *defining* one is blocked.
+
+⛔ **D.1.1 Special Parts has no managed class** (`PS_CREATE_SPEZPART`, interactive: pick parts, then
+an insertion point). The COM twins `Ks_ComDefineUserShape` / `Ks_ComUserShapes` are **untried** —
+and COM is exactly what rescued .NET on `PsGrid` in B.6. Named as the next lead.
+
 ## `cog` — D.5.2 centre of gravity (v179)
 
 ```

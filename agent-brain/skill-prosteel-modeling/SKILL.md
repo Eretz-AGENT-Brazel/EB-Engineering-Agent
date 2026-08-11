@@ -147,6 +147,44 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 > through 79 mm of contiguous steel, and 6 more leaving 11 mm for a 16 mm nut. Neither can be
 > assembled, and nothing but this check would have said so.
 
+> ## 🏭 EB CAN DEFINE ITS OWN SECTIONS FROM CODE — 34 PARAMETRIC TYPES (D.1.4, 11/08)
+> **D.1 is the chapter that PRODUCES what B.8 learnt to consume.** B.8 found four shape databases
+> and could only insert from them; `PsUserShapeManager` is the other side, and it carries **exactly
+> 34 `BuildUserShape_*` methods** — the manual's own number (*"at the very moment, 34 shape types…
+> are available"*), confirmed a third time by `ParametricUserShapeType`'s 34 members. On disk:
+> `Data\UserShapes` 68 catalogues · `CombiShapes` 15 · `WeldShapes` 3 — matching B.8's API-side
+> counts exactly.
+>
+> **Verified against closed-form section area, because `CutArea` is readable off the manager:**
+> `flat 100x10 → 1,000 mm²` · `rectangle 200x120 → 24,000` · `i_symetric 300,200,10,15 → 8,700` ·
+> `rectpipe 200x100x6 → 3,456` — eight types checked, all consistent.
+> ⚠️⚠️ **`PsUserShapeManager.CutArea` is in m²; `PsObjectProperties.CutArea` on a placed part is in
+> cm²** (HE300B reads 149 against a 149 cm² catalogue). **Same property name, two classes, two
+> units.** The unit here is pinned by the two exact cases; the rest confirm to printed precision.
+> ⭐ **Second, independent check — paint area.** The I 300×200 (tw 10, tf 15) reported
+> **`paintArea = 1.38`**, and the perimeter by hand is `420 + 420 + 540 = 1,380 mm` ⇒ **1.38 m² per
+> metre, exact.** These are per-metre quantities.
+>
+> ⭐ **`Draw()` is the dialog's PREVIEW, not an insertion** — it makes an `AcDbBlockReference` on
+> layer 0, not a `Ks_Shape`. ⭐ **`WriteFile` produces a real `.psp`** (1,748 bytes) and `LoadFile`
+> round-trips it — but **the ACCESS KEY comes back as the FILENAME**, not the key that was set.
+> That is B.8's *"address a section by its filename; the internal name field lies"* **confirmed from
+> the producing side.** ⭐ Only the **NORMAL** resolution is generated (`poly=1/0/0`) — the manual
+> says the three modes *"must be created individually"*, and they must.
+> ⛔ **Nothing was written into `Data\UserShapes`** — that is an installation change and Amir's call.
+> ⛔ **D.1.3's weld-shape creator refuses.** `PsCreateUserShape` maps 1:1 onto the I-form dialog
+> (`SetUpperPolygon`/`SetFlangePolygon`(=web)/`SetLowerPolygon`, `SetTreatAsSingles` = *Treat
+> Parts*, `SetWeight` = the manual's *"possible to change the calculated weight"*), and `Create()`
+> returns **False with the census unmoved in three configurations, ProSteel silent on the command
+> line**. All three failed the *same* way ⇒ closed, not still-learning.
+> ⭐ **But consuming a weld shape works** — B.8 measured `bendshape` as the only creator with
+> `SelectWeldSections`, reaching `Data\WeldShapes`. **Defining a new one is what is blocked.**
+> 🔜 **The variant + dBASE route** (a folder under `…\sopro` holding `rules.dat` + a `.dbf`, with
+> `$1,$2,$3` filled from records) is how a whole SERIES is generated from a table — **file-based, so
+> no dialog is involved**, exactly like A.3.2's templates. **No `rules.dat` ships anywhere in this
+> installation**, so nothing exercises it yet. Amir's call, and the highest-leverage unopened door
+> in part D.
+
 > ## 💥 A BOLT IN A CORRECT HOLE CAN REPORT A COLLISION — AND IT IS TESSELLATION (D.5.1, 11/08)
 > **E.4's open question is closed, and the mechanism is mechanical.** E.4 recorded *"why E.1's M12
 > bolts report 0 and these M22-through-a-rolled-flange bolts do not is UNRESOLVED"*. Reproduced in

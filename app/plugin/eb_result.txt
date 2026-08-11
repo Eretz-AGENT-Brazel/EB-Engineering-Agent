@@ -1,1 +1,1 @@
-﻿EB_OK holes handle=313 count=0 -> eb_holes.txt reqid=ebc46b47
+﻿EB_OK list 73 entities -> eb_list.txt reqid=7e9fe7ad
