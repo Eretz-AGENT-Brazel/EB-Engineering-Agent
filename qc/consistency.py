@@ -469,6 +469,75 @@ def check_built():
         warn("built", "built-legacy.tsv lists %s, which no longer needs it -- delete the row" % s)
 
 
+# ----------------------------------------------------------------- 9. built, and actually JOINED
+def check_joints():
+    """⛔ NO MORE CUTTING CORNERS. Amir, 11/08/2026, after opening the E.4 portal frame.
+
+    Check 8 asks whether a chapter BUILT anything. It cannot ask whether what was built is
+    CORRECT -- and E.4 passed it with a frame whose two rafters carried zero holes and were
+    joined to nothing. `vfy_fit bolts=196 OK=196 BOLT-NO-HOLE=0` was true and meaningless: it
+    verifies each BOLT against the parts it is LINKED to, and is blind to a main member that was
+    never in the joint at all.
+
+    So a chapter that builds a CONNECTED assembly must cite a JOINT AUDIT -- app/vfy_joined.py,
+    which asks the question from the member's side: what joins this part to anything? Every member
+    must be bolted, or declared welded, part by part.
+
+    A welded joint is legitimate (B.23: welds are not creatable from code). Declaring it is the
+    price. Silence is what produced the frame.
+    """
+    prog = os.path.join(REPO, "PROGRESS.md")
+    if not os.path.isfile(prog):
+        warn("joints", "no PROGRESS.md")
+        return
+    rows = re.findall(r"^\|\s*✅\s*\|\s*([A-Z]\.\d+)\s*\|", read(prog), re.M)
+    # ⚠️ The trigger must be CHAPTERS THAT BUILT A BOLTED ASSEMBLY, not chapters that mention
+    # bolts. The first version fired on A.2 "language selection" because the word appears in it.
+    # A guard that cries wolf gets switched off, which is the failure it was written to prevent.
+    # The honest signal is the op that CREATES bolts, or a stated per-chapter bolt count.
+    NEEDS = re.compile(r"\bboltparts\b|\bbolts\s+\d+\s*(?:×|x)\s*M\d|\d+\s*(?:×|x)\s*M\d\d?\s+DIN", re.I)
+    CITES = re.compile(r"JOINT AUDIT|vfy_joined", re.I)
+    legacy = {}
+    lp = os.path.join(HERE, "joints-legacy.tsv")
+    if os.path.isfile(lp):
+        for l in read(lp).splitlines():
+            if l.strip() and not l.startswith("#") and "\t" in l:
+                k, _, v = l.partition("\t")
+                legacy[k.strip()] = v.strip()
+
+    missing, unaudited = [], []
+    for ch in sorted(set(rows)):
+        part, num = ch.split(".")
+        pdir = os.path.join(NOTES_DIR, part)
+        pat = re.compile(r"(MANUAL-NOTES-)?%s0?%s[-.]" % (part, num))
+        note = None
+        if os.path.isdir(pdir):
+            for f in sorted(os.listdir(pdir)):
+                if pat.match(f):
+                    note = os.path.join(pdir, f)
+                    break
+        if note is None:
+            continue                       # check 8 already owns the missing-notes case
+        body = read(note)
+        if NEEDS.search(body) and not CITES.search(body):
+            if ch in legacy:
+                unaudited.append("%-5s %s" % (ch, legacy[ch]))
+                continue
+            missing.append(
+                "%s builds a BOLTED assembly but cites no JOINT AUDIT. `vfy_fit` cannot see a "
+                "member that was never in the joint -- E.4's rafters had zero holes and it "
+                "passed. Run app/vfy_joined.py over the band and paste the result into %s."
+                % (ch, os.path.relpath(note, REPO)))
+    for m in missing:
+        fail("joints", m)
+    print("  %d closed chapters, %d missing a joint audit, %d unaudited backlog"
+          % (len(set(rows)), len(missing), len(unaudited)))
+    if unaudited:
+        print("  ⚠️  bolted assemblies closed before the joint-audit rule:")
+        for u in unaudited:
+            print("       %s" % u)
+
+
 CHECKS = [
     ("1. retractions  ", check_retractions),
     ("2+3. memory     ", check_memory),
@@ -477,6 +546,7 @@ CHECKS = [
     ("6. chapter sync ", check_chapters),
     ("7. version drift", check_version_claims),
     ("8. built not read", check_built),
+    ("9. joint audit  ", check_joints),
 ]
 
 

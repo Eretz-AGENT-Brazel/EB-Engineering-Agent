@@ -164,26 +164,107 @@ rebuilt**, never re-drilled.
 
 ---
 
+# 🛑🛑 THE FIRST FRAME WAS SLOPPY. WHAT AMIR SAW, AND WHAT IT COST TO FIND.
+
+*11/08/2026. The frame below is the **second** one. The first was committed, looked right in the
+viewport, and reported `vfy_fit bolts=196 OK=196 BOLT-NO-HOLE=0`. Amir opened it and asked one
+question: is this a sensible connection?*
+
+```
+1312  IPE500   holes=0
+1314  IPE500   holes=0
+```
+
+> ### ⛔ BOTH RAFTERS CARRIED ZERO HOLES.
+> All 12 bolts joined a **plate to a column**, or a **plate to a plate** at the apex. The plates
+> merely *touched* the rafter ends. **It was not a frame** — two columns with plates bolted on, and
+> two rafters resting nearby. In the shop it comes apart on the first lift.
+
+And the rest of it was thin in every direction:
+* **no haunch** at a 20 m portal knee — the API refused and I let that decide the engineering
+  instead of saying out loud that the software cannot build the correct detail
+* **no stiffeners** — 4 bolts pulling on a bare `HE400B` flange with nothing opposite
+* **4 bolts at ±180 on a 500 plate** — arbitrary; a moment knee clusters them at the tension flange
+* **30 mm edge distance** for a ⌀23 hole on a 200-wide plate
+
+## ⚠️ AND `vfy_fit` COULD NOT SEE ANY OF IT
+
+`vfy_fit` verifies each **bolt** against the parts it is **linked to**. It is structurally blind to
+a member that was never in the joint at all. **A green check stood in for looking at the thing.**
+Worse: `collision` *was* shouting — 24 hits — and I filed them as a checker artefact.
+
+> ### ⭐⭐⭐ THE RULE THAT CAME OUT OF IT — `app/vfy_joined.py`
+> Ask the question **from the member's side**: *what joins this part to anything?* Every member must
+> be **bolted**, or **declared welded**, part by part. A welded joint is legitimate — B.23 proved
+> welds are not creatable from code — but **declaring it is the price. Silence is what produced
+> this frame.** Enforced by `qc/consistency.py` check 9; the backlog lives in `qc/joints-legacy.tsv`
+> and may only shrink.
+
+---
+
 # STEP 2 — WHAT IS BUILT
 
 ```
 span 20000 across outer steel edge · eaves 6000 on the rafter line · roof 10° · ridge z 7728.0
-columns  HE400B rot=90, axes x 300200 / 319800, to z 6350 so they back the knee plates
-rafters  IPE500 rot=90, from the column INNER faces (300400 / 319600) to the ridge
+columns  HE400B rot=90, axes x 300200 / 319800, to z 6450 so they back the full end plate
+rafters  IPE500 rot=90, from the end-plate faces (300430 / 319570) to the ridge
 base     600×600×30, 4 × ⌀33 holding-down holes each (anchors are cast in, not modelled)
-knee     500×200×20 end plate, 4 × M22 DIN7990 through the column's inner flange   ← `Free Plate`
-apex     two 600×200×20 end plates perpendicular to the rafters, 4 × M22           ← `Free Plate`
-adapt    both rafters `planecut` at the plate face                                 ← `Adapt`
+
+THE KNEE — a real haunched moment connection
+  end plate   1115 × 300 × 30, EXTENDED: from above the rafter's top flange down past the
+              haunch's bottom flange. 300 wide gives 60 mm edge distance to a ⌀26 hole.
+  haunch      web triangle 2147 × 466 × 10 + bottom flange FL 200×16, 500 deep at the column,
+              running 2000 along the rafter to die into the rafter's own bottom flange
+  stiffeners  4 plates 352 × 142 × 15 inside each column, in line with the rafter top flange and
+              the haunch bottom flange, one either side of the web — the load path v1 omitted
+  bolts       10 × M24 DIN7990 per knee, two lines at ±90, five rows CLUSTERED AT THE TOP
+  apex        two 700 × 300 × 30 plates perpendicular to the rafters, 8 × M24 through both
 ```
 
-**22 parts · 12 bolts.** `Haunch` was unavailable, so the knees use the chapter's other option —
-which is what EB would bolt anyway.
+**22 members · 28 bolts.**
+
+## ⭐ THE DRILL DIRECTION RULE, FINALLY STATED PROPERLY
+
+The first build got the right knee wrong, the rebuild got the *left* knee wrong the same way. It is
+not a left/right rule at all:
+
+> ### ⭐⭐ THE DRILL DIRECTION MUST POINT **FROM THE COLUMN TOWARD THE PLATE**.
+> ```
+> left  column inner face 300400, plate 300400…300430  ->  n = +x
+> right column inner face 319600, plate 319570…319600  ->  n = −x
+> ```
+> Travelling the other way the drill runs **through** the section and registers on the **far
+> flange** — measured twice, at `300000→300024` and `320000→319976`, each ~400 mm from the plate.
+> Holes cannot be removed, so both times the column and plate were **deleted and rebuilt**.
+
+⚠️ `beam` has **no `flat=` key** — its keys are `|ax|ay|catalog|kind|layer|mirror|name|offx|offy|
+p1|p2|rot|`. A flat bar comes from `DIN_FLACH` by name (`200X16`).
+
+## THE JOINT AUDIT — `app/vfy_joined.py 298000 358000`
+
+```
+22 members, 28 bolts
+  columns 151B / 1529      holes=10  bolted
+  end plates 151C / 152A   holes=10  bolted
+  apex plates 14FD / 14FE  holes=8   bolted
+  base plates 14D9 / 14DC  holes=4   bolted
+  rafters 14D8 / 14DB      holes=0   WELDED (declared)
+  haunch webs, haunch flanges, 8 stiffeners   holes=0   WELDED (declared)
+
+JOINT AUDIT CLEAN -- every member is bolted or declared welded.
+```
+
+⚠️ **The welds are declared, not built.** B.23: welds are not creatable from code. Every welded part
+was checked for **contact** rather than assumed — rafter→end plate, haunch web→end plate, haunch
+flange→end plate all measure a **0.00 mm gap**. ⇒ **This frame is shop-ready in geometry and needs
+its welds specified by a person.** Said plainly, because not saying it is what produced v1.
 
 | verification | result |
 |---|---|
-| `vfy_fit` model-wide | **`bolts=196 OK=196 BOLT-NO-HOLE=0 GAP-IN-PACKET=0 OVERSIZED=0 SHORT=0`** |
-| `collision` — E.1 / E.2 / E.3 / E.03 bands | **0, 0, 0, 0** — untouched |
-| `collision` — E.04 band | **25**, of which **24 lie on a bolt axis** — see below |
+| `vfy_fit` model-wide | **`bolts=212 OK=212 BOLT-NO-HOLE=0 GAP-IN-PACKET=0 OVERSIZED=0 SHORT=0`** |
+| **JOINT AUDIT** | **CLEAN** — 22 members, none floating |
+| `collision` — E.1 / E.2 / E.3 / E.03 | **0, 0, 0, 0** — untouched |
+| `collision` — E.04 band | **25**, the bolt-in-hole class — see below |
 | `collision` — E.9/E.10/E.11 | 24, pre-existing |
 
 ---

@@ -1,0 +1,23 @@
+# CHAPTERS WITH BOLTED ASSEMBLIES THAT PREDATE THE JOINT-AUDIT RULE (11/08/2026)
+#
+# Check 9 demands that a chapter which BUILT a bolted assembly cite a JOINT AUDIT --
+# app/vfy_joined.py -- which asks, from the MEMBER's side, what joins each part to anything.
+#
+# ⚡ WHY. E.4 was committed with a portal frame that reported `vfy_fit bolts=196 OK=196
+# BOLT-NO-HOLE=0` and whose two rafters carried ZERO holes. Every bolt joined a plate to a column
+# or a plate to a plate; the plates merely touched the rafter ends. vfy_fit verifies each BOLT
+# against the parts it is LINKED to and is structurally blind to a member that was never in the
+# joint. Amir opened the drawing and asked whether it was a sensible connection. It was not.
+#
+# These rows predate the rule. They are NOT declared correct -- they are declared UNAUDITED, out
+# loud, on every run.
+#
+# ⚠️ THIS LIST MAY ONLY SHRINK. Adding a row to make the guard go green is the exact failure it
+# exists to prevent.
+#
+# chapter	why it is here
+A.4	input options -- a reference chapter; quotes bolt fields, builds no assembly. Likely a false trigger; confirm and delete.
+E.10	command reference -- lists bolt commands, builds nothing. Likely a false trigger; confirm and delete.
+E.11	own notes -- not a manual chapter; cites bolt counts from other bands.
+B.26	haunches -- TWO portal frames built and audited in B08-insert-shapes.dwg. ⚠️ PRIORITY: this is the chapter E.4 inherited its detail from, and it has never had a joint audit.
+E.1	straight stair -- 128 bolts, 179 parts, cleat->stringer and tread->cleat. ⚠️ PRIORITY: a real bolted assembly. Run app/vfy_joined.py 119000 126000 and paste the result into its notes.
