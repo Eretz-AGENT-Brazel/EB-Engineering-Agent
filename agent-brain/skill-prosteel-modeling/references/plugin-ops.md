@@ -2838,3 +2838,78 @@ created **if you have added kick plates as shapes**."*
 ⛔ **Stated limit:** *"only **one** deviating intermediate angle is possible… not corners of 45° and
 30° at the same time."*
 ⭐ **ALT at shape selection takes over the previous type**, including the on/off status.
+
+---
+
+## ⛔⛔ THE HANGAR / PORTAL FRAME — E.4, 11/08/2026
+
+`PsPortalFrame.init()+insert() = 0`, entities `505 -> 505`, **re-measured first-hand** rather than
+cited. No `PsCreatePortalFrame` exists: of 27 `PsCreate*` classes, `PsCreateHandrail` is still the
+only structural creator. ⇒ **compose it.**
+
+### ⭐⭐⭐ `rot=90` — MEASURED UNAMBIGUOUSLY AT LAST
+
+B.26 diagnosed the portal columns bending about their WEAK axis but used **HE300B, where h=b=300**,
+so the hole depth could not distinguish the two orientations. **HE400B** (h=400, b=300, tw≈13.5):
+
+| | along X | along Y |
+|---|---:|---:|
+| `rot=0` | **13.5** = web only | **400** = both flanges |
+| `rot=90` | **400** = both flanges | **13.5** = web only |
+
+⇒ ⭐ **A portal stands in XZ, so the DEPTH must lie along X ⇒ `rot=90` on columns AND rafters.**
+
+### ⛔⛔ THE HAUNCH CANNOT BE PLACED FROM CODE — and B.26's stated reason is WRONG
+
+Four controlled attempts. The `Default/Standard` template's plane reads back as **`X=0,0,0
+Y=0,0,0`** — null. Setting `ex`/`ey` explicitly **round-trips** (`readback X=1,0,0 Y=0,0,1`) and is
+**ignored**. `at=` round-trips and is ignored.
+
+> ### 🛑 B.26 SAID *"the haunch builds at the SUPPORT'S ORIGIN"*. TESTED AND REFUTED.
+> The column was rebuilt reversed; its part `Origin` read back as `300200,0,6000` (`ZAxis 0/0/-1`).
+> **The haunch still built at z=0.** The origin moved, the output did not.
+> ⇒ **The parts take X and Y from the member and pin Z to WORLD 0.** THE CEILING.
+
+### ⚠️ THE `op=haunch` BLAST GUARD READS THE LENGTH TOO EARLY
+
+```
+guard printed:  beamLen=9951.18->9951.18
+measured again: 9951.2 -> 10451.2      (the member grew exactly 500)
+```
+⇒ **A runaway haunch would pass the guard silently.** Caught only by measuring a second time from
+`dumpmodel` instead of believing the op. **Re-read after a destructive op; never trust its own
+snapshot.**
+
+### ⭐ THE KNEE/APEX TABS ARE B.26 AND B.20, REACHED BY TEMPLATE
+
+`Adapt` (crossbar cut to the support) · `Angle Cut` (mitred) · `Haunch` (template) · `Free Plate`
+(template) · `Align As is`. 🛑 **No `Haunch` at the apex** — and the API proves it: there are
+`LeftVouteTemplate` and `RightVouteTemplate` and **no `CenterVouteTemplate`**. *Voute* = haunch,
+`St` = *Stiel* (support), `Rg` = *Riegel* (crossbar), `OkFoot` = *Oberkante Fuß*.
+
+### ⭐ B.22's SIGN RULE, FOURTH INSTANCE
+Right knee refused to bolt. The holes said why: plate holes correct at `319600->319580`, **column
+holes at `320000->319976` — the OUTER flange, 376 mm away.** Drilling `n=+x` ran through the column
+to the far flange. ⇒ **`n=-1,0,0` on the right.** Rebuilt, never re-drilled.
+
+---
+
+## 🛑🛑 CORRECTION TO THE E.3 SECTION ABOVE — BOLTS ARE **NOT** EXEMPT FROM `collision`
+
+E.3 states: *"Bolts are treated differently — E.1's 128 bolts all sit in drilled holes and report
+0."* **Withdrawn as a general rule.** At the E.4 knee:
+
+```
+column inner flange  x 300376…300400
+bolt M22x75          x 300345…300420   through a drilled ⌀23 hole
+collision reported   x 300388          inside that hole
+```
+**24 of 25 E.04 collisions lie on a bolt axis — 12 bolts × 2 parts each — while `vfy_fit` passes
+all 196 with `BOLT-NO-HOLE=0`.**
+
+⇒ What still stands: the checker honours a **boolean (`s`)** and not a **drilled hole (`hf`)**.
+What does not: that bolts are excepted. **Why E.1's M12-in-plate bolts report 0 and these
+M22-through-a-rolled-flange bolts do not is UNRESOLVED** — not explained, not guessed.
+
+⚠️ **Do not "fix" these by cutting the column.** E.2's rule: *a fix applied to a checker artefact
+destroys good geometry.* The bolts sit in real, measured, full-depth holes.
