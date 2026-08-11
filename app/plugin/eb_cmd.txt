@@ -1,5 +1,4 @@
-reqid=a51b5645
-op=vfy_fit
-minx=479000
-maxx=481000
+reqid=c12894bb
+op=props
+handle=412
 dwg=D-miscellaneous.dwg
