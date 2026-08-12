@@ -12,32 +12,25 @@
 |---|---|
 | **להבין לאן הפרויקט הולך** | [`agent-brain/PROGRAM.md`](agent-brain/PROGRAM.md) — תוכנית-העל של אמיר, שני השלבים, וחוק הרישום |
 | **לראות מה נעשה ומה נשאר** | [`PROGRESS.md`](PROGRESS.md) — טבלת מעקב לפי פרקי המדריך |
-| **להמשיך עבודה מאתמול** | [`knowledge/learning/RESUME-HERE.md`](knowledge/learning/RESUME-HERE.md) |
+| **להמשיך עבודה מאתמול** | [`API+KNOWLEDGE-DEVELOP/knowledge/learning/RESUME-HERE.md`](API+KNOWLEDGE-DEVELOP/knowledge/learning/RESUME-HERE.md) |
 | **לדעת איך למדל בפועל** | הסקיל: `~/.claude/skills/prosteel-modeling/` — *זה מה שהסוכן טוען* |
 | **להריץ** | `EB PROSTEEL AGENT.bat` · ואת AutoCAD פותחים ידנית עם פרופיל ProStructures |
 
 ---
 
-## 🗺️ מפת הרשויות — לכל עובדה בית אחד
+## 🛤️ שני נתיבי הפיתוח — הסידור של אמיר, 12/08/2026
 
-> ⭐⭐ **זה הלב של הסידור.** הכשל של 10/08/2026 לא היה חוסר סדר — הוא היה ש**לאותה עובדה
-> היו כמה בתים ואף אחד לא שמר עליהם מסכימים**. הטבלה הזאת קובעת מי הרשות, וכל השאר מצביע אליה.
-
-| סוג העובדה | **הרשות** | מי מצטט אותה |
+| נתיב | איפה | מצב |
 |---|---|---|
-| **איך מפעילים op** | `~/.claude/skills/.../references/plugin-ops.md` | הסקיל, ההערות |
-| **מה התוכנה עושה בדיאלוג** | `knowledge/learning/manual/<חלק>/MANUAL-NOTES-*` | הסקיל |
-| **מה ה-API מסרב לעשות** | `knowledge/learning/findings/THE-CEILING-what-code-cannot-reach.md` | הכול |
-| **⛔ קריאות שהורגות את AutoCAD** | `knowledge/learning/findings/LETHAL-CALLS-do-not-invoke.md` | הסקיל |
-| **מה הופרך ומתי** | `qc/retracted.tsv` — *וגם הדלק של השומר* | השומר |
-| **מה נמדד בביקורת פרק** | `knowledge/learning/audits/AUDIT-*.md` | הערות הפרק |
-| **המשטח הגולמי של ה-API** | `knowledge/api/API-SURFACE-RAW.txt` | הכול |
-| **קטלוגי חתכים** | `knowledge/SECTION-CATALOGUES.md` | הסקיל, הזיכרון |
-| **הידע ההנדסי** | `knowledge/steel/` | שלב 2 |
-| **מי אמיר ואיך הוא עובד** | `~/.claude/projects/.../memory/` + `MEMORY.md` | כל סשן |
+| **נתיב 1 — API וידע הנדסי** | [`API+KNOWLEDGE-DEVELOP/`](API+KNOWLEDGE-DEVELOP/README.md) | 🔵 פעיל — כאן קורה הכול |
+| **נתיב 2 — ידיעת התקנים** | `standards/` | 🔒 נעול עד הכרזת אמיר (פאזה 2) |
 
-⚠️ **גרסת התוסף הקנונית היא `app/eb_api.py` ותו לא** — שם `DLL` ו-`RUN_CMD` מוצהרים.
-כל מספר גרסה אחר במסמך כלשהו הוא ציטוט מתוארך, לא מקור.
+מנתיב 1 ייבנה בסוף **המוצר**: הקונסולה/פלאגין שיוטמע רשמית במחשבי החברה — הסוכן
+בתוך התוכנה, ממדל ופותר בעיות הנדסיות. גם כל השיפורים והעדכונים בהמשך יבוצעו בתוכו.
+
+⚠️ **מוסכמת נתיבים:** במסמכים שבתוך `API+KNOWLEDGE-DEVELOP/` (הסקיל, ההערות, הביקורות),
+נתיבים כמו `app/plugin/...` או `knowledge/learning/...` הם **יחסיים לתיקיית הנתיב** —
+לא לשורש הריפו.
 
 ---
 
@@ -45,56 +38,63 @@
 
 ```
 EB PROSTEEL AGENT/
-├── PROGRESS.md             מעקב פרקים
 ├── README.md               הקובץ הזה — המפה
+├── PROGRESS.md             מעקב פרקי המדריך
+├── EB PROSTEEL AGENT.bat   הלאנצ'ר (קונסולה — מוקפאת 05/08)
 │
-├── agent-brain/            🧠 המוח של הפרויקט
+├── agent-brain/            🧠 עיקרון הפרויקט
 │   ├── PROGRAM.md          תוכנית-העל + חוק הרישום            ← אמיר קובע
 │   ├── skill-prosteel-modeling/   גיבוי-מראה של הסקיל (sync.py — לא לערוך ידנית)
 │   └── memory/             גיבוי-מראה של הזיכרון (sync.py — לא לערוך ידנית)
 │
-├── app/                    הקוד החי
-│   ├── console.py          שרת הקונסולה (מוקפא 05/08)
-│   ├── eb_api.py           ⭐ הגשר לתוסף — הרשות לגרסה
-│   ├── acad.py             עטיפת COM
-│   ├── context.py nlu.py prosteel.py learn.py standards_kb.py
-│   ├── plugin/             🔒 לא להזיז — הנתיב צרוב ב-.cs המקומפל
-│   │   ├── EBAgentApi<N>.cs    153 גרסאות = ההיסטוריה הכתובה של ה-API
-│   │   └── eb_cmd/eb_result    ערוץ הפקודות (מתחלף בכל op)
-│   └── _attic/             סקריפטים חד-פעמיים משיעורים שהסתיימו
+├── API+KNOWLEDGE-DEVELOP/  ⭐ נתיב פיתוח 1 — יש לה README משלה
+│   ├── app/                הקוד: ה-API, התוסף (plugin/), הקונסולה
+│   ├── qc/                 השומרים: consistency.py + selftest + שלוש הרשימות
+│   ├── knowledge/          הידע: הערות המדריך, ממצאים, מפת ה-API, פלדה
+│   ├── lessons/            שיעורים 1–5: תיעוד, לקחים, ביקורות
+│   ├── projects/           המודלים: SANDBOX (פרקים A–E) + שיעור-1..5
+│   ├── research/           מחקרים הנדסיים — ביסוס ועיגון עמודי פלדה
+│   └── data/ · assets/     מצב הקונסולה + אייקונים
 │
-├── knowledge/              ⭐ כל מה שנלמד
-│   ├── api/                משטח ה-API הגולמי (רפלקציה)
-│   ├── learning/
-│   │   ├── RESUME-HERE.md      נקודת חזרה
-│   │   ├── manual/A|B|E/       הערות לכל פרק במדריך
-│   │   ├── audits/             ביקורות פרקים — מרשם ההפרכות
-│   │   ├── findings/           THE CEILING · LETHAL CALLS
-│   │   ├── lessons/            יומני שיעורים עם אמיר
-│   │   └── plan/
-│   ├── steel/ recipes/ research/
-│   └── SECTION-CATALOGUES.md
-│
-├── qc/                     ⭐ השומרים
-│   ├── consistency.py      ← להריץ לפני כל קומיט
-│   ├── selftest_consistency.py
-│   └── retracted.tsv       רשימת הטענות המופרכות
-│
-├── projects/               מודלים: SANDBOX + שיעור-N/ (כולל יומני בנייה)
-├── _archive/handoffs/      מסמכי מסירה בין סשנים — היסטוריה מתוארכת
-└── standards/ qc/ data/ assets/
+├── standards/              🔒 נתיב פיתוח 2 — תקנים (פאזה 2, לא נוגעים)
+└── _archive/handoffs/      מסמכי מסירה בין סשנים — היסטוריה מתוארכת
 ```
+
+---
+
+## 🗺️ מפת הרשויות — לכל עובדה בית אחד
+
+> ⭐⭐ **זה הלב של הסידור.** הכשל של 10/08/2026 לא היה חוסר סדר — הוא היה ש**לאותה עובדה
+> היו כמה בתים ואף אחד לא שמר עליהם מסכימים**. הטבלה הזאת קובעת מי הרשות, וכל השאר מצביע אליה.
+> הנתיבים כאן מהשורש; `DEV/` = ‏`API+KNOWLEDGE-DEVELOP/`.
+
+| סוג העובדה | **הרשות** | מי מצטט אותה |
+|---|---|---|
+| **איך מפעילים op** | `~/.claude/skills/.../references/plugin-ops.md` | הסקיל, ההערות |
+| **מה התוכנה עושה בדיאלוג** | `DEV/knowledge/learning/manual/<חלק>/MANUAL-NOTES-*` | הסקיל |
+| **מה ה-API מסרב לעשות** | `DEV/knowledge/learning/findings/THE-CEILING-what-code-cannot-reach.md` | הכול |
+| **⛔ קריאות שהורגות את AutoCAD** | `DEV/knowledge/learning/findings/LETHAL-CALLS-do-not-invoke.md` | הסקיל |
+| **מה הופרך ומתי** | `DEV/qc/retracted.tsv` — *וגם הדלק של השומר* | השומר |
+| **מה נמדד בביקורת פרק** | `DEV/knowledge/learning/audits/AUDIT-*.md` | הערות הפרק |
+| **המשטח הגולמי של ה-API** | `DEV/knowledge/api/API-SURFACE-RAW.txt` | הכול |
+| **קטלוגי חתכים** | `DEV/knowledge/learning/findings/SECTION-CATALOGUES.md` | הסקיל, הזיכרון |
+| **הידע ההנדסי** | `DEV/knowledge/steel/` + `DEV/research/` | שלב 2 |
+| **מי אמיר ואיך הוא עובד** | `~/.claude/projects/.../memory/` + `MEMORY.md` | כל סשן |
+
+⚠️ **גרסת התוסף הקנונית היא `DEV/app/eb_api.py` ותו לא** — שם `DLL` ו-`RUN_CMD` מוצהרים.
+כל מספר גרסה אחר במסמך כלשהו הוא ציטוט מתוארך, לא מקור.
 
 ---
 
 ## 🚦 לפני כל קומיט
 
 ```bash
-python qc/consistency.py
+python "API+KNOWLEDGE-DEVELOP/qc/consistency.py"
 ```
 
 עוצר אם: טענה מופרכת עומדת חיה · זיכרון לא באינדקס · גיבוי הסקיל לא תואם · גרסת תוסף שגויה ·
 פרק בביקורת בלי סימון בהערות שלו. הנימוק המלא: [`agent-brain/PROGRAM.md`](agent-brain/PROGRAM.md) § חוק הרישום.
+ואחרי כל קומיט — **פוש**: אמיר מתעדכן דרך GitHub.
 
 ⚠️ **`agent-brain/sync.py` מגבה, הוא לא כותב.** ההודעה `backup already current` פירושה
 "הגיבוי תואם", לא "הידע נשמר".

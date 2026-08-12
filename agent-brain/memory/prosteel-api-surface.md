@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: a4c7fddc-7ed7-48b9-a359-e4b37dc8fdbe
-  modified: 2026-08-06T09:31:01.453Z
+  modified: 2026-08-12T07:47:17.616Z
 ---
 
 ‏02/08/2026 — עשיתי רפלקציה על קובצי ProStructures עצמם ומצאתי שאני משתמש ב-**26 מתוך 771**
@@ -19,9 +19,10 @@ C:\Program Files\Bentley\ProStructures Ss6 R1\AutoCAD 2015\Prg\
   = 75 assemblies · 771 public types
 ```
 
-**המפה שמורה:** `EB PROSTEEL AGENT\knowledge\API-SURFACE-RAW.txt` (383 KB) +
-`API-SURFACE.md` (המדריך, עם טבלת "מה בניתי ביד מול מה שקיים").
-דוח מלא: `knowledge\lessons\תוכנית-השתלטות-על-התוכנה.pdf`.
+**המפה שמורה:** `EB PROSTEEL AGENT\API+KNOWLEDGE-DEVELOP\knowledge\api\API-SURFACE-RAW.txt`
+(383 KB) + `API-SURFACE.md` (המדריך, עם טבלת "מה בניתי ביד מול מה שקיים").
+דוח מלא: `API+KNOWLEDGE-DEVELOP\lessons\תוכנית-השתלטות-על-התוכנה.pdf`.
+*(נתיבים עודכנו 12/08/2026 — סידור התיקייה: נתיב הפיתוח עבר ל-`API+KNOWLEDGE-DEVELOP\`.)*
 
 **המחלקות שפותרות את הכשלים החוזרים:** `PsCreateFastener.CreateFastenerStraightAnchorBolt`
 (עוגנים, עם Extrusion/Embedment/PlateThickness/GroutThickness) · ~~`PsGeometryFunctions`

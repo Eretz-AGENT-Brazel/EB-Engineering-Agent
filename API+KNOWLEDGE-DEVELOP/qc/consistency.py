@@ -32,13 +32,14 @@ import sys
 import filecmp
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-REPO = os.path.dirname(HERE)
+DEV = os.path.dirname(HERE)     # API+KNOWLEDGE-DEVELOP -- development track 1 (12/08/2026 reorg)
+REPO = os.path.dirname(DEV)     # the repo root: PROGRESS.md, agent-brain, standards, _archive
 HOME = os.path.expanduser("~")
 
 SKILL_LIVE = os.path.join(HOME, ".claude", "skills", "prosteel-modeling")
 SKILL_COPY = os.path.join(REPO, "agent-brain", "skill-prosteel-modeling")
 MEM_LIVE = os.path.join(HOME, ".claude", "projects", "C--Users-User-Desktop", "memory")
-KNOW = os.path.join(REPO, "knowledge")
+KNOW = os.path.join(DEV, "knowledge")
 RECORD_DIR = os.path.join(KNOW, "learning", "audits")
 NOTES_DIR = os.path.join(KNOW, "learning", "manual")
 RETRACTED = os.path.join(HERE, "retracted.tsv")
@@ -49,6 +50,9 @@ RETRACTED = os.path.join(HERE, "retracted.tsv")
 # its root carries the program charter (PROGRAM.md) and must stay under the guard. Only its two
 # auto-generated mirrors are excluded, because they duplicate the live skill and memory that are
 # already scanned directly — and a finding inside a mirror belongs to its live original anyway.
+# NOTE os.walk pruning is BY NAME AT ANY DEPTH, so these entries also prune the same-named dirs
+# nested inside API+KNOWLEDGE-DEVELOP/ — which is exactly what we want. The dev folder's own
+# root, lessons/ and research/ are NOT listed, so they ARE scanned.
 REPO_SKIP = ("knowledge", "app", "projects", "qc", "assets", "data", "standards",
              "skill-prosteel-modeling", "memory")
 
@@ -258,7 +262,7 @@ def check_skill_backup():
 
 # ----------------------------------------------------------------- 5. plugin version
 def check_plugin():
-    api = os.path.join(REPO, "app", "eb_api.py")
+    api = os.path.join(DEV, "app", "eb_api.py")
     src = read(api)
     if not src:
         fail("plugin", "cannot read app/eb_api.py")
@@ -275,7 +279,7 @@ def check_plugin():
         fail("plugin", "eb_api.py loads EBAgentApi%s.dll but calls EB_RUN%s -- mismatch"
              % (dll.group(1), cmd.group(1)))
     v = int(dll.group(1))
-    pdir = os.path.join(REPO, "app", "plugin")
+    pdir = os.path.join(DEV, "app", "plugin")
     have_cs = sorted(int(m.group(1)) for m in
                      (re.match(r"EBAgentApi(\d+)\.cs$", f) for f in os.listdir(pdir)) if m)
     if v not in have_cs:
@@ -348,7 +352,7 @@ def check_version_claims():
     and eb_api.py's own docstring said EB_RUN6 above code that ran v152. Four numbers, one truth.
     ⇒ The version is a COMPUTED fact with exactly one source. Everything else points at it.
     """
-    src = read(os.path.join(REPO, "app", "eb_api.py"))
+    src = read(os.path.join(DEV, "app", "eb_api.py"))
     m = re.search(r"^\s*RUN_CMD\s*=\s*[\"']EB_RUN(\d+)[\"']", src, re.M)
     if not m:
         warn("versions", "cannot read RUN_CMD from app/eb_api.py")

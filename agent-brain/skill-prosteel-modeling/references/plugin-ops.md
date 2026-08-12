@@ -1827,7 +1827,7 @@ Four `/r:` references, and **two of them are easy to miss**: the source uses
 $csc  = "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
 $acad = "C:\Program Files\Autodesk\AutoCAD 2015"
 $prg  = "C:\Program Files\Bentley\ProStructures Ss6 R1\AutoCAD 2015\Prg"
-$plug = "C:\Users\User\Desktop\EB PROSTEEL AGENT\app\plugin"
+$plug = "C:\Users\User\Desktop\EB PROSTEEL AGENT\API+KNOWLEDGE-DEVELOP\app\plugin"
 & $csc /nologo /target:library /platform:x64 /out:"$plug\EBAgentApi<N>.dll" `
   /r:"$acad\acmgd.dll" /r:"$acad\acdbmgd.dll" /r:"$acad\accoremgd.dll" `
   /r:"$prg\ProStructuresNet.dll" /r:"$prg\PSN_HollowShapeBracing.dll" `

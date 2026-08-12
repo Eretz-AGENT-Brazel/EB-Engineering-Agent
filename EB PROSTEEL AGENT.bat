@@ -13,7 +13,7 @@ echo.
 echo [1/2] Starting the Agent Console server...
 set PYEXE=C:\Users\User\AppData\Local\Programs\Python\Python312\python.exe
 if not exist "%PYEXE%" set PYEXE=python
-start "EB-Console-Server" /min cmd /c ""%PYEXE%" "%~dp0app\console.py""
+start "EB-Console-Server" /min cmd /c ""%PYEXE%" "%~dp0API+KNOWLEDGE-DEVELOP\app\console.py""
 timeout /t 2 /nobreak >nul
 
 echo [2/2] Opening the workspace...

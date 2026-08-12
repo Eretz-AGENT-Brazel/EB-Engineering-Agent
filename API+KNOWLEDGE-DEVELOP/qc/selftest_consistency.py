@@ -22,7 +22,7 @@ import subprocess
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-REPO = os.path.dirname(HERE)
+REPO = os.path.dirname(os.path.dirname(HERE))   # qc sits inside API+KNOWLEDGE-DEVELOP since 12/08/2026
 HOME = os.path.expanduser("~")
 
 LIVE = os.path.join(HOME, ".claude", "skills", "prosteel-modeling", "references", "plugin-ops.md")

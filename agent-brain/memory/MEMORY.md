@@ -28,6 +28,8 @@
 - [Self-drilling screws](self-drilling-screws.md) — ⚡ בורג בלי חור לגיטימי רק כ"בורג קודח", ורק כשאמיר מצהיר. לעולם לא ביוזמתי
 - [PSN macro assemblies](psn-macro-assemblies.md) — ⚡ 62 assemblies של Connection Center מעבר ל-ProStructuresNet (ייצוב, גאסטים, מדרגות, מעקות) · כולן אינטראקטיביות · שחזור מסשן תקוע = ENTER ולא ESC
 
+- [Dev track folder](dev-track-folder.md) — ⚡ סידור 12/08: נתיב 1 כולו ב-API+KNOWLEDGE-DEVELOP/ (=DEV) · המוצר ייבנה ממנו · v184 נוצר בגלל הנתיב הצרוב · תקנים נעולים ב-standards/
+- [Push every commit](push-every-commit.md) — ⚡ אמיר מתעדכן דרך GitHub: כל קומיט נדחף מיד, main לעולם לא נשאר מקדים
 - [Lesson strips](lesson-strips.md) — כל שיעור ברצועה מוגדרת עם הפרדה גלויה; מקצב 60,000 וגבול `Ks_Grid` בשם השיעור
 - [No written standard](no-written-standard.md) — ⚡ אין מסמך פרטים בארץ ברזל; הכל מניסיון אמיר ולפי דרישה ⇒ תקן = פרויקט חילוץ, לא תרגום
 - [Part B complete](part-b-complete.md) — ⚡ כל 29 הפרקים בוקרו ונסגרו 10/08/2026 · ⏸️ ארבע ההחלטות **בהולד מפורש של אמיר** — לא לפתוח מיוזמה, והוא יאמר מתי חוזרים
