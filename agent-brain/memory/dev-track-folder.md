@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: f7644a80-6f23-41e6-b129-0eb429982261
-  modified: 2026-08-12T08:02:03.921Z
+  modified: 2026-08-12T08:19:40.762Z
 ---
 
 **הסידור של אמיר, 12/08/2026 — שני נתיבי פיתוח, תיקייה לכל נתיב:**
@@ -36,6 +36,14 @@ EB PROSTEEL AGENT/
 - ⚠️ בגלל ההזזה נוצר **v184** (הנתיב הצרוב `const string Dir` עודכן): ‏`EBAgentApi184.cs`
   קומפל ל-DLL לפי הפקודה המתועדת ב-plugin-ops. בסשן ה-AutoCAD הבא — ‏NETLOAD של v184;
   ‏v183 שדולף מסשן ישן יכתוב לנתיב שכבר לא קיים.
+- ✅ **אומת מקצה לקצה 12/08/2026:** ‏NETLOAD v184 מהנתיב החדש (`live after 1.0s`) · ‏`env` ·
+  ‏`vfy_fit 360000..416000` על `D-miscellaneous.dwg` החזיר **בדיוק** את שורת הבסיס של D.5
+  (`bolts=24 OK=24 BOLT-NO-HOLE=0 GAP=0 SHORT=0`). כלום לא נפגע.
+- ⚡ **לקח: הזזת תיקיית התוסף מחייבת גם העברת TRUSTEDPATHS** — האמון של AutoCAD יושב על
+  הנתיב, לא על הקובץ. ‏eb_api מזהיר על זה במפורש; התיקון מקוד: `doc.SetVariable("TRUSTEDPATHS",...)`
+  (בוצע — הישן הוסר, החדש נוסף, נשמר בפרופיל). וגם: פתיחת AutoCAD+ProStructures מקוד עובדת —
+  לשכפל את הקיצור: `acad.exe /p "...ProStructures_SS6.1ACAD_E001_409.arg" /t Ps191_Metric
+  /ld ProStructuresLoader.arx`.
 - הקונסולה: אמיר שוקל להחליף אותה במשהו אחר — ההחלטה נדחתה ("עוד מעט נגיע לזה"),
   בינתיים `console.py`, ‏data/ ו-assets/ נשארים כמו שהם בתוך DEV.
 
