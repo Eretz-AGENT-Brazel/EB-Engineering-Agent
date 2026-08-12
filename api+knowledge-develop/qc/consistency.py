@@ -557,7 +557,8 @@ def check_joints():
 # ROUTED to its home (the routing table: api+knowledge-develop/README.md); a genuinely new
 # top-level folder is a STRUCTURE decision, so it must appear both here and in the README map
 # in the same commit. This check failing is the reminder, not an obstacle.
-REPO_ROOT_ALLOW = {".git", ".gitignore", "README.md", "PROGRESS.md", "EB PROSTEEL AGENT.bat",
+REPO_ROOT_ALLOW = {".git", ".gitignore", "README.md", "PROGRESS.md", "SESSION-START.md",
+                   "EB PROSTEEL AGENT.bat",
                    "agent-brain", "api+knowledge-develop", "standards", "z-archive"}
 DEV_ROOT_ALLOW = {"README.md", "app", "assets", "data", "knowledge", "lessons",
                   "projects", "qc", "research"}

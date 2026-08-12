@@ -14,6 +14,7 @@
 |---|---|
 | **להבין לאן הפרויקט הולך** | [`agent-brain/PROGRAM.md`](agent-brain/PROGRAM.md) — תוכנית-העל של אמיר, שני השלבים, וחוק הרישום |
 | **לראות מה נעשה ומה נשאר** | [`PROGRESS.md`](PROGRESS.md) — טבלת מעקב לפי פרקי המדריך |
+| **לפתוח סשן חדש** | [`SESSION-START.md`](SESSION-START.md) — ההודעה הקבועה להדבקה + נוהל הפתיחה והסגירה |
 | **להמשיך עבודה מאתמול** | [`api+knowledge-develop/knowledge/learning/RESUME-HERE.md`](api+knowledge-develop/knowledge/learning/RESUME-HERE.md) |
 | **לדעת איך למדל בפועל** | הסקיל: `~/.claude/skills/prosteel-modeling/` — *זה מה שהסוכן טוען* |
 | **להריץ** | `EB PROSTEEL AGENT.bat` · ואת AutoCAD פותחים ידנית עם פרופיל ProStructures |
@@ -41,7 +42,8 @@
 ```
 EB PROSTEEL AGENT/
 ├── README.md               הקובץ הזה — המפה
-├── PROGRESS.md             מעקב פרקי המדריך
+├── PROGRESS.md             ריכוז כל תהליך הלימוד והפיתוח + מעקב המדריך
+├── SESSION-START.md        נוהל פתיחת/סגירת סשן — ההודעה הקבועה של אמיר
 ├── EB PROSTEEL AGENT.bat   הלאנצ'ר (קונסולה — מוקפאת 05/08)
 │
 ├── agent-brain/            🧠 עיקרון הפרויקט
