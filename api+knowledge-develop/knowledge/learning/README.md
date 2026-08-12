@@ -70,7 +70,8 @@ running system looks for them, with their own map in `projects/sandbox/README-MO
 * **`B08-insert-shapes.dwg`** — part B, 20 chapter bands laid out along +X
 * **`E-structural-elements.dwg`** — part E, **one lesson per strip** with a visible gap between
   strips and a named grid on each
-* `sandbox.dwg` — 🛑 **Amir's own file. Do not write to it.**
+* `sandbox.dwg` — general scratch drawing, free to work in *(the old do-not-touch rule was
+  withdrawn 12/08/2026 — Amir clarified the file is not his)*
 * `_archive/` — snapshots, kept rather than deleted
 
 ---
