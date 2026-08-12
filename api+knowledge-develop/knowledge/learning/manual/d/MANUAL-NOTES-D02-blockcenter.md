@@ -128,7 +128,7 @@ census סוף הפרק        79 ישויות  (‏Ks_Plate 30 · Ks_Bolt 28 · 
                                    PcRebarManager 2 · AcDbBlockReference 1 · AcDb3dSolid 1)
 רצועת D.02             6 חלקים — 2 Ks_Plate + 4 Ks_Bolt, כולם דרך block insert+explode
 vfy_fit 479000..481000 bolts=4 OK=4 BOLT-NO-HOLE=0 GAP-IN-PACKET=0 SHORT=0
-ארטיפקט על הדיסק       projects/SANDBOX/EB-block-boltedlap.dwg — 35,996 בתים
+ארטיפקט על הדיסק       projects/sandbox/EB-block-boltedlap.dwg — 35,996 בתים
 ```
 
 **‏JOINT AUDIT:** הרצועה מכילה מכלול מוברג, והוא נבדק — ארבעת הברגים עוברים דרך שמונה חורים אמיתיים

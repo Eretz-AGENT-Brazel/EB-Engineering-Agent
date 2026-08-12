@@ -14,7 +14,7 @@
 |---|---|
 | **להבין לאן הפרויקט הולך** | [`agent-brain/PROGRAM.md`](agent-brain/PROGRAM.md) — תוכנית-העל של אמיר, שני השלבים, וחוק הרישום |
 | **לראות מה נעשה ומה נשאר** | [`PROGRESS.md`](PROGRESS.md) — טבלת מעקב לפי פרקי המדריך |
-| **להמשיך עבודה מאתמול** | [`API+KNOWLEDGE-DEVELOP/knowledge/learning/RESUME-HERE.md`](API+KNOWLEDGE-DEVELOP/knowledge/learning/RESUME-HERE.md) |
+| **להמשיך עבודה מאתמול** | [`api+knowledge-develop/knowledge/learning/RESUME-HERE.md`](api+knowledge-develop/knowledge/learning/RESUME-HERE.md) |
 | **לדעת איך למדל בפועל** | הסקיל: `~/.claude/skills/prosteel-modeling/` — *זה מה שהסוכן טוען* |
 | **להריץ** | `EB PROSTEEL AGENT.bat` · ואת AutoCAD פותחים ידנית עם פרופיל ProStructures |
 
@@ -24,13 +24,13 @@
 
 | נתיב | איפה | מצב |
 |---|---|---|
-| **נתיב 1 — API וידע הנדסי** | [`API+KNOWLEDGE-DEVELOP/`](API+KNOWLEDGE-DEVELOP/README.md) | 🔵 פעיל — כאן קורה הכול |
+| **נתיב 1 — API וידע הנדסי** | [`api+knowledge-develop/`](api+knowledge-develop/README.md) | 🔵 פעיל — כאן קורה הכול |
 | **נתיב 2 — ידיעת התקנים** | `standards/` | 🔒 נעול עד הכרזת אמיר (פאזה 2) |
 
 מנתיב 1 ייבנה בסוף **המוצר**: הקונסולה/פלאגין שיוטמע רשמית במחשבי החברה — הסוכן
 בתוך התוכנה, ממדל ופותר בעיות הנדסיות. גם כל השיפורים והעדכונים בהמשך יבוצעו בתוכו.
 
-⚠️ **מוסכמת נתיבים:** במסמכים שבתוך `API+KNOWLEDGE-DEVELOP/` (הסקיל, ההערות, הביקורות),
+⚠️ **מוסכמת נתיבים:** במסמכים שבתוך `api+knowledge-develop/` (הסקיל, ההערות, הביקורות),
 נתיבים כמו `app/plugin/...` או `knowledge/learning/...` הם **יחסיים לתיקיית הנתיב** —
 לא לשורש הריפו.
 
@@ -49,17 +49,17 @@ EB PROSTEEL AGENT/
 │   ├── skill-prosteel-modeling/   גיבוי-מראה של הסקיל (sync.py — לא לערוך ידנית)
 │   └── memory/             גיבוי-מראה של הזיכרון (sync.py — לא לערוך ידנית)
 │
-├── API+KNOWLEDGE-DEVELOP/  ⭐ נתיב פיתוח 1 — יש לה README משלה
+├── api+knowledge-develop/  ⭐ נתיב פיתוח 1 — יש לה README משלה
 │   ├── app/                הקוד: ה-API, התוסף (plugin/), הקונסולה
 │   ├── qc/                 השומרים: consistency.py + selftest + שלוש הרשימות
 │   ├── knowledge/          הידע: הערות המדריך, ממצאים, מפת ה-API, פלדה
 │   ├── lessons/            שיעורים 1–5: תיעוד, לקחים, ביקורות
-│   ├── projects/           המודלים: SANDBOX (פרקים A–E) + שיעור-1..5
+│   ├── projects/           המודלים: sandbox (פרקים A–E) + lesson-1..5
 │   ├── research/           מחקרים הנדסיים — ביסוס ועיגון עמודי פלדה
 │   └── data/ · assets/     מצב הקונסולה + אייקונים
 │
 ├── standards/              🔒 נתיב פיתוח 2 — תקנים (פאזה 2, לא נוגעים)
-└── Z-ARCHIVE/handoffs/     מסמכי מסירה בין סשנים — היסטוריה מתוארכת
+└── z-archive/handoffs/     מסמכי מסירה בין סשנים — היסטוריה מתוארכת
                             (ה-Z מכוונת: שומרת את הארכיון אחרון במיון של GitHub)
 ```
 
@@ -69,7 +69,7 @@ EB PROSTEEL AGENT/
 
 > ⭐⭐ **זה הלב של הסידור.** הכשל של 10/08/2026 לא היה חוסר סדר — הוא היה ש**לאותה עובדה
 > היו כמה בתים ואף אחד לא שמר עליהם מסכימים**. הטבלה הזאת קובעת מי הרשות, וכל השאר מצביע אליה.
-> הנתיבים כאן מהשורש; `DEV/` = ‏`API+KNOWLEDGE-DEVELOP/`.
+> הנתיבים כאן מהשורש; `DEV/` = ‏`api+knowledge-develop/`.
 
 | סוג העובדה | **הרשות** | מי מצטט אותה |
 |---|---|---|
@@ -92,7 +92,7 @@ EB PROSTEEL AGENT/
 ## 🚦 לפני כל קומיט
 
 ```bash
-python "API+KNOWLEDGE-DEVELOP/qc/consistency.py"
+python "api+knowledge-develop/qc/consistency.py"
 ```
 
 עוצר אם: טענה מופרכת עומדת חיה · זיכרון לא באינדקס · גיבוי הסקיל לא תואם · גרסת תוסף שגויה ·

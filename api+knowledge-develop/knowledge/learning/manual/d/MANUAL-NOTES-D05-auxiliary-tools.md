@@ -3,7 +3,7 @@
 # D.5 — כלי עזר (Auxiliary Tools)
 
 **המדריך:** עמ' 964–977 · `manual_fulltext.txt` שורות 25060–25309 · נקרא במלואו, שבעת תתי-הפרקים.
-**מודל:** `projects/SANDBOX/D-miscellaneous.dwg` — נוצר 11/08/2026 בהעתקת `A-dialogs-templates-settings.dwg`.
+**מודל:** `projects/sandbox/D-miscellaneous.dwg` — נוצר 11/08/2026 בהעתקת `A-dialogs-templates-settings.dwg`.
 **רצועה:** `D05-auxtools`, גריד `203` על שכבה `_STRIPS`, ‏`ext = 359,999 … 416,001 × 20,002`.
 **תוסף:** נבנה **v179** בפרק הזה (‏`cog`, ‏`unwind`, ‏`collision` מורחב).
 

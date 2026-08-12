@@ -7,7 +7,7 @@ description: How to model real steel structures in AutoCAD 2015 + ProStructures 
 
 Working knowledge built from live lessons with **Amir (ארץ ברזל)**, who models steel professionally
 and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\EB PROSTEEL AGENT`,
-whose development track lives in `API+KNOWLEDGE-DEVELOP\` since the 12/08/2026 reorg — every
+whose development track lives in `api+knowledge-develop\` since the 12/08/2026 reorg — every
 `app/…`, `qc/…`, `knowledge/…`, `projects/…` path in this skill is relative to that folder.
 (`agent-brain/PROGRAM.md`, `PROGRESS.md` and `standards/` sit at the repo root.)
 
@@ -475,7 +475,7 @@ whose development track lives in `API+KNOWLEDGE-DEVELOP\` since the 12/08/2026 r
 > hand-composing the next connection.**
 
 > ## 📝 THE PROPERTIES DIALOG IS A WRITE SURFACE (E.9, 10/08)
-> Full notes: **`knowledge/learning/manual/E/MANUAL-NOTES-E09-properties-dialogs.md`**.
+> Full notes: **`knowledge/learning/manual/e/MANUAL-NOTES-E09-properties-dialogs.md`**.
 >
 > ⭐⭐ **Every field in ProSteel's properties dialog is a property on `PsObjectProperties`, and that
 > class has `writeTo(Int64 ObjId)`.** Measured: 14 fields set in one call, `writeTo.rc=0`, **14/14
@@ -544,7 +544,7 @@ whose development track lives in `API+KNOWLEDGE-DEVELOP\` since the 12/08/2026 r
 > wide — and the grid's **LENGTH runs along world Y, its WIDTH along world X**.
 
 > ## 📖 E.10's chapter numbers are STALE — trust the COMMAND, re-derive the chapter (10/08)
-> Corrected table: **`knowledge/learning/manual/E/E10-COMMAND-REFERENCE.md`** — 126 commands, chapter column
+> Corrected table: **`knowledge/learning/manual/e/E10-COMMAND-REFERENCE.md`** — 126 commands, chapter column
 > re-derived from the manual's own table of contents, plus which agent op covers each.
 >
 > E.10 gives *Function / Chapter / Command*. Of the 50 rows whose function name matches a TOC
@@ -1876,7 +1876,7 @@ Amir to add the path once, then verify it and refuse to run without it.
    (embedment ±1, nut-to-plate gap 0±3, nothing in mid-air); contact (plate on concrete, column on
    plate); exact **and near** duplicates (same XY, different Z — the connection-rerun signature); and
    a delta vs the previous state where every change is explained. Full catalogue of the 15 errors this
-   would have caught: `EB PROSTEEL AGENT/API+KNOWLEDGE-DEVELOP/lessons/RETROSPECTIVE-L4-L5.md`.
+   would have caught: `EB PROSTEEL AGENT/api+knowledge-develop/lessons/RETROSPECTIVE-L4-L5.md`.
 1b. **Report only what you measured.** Gate tables with evidence per row; no victory language before
    every gate is green. "Approved" is not immunity — re-audit after any adjacent change.
 1c. **A value not in the drawing and not in the template is a QUESTION to Amir, never an invention.**
@@ -1920,7 +1920,7 @@ hand-drilled centre holes. The chain order was wrong (`dedupe` ran *before* `flo
 
 **The lesson is not the timing — it is that speed was never the problem.** The 10-minute target
 was beaten threefold on a defective model, and **Amir's eye was still the only relationship
-checker in the system.** Full record: `EB PROSTEEL AGENT/API+KNOWLEDGE-DEVELOP/lessons/BASELINE-L5-2026-08-05.md`
+checker in the system.** Full record: `EB PROSTEEL AGENT/api+knowledge-develop/lessons/BASELINE-L5-2026-08-05.md`
 
 ## The engineering behind a column base
 

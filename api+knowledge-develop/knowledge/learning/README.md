@@ -57,15 +57,15 @@ These stayed where they are, and moving them would break something:
 | `knowledge/steel/` · `recipes/` · `research/` | read by `console.py`, `standards_kb.py`, `make_recipe.py` |
 | `knowledge/api/` | the API surface dump — **reference**, not learning. **771 types is a retracted figure** — see `knowledge/api/` itself for the current dump |
 | `knowledge/HOW_AMIR_MODELS.md` · `AMIR-ANSWERS-CONNECTIONS.md` · `KNOWLEDGE.md` | **Amir's own input**, not something the agent worked out |
-| `projects/SANDBOX/*.dwg` | the models. `projects/` **is** their organised place, and `eb_api` resolves them through it. Map: `projects/SANDBOX/README-MODELS.md` |
+| `projects/sandbox/*.dwg` | the models. `projects/` **is** their organised place, and `eb_api` resolves them through it. Map: `projects/sandbox/README-MODELS.md` |
 | `app/plugin/eb_cmd.txt` · `eb_result.txt` · `eb_expect_dwg.txt` | the command channel. The plugin holds its directory as a **compiled-in constant** |
 
 ---
 
 ## The models
 
-The practice drawings are **not** here — they are in `projects/SANDBOX/`, which is where the
-running system looks for them, with their own map in `projects/SANDBOX/README-MODELS.md`:
+The practice drawings are **not** here — they are in `projects/sandbox/`, which is where the
+running system looks for them, with their own map in `projects/sandbox/README-MODELS.md`:
 
 * **`B08-insert-shapes.dwg`** — part B, 20 chapter bands laid out along +X
 * **`E-structural-elements.dwg`** — part E, **one lesson per strip** with a visible gap between

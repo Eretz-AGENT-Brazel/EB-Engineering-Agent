@@ -16,4 +16,4 @@ metadata:
 
 ⚠️ שתי מלכודות ב-`grid` שנמדדו: `lsteps`/`wsteps` הם **מרווחי מפתחים ולא מספר חלוקות** (`lsteps=1` בונה מפתח של מילימטר), וה-**LENGTH של הרשת רץ על ציר Y העולמי וה-WIDTH על ציר X**.
 
-הוחל לראשונה ב-`projects/SANDBOX/E-structural-elements.dwg`. ראה [[no-silent-skipping]] ו-[[two-axes-authority]].
+הוחל לראשונה ב-`projects/sandbox/E-structural-elements.dwg`. ראה [[no-silent-skipping]] ו-[[two-axes-authority]].

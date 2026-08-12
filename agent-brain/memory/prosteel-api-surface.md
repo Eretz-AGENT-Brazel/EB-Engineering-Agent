@@ -19,10 +19,10 @@ C:\Program Files\Bentley\ProStructures Ss6 R1\AutoCAD 2015\Prg\
   = 75 assemblies · 771 public types
 ```
 
-**המפה שמורה:** `EB PROSTEEL AGENT\API+KNOWLEDGE-DEVELOP\knowledge\api\API-SURFACE-RAW.txt`
+**המפה שמורה:** `EB PROSTEEL AGENT\api+knowledge-develop\knowledge\api\API-SURFACE-RAW.txt`
 (383 KB) + `API-SURFACE.md` (המדריך, עם טבלת "מה בניתי ביד מול מה שקיים").
-דוח מלא: `API+KNOWLEDGE-DEVELOP\lessons\תוכנית-השתלטות-על-התוכנה.pdf`.
-*(נתיבים עודכנו 12/08/2026 — סידור התיקייה: נתיב הפיתוח עבר ל-`API+KNOWLEDGE-DEVELOP\`.)*
+דוח מלא: `api+knowledge-develop\lessons\תוכנית-השתלטות-על-התוכנה.pdf`.
+*(נתיבים עודכנו 12/08/2026 — סידור התיקייה: נתיב הפיתוח עבר ל-`api+knowledge-develop\`.)*
 
 **המחלקות שפותרות את הכשלים החוזרים:** `PsCreateFastener.CreateFastenerStraightAnchorBolt`
 (עוגנים, עם Extrusion/Embedment/PlateThickness/GroutThickness) · ~~`PsGeometryFunctions`

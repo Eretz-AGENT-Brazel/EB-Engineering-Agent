@@ -5,7 +5,7 @@
 **‏73 פרקים בסך הכל.**
 
 > 📁 **מוסכמת נתיבים (מאז סידור 12/08/2026):** נתיבי `app/`, `qc/`, `knowledge/`, `projects/`
-> במסמך הזה יחסיים ל-**`API+KNOWLEDGE-DEVELOP/`** — תיקיית נתיב הפיתוח.
+> במסמך הזה יחסיים ל-**`api+knowledge-develop/`** — תיקיית נתיב הפיתוח.
 
 ## 📋 סדר העבודה — חמישה שלבים לכל פרק
 
@@ -67,7 +67,7 @@
 > ‏**8 ברגים ב-B.25 חוצים 31 מ"מ אוויר** (הגאסט והזווית לא נוגעים) · **12 ברגים ב-B.26 שאי אפשר
 > להרכיב** (‏6 קצרים ב-9 מ"מ מהחומר, 6 עם 11 מ"מ בלבד לאום של 16).
 > הדוח המלא: `knowledge/learning/audits/AUDIT-B08-bolts-2026-08-10.md`
-> פירוט מה בכל מודל: `projects/SANDBOX/README-MODELS.md`
+> פירוט מה בכל מודל: `projects/sandbox/README-MODELS.md`
 
 > ### 📐 קו בסיס — `E-structural-elements.dwg` (מודל חלק E), 10/08/2026
 > **80 חלקים** · 24 ברגים · 49 חורים · 24 מותאמים · **0 הפרות של כלל הברזל** · 0 חריגות גודל.
@@ -88,7 +88,7 @@
 | **סה"כ** | **79** | **53** | **0** | **26** | `█████████████████░░░░░░░░░░░` **67.1%** |
 
 > **קצב:** ‏53 פרקים נסגרו עד 11/08/2026. **חלק A — 100%** · **חלק E — 100% ✅** · חלק B — **87.9%** (‏B.30–B.33 נותרו) · **חלק D הושלם 11/08 בלילה — 7 מתוך 7 ✅**. נשאר: **חלק C — פירוט ושרטוטים, 22 פרקים.**
-> 📁 **מודל חלק D:** `projects/SANDBOX/D-miscellaneous.dwg` — נוצר **בהעתקת** `A-dialogs-templates-settings.dwg`. ⚠️ **לעולם לא לפתוח שרטוט חדש כדי להתחיל חלק** — שרטוט חדש מעלה את הדיאלוג המודאלי "Measurement Unit" שמתועד כבלתי-ניתן-לסגירה מקוד; פתיחת קובץ קיים לא שואלת (נמדד, בפעם הראשונה). קו בסיס שנורש מההעתקה: **18 ישויות ב-x 0…300,250**, ולכן רצועות D מתחילות ב-**360,000** במקצב 60,000.
+> 📁 **מודל חלק D:** `projects/sandbox/D-miscellaneous.dwg` — נוצר **בהעתקת** `A-dialogs-templates-settings.dwg`. ⚠️ **לעולם לא לפתוח שרטוט חדש כדי להתחיל חלק** — שרטוט חדש מעלה את הדיאלוג המודאלי "Measurement Unit" שמתועד כבלתי-ניתן-לסגירה מקוד; פתיחת קובץ קיים לא שואלת (נמדד, בפעם הראשונה). קו בסיס שנורש מההעתקה: **18 ישויות ב-x 0…300,250**, ולכן רצועות D מתחילות ב-**360,000** במקצב 60,000.
 > ⭐ **חלק A נוסף למעקב ב-10/08** (6 פרקים) — לכן הסך גדל מ-73 ל-79 והאחוז ירד.
 > חלק C (22 פרקים) הוא הגדול ביותר והוא אחרון, כי הוא עוסק בשרטוטי ייצור ולא במידול.
 
@@ -156,21 +156,21 @@
 > ⚠️ **‏15 השורות הבאות היו חסרות מהטבלה לגמרי** — הפרקים נלמדו ויש להם קובץ הערות,
 > אך מעולם לא נרשמו כאן. נוספו 11/08/2026 בבדיקה מול קבצי ההערות.
 
-| ✅ | B.6 | מסגרות עבודה | ‏רשת צירים + מבטי UCS אוטומטיים · ‏`PsCreateGrid`/`PsGrid` · ההערות: `knowledge/learning/manual/B/MANUAL-NOTES-B06*.md` |
-| ✅ | B.8 | הכנסת פרופילים | ‏‏`PsCreateShape` — הבסיס לכל מוט במודל · קטלוגים, `rot`, יישור · ההערות: `knowledge/learning/manual/B/MANUAL-NOTES-B08*.md` |
-| ✅ | B.9 | הכנסת פלטות | ‏‏`PsCreatePlate` · פלטת מלבן ופלטת מתאר · `at` הוא מישור האמצע · ההערות: `knowledge/learning/manual/B/MANUAL-NOTES-B09*.md` |
-| ✅ | B.13 | עורך הפלטות | ‏עריכת מתאר פלטה אחרי יצירה · ההערות: `knowledge/learning/manual/B/MANUAL-NOTES-B13*.md` |
-| ✅ | B.14 | קידוח | ‏‏`PsDrillObject` · ⚠️ **החורים בלתי הפיכים** — הכלל שחזר בכל פרק מאז · ההערות: `knowledge/learning/manual/B/MANUAL-NOTES-B14*.md` |
-| ✅ | B.15 | ברגים | ‏‏`boltparts` · ⛔ *"holes further apart than Gap distance"* הוא ההודעה שחזרה הכי הרבה · ההערות: `knowledge/learning/manual/B/MANUAL-NOTES-B15*.md` |
-| ✅ | B.16 | ריפים | ‏‏`PsStiffenerConnection` + תבניות · ההערות: `knowledge/learning/manual/B/MANUAL-NOTES-B16*.md` |
-| ✅ | B.17 | חיבורי פלטה | ‏‏`shearplate` / `webangle` / תבניות `Default/Standard` · ההערות: `knowledge/learning/manual/B/MANUAL-NOTES-B17*.md` |
-| ✅ | B.18 | פלטות בסיס | ‏‏`PsBasePlateConnection` · הבסיס למחקר הביסוס · ההערות: `knowledge/learning/manual/B/MANUAL-NOTES-B18*.md` |
-| ✅ | B.19 | זווית אגף | ‏‏`webangle` + תבניות · ההערות: `knowledge/learning/manual/B/MANUAL-NOTES-B19*.md` |
-| ✅ | B.20 | פלטות גזירה | ‏ביקורת 10/08 — פוזיציות, קריאה חוזרת, `flat=` · ההערות: `knowledge/learning/manual/B/MANUAL-NOTES-B20*.md` |
-| ✅ | B.21 | חיבורי הברגה | ‏⚠️ **סגנונות ברגים הם CRC בלבד** — שם חייב להיפתר דרך `PsObjectStyleList` · ההערות: `knowledge/learning/manual/B/MANUAL-NOTES-B21*.md` |
-| ✅ | B.23 | פלטות גאסט | ‏⛔ ריתוכים אינם ניתנים ליצירה מקוד · ⛔ קריאה קטלנית אחת · ההערות: `knowledge/learning/manual/B/MANUAL-NOTES-B23*.md` |
-| ✅ | B.28 | מבנה קבוצות | ‏היררכיית No Group / Subgroup / Assembly · ההערות: `knowledge/learning/manual/B/MANUAL-NOTES-B28*.md` |
-| ✅ | B.29 | מספור פוזיציות | ‏‏`CheckTwoPartsAreEqual` הוא מבחן הזהות היחיד שרואה חיתוכים · ההערות: `knowledge/learning/manual/B/MANUAL-NOTES-B29*.md` |
+| ✅ | B.6 | מסגרות עבודה | ‏רשת צירים + מבטי UCS אוטומטיים · ‏`PsCreateGrid`/`PsGrid` · ההערות: `knowledge/learning/manual/b/MANUAL-NOTES-B06*.md` |
+| ✅ | B.8 | הכנסת פרופילים | ‏‏`PsCreateShape` — הבסיס לכל מוט במודל · קטלוגים, `rot`, יישור · ההערות: `knowledge/learning/manual/b/MANUAL-NOTES-B08*.md` |
+| ✅ | B.9 | הכנסת פלטות | ‏‏`PsCreatePlate` · פלטת מלבן ופלטת מתאר · `at` הוא מישור האמצע · ההערות: `knowledge/learning/manual/b/MANUAL-NOTES-B09*.md` |
+| ✅ | B.13 | עורך הפלטות | ‏עריכת מתאר פלטה אחרי יצירה · ההערות: `knowledge/learning/manual/b/MANUAL-NOTES-B13*.md` |
+| ✅ | B.14 | קידוח | ‏‏`PsDrillObject` · ⚠️ **החורים בלתי הפיכים** — הכלל שחזר בכל פרק מאז · ההערות: `knowledge/learning/manual/b/MANUAL-NOTES-B14*.md` |
+| ✅ | B.15 | ברגים | ‏‏`boltparts` · ⛔ *"holes further apart than Gap distance"* הוא ההודעה שחזרה הכי הרבה · ההערות: `knowledge/learning/manual/b/MANUAL-NOTES-B15*.md` |
+| ✅ | B.16 | ריפים | ‏‏`PsStiffenerConnection` + תבניות · ההערות: `knowledge/learning/manual/b/MANUAL-NOTES-B16*.md` |
+| ✅ | B.17 | חיבורי פלטה | ‏‏`shearplate` / `webangle` / תבניות `Default/Standard` · ההערות: `knowledge/learning/manual/b/MANUAL-NOTES-B17*.md` |
+| ✅ | B.18 | פלטות בסיס | ‏‏`PsBasePlateConnection` · הבסיס למחקר הביסוס · ההערות: `knowledge/learning/manual/b/MANUAL-NOTES-B18*.md` |
+| ✅ | B.19 | זווית אגף | ‏‏`webangle` + תבניות · ההערות: `knowledge/learning/manual/b/MANUAL-NOTES-B19*.md` |
+| ✅ | B.20 | פלטות גזירה | ‏ביקורת 10/08 — פוזיציות, קריאה חוזרת, `flat=` · ההערות: `knowledge/learning/manual/b/MANUAL-NOTES-B20*.md` |
+| ✅ | B.21 | חיבורי הברגה | ‏⚠️ **סגנונות ברגים הם CRC בלבד** — שם חייב להיפתר דרך `PsObjectStyleList` · ההערות: `knowledge/learning/manual/b/MANUAL-NOTES-B21*.md` |
+| ✅ | B.23 | פלטות גאסט | ‏⛔ ריתוכים אינם ניתנים ליצירה מקוד · ⛔ קריאה קטלנית אחת · ההערות: `knowledge/learning/manual/b/MANUAL-NOTES-B23*.md` |
+| ✅ | B.28 | מבנה קבוצות | ‏היררכיית No Group / Subgroup / Assembly · ההערות: `knowledge/learning/manual/b/MANUAL-NOTES-B28*.md` |
+| ✅ | B.29 | מספור פוזיציות | ‏‏`CheckTwoPartsAreEqual` הוא מבחן הזהות היחיד שרואה חיתוכים · ההערות: `knowledge/learning/manual/b/MANUAL-NOTES-B29*.md` |
 | ⬜ | B.30 | מידע שרטוט | |
 | ⬜ | B.31 | יצירת רשימות חומרים | |
 | ⬜ | B.32 | רשימת חומרים בשרטוט | |

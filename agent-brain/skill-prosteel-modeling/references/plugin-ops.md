@@ -1827,7 +1827,7 @@ Four `/r:` references, and **two of them are easy to miss**: the source uses
 $csc  = "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
 $acad = "C:\Program Files\Autodesk\AutoCAD 2015"
 $prg  = "C:\Program Files\Bentley\ProStructures Ss6 R1\AutoCAD 2015\Prg"
-$plug = "C:\Users\User\Desktop\EB PROSTEEL AGENT\API+KNOWLEDGE-DEVELOP\app\plugin"
+$plug = "C:\Users\User\Desktop\EB PROSTEEL AGENT\api+knowledge-develop\app\plugin"
 & $csc /nologo /target:library /platform:x64 /out:"$plug\EBAgentApi<N>.dll" `
   /r:"$acad\acmgd.dll" /r:"$acad\acdbmgd.dll" /r:"$acad\accoremgd.dll" `
   /r:"$prg\ProStructuresNet.dll" /r:"$prg\PSN_HollowShapeBracing.dll" `
@@ -3214,7 +3214,7 @@ number.** Clear the VolBody, *then* read.
 
 # 🧰 PART D — MISCELLANEOUS
 
-*Model: `projects/SANDBOX/D-miscellaneous.dwg`, created 11/08/2026 by COPYING an existing drawing.*
+*Model: `projects/sandbox/D-miscellaneous.dwg`, created 11/08/2026 by COPYING an existing drawing.*
 ⚠️ **Never create a new drawing to start a part.** A new drawing raises ProStructures' modal
 *"Measurement Unit"* prompt, which is documented here as undismissable from code (six attempts).
 **Copying a DWG on disk and opening it by full path never asks** — measured, first try, no dialog.

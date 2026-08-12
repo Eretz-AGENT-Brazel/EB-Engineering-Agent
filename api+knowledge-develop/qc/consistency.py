@@ -32,7 +32,7 @@ import sys
 import filecmp
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-DEV = os.path.dirname(HERE)     # API+KNOWLEDGE-DEVELOP -- development track 1 (12/08/2026 reorg)
+DEV = os.path.dirname(HERE)     # api+knowledge-develop -- development track 1 (12/08/2026 reorg)
 REPO = os.path.dirname(DEV)     # the repo root: PROGRESS.md, agent-brain, standards, _archive
 HOME = os.path.expanduser("~")
 
@@ -51,7 +51,7 @@ RETRACTED = os.path.join(HERE, "retracted.tsv")
 # auto-generated mirrors are excluded, because they duplicate the live skill and memory that are
 # already scanned directly — and a finding inside a mirror belongs to its live original anyway.
 # NOTE os.walk pruning is BY NAME AT ANY DEPTH, so these entries also prune the same-named dirs
-# nested inside API+KNOWLEDGE-DEVELOP/ — which is exactly what we want. The dev folder's own
+# nested inside api+knowledge-develop/ — which is exactly what we want. The dev folder's own
 # root, lessons/ and research/ are NOT listed, so they ARE scanned.
 REPO_SKIP = ("knowledge", "app", "projects", "qc", "assets", "data", "standards",
              "skill-prosteel-modeling", "memory")
@@ -148,7 +148,7 @@ def check_retractions():
     for root, skip in roots:
         if not os.path.isdir(root):
             continue
-        for path in md_files(root, skip_dirs=skip + ("__pycache__", "_attic", "_archive", "Z-ARCHIVE")):
+        for path in md_files(root, skip_dirs=skip + ("__pycache__", "_attic", "_archive", "z-archive")):
             base = os.path.basename(path)
             # The audit record IS the register of retractions and qc/retracted.tsv is the list
             # itself: both must be free to quote what they withdraw. Everything else must agree
@@ -320,7 +320,7 @@ def check_chapters():
             part, num = ch.split(".")
             pat = re.compile(r"MANUAL-NOTES-%s0?%s-" % (part, num))
             note = None
-            pdir = os.path.join(NOTES_DIR, part)
+            pdir = os.path.join(NOTES_DIR, part.lower())
             if os.path.isdir(pdir):
                 for f in os.listdir(pdir):
                     if pat.match(f):
@@ -366,7 +366,7 @@ def check_version_claims():
     for root, skip in roots:
         if not os.path.isdir(root):
             continue
-        for path in md_files(root, skip_dirs=skip + ("__pycache__", "_attic", "_archive", "Z-ARCHIVE")):
+        for path in md_files(root, skip_dirs=skip + ("__pycache__", "_attic", "_archive", "z-archive")):
             body = read(path)
             # A file may DECLARE itself an append-only dated log with <!-- DATED-LOG --> near the
             # top. Its sections record what was true when written and are not claims about now.

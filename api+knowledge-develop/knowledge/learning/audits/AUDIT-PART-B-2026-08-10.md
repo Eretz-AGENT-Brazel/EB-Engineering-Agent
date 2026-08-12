@@ -23,7 +23,7 @@ Three questions per chapter, his:
 | **5 · fix** | in `B08-insert-shapes.dwg`, the band the chapter owns |
 | **6 · verdict** | written, including what is still open |
 
-**Model:** `projects/SANDBOX/B08-insert-shapes.dwg` — 834 entities at the start of the audit,
+**Model:** `projects/sandbox/B08-insert-shapes.dwg` — 834 entities at the start of the audit,
 post-fix state from this morning's bolt audit (179 bolts, 0 iron-rule violations).
 
 ---

@@ -1,7 +1,7 @@
 # Base plate to floor, and ribs — the worked lesson
 
 *Learned from Amir in learning mode, 31/07/2026, two stages. Source model:
-`EB PROSTEEL AGENT/projects/שיעור-4/שיעור-4.dwg`; exam model `מבחן-שיעור-4.dwg`.
+`EB PROSTEEL AGENT/api+knowledge-develop/projects/lesson-4/שיעור-4.dwg`; exam model `מבחן-שיעור-4.dwg`.
 The numbers here are examples from these cases — the **method** generalises, the figures do not.*
 
 ---

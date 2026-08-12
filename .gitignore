@@ -24,39 +24,39 @@ __pycache__/
 *.pyc
 
 # the plugin's scratch I/O files — written and overwritten on every single op
-API+KNOWLEDGE-DEVELOP/app/plugin/eb_cmd.txt
-API+KNOWLEDGE-DEVELOP/app/plugin/eb_result.txt
-API+KNOWLEDGE-DEVELOP/app/plugin/eb_expect_dwg.txt
-API+KNOWLEDGE-DEVELOP/app/plugin/eb_holes.txt
-API+KNOWLEDGE-DEVELOP/app/plugin/eb_list.txt
-API+KNOWLEDGE-DEVELOP/app/plugin/eb_posnum.txt
-API+KNOWLEDGE-DEVELOP/app/plugin/eb_posauto.txt
-API+KNOWLEDGE-DEVELOP/app/plugin/eb_groupauto.txt
-API+KNOWLEDGE-DEVELOP/app/plugin/eb_conndump.txt
-API+KNOWLEDGE-DEVELOP/app/plugin/eb_basedump.txt
-API+KNOWLEDGE-DEVELOP/app/plugin/eb_purlin.txt
-API+KNOWLEDGE-DEVELOP/app/plugin/eb_cat.txt
-API+KNOWLEDGE-DEVELOP/app/plugin/eb_sections.txt
-API+KNOWLEDGE-DEVELOP/app/plugin/eb_styles.txt
-API+KNOWLEDGE-DEVELOP/app/plugin/eb_enums.txt
-API+KNOWLEDGE-DEVELOP/app/plugin/eb_catalog.txt
+api+knowledge-develop/app/plugin/eb_cmd.txt
+api+knowledge-develop/app/plugin/eb_result.txt
+api+knowledge-develop/app/plugin/eb_expect_dwg.txt
+api+knowledge-develop/app/plugin/eb_holes.txt
+api+knowledge-develop/app/plugin/eb_list.txt
+api+knowledge-develop/app/plugin/eb_posnum.txt
+api+knowledge-develop/app/plugin/eb_posauto.txt
+api+knowledge-develop/app/plugin/eb_groupauto.txt
+api+knowledge-develop/app/plugin/eb_conndump.txt
+api+knowledge-develop/app/plugin/eb_basedump.txt
+api+knowledge-develop/app/plugin/eb_purlin.txt
+api+knowledge-develop/app/plugin/eb_cat.txt
+api+knowledge-develop/app/plugin/eb_sections.txt
+api+knowledge-develop/app/plugin/eb_styles.txt
+api+knowledge-develop/app/plugin/eb_enums.txt
+api+knowledge-develop/app/plugin/eb_catalog.txt
 
 # --- added 09/08/2026, development-folder tidy ---
 # Compiled plugin binaries: rebuildable from the .cs beside them, and 125 of them were
 # most of a 54 MB .git. The SOURCES stay tracked — they are the written history of the API.
-API+KNOWLEDGE-DEVELOP/app/plugin/*.dll
-API+KNOWLEDGE-DEVELOP/app/plugin/*.pdb
+api+knowledge-develop/app/plugin/*.dll
+api+knowledge-develop/app/plugin/*.pdb
 
 # Transient op output. Every one of these is written by an op and read straight back;
 # they regenerate on demand and carry no history.
-API+KNOWLEDGE-DEVELOP/app/plugin/eb_*.txt
-!API+KNOWLEDGE-DEVELOP/app/plugin/eb_cmd.txt
-!API+KNOWLEDGE-DEVELOP/app/plugin/eb_result.txt
-!API+KNOWLEDGE-DEVELOP/app/plugin/eb_expect_dwg.txt
+api+knowledge-develop/app/plugin/eb_*.txt
+!api+knowledge-develop/app/plugin/eb_cmd.txt
+!api+knowledge-develop/app/plugin/eb_result.txt
+!api+knowledge-develop/app/plugin/eb_expect_dwg.txt
 
 # Archived DWG snapshots — kept on disk, out of the repo
-API+KNOWLEDGE-DEVELOP/projects/SANDBOX/_archive/
+api+knowledge-develop/projects/sandbox/_archive/
 
 # eb_api.save()'s timestamped snapshots land next to the model and are moved to _archive/
 # when a part closes; until then they are deliberate local backups, not repo content.
-API+KNOWLEDGE-DEVELOP/projects/SANDBOX/*-backup-*.dwg
+api+knowledge-develop/projects/sandbox/*-backup-*.dwg

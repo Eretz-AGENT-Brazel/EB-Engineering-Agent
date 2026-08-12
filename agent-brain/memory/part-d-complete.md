@@ -11,7 +11,7 @@ metadata:
 חלק D של מדריך ProStructures נסגר **במלואו בלילה של 11/08/2026** — שבעה פרקים, חמשת השלבים לכל
 אחד, הכל נדחף. הסך: **53 מתוך 79 פרקים**. נשאר **חלק C (22 פרקים)** ו-**B.30–B.33**.
 
-**המודל:** `projects/SANDBOX/D-miscellaneous.dwg` — 98 ישויות, `vfy_fit bolts=28 OK=28
+**המודל:** `projects/sandbox/D-miscellaneous.dwg` — 98 ישויות, `vfy_fit bolts=28 OK=28
 BOLT-NO-HOLE=0`. רצועות במקצב 60,000 מ-**x=360,000** (‏D.05 · D.02 · D.03 · D.04 · D.06).
 **התוסף עלה v178 → v183** (אופים חדשים: `cog`, `unwind`, `usershape`, `block`, ו-`collision` מורחב).
 

@@ -1,6 +1,6 @@
 ---
 name: dev-track-folder
-description: "סידור 12/08/2026: כל נתיב פיתוח 1 (API + ידע הנדסי) יושב ב-API+KNOWLEDGE-DEVELOP/ — ממנו ייבנה המוצר שיוטמע בחברה; תקנים = נתיב 2, נעול ב-standards/"
+description: "סידור 12/08/2026: כל נתיב פיתוח 1 (API + ידע הנדסי) יושב ב-api+knowledge-develop/ — ממנו ייבנה המוצר שיוטמע בחברה; תקנים = נתיב 2, נעול ב-standards/"
 metadata: 
   node_type: memory
   type: project
@@ -14,10 +14,10 @@ metadata:
 EB PROSTEEL AGENT/
 ├── PROGRESS.md · README.md · הלאנצ'ר          ← בשורש, בהחלטת אמיר
 ├── agent-brain/          עיקרון הפרויקט: PROGRAM.md + מראות הסקיל/הזיכרון (sync.py)
-├── API+KNOWLEDGE-DEVELOP/   ⭐ נתיב 1 — API וידע הנדסי (להלן DEV/)
+├── api+knowledge-develop/   ⭐ נתיב 1 — API וידע הנדסי (להלן DEV/)
 │   ├── app/  qc/  knowledge/  lessons/  projects/  research/  data/  assets/
 ├── standards/            🔒 נתיב 2 — תקנים, נעול עד הכרזת אמיר
-└── Z-ARCHIVE/handoffs/   מסירות בין סשנים (ה-Z מכוונת — ממוין אחרון בגיטהאב)
+└── z-archive/handoffs/   מסירות בין סשנים (ה-Z מכוונת — ממוין אחרון בגיטהאב)
 ```
 
 **החזון שאמיר הגדיר:** מתוך DEV ייבנה בסוף **המוצר** — הקונסולה/פלאגין שיוטמע רשמית
@@ -31,7 +31,7 @@ EB PROSTEEL AGENT/
 **How to apply:**
 - מוסכמת נתיבים: במסמכים שבתוך DEV (סקיל, הערות, PROGRESS) — `app/`, `qc/`, `knowledge/`,
   `projects/` יחסיים ל-DEV. מסמכי שורש כותבים נתיב מלא או `DEV/`.
-- השומר: `python "API+KNOWLEDGE-DEVELOP/qc/consistency.py"` — עודכן לעוגן DEV וסורק גם
+- השומר: `python "api+knowledge-develop/qc/consistency.py"` — עודכן לעוגן DEV וסורק גם
   את lessons/ ו-research/. ‏selftest עודכן בהתאם.
 - ⚠️ בגלל ההזזה נוצר **v184** (הנתיב הצרוב `const string Dir` עודכן): ‏`EBAgentApi184.cs`
   קומפל ל-DLL לפי הפקודה המתועדת ב-plugin-ops. בסשן ה-AutoCAD הבא — ‏NETLOAD של v184;

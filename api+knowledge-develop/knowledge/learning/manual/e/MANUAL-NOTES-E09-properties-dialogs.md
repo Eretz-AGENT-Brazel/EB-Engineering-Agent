@@ -1,7 +1,7 @@
 # E.9 — ProSteel Properties Dialogs
 
 *Manual pp. 1129–1172, 17 sub-sections. Read 10/08/2026, implemented in
-`projects/SANDBOX/E-structural-elements.dwg`, band **x 0 – 44 000**.*
+`projects/sandbox/E-structural-elements.dwg`, band **x 0 – 44 000**.*
 
 ---
 

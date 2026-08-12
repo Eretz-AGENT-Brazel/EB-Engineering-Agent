@@ -1,7 +1,7 @@
 # A.1 — General Information
 
 *Manual pp. 15–18. Read 10/08/2026. Implemented in
-`projects/SANDBOX/A-dialogs-templates-settings.dwg`, strip **A.01**, x −3 000 … 53 000.*
+`projects/sandbox/A-dialogs-templates-settings.dwg`, strip **A.01**, x −3 000 … 53 000.*
 
 The shortest chapter in the manual — two sub-sections and about a page and a half. It is also
 the one that should have been read **first**, two weeks ago.
