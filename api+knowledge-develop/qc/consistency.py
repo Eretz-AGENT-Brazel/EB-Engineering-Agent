@@ -22,6 +22,10 @@ WHAT IT CHECKS
   4. SKILL BACKUP  the repo's copy of the skill matches the live skill, both directions
   5. PLUGIN        the version app/eb_api.py loads exists, and is the newest source present
   6. CHAPTER SYNC  every chapter the audit record covers carries an audit marker in its own note
+  7. VERSION DRIFT no document asserts a canonical plugin version other than app/eb_api.py's
+  8+9. LEGACY LISTS the two declared backlogs (built-not-read, unaudited joints) only ever shrink
+  10. ROOT HYGIENE  the repo root and the track root hold exactly their named inventory --
+                   nothing lands in a root uninvited (Amir's standing order, 12/08/2026)
 
 EXIT CODE 0 = clean.  Anything else = do not commit yet.
 """
@@ -547,6 +551,38 @@ def check_joints():
             print("       %s" % u)
 
 
+# ----------------------------------------------------------------- 10. root hygiene
+# The 12/08/2026 cleanup was not needed because anyone was untidy -- it was needed because both
+# roots ACCEPTED anything. From now on each root carries a NAMED inventory. A new artifact gets
+# ROUTED to its home (the routing table: api+knowledge-develop/README.md); a genuinely new
+# top-level folder is a STRUCTURE decision, so it must appear both here and in the README map
+# in the same commit. This check failing is the reminder, not an obstacle.
+REPO_ROOT_ALLOW = {".git", ".gitignore", "README.md", "PROGRESS.md", "EB PROSTEEL AGENT.bat",
+                   "agent-brain", "api+knowledge-develop", "standards", "z-archive"}
+DEV_ROOT_ALLOW = {"README.md", "app", "assets", "data", "knowledge", "lessons",
+                  "projects", "qc", "research"}
+
+
+def check_root_hygiene():
+    """Nothing lands in either root uninvited -- the pre-cleanup mess must not re-form."""
+    for root, allow, label in ((REPO, REPO_ROOT_ALLOW, "repo root"),
+                               (DEV, DEV_ROOT_ALLOW, "api+knowledge-develop/")):
+        try:
+            entries = os.listdir(root)
+        except Exception as e:
+            warn("root hygiene", "cannot list %s: %s" % (label, e))
+            continue
+        for name in sorted(entries):
+            if name not in allow:
+                fail("root hygiene",
+                     "%s holds an unlisted entry: %r. Route it to its home (the routing table in "
+                     "api+knowledge-develop/README.md), or -- for a deliberate new top-level "
+                     "folder -- add it to the whitelist here AND to the README map in this "
+                     "same commit." % (label, name))
+    print("  both roots match their named inventory (%d + %d entries)"
+          % (len(REPO_ROOT_ALLOW), len(DEV_ROOT_ALLOW)))
+
+
 CHECKS = [
     ("1. retractions  ", check_retractions),
     ("2+3. memory     ", check_memory),
@@ -556,6 +592,7 @@ CHECKS = [
     ("7. version drift", check_version_claims),
     ("8. built not read", check_built),
     ("9. joint audit  ", check_joints),
+    ("10. root hygiene", check_root_hygiene),
 ]
 
 

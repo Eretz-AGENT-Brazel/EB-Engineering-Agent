@@ -96,7 +96,9 @@ python "api+knowledge-develop/qc/consistency.py"
 ```
 
 עוצר אם: טענה מופרכת עומדת חיה · זיכרון לא באינדקס · גיבוי הסקיל לא תואם · גרסת תוסף שגויה ·
-פרק בביקורת בלי סימון בהערות שלו. הנימוק המלא: [`agent-brain/PROGRAM.md`](agent-brain/PROGRAM.md) § חוק הרישום.
+פרק בביקורת בלי סימון בהערות שלו · **קובץ זר נחת באחד השורשים** (בדיקה 10 — היגיינת שורשים).
+שיטת הסדר המלאה: [`api+knowledge-develop/README.md`](api+knowledge-develop/README.md) § איך נשמר הסדר.
+הנימוק המלא: [`agent-brain/PROGRAM.md`](agent-brain/PROGRAM.md) § חוק הרישום.
 ואחרי כל קומיט — **פוש**: אמיר מתעדכן דרך GitHub.
 
 ⚠️ **`agent-brain/sync.py` מגבה, הוא לא כותב.** ההודעה `backup already current` פירושה
