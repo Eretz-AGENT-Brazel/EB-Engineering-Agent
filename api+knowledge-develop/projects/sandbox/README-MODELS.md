@@ -91,10 +91,8 @@ One unfilled hole, and it is the deliberate one, labelled as such on the part.
 ## `sandbox.dwg` — general scratch drawing
 
 Part B work from **07/08** is in here. **Free to open, edit and work in** — the old
-ownership rule was **withdrawn 12/08/2026**: Amir clarified the file is not his.
-The rule had grown out of his 06/08 remark *"זה קובץ שאני עובד עליו — אל תסגור אותו"*,
-which was about a live working session, not about this file. The lesson that survives:
-**never close a drawing the user is actively working in.**
+ownership rule was **withdrawn 12/08/2026**: Amir clarified the file is not his, and
+the rule was deleted entirely at his instruction.
 
 ---
 
