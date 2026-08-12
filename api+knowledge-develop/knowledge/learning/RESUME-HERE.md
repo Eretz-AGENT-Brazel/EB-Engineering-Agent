@@ -65,7 +65,7 @@
 | **LISP** | **אפס במערכת.** ‏`_netload` עבר ל-`FILEDIA=0` + `_NETLOAD` כמחרוזת — **אומת בריצה חיה** (זה היה הסיכון הפתוח). ‏4 סקריפטים מתים ל-`app/_attic/` |
 | **מטרי** | נאכף ואומת. **תוקן באג:** התבנית `Ps191_Metric` שהקוד ניסה לטעון **לא קיימת** → `acadiso.dwt` מפורש + `enforce_metric()` שקורא חזרה |
 | **סקיל** | ‏7 מסמכי reference. חדשים: `api-surface-map.md` · `anchorage-engineering.md` · `beam-connections.md`. + כלל METRIC + פרק LISP + תיקון שורה שהמליצה על LISP ל-ZOOM |
-| **דוחות** | ‏3 PDF מסודרים ב-`projects/lesson-5/דוחות/` עם README ומקורות |
+| **דוחות** | ‏3 PDF מסודרים ב-`projects/lesson-5/reports/` עם README ומקורות |
 
 ---
 

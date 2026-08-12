@@ -531,7 +531,7 @@ result by re-drilling and remains a valid fallback.
 
 ## 🏛️ B.8 INSERT SHAPES — the foundation, read and implemented (v87 → v91)
 
-*Chapter notes: `EB PROSTEEL AGENT\knowledge\MANUAL-NOTES-B08-insert-shapes.md`.
+*Chapter notes: `EB PROSTEEL AGENT\api+knowledge-develop\knowledge\learning\manual\b\MANUAL-NOTES-B08-insert-shapes.md`.
 Worked in its own drawing, `B08-insert-shapes.dwg`.*
 
 ### ⭐ The orientation rule — documented all along
@@ -923,7 +923,7 @@ members: 3 methods and 133 properties** — the entire B.17 dialog). Guessing wh
 which field is how *"Diameter"* came to mean the **bolt**. So read them all off a live template:
 `op=conndump` lists the installed templates, `template=<name>` prints every property, its type
 and its value. Full map saved at
-`EB PROSTEEL AGENT\knowledge\B17-plate-connection-properties.txt`.
+`EB PROSTEEL AGENT\api+knowledge-develop\knowledge\api\B17-plate-connection-properties.txt`.
 
 **7 templates installed:** `default/Standard` · `example/example1…4` ·
 `AutoConnect Metric v 18/152x152x13` · `…/204x204x13`.

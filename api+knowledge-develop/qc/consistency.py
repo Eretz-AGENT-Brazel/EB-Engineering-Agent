@@ -438,6 +438,7 @@ def check_built():
 
     legacy = {}
     lp = os.path.join(HERE, "built-legacy.tsv")
+    _legacy_shrink_guard("built", lp)
     if os.path.isfile(lp):
         for l in read(lp).splitlines():
             if l.strip() and not l.startswith("#") and "\t" in l:
@@ -514,6 +515,7 @@ def check_joints():
     CITES = re.compile(r"JOINT AUDIT|vfy_joined", re.I)
     legacy = {}
     lp = os.path.join(HERE, "joints-legacy.tsv")
+    _legacy_shrink_guard("joints", lp)
     if os.path.isfile(lp):
         for l in read(lp).splitlines():
             if l.strip() and not l.startswith("#") and "\t" in l:
@@ -551,6 +553,37 @@ def check_joints():
         print("  ⚠️  bolted assemblies closed before the joint-audit rule:")
         for u in unaudited:
             print("       %s" % u)
+
+
+# The two legacy lists PROMISE they only ever shrink -- their own headers say that adding a row
+# to silence the guard is the exact failure they exist to prevent. Promised from day one --
+# ENFORCED since 12/08/2026 (council finding: the promise had no code behind it). Every commit
+# compares the working-tree list against HEAD; a chapter id present now but absent from the
+# committed version fails the build.
+def _legacy_rows(text):
+    rows = set()
+    for ln in text.splitlines():
+        ln = ln.strip()
+        if ln and not ln.startswith("#"):
+            rows.add(ln.split("\t")[0].strip())
+    return rows
+
+
+def _legacy_shrink_guard(check, tsv_path):
+    import subprocess
+    rel = os.path.relpath(tsv_path, REPO).replace(os.sep, "/")
+    try:
+        old = subprocess.run(["git", "-C", REPO, "show", "HEAD:%s" % rel],
+                             capture_output=True, text=True, encoding="utf-8", errors="replace")
+    except Exception as e:
+        warn(check, "cannot compare %s against HEAD: %s" % (rel, e))
+        return
+    if old.returncode != 0:            # file not in HEAD yet -- nothing to compare against
+        return
+    for row in sorted(_legacy_rows(read(tsv_path)) - _legacy_rows(old.stdout)):
+        fail(check, "%s gained a NEW row %r -- this list may only shrink. Prove the chapter "
+                    "in the model instead of declaring it legacy."
+                    % (os.path.basename(tsv_path), row))
 
 
 # ----------------------------------------------------------------- 10. root hygiene

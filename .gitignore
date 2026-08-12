@@ -15,8 +15,10 @@ acad*.log
 plot.log
 # and nothing else — a lesson log is content.
 
-# AutoCAD's own rolling backup of the previous save (the *-backup-*.dwg files ARE kept —
-# they are deliberate, timestamped snapshots; these .bak ones are automatic and redundant)
+# AutoCAD's own rolling .bak of the previous save — automatic and redundant, never kept.
+# (The *-backup-*.dwg snapshots are deliberate LOCAL evidence: they sit next to the model
+#  until archived into sandbox/_archive/ — see the rule near the end — and stay out of the
+#  repo either way. Corrected 12/08/2026: this note used to say they ARE kept in the repo.)
 *.bak
 
 # Python

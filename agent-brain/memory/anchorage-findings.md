@@ -9,7 +9,7 @@ metadata:
 ---
 
 מחקר העיגון (2026-08-02, סיום שיעורים 4+5) מצא שלושה פערים בפרט הבסיס הסטנדרטי של ארץ ברזל.
-דוח מלא: `EB PROSTEEL AGENT\knowledge\research\ביסוס-ועיגון-עמודי-פלדה.pdf` (28 עמ') +
+דוח מלא: `EB PROSTEEL AGENT\api+knowledge-develop\research\ביסוס-ועיגון-עמודי-פלדה.pdf` (28 עמ') +
 מקור `REPORT-ANCHORAGE.html`; 6 מחקרי גלם ב-`knowledge/research/01..06-*.md`;
 מידות הפרטים ב-`knowledge/steel/09-ANCHORAGE-CASE-DATA.md`.
 

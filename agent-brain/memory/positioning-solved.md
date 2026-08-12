@@ -53,4 +53,4 @@ metadata:
 כתיבת בלוק חדש דורסת `Name`/`Article`/`Style` בריק.
 
 תיעוד: `~/.claude/skills/prosteel-modeling/references/plugin-ops.md` ·
-מחקר 7 הפריטים: `EB PROSTEEL AGENT\knowledge\RESEARCH-open-api-items-2026-08-06.md`
+מחקר 7 הפריטים: `EB PROSTEEL AGENT\api+knowledge-develop\knowledge\learning\findings\RESEARCH-open-api-items-2026-08-06.md`

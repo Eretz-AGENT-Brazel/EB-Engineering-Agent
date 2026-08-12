@@ -21,7 +21,7 @@ metadata:
 (`DIN WINKEL GLEICH/HD/VD/4T/DIA`), תעלות (`DIN_U`/`UPE`/`UAP`), חלולים חם וקר (`RQ`/`RR`/`RO`),
 חצאי קורות (`DIN_HALBE IPE`→`HIPE300`), T (`T80`), עמודים כבדים (`Peiner_HD`/`HL`), מגולגל קר
 (`Z160`, `C150x75x6,5`), פסים, מוטות, מוט מוברג, ואפילו עץ. המפה המלאה:
-`EB PROSTEEL AGENT\knowledge\SECTION-CATALOGUES.md`.
+`EB PROSTEEL AGENT\api+knowledge-develop\knowledge\learning\findings\SECTION-CATALOGUES.md`.
 
 ⚠️ **מפתח חתך הוא מחרוזת אטומה — לחפש, לא להרכיב.** `HD260x68,15` עם **פסיק** גרמני מול
 `RO 219.1x6.3` עם **נקודה** באותה ספרייה · `DIN HALBE IPE` לא קיים אבל `DIN_HALBE IPE` כן ·

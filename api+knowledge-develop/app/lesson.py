@@ -127,7 +127,7 @@ def parse_counts(s):
 def start(num, topic):
     if not wait_for_cad():
         return
-    name = "שיעור-%s" % num
+    name = "lesson-%s" % num
     folder = os.path.join(LESSONS, name)
     lf = os.path.join(folder, "learning")
     os.makedirs(lf, exist_ok=True)

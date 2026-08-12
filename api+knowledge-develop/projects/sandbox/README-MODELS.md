@@ -108,5 +108,5 @@ on Amir's instruction so the folder reads cleanly, and it is excluded from the r
 
 ## The other lesson folders
 
-`projects/lesson-1 … שיעור-5` hold the graded lessons from before part B began, plus their
+`projects/lesson-1 … lesson-5` hold the graded lessons from before part B began, plus their
 baselines and exam drawings. They are history, not working files.

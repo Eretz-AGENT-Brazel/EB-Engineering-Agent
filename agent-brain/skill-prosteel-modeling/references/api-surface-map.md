@@ -24,7 +24,7 @@ C:\Program Files\Bentley\ProStructures Ss6 R1\AutoCAD 2015\Prg\
 **The agent was using 26 of ~1,400.**
 Full map: `EB PROSTEEL AGENT\api+knowledge-develop\knowledge\api\API-SURFACE-RAW.txt` (3.0 MB, every signature) ·
 per-assembly counts: `knowledge\api\API-ASSEMBLY-INDEX.txt` ·
-guide with the "hand-built vs already exists" table: `knowledge\API-SURFACE.md`.
+guide with the "hand-built vs already exists" table: `knowledge\api\API-SURFACE.md`.
 
 > **This number was wrong three times before it was right:** 325 (one assembly) → 771
 > (75 assemblies) → 8,622 (all of them, unfiltered) → **~1,400 (filtered).** The first pass
@@ -138,7 +138,7 @@ Apply() → int · GetModifyIndex()
   extraction is an open item.
 - **`Samples\COM Macros\`** — 25 worked sample DWGs, one per macro.
 - **`Samples\Detailing\`** — 12 samples covering Assembly / Group / Connection dimensioning.
-- **`knowledge\manual_fulltext.txt`** — the 1,179-page ProSteel manual, extracted since 18/06/2026.
+- **`knowledge\learning\manual\manual_fulltext.txt`** — the 1,179-page ProSteel manual, extracted since 18/06/2026.
 
 ## Reading order
 

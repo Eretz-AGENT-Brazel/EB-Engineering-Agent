@@ -17,7 +17,6 @@ Run it after any change to qc/consistency.py, and whenever the guard has been si
 """
 import io
 import os
-import shutil
 import subprocess
 import sys
 
@@ -51,8 +50,13 @@ def main():
     if not os.path.exists(LIVE):
         print("live skill file missing: %s" % LIVE)
         return 2
-    if os.path.exists(COPY):
-        shutil.copy2(COPY, LIVE)          # start from the known-good bytes
+    if os.path.exists(COPY) and io.open(COPY, "rb").read() != io.open(LIVE, "rb").read():
+        # NEVER copy the backup over the live file. The live skill is the AUTHORITY and the
+        # repo copy is its mirror; the first version did copy2(COPY, LIVE) here, which would
+        # silently destroy live edits that had not been synced yet (council finding, 12/08/2026).
+        print("live plugin-ops.md differs from the repo mirror -- run agent-brain/sync.py first,")
+        print("then run this self-test again. Refusing to overwrite the live skill.")
+        return 2
 
     rc0, msg0, _ = run_guard()
     print("  baseline              exit=%d  %s" % (rc0, msg0))
