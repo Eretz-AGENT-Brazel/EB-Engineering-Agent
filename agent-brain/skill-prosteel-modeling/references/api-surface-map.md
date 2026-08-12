@@ -22,8 +22,8 @@ C:\Program Files\Bentley\ProStructures Ss6 R1\AutoCAD 2015\Prg\
 ```
 
 **The agent was using 26 of ~1,400.**
-Full map: `EB PROSTEEL AGENT\knowledge\API-SURFACE-RAW.txt` (3.0 MB, every signature) ·
-per-assembly counts: `knowledge\API-ASSEMBLY-INDEX.txt` ·
+Full map: `EB PROSTEEL AGENT\api+knowledge-develop\knowledge\api\API-SURFACE-RAW.txt` (3.0 MB, every signature) ·
+per-assembly counts: `knowledge\api\API-ASSEMBLY-INDEX.txt` ·
 guide with the "hand-built vs already exists" table: `knowledge\API-SURFACE.md`.
 
 > **This number was wrong three times before it was right:** 325 (one assembly) → 771

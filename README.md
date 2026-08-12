@@ -97,8 +97,8 @@ EB PROSTEEL AGENT/
 python "api+knowledge-develop/qc/consistency.py"
 ```
 
-עוצר אם: טענה מופרכת עומדת חיה · זיכרון לא באינדקס · גיבוי הסקיל לא תואם · גרסת תוסף שגויה ·
-פרק בביקורת בלי סימון בהערות שלו · **קובץ זר נחת באחד השורשים** (בדיקה 10 — היגיינת שורשים).
+עוצר לפי **עשר בדיקות** — מהפרכה שעומדת חיה ועד קובץ זר שנחת באחד השורשים. הרשימה
+המוסמכת חיה במקום אחד: ה-docstring של השומר עצמו (‏"WHAT IT CHECKS").
 שיטת הסדר המלאה: [`api+knowledge-develop/README.md`](api+knowledge-develop/README.md) § איך נשמר הסדר.
 הנימוק המלא: [`agent-brain/PROGRAM.md`](agent-brain/PROGRAM.md) § חוק הרישום.
 ואחרי כל קומיט — **פוש**: אמיר מתעדכן דרך GitHub.

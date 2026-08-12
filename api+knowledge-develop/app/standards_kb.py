@@ -27,8 +27,9 @@ import json
 import glob
 
 APP = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(APP)
-KB_DIR = os.path.join(ROOT, "standards", "kb")
+ROOT = os.path.dirname(APP)                 # api+knowledge-develop (the dev track)
+REPO = os.path.dirname(ROOT)                # the repo root -- standards/ lives THERE (track 2)
+KB_DIR = os.path.join(REPO, "standards", "kb")
 # steel-modeling teaching modules (detailing workflow, precision, connections,
 # ProSteel methodology, He<->En glossary, fabrication) — searchable alongside
 # the standards modules so the console can consult practice, not only code.

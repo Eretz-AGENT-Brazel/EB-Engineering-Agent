@@ -364,7 +364,9 @@ def check_version_claims():
     live = int(m.group(1))
     # Only lines that CLAIM canonicity count. A dated log line recording what was true then is
     # history and is left alone.
-    CLAIMY = ("canonical", "points at", "current build", "the build is", "הקנונית", "הגרסה הנוכחית")
+    # "קנוני" (bare) also covers "הקנונית"/"קנונית" as a substring. Added 12/08/2026 after the
+    # council review proved RESUME-HERE carried four undated "פלאגין קנוני vNN" claims unseen.
+    CLAIMY = ("canonical", "points at", "current build", "the build is", "קנוני", "הגרסה הנוכחית")
     hits = 0
     roots = [(KNOW, ()), (SKILL_LIVE, ()), (MEM_LIVE, ()), (REPO, REPO_SKIP)]
     for root, skip in roots:
@@ -445,7 +447,7 @@ def check_built():
     missing, unreviewed = [], []
     for ch in sorted(set(rows)):
         part, num = ch.split(".")
-        pdir = os.path.join(NOTES_DIR, part)
+        pdir = os.path.join(NOTES_DIR, part.lower())
         pat = re.compile(r"(MANUAL-NOTES-)?%s0?%s[-.]" % (part, num))
         note = None
         if os.path.isdir(pdir):
@@ -521,7 +523,7 @@ def check_joints():
     missing, unaudited = [], []
     for ch in sorted(set(rows)):
         part, num = ch.split(".")
-        pdir = os.path.join(NOTES_DIR, part)
+        pdir = os.path.join(NOTES_DIR, part.lower())
         pat = re.compile(r"(MANUAL-NOTES-)?%s0?%s[-.]" % (part, num))
         note = None
         if os.path.isdir(pdir):

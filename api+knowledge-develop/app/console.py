@@ -32,7 +32,8 @@ import subprocess
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 APP = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(APP)
+ROOT = os.path.dirname(APP)                 # api+knowledge-develop (the dev track)
+REPO = os.path.dirname(ROOT)                # repo root -- standards/ (track 2) lives there
 DATA = os.path.join(ROOT, "data")
 UPLOADS = os.path.join(DATA, "uploads")          # global (screenshots, temp)
 BRAND = os.path.join(DATA, "brand")
@@ -759,11 +760,11 @@ class Handler(BaseHTTPRequestHandler):
         if p == "/logo.svg":
             return self._bytes(DEFAULT_LOGO.encode("utf-8"), "image/svg+xml")
         if p == "/standards":
-            fp = os.path.join(ROOT, "standards", "STANDARDS.md")
+            fp = os.path.join(REPO, "standards", "STANDARDS.md")
             txt = open(fp, encoding="utf-8").read() if os.path.exists(fp) else "# אין קובץ תקנים"
             # list purchased official PDFs, if any
             pdfs = []
-            pd = os.path.join(ROOT, "standards", "pdfs")
+            pd = os.path.join(REPO, "standards", "pdfs")
             if os.path.isdir(pd):
                 pdfs = [f for f in sorted(os.listdir(pd)) if f.lower().endswith(".pdf")]
             return self._json({"md": txt, "pdfs": pdfs})
@@ -784,7 +785,7 @@ class Handler(BaseHTTPRequestHandler):
                        "national-annex-checklist": "national-annex-checklist.md",
                        "overview": "STANDARDS.md"}
             if slug in special:
-                fp = os.path.join(ROOT, "standards", special[slug])
+                fp = os.path.join(REPO, "standards", special[slug])
                 md = open(fp, encoding="utf-8").read() if os.path.exists(fp) else "# לא נמצא"
                 return self._json({"md": md, "slug": slug})
             try:

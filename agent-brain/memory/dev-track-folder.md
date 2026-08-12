@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: f7644a80-6f23-41e6-b129-0eb429982261
-  modified: 2026-08-12T11:04:03.754Z
+  modified: 2026-08-12T18:19:49.248Z
 ---
 
 **הסידור של אמיר, 12/08/2026 — שני נתיבי פיתוח, תיקייה לכל נתיב:**
@@ -51,6 +51,9 @@ EB PROSTEEL AGENT/
   (בוצע — הישן הוסר, החדש נוסף, נשמר בפרופיל). וגם: פתיחת AutoCAD+ProStructures מקוד עובדת —
   לשכפל את הקיצור: `acad.exe /p "...ProStructures_SS6.1ACAD_E001_409.arg" /t Ps191_Metric
   /ld ProStructuresLoader.arx`.
+- 💡 **הצעת המועצה (12/08, ממתינה להחלטה עם אמיר בגרסה טבעית הבאה):** להחליף את
+  ה-`const Dir` הצרוב בתוסף ב-`Assembly.GetExecutingAssembly().Location` — יבטל את מס
+  הגרסה-על-כל-הזזת-תיקייה. סיכון למיפוי: ‏shadow-copy; גיבוי: ‏env-var מהלאנצ'ר.
 - הקונסולה: ⏸️ **הכרעת אמיר 12/08/2026 — נשארת קפואה בינתיים** ("בוא נשאיר אותה קפואה").
   ‏`console.py`, ‏data/ ו-assets/ נשארים כמו שהם בתוך DEV; החלפה/החייאה — רק כשאמיר יעלה
   את זה. לא להציע מיוזמתי.

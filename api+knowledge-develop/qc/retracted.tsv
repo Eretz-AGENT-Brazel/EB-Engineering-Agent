@@ -5,8 +5,9 @@
 # knowledge/, the skill, the memory or the root docs.
 #
 # Quoting a withdrawn claim INSIDE a retraction is correct and expected — the guard allows the
-# phrase within 14 lines of a retraction marker (RETRACTED / CORRECTED / WITHDRAWN / CLOSED /
-# "used to say" / "used to read" / הופרך / נסגר / תוקן).
+# phrase when it is quoted on its line, or near a retraction marker. The authoritative marker
+# list and line-window live in consistency.py (RETRACTION_MARKERS + WINDOW) — the code decides,
+# not this header. (Corrected 12/08/2026: this header used to state 14 lines and dead markers.)
 #
 # ADD A ROW THE MOMENT YOU RETRACT SOMETHING. That is the whole point: the next person to write
 # the old sentence gets stopped by a machine instead of by luck.

@@ -32,7 +32,7 @@
 6. **`api+knowledge-develop/knowledge/learning/RESUME-HERE.md`** — נקודת העצירה האחרונה
    שנרשמה, והצעד הפתוח הבא.
 7. **אם הסשן כולל מידול:** הסקיל `prosteel-modeling` הוא הידע המעשי; לפני כל ניסיון API —
-   ‏`LETHAL-CALLS` ו-`THE-CEILING` שב-`knowledge/learning/findings/`.
+   ‏`LETHAL-CALLS` ו-`THE-CEILING` שב-`api+knowledge-develop/knowledge/learning/findings/`.
 
 ## 📢 דיווח המוכנות — פורמט קבוע
 

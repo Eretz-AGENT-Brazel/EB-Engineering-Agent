@@ -3,7 +3,7 @@
 *Distilled from a deep study of EN 1992-4, EN 1993-1-8, EN 1090-2, ACI 318-19 Ch.17, ACI 117 and
 AISC Design Guide 1, applied to Eretz Barzel's measured details (lessons 4–5). Every number below was
 computed and is reproducible. Full report:
-`EB PROSTEEL AGENT\knowledge\research\ביסוס-ועיגון-עמודי-פלדה.pdf` (28 pp).*
+`EB PROSTEEL AGENT\api+knowledge-develop\research\ביסוס-ועיגון-עמודי-פלדה.pdf` (28 pp).*
 
 > **Scope note.** This is *understanding*, for modelling a detail knowingly and for asking the right
 > question. It is **not** design authority — Phase 2 (standards / design checking) is locked until

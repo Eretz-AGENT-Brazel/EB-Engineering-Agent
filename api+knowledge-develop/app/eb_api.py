@@ -1053,7 +1053,7 @@ def save(backup=True):
     # the live file. COM's doc.Save() is the route that has actually produced correct files.
     # It is also the route that reports the SIZE, which is the only way to catch this class of
     # failure: a save that "succeeds" and writes nothing.
-    path = _os.path.join(PROJECTS, "SANDBOX", EXPECT_DWG or "sandbox.dwg")
+    path = _os.path.join(PROJECTS, "sandbox", EXPECT_DWG or "sandbox.dwg")
     before_size = _os.path.getsize(path) if _os.path.exists(path) else 0
     before = _os.path.getmtime(path) if _os.path.exists(path) else 0
     app, doc = _app_doc(tries=10)

@@ -684,8 +684,8 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > already existed.
 >
 > **Before writing a loop, a helper, or any geometry by hand — search the map:**
-> `EB PROSTEEL AGENT\knowledge\API-SURFACE-RAW.txt` (3.0 MB, every signature) ·
-> `knowledge\API-ASSEMBLY-INDEX.txt` · guide `knowledge\API-SURFACE.md` ·
+> `EB PROSTEEL AGENT\api+knowledge-develop\knowledge\api\API-SURFACE-RAW.txt` (3.0 MB, every signature) ·
+> `knowledge\api\API-ASSEMBLY-INDEX.txt` · guide `knowledge\api\API-SURFACE.md` ·
 > `references/api-surface-map.md` · **what the plugin can already do:**
 > `references/plugin-ops.md` (65 ops, what each is verified to do, and what is still open).
 >

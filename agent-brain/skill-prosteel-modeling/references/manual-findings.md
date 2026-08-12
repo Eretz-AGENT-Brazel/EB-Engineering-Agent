@@ -2,7 +2,7 @@
 
 *Distilled from reading `manual_fulltext.txt` (1,179 pp) chapter by chapter on 06/08/2026.
 Seven chapters closed completely: `B.12.6` · `B.13` · `B.14` · `B.17` · `B.18` · `B.28` · `B.29`.
-Full notes: `EB PROSTEEL AGENT\knowledge\MANUAL-NOTES-*.md`.*
+Full notes: `EB PROSTEEL AGENT\api+knowledge-develop\knowledge\learning\manual\<part>\MANUAL-NOTES-*.md`.*
 
 > **The realisation that changes the learning economics: THE MANUAL IS THE API DOCUMENTATION.**
 > Every dialog field maps one-to-one onto a property. `Create Group` → `CreateGroup`,

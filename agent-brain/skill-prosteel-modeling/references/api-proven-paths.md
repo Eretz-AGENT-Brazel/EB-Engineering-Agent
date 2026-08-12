@@ -1,7 +1,7 @@
 # The ProSteel .NET API — proven paths and measured dead ends
 
 *Every entry here was tested against a live model and verified by reading the value back.
-Ground truth for signatures: `EB PROSTEEL AGENT/app/plugin/api_dump_ProStructuresNet.txt`
+Ground truth for signatures: `EB PROSTEEL AGENT/api+knowledge-develop/knowledge/api/API-SURFACE-RAW.txt` (the reflection dump; the old api_dump file no longer exists)
 (19,268 lines of reflected type metadata — grep it, don't read it whole).*
 
 `ProStructuresNet.dll` lives in
