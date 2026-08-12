@@ -10,7 +10,7 @@
 
 | רוצה... | קרא |
 |---|---|
-| **להבין לאן הפרויקט הולך** | [`PROGRAM.md`](PROGRAM.md) — תוכנית-העל של אמיר, שני השלבים, וחוק הרישום |
+| **להבין לאן הפרויקט הולך** | [`agent-brain/PROGRAM.md`](agent-brain/PROGRAM.md) — תוכנית-העל של אמיר, שני השלבים, וחוק הרישום |
 | **לראות מה נעשה ומה נשאר** | [`PROGRESS.md`](PROGRESS.md) — טבלת מעקב לפי פרקי המדריך |
 | **להמשיך עבודה מאתמול** | [`knowledge/learning/RESUME-HERE.md`](knowledge/learning/RESUME-HERE.md) |
 | **לדעת איך למדל בפועל** | הסקיל: `~/.claude/skills/prosteel-modeling/` — *זה מה שהסוכן טוען* |
@@ -45,9 +45,13 @@
 
 ```
 EB PROSTEEL AGENT/
-├── PROGRAM.md              תוכנית-העל + חוק הרישום            ← אמיר קובע
 ├── PROGRESS.md             מעקב פרקים
 ├── README.md               הקובץ הזה — המפה
+│
+├── agent-brain/            🧠 המוח של הפרויקט
+│   ├── PROGRAM.md          תוכנית-העל + חוק הרישום            ← אמיר קובע
+│   ├── skill-prosteel-modeling/   גיבוי-מראה של הסקיל (sync.py — לא לערוך ידנית)
+│   └── memory/             גיבוי-מראה של הזיכרון (sync.py — לא לערוך ידנית)
 │
 ├── app/                    הקוד החי
 │   ├── console.py          שרת הקונסולה (מוקפא 05/08)
@@ -77,7 +81,7 @@ EB PROSTEEL AGENT/
 │   └── retracted.tsv       רשימת הטענות המופרכות
 │
 ├── projects/               מודלים: SANDBOX + שיעור-N/ (כולל יומני בנייה)
-├── agent-brain/            גיבוי הסקיל והזיכרון לתוך הריפו (sync.py)
+├── _archive/handoffs/      מסמכי מסירה בין סשנים — היסטוריה מתוארכת
 └── standards/ qc/ data/ assets/
 ```
 
@@ -90,7 +94,7 @@ python qc/consistency.py
 ```
 
 עוצר אם: טענה מופרכת עומדת חיה · זיכרון לא באינדקס · גיבוי הסקיל לא תואם · גרסת תוסף שגויה ·
-פרק בביקורת בלי סימון בהערות שלו. הנימוק המלא: [`PROGRAM.md`](PROGRAM.md) § חוק הרישום.
+פרק בביקורת בלי סימון בהערות שלו. הנימוק המלא: [`agent-brain/PROGRAM.md`](agent-brain/PROGRAM.md) § חוק הרישום.
 
 ⚠️ **`agent-brain/sync.py` מגבה, הוא לא כותב.** ההודעה `backup already current` פירושה
 "הגיבוי תואם", לא "הידע נשמר".

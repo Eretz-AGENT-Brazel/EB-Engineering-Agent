@@ -43,6 +43,15 @@ RECORD_DIR = os.path.join(KNOW, "learning", "audits")
 NOTES_DIR = os.path.join(KNOW, "learning", "manual")
 RETRACTED = os.path.join(HERE, "retracted.tsv")
 
+# What the REPO-root scan skips (checks 1 and 7 share this — they must never disagree).
+# Content roots scanned separately (knowledge, the live skill, the live memory) or dirs holding
+# code/models rather than documents. ⚠️ agent-brain is NOT skipped as a whole since 12/08/2026:
+# its root carries the program charter (PROGRAM.md) and must stay under the guard. Only its two
+# auto-generated mirrors are excluded, because they duplicate the live skill and memory that are
+# already scanned directly — and a finding inside a mirror belongs to its live original anyway.
+REPO_SKIP = ("knowledge", "app", "projects", "qc", "assets", "data", "standards",
+             "skill-prosteel-modeling", "memory")
+
 # A quoted claim inside a retraction is correct and must not trip the check. These markers open a
 # window in which the withdrawn wording is expected to appear.
 # ⚠️ These must be UNAMBIGUOUS. The first version included bare "closed" and "נסגר", and
@@ -130,9 +139,7 @@ def check_retractions():
         warn("retractions", "retracted.tsv has no entries")
         return
 
-    roots = [(KNOW, ()), (SKILL_LIVE, ()), (MEM_LIVE, ()), (REPO, ("knowledge", "agent-brain",
-                                                                  "app", "projects", "qc",
-                                                                  "assets", "data", "standards"))]
+    roots = [(KNOW, ()), (SKILL_LIVE, ()), (MEM_LIVE, ()), (REPO, REPO_SKIP)]
     scanned = 0
     for root, skip in roots:
         if not os.path.isdir(root):
@@ -351,9 +358,7 @@ def check_version_claims():
     # history and is left alone.
     CLAIMY = ("canonical", "points at", "current build", "the build is", "הקנונית", "הגרסה הנוכחית")
     hits = 0
-    roots = [(KNOW, ()), (SKILL_LIVE, ()), (MEM_LIVE, ()),
-             (REPO, ("knowledge", "agent-brain", "app", "projects", "qc",
-                     "assets", "data", "standards"))]
+    roots = [(KNOW, ()), (SKILL_LIVE, ()), (MEM_LIVE, ()), (REPO, REPO_SKIP)]
     for root, skip in roots:
         if not os.path.isdir(root):
             continue

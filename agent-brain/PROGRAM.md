@@ -115,7 +115,7 @@
 | כלי ניתוח לכל מודל חדש | `app/model_analyze.py`, `app/self_audit.py`, `app/make_recipe.py` |
 | מתכוני בנייה (זיכרון מבנים) | `knowledge/recipes/` + `app/build_from_scratch.py` |
 | ביקורות Fable והנחיות תיקון | `qc/` |
-| ה-API עצמו | `app/` + `app/plugin/` (**קנוני: v17** = EB_RUN17) |
+| ה-API עצמו | `app/` + `app/plugin/` (הגרסה הקנונית מוצהרת ב-`app/eb_api.py` בלבד) |
 | תקנים (נכס לשלב 2 — נעול) | `standards/` |
 
 ## ⚖️ כללי העבודה הקבועים
