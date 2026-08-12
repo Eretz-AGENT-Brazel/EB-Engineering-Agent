@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: f7644a80-6f23-41e6-b129-0eb429982261
-  modified: 2026-08-12T10:31:18.991Z
+  modified: 2026-08-12T10:40:10.844Z
 ---
 
 **הסידור של אמיר, 12/08/2026 — שני נתיבי פיתוח, תיקייה לכל נתיב:**
@@ -48,7 +48,8 @@ EB PROSTEEL AGENT/
   (בוצע — הישן הוסר, החדש נוסף, נשמר בפרופיל). וגם: פתיחת AutoCAD+ProStructures מקוד עובדת —
   לשכפל את הקיצור: `acad.exe /p "...ProStructures_SS6.1ACAD_E001_409.arg" /t Ps191_Metric
   /ld ProStructuresLoader.arx`.
-- הקונסולה: אמיר שוקל להחליף אותה במשהו אחר — ההחלטה נדחתה ("עוד מעט נגיע לזה"),
-  בינתיים `console.py`, ‏data/ ו-assets/ נשארים כמו שהם בתוך DEV.
+- הקונסולה: ⏸️ **הכרעת אמיר 12/08/2026 — נשארת קפואה בינתיים** ("בוא נשאיר אותה קפואה").
+  ‏`console.py`, ‏data/ ו-assets/ נשארים כמו שהם בתוך DEV; החלפה/החייאה — רק כשאמיר יעלה
+  את זה. לא להציע מיוזמתי.
 
 קשור: [[two-phase-program]] · [[acad-agent]] · [[eb-portal]]
