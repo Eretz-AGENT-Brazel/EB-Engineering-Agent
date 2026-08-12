@@ -1,3 +1,5 @@
+<div dir="rtl" align="right">
+
 # ⭐ API+KNOWLEDGE-DEVELOP — נתיב פיתוח 1: ה-API והידע ההנדסי
 
 **כאן נבנה הסוכן.** התיקייה הזו מרכזת את כל בניין הידע ההנדסי ואת כל בניית ידע התוכנה —
@@ -38,3 +40,5 @@
 2. גרסת התוסף נקבעת **רק** ב-`app/eb_api.py`. כל מספר אחר הוא ציטוט מתוארך.
 3. ⛔ לפני כל ניסיון API חדש: ‏`knowledge/learning/findings/LETHAL-CALLS-do-not-invoke.md`
    ו-`THE-CEILING-what-code-cannot-reach.md`.
+
+</div>

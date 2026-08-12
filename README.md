@@ -1,3 +1,5 @@
+<div dir="rtl" align="right">
+
 # 🏗️ EB PROSTEEL AGENT
 
 **Claude כממדל הפלדה של ארץ ברזל** — מפעיל AutoCAD 2015 + ProStructures (ProSteel) V8i SS6 באמת,
@@ -110,3 +112,5 @@ python "API+KNOWLEDGE-DEVELOP/qc/consistency.py"
 3. **מטרי תמיד.**
 4. **לשמור את המודל אחרי כל שלב.**
 5. **`sandbox.dwg` הוא של אמיר** — לא לשמור, לא לשנות, לא לסגור.
+
+</div>

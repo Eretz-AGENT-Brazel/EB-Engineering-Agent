@@ -1,3 +1,5 @@
+<div dir="rtl" align="right">
+
 # 🧠 agent-brain — המוח של הפרויקט
 
 שני סוגי תוכן גרים כאן, ואסור לבלבל ביניהם:
@@ -38,3 +40,5 @@ cp    agent-brain/memory/*.md              ~/.claude/projects/C--Users-User-Desk
 ```
 
 הסקיל נטען אוטומטית לפי `SKILL.md`; קובץ `MEMORY.md` הוא האינדקס שנטען בתחילת כל שיחה.
+
+</div>
