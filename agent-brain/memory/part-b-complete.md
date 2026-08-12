@@ -11,7 +11,7 @@ metadata:
 **כל 29 פרקי חלק B עברו ביקורת** (10/08/2026). תוסף v156 → v172. המודל
 `B08-insert-shapes.dwg` — 1,194 ישויות, `vfy_fit` על כל המודל: **`BOLT-NO-HOLE=0`**.
 הרשומה: `knowledge/learning/audits/AUDIT-PART-B-2026-08-10.md`.
-ההמשך: `_archive/handoffs/HANDOFF-AFTER-PART-B.md` (מחליף את `HANDOFF-B20.md`; ה-HANDOFF-ים הועברו לארכיון ב-12/08/2026).
+ההמשך: `Z-ARCHIVE/handoffs/HANDOFF-AFTER-PART-B.md` (מחליף את `HANDOFF-B20.md`; ה-HANDOFF-ים הועברו לארכיון ב-12/08/2026).
 
 ## ⏸️ ארבע החלטות — **בהולד מפורש של אמיר (11/08/2026)**
 

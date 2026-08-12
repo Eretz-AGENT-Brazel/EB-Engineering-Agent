@@ -148,7 +148,7 @@ def check_retractions():
     for root, skip in roots:
         if not os.path.isdir(root):
             continue
-        for path in md_files(root, skip_dirs=skip + ("__pycache__", "_attic", "_archive")):
+        for path in md_files(root, skip_dirs=skip + ("__pycache__", "_attic", "_archive", "Z-ARCHIVE")):
             base = os.path.basename(path)
             # The audit record IS the register of retractions and qc/retracted.tsv is the list
             # itself: both must be free to quote what they withdraw. Everything else must agree
@@ -366,7 +366,7 @@ def check_version_claims():
     for root, skip in roots:
         if not os.path.isdir(root):
             continue
-        for path in md_files(root, skip_dirs=skip + ("__pycache__", "_attic", "_archive")):
+        for path in md_files(root, skip_dirs=skip + ("__pycache__", "_attic", "_archive", "Z-ARCHIVE")):
             body = read(path)
             # A file may DECLARE itself an append-only dated log with <!-- DATED-LOG --> near the
             # top. Its sections record what was true when written and are not claims about now.

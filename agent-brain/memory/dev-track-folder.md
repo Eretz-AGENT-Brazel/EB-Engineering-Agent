@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: f7644a80-6f23-41e6-b129-0eb429982261
-  modified: 2026-08-12T07:47:59.112Z
+  modified: 2026-08-12T08:02:03.921Z
 ---
 
 **הסידור של אמיר, 12/08/2026 — שני נתיבי פיתוח, תיקייה לכל נתיב:**
@@ -17,7 +17,7 @@ EB PROSTEEL AGENT/
 ├── API+KNOWLEDGE-DEVELOP/   ⭐ נתיב 1 — API וידע הנדסי (להלן DEV/)
 │   ├── app/  qc/  knowledge/  lessons/  projects/  research/  data/  assets/
 ├── standards/            🔒 נתיב 2 — תקנים, נעול עד הכרזת אמיר
-└── _archive/handoffs/    מסירות בין סשנים
+└── Z-ARCHIVE/handoffs/   מסירות בין סשנים (ה-Z מכוונת — ממוין אחרון בגיטהאב)
 ```
 
 **החזון שאמיר הגדיר:** מתוך DEV ייבנה בסוף **המוצר** — הקונסולה/פלאגין שיוטמע רשמית
