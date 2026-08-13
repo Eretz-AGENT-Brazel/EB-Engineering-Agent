@@ -1,3 +1,5 @@
-reqid=228cf6d8
-op=save
+reqid=a9b61c60
+op=zoom
+handle=4FA
+margin=3.5
 dwg=lesson-6.dwg
