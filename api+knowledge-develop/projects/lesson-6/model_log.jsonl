@@ -1,0 +1,5 @@
+{"op": "beam", "args": {"kind": "standard", "name": "HE200A", "catalog": "DIN_HEA", "p1": "40000.000,0,0", "p2": "41000.000,0,0", "rot": 90, "dwg": "lesson-6.dwg"}, "handle": "337", "ts": "10:20:02"}
+{"op": "beam", "args": {"kind": "standard", "name": "HE200A", "catalog": "DIN_HEA", "p1": "40000.000,0.0,0", "p2": "41000.000,0.0,0", "rot": 0, "dwg": "lesson-6.dwg"}, "handle": "338", "ts": "10:21:25"}
+{"op": "beam", "args": {"kind": "standard", "name": "HE200A", "catalog": "DIN_HEA", "p1": "40000.000,1000.0,0", "p2": "41000.000,1000.0,0", "rot": 90, "dwg": "lesson-6.dwg"}, "handle": "339", "ts": "10:21:25"}
+{"op": "beam", "args": {"kind": "standard", "name": "HE200A", "catalog": "DIN_HEA", "p1": "-225.121,3856.573,0", "p2": "774.879,3856.573,0", "rot": 0, "dwg": "lesson-6.dwg"}, "handle": "33A", "ts": "10:23:26"}
+{"op": "beam", "args": {"kind": "standard", "name": "HE200A", "catalog": "DIN_HEA", "p1": "774.879,3856.573,0", "p2": "1774.879,3856.573,0", "rot": 0, "dwg": "lesson-6.dwg"}, "handle": "33B", "ts": "10:23:26"}

@@ -280,7 +280,24 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > ⛔⛔ **AND IT COLLIDES WITH THE SHOP PRACTICE RECORDED IN THIS FILE.** *"M16 → hole ⌀19 · M20 →
 > hole ⌀23, 3 mm clearance"* is Amir's stated practice. Measured: **⌀19 + DIN7990 → zero bolts**,
 > **⌀23 + DIN7990 → an M22, not an M20.** Modelling his practice with that style yields either
-> drilled-and-unbolted steel or a bolt one size up. ⏳ **His call, not mine — asked, not resolved.**
+> drilled-and-unbolted steel or a bolt one size up.
+> ✅ **RESOLVED 13/08/2026 by measuring all six styles — and the answer was NOT about DIN7990.**
+> The full matrix is in `knowledge/learning/findings/BOLT-STYLES-AND-HOLES.md`; the short form:
+> ```
+> 8.8S / 8.8TB / 8.8TF   18→M16   19 ⛔   22→M20   23 ⛔   26→M24   27→M24
+> DIN7990                18→M16   19 ⛔   22→M20   23→M22  26→M24   27→M24
+> DIN933                 18→M16   19→M18  22→M20   23 ⛔   26→M24   27→M24
+> ```
+> ⇒ ⭐⭐⭐ **The 8.8 table pairs on +2 mm and REFUSES ⌀19 and ⌀23 outright.** Amir's +3 rule and a
+> grade-8.8 bolt **cannot both come out of the API**: the styles that accept +3 hand back the next
+> size up. **His dialog does it anyway** (`M20 x 60 8.8/S` through his own ⌀23 holes), so this is a
+> dialog-vs-API gap, **not** a defect in his practice.
+> 🧲 **AND THE DEFAULT IS SETTLED — Amir, 13/08/2026:** *"אנחנו עובדים לרוב עם ברגים 8.8. אני צריך
+> שזו תהיה ברירת המחדל שלך."* **`DEFAULT_BOLT_STYLE = "8.8S"` in `app/eb_api.py`**, injected
+> automatically into every bolt op that does not name a style. The helpers' old default was
+> `DIN6914` — a **10.9** bolt, the wrong grade. ⏳ Still his call: whether to drill at **+2** so
+> 8.8 bolts form (recommended, and EN 1090-2's normal clearance), or keep +3 and place bolts by
+> the manual route.
 >
 > ⭐ **The discipline that caught it:** the first version of this finding was a clearance table built
 > on the assumption that the bolt I got was the bolt I asked for. **Reading the bolt back out of the
@@ -982,6 +999,34 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > **`MaxDeclination` = `Angle difference`** — *"if exceeded, the holes don't align"*.
 > ⚠️ One error message, two causes: a missing style and out-of-range holes read the same. Check
 > the geometry, not the last thing that broke.
+
+> ## 🛑🛑 THE FLANGE SELECTOR IS LABELLED BACKWARDS — and `Both` DUPLICATES A HOLE (lesson 6, 13/08)
+> Amir could not bolt the **top** flange of a splice and stopped rather than model a bolt with no
+> hole. Controlled experiment: one HE200A standing upright, ray from above (`n=0,0,-1`), **one
+> variable** — the `flange` selector. Verdict = the hole's **z range read back**, top flange at
+> z 85…95, bottom at −95…−85:
+>
+> | `flange=` | what our code's comment claims | **what it did** |
+> |---|---|---|
+> | **0** | `top` | **z −95…−85 ⇒ the BOTTOM flange** |
+> | **1** | `down` | **z 85…95 ⇒ the TOP flange** |
+> | **2** | `both` | **both, in ONE call** ✅ |
+>
+> ⇒ ⭐⭐⭐ **Aim at the top flange, ask for "top", get the bottom.** That is the whole explanation of
+> a real defect in his model: **zero holes in the top flange, and a second identical hole field in
+> the bottom one.**
+> ⇒ ⭐⭐ **And `flange=2` on a part with only ONE wall on the ray makes TWO COINCIDENT HOLES** —
+> measured on a plate (2 identical holes from one call) and on a web. **That is where his 48
+> duplicate holes came from.** So: `flange=2` for a **shape** (both flanges, one call), and **no
+> `flange` at all** for plates and web passes.
+> 🔧 **Repair, proven:** `killholefield handle= field=` (highest index first, `dryrun=1` to preview)
+> took a plate from `fields=2 holes=2` to `1/1`. **A hole is irreversible; a hole FIELD is not.**
+> ⚠️ **`boltparts` double-bolts a shared plate:** calling it once per beam while **both** web plates
+> were in the selection bolted the plate-to-plate pairs at the *other* beam's positions too — 64
+> bolts instead of 48. **Select the whole joint in one call.** A bolt, unlike a hole, can be deleted.
+> ⚠️ **`rot=` is not the dialog's rotation number.** His dump reads `90` for an upright HE200A;
+> from the `beam` op **`rot=0`** gives that same upright stance (span Y 200 / Z 190) and `rot=90`
+> lays it on its side. **Measure the span, never copy the dump's angle.**
 
 > ## 🕳️ THE DRILL PICKS A FLANGE BY PARAMETER, NOT BY YOUR POINT (measured 09/08)
 > Two identical end-plate connections, one at each end of the same beam. One bolted, one refused
@@ -1711,7 +1756,11 @@ straight back. Verify every planned key against `op=dumpcat` before building.
 
 - **M16 → hole ⌀19 · M20 → hole ⌀23** — 3 mm clearance, the shop's practice (EN 1090-2's default is
   2 mm; a declared shop practice wins over the standard's default). **This applies to steel-to-steel
-  bolting.** Cast-in anchors are different: a measured floor detail used a **⌀28 hole for a ⌀20
+  bolting.**
+  🛑 **BUT: from CODE this pairing is unreachable with a grade-8.8 bolt** — the 8.8 table refuses
+  ⌀19 and ⌀23 (measured 13/08, six styles; see `BOLT-STYLES-AND-HOLES.md`). His **dialog** does it;
+  `PsCreateBolt` does not. **The grade is the standing decision (`8.8S`); the clearance is the open
+  question — ask, never silently drill +2 or silently switch style.** Cast-in anchors are different: a measured floor detail used a **⌀28 hole for a ⌀20
   anchor — 8 mm clearance** — to absorb casting inaccuracy (which then requires a plate washer), while
   wall plates drilled into existing concrete used **⌀27 for M24, 3 mm**. Clearance follows how the
   anchor gets into the concrete, not one rule.

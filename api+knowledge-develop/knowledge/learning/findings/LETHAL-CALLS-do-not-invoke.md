@@ -4,9 +4,15 @@
 recorded inside B.9's chapter notes and stayed there; a second member makes it a **family**, and a
 family needs one place to look before calling anything unfamiliar.*
 
-**The signature is always the same:** the process disappears. **No exception, no error dialog, no
-`EB_ERR`** — the plugin never returns, the Python side reports `EB_TIMEOUT`, and
-`Get-Process acad` comes back empty. Anything unsaved is gone.
+**Two signatures, not one** *(corrected 13/08/2026 — the fifth entry hangs instead of dying)*:
+1. **DEAD** — the process disappears. **No exception, no error dialog, no `EB_ERR`**; the plugin
+   never returns, Python reports `EB_TIMEOUT`, and `Get-Process acad` comes back empty. Anything
+   unsaved is gone.
+2. **SPINNING** — the process stays listed with `Responding=False`, **CPU pinned at a full core
+   and memory flat**. It does not recover; the disk file is untouched.
+
+⇒ **`EB_TIMEOUT` alone tells you neither.** Check `Get-Process acad` for *both* existence **and**
+`Responding`/`CPU` before deciding whether to wait, kill, or look for a dialog.
 
 ---
 
@@ -18,6 +24,22 @@ family needs one place to look before calling anything unfamiliar.*
 | **`checkHoleEdgeDistance(int)`** | `PsVolume` | **B.14 audit, 10/08** | isolated in stages — plate created **and saved**, hole drilled **and saved**, both survived; the call **alone**, on a saved model, killed the process |
 | **`addUserXaxis(PsPoint, PsPoint)`** | **`PsGrid`**, on a grid bound through `PsTransaction.GetObject` | **B.23 audit, 10/08** | killed it **twice**. First with four calls in one run; then **isolated to this call alone**, on a freshly saved model, with `probe=addx` — dead again |
 | **binding + reading a `PsEditConnection`** | `PsTransaction.GetObject(Int64, PsOpenMode, PsEditConnection&)` | **B.27 audit, 10/08** | **first call**, on beam `15EE`. Not isolated: bind-then-read is one call, so which half is the killer is unknown |
+| ⏳ **`SetFileName("*.mdb")`** | **`PsDBaseDatabase`** (op `dbase`) | **lesson 6, 13/08** | ‏`Data\Bolts\Australia.mdb` (479 KB). **A HANG, not a crash** — the process stays listed, `Responding=False`, **CPU pinned at a full core** and memory **flat at 610 MB for 2 minutes** (an endless loop, not a slow parse). Killed and relaunched. **Guarded in `eb_api.run`: `dbase` now refuses any file that is not `.dbf`** |
+
+### ⏳ THE FIFTH ONE IS A NEW SHAPE: IT HANGS INSTEAD OF DYING
+
+`PsDBaseDatabase` reads **dBASE (`.dbf`)**. Handed an **Access `.mdb`** it never returns.
+⇒ ⭐ **The signature at the top of this file — "the process disappears" — is no longer the only
+one.** Two failure shapes now: **dead** (`Get-Process acad` empty) and **spinning**
+(`Responding=False`, CPU at 100 % of a core, memory flat). Tell them apart before deciding what
+to do: a spin will not recover, so waiting is wasted; and unlike a crash it leaves the disk file
+untouched, so a kill costs only the session.
+⚠️ **What made this cheap:** the model had been **saved and verified two minutes earlier**
+(139,923 bytes), so the kill cost nothing. That is the protocol below, and it paid again.
+⚠️ The bolt/section databases are `.mdb` and there is **no ACE/Jet provider on this machine**
+(re-checked 13/08: `SQLOLEDB, MSDataShape, Csp, ADsDSOObject, Windows Search, MSDASQL, MSDAOSP`
+— none can open Access). ⇒ **A bolt table is measured by building specimens, not by reading the
+database.** The measured result: [[BOLT-STYLES-AND-HOLES]].
 
 ### ⚠️ The third one is a different shape from the first two, and that matters
 

@@ -4,8 +4,9 @@ eb_api.py - Python client for the EB Modeling API (native ProSteel from code).
 File protocol: write plugin/eb_cmd.txt -> SendCommand RUN_CMD -> read plugin/eb_result.txt
 The version lives in DLL and RUN_CMD below and NOWHERE ELSE. This line used to hardcode
 EB_RUN6 and went 146 builds stale.
-Verified native ops: beam (Ks_Shape), plate (Ks_Plate), bolt (Ks_Bolt DIN6914),
-boltfield, conn_bolted, miter cut, workframe. Plus COM-level view/zoom/copy/delete/undo.
+Verified native ops: beam (Ks_Shape), plate (Ks_Plate), bolt (Ks_Bolt, default style
+8.8S -- see DEFAULT_BOLT_STYLE), boltfield, conn_bolted, miter cut, workframe.
+Plus COM-level view/zoom/copy/delete/undo.
 
 Profile resolver bridges speech ("HEB 500") to DB key ("HE500B", catalog "DIN_HEB").
 """
@@ -651,9 +652,36 @@ def ready(verbose=False):
     return q and not dlgs
 
 
+#: Eretz Barzel's bolt grade, set by Amir on 13/08/2026:
+#: "אנחנו עובדים לרוב עם ברגים 8.8. אני צריך שזו תהיה ברירת המחדל שלך."
+#: `8.8S` is the AS/NZS snug-tightened category, and it is what his own PS_BOLT run
+#: produced ("M20 x 60 8.8/S"). The helpers below used to default to DIN6914 — a
+#: 10.9 HV bolt, i.e. the wrong grade entirely.
+#: ⚠️ This table pairs on +2 mm clearance ONLY (18→M16, 22→M20, 26→M24) and REFUSES
+#: ⌀19 and ⌀23. Full measured matrix:
+#:   knowledge/learning/findings/BOLT-STYLES-AND-HOLES.md
+DEFAULT_BOLT_STYLE = "8.8S"
+
+#: ops whose `style=` really is a BOLT style (plate9's `style` is something else)
+_BOLT_OPS = ("bolt", "boltfield", "boltparts", "boltsingle", "threadedrod",
+             "nutonly", "conn_bolted")
+
+
 def run(op, wait=5.0, _log=True, **kw):
     import uuid
     reqid = uuid.uuid4().hex[:8]
+    # ⛔ 13/08/2026: `dbase` on an .mdb spins AutoCAD in an endless loop -- CPU pinned,
+    # memory flat, no recovery, the session has to be killed. PsDBaseDatabase reads
+    # dBASE (.dbf) files. See LETHAL-CALLS-do-not-invoke.md.
+    if op == "dbase":
+        f = str(kw.get("file", ""))
+        if not f.lower().endswith(".dbf"):
+            return ("EB_ERR dbase refuses '%s' -- PsDBaseDatabase takes .dbf only; an .mdb "
+                    "HANGS AutoCAD (measured 13/08/2026, session had to be killed). "
+                    "-- refused, nothing was executed" % f)
+    # the bolt grade is a standing decision, not a per-call choice
+    if op in _BOLT_OPS and "style" not in kw:
+        kw = dict(kw, style=DEFAULT_BOLT_STYLE)
     try:
         app, _ = _app_doc()
         if not _quiescent(app):
@@ -719,13 +747,23 @@ def _stamp():
 
 
 def _model_log(op, kw, res):
-    """Phase G: record every native create into the active project's model_log."""
+    """Phase G: record every native create into the active project's model_log.
+
+    ⚠️ 13/08/2026: this used to `makedirs` the pid unconditionally, and `data/project.txt`
+    still held a pre-reorg id (`שיעור-2`) -- so lesson 6's creates RESURRECTED a Hebrew
+    folder the 12/08 cleanup had removed, in a repo whose convention is lowercase English.
+    A logger must never invent a project directory: log only into one that EXISTS, and
+    otherwise fall back to the folder of the pinned drawing.
+    """
     try:
         pid = open(ACTIVE, encoding="utf-8").read().strip() if os.path.exists(ACTIVE) else ""
-        if not pid:
-            return
-        d = os.path.join(PROJECTS, pid)
-        os.makedirs(d, exist_ok=True)
+        d = os.path.join(PROJECTS, pid) if pid else ""
+        if not d or not os.path.isdir(d):
+            pin = EXPECT_DWG or _read_pin() or ""
+            alt = os.path.join(PROJECTS, os.path.splitext(os.path.basename(pin))[0]) if pin else ""
+            if not (alt and os.path.isdir(alt)):
+                return
+            d = alt
         h = re.search(r"handle=(\w+)", res)
         rec = {"op": op, "args": kw, "handle": h.group(1) if h else None, "ts": time.strftime("%H:%M:%S")}
         with open(os.path.join(d, "model_log.jsonl"), "a", encoding="utf-8") as f:
@@ -771,16 +809,16 @@ def plate(center, length, width, thickness, normal=(0, 0, 1)):
     return run("plate", center=_pt(center), l=length, w=width, t=thickness, normal=_pt(normal))
 
 
-def bolt(p1, p2, dia=20, style="DIN6914", hosts=""):
+def bolt(p1, p2, dia=20, style=DEFAULT_BOLT_STYLE, hosts=""):
     return run("bolt", p1=_pt(p1), p2=_pt(p2), dia=dia, style=style, hosts=hosts)
 
 
-def boltfield(center, nx=2, ny=2, sx=100, sy=100, dia=20, gap=60, style="DIN6914", hosts=""):
+def boltfield(center, nx=2, ny=2, sx=100, sy=100, dia=20, gap=60, style=DEFAULT_BOLT_STYLE, hosts=""):
     return run("boltfield", center=_pt(center), nx=nx, ny=ny, sx=sx, sy=sy,
                dia=dia, gap=gap, style=style, hosts=hosts)
 
 
-def conn_bolted(at, pl=220, pw=220, pt=20, gap=60, nx=2, ny=2, sx=100, sy=100, dia=20, style="DIN6914"):
+def conn_bolted(at, pl=220, pw=220, pt=20, gap=60, nx=2, ny=2, sx=100, sy=100, dia=20, style=DEFAULT_BOLT_STYLE):
     return run("conn_bolted", at=_pt(at), pl=pl, pw=pw, pt=pt, gap=gap,
                nx=nx, ny=ny, sx=sx, sy=sy, dia=dia, style=style, wait=6)
 

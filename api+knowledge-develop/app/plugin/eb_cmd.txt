@@ -1,5 +1,5 @@
-reqid=31b135b0
-op=vfy_fit
-minx=360000
-maxx=416000
-dwg=D-miscellaneous.dwg
+reqid=497b3c07
+op=boltparts
+handles=33A
+style=8.8S
+dwg=lesson-6.dwg
