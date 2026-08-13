@@ -83,6 +83,7 @@ EB PROSTEEL AGENT/
 | **מה נמדד בביקורת פרק** | `DEV/knowledge/learning/audits/AUDIT-*.md` | הערות הפרק |
 | **המשטח הגולמי של ה-API** | `DEV/knowledge/api/API-SURFACE-RAW.txt` | הכול |
 | **קטלוגי חתכים** | `DEV/knowledge/learning/findings/SECTION-CATALOGUES.md` | הסקיל, הזיכרון |
+| 🧲 **סגנון ברגים וקוטר חור** | `DEV/knowledge/learning/findings/BOLT-STYLES-AND-HOLES.md` | הסקיל, הקוד (`DEFAULT_BOLT_STYLE`), הזיכרון |
 | **הידע ההנדסי** | `DEV/knowledge/steel/` + `DEV/research/` | שלב 2 |
 | **מי אמיר ואיך הוא עובד** | `~/.claude/projects/.../memory/` + `MEMORY.md` | כל סשן |
 
@@ -112,8 +113,12 @@ python "api+knowledge-develop/qc/consistency.py"
 
 1. **בורג חייב לעבור דרך חור מדולל בכל אלמנט שהוא מחבר.** אין "חומר". החריג היחיד הוא בורג
    קודח, ורק בהצהרה מפורשת של אמיר לכל מקרה. שתיקה = שגיאה קריטית.
-2. **LISP אסור.**
-3. **מטרי תמיד.**
-4. **לשמור את המודל אחרי כל שלב.**
+2. 🧲 **ברגי `8.8S`, וחור = קוטר הבורג + 2 מ"מ** (‏M16→⌀18 · M20→⌀22 · M24→⌀26). נקבע ע"י אמיר
+   ב-13/08/2026 והחליף את כלל ה-+3. הקריאה: `dia=<בורג> play=2`. מודלים שנבנו לפני התאריך נושאים
+   ⌀19/⌀23 **כדין** — קוראים אותם, לא "מתקנים". התחום: חורי ברגים בפלדה; עוגנים יצוקים לא שונו.
+   ‏→ `DEV/knowledge/learning/findings/BOLT-STYLES-AND-HOLES.md`
+3. **LISP אסור.**
+4. **מטרי תמיד.**
+5. **לשמור את המודל אחרי כל שלב.**
 
 </div>

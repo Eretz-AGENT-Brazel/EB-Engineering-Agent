@@ -1,1 +1,1 @@
-﻿EB_OK zoom handle=695 w=1157.958 h=1983.107 margin=1.3 reqid=ed9b8307
+﻿EB_OK dumpholes objs=205 withholes=30 holes=356 slotted=24 err=0 -> eb_final_holes.txt reqid=30431490
