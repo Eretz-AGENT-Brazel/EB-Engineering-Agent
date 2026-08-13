@@ -1,0 +1,8 @@
+LINK	421	Ks_Shape	PS_Shape	0	type=11/kConnectWithFreePlate name=Endplate connection ident=13 - 36 desc= modi=1 parts=2 bolts=4 extra=0
+MEMB	421	0	parts=428,429 (2/2 filled)	bolts=43A,43B,43C,43D (4/4 filled)	extra=	target=422
+LINK	422	Ks_Shape	PS_Shape	0	type=12/kConnectedBy name=Conn. Shape ident= desc= modi=3 parts=0 bolts=0 extra=0
+MEMB	422	0	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=421
+LINK	428	Ks_Plate	PS_Plate	0	type=10/kPlateConnectionLink name=Brace Plate ident= desc= modi=0 parts=0 bolts=0 extra=0
+MEMB	428	0	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=421
+LINK	429	Ks_Plate	PS_Plate	0	type=10/kPlateConnectionLink name=Brace Plate ident= desc= modi=0 parts=0 bolts=0 extra=0
+MEMB	429	0	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=422

@@ -1,89 +1,92 @@
 ============================================================================
-LESSON 6 — מחברי קורות ומידול קורות — beam connections
+LESSON 6 — שלב ב' — המשך שיעור 6 בתוך המודל הקיים
 ============================================================================
-recorded 2026-08-13 09:29:10 -> 2026-08-13 09:59:44
+recorded 2026-08-13 11:38:14 -> 2026-08-13 12:03:24
 
 ### 1. WHAT CHANGED IN THE MODEL (before -> after)
-  shapes        0 -> 4      (+4)
-  plates        0 -> 8      (+8)
-  bolts         0 -> 32     (+32)
-  other         1 -> 5      (+4)
-  holes         0 -> 144    (+144)
-  joints        0 -> 0      (+0)
+  shapes        6 -> 12     (+6)
+  plates       12 -> 20     (+8)
+  bolts        80 -> 96     (+16)
+  other         6 -> 12     (+6)
+  holes       256 -> 308    (+52)
+  joints        0 -> 4      (+4)
 
 ### 2. HOW HE WORKED (the method)
-  events 1068 | commands 265 | cancelled 6 | created 228 | erased 71
+  events 742 | commands 188 | cancelled 21 | created 168 | erased 70
   UNDO share: 29%
   commands used:
-     UNDO                     x74
-     -VIEW                    x35
-     3DORBITTRANSPARENT       x32
-     PS_GLOBAL_VIEW           x29
-     PS_COPY                  x28
-     ERASE                    x15
-     PS_DRILL                 x14
-     VSCURRENT                x6
-     LINE                     x4
-     GRIP_STRETCH             x4
-     MOVE                     x3
-     DIMLINEAR                x3
+     UNDO                     x52
+     -VIEW                    x33
+     PS_COPY                  x17
+     PS_GLOBAL_VIEW           x15
+     DIMLINEAR                x14
+     3DORBITTRANSPARENT       x9
+     GRIP_STRETCH             x9
+     LINE                     x7
+     ERASE                    x5
+     PS_DRILL                 x4
+     PS_HIDE_EXCLUDE          x3
+     PS_HIDE                  x3
 
 ### 3. WHAT HE BUILT (per object, with real parameters)
 
-  (no command)  ->  66 object(s)
-     AcDbDictionary                         x33
-     AcDbXrecord                            x32
-     AcDbRegAppTableRecord                         x1
-
-  PS_COPY  ->  26 object(s)
-     AcDbLine                               x6
-     Ks_Plate       800x200x10             verts=5  x6
-     Ks_Shape       HE200A                  x5
-     Ks_Plate       800x150x10             verts=5  x4
-     Ks_Plate       800x200x10             verts=5 HOLES=16  x2
-     AcDbDictionary                         x1
-     AcDbXrecord                            x1
-     Ks_Plate       800x150x10             verts=5 HOLES=16  x1
+  (no command)  ->  3 object(s)
+     ?                                      x3
 
   PS_INS_PROF  ->  10 object(s)
-     Ks_ShapeReference                         x4
-     AcDbDictionary                         x3
-     AcDbXrecord                            x1
-     Ks_DataRecord                          x1
-     Ks_Shape       HE200A                  x1
+     Ks_ShapeReference                         x8
+     Ks_Shape       SHS100X100X4            x1
+     Ks_Shape       U200                    x1
 
-  UNDO  ->  58 object(s)
-     AcDbDictionary                         x29
-     AcDbXrecord                            x29
+  PS_COPY  ->  18 object(s)
+     AcDbLine                               x4
+     Ks_Shape       SHS100X100X4            x3
+     Ks_Plate       600x80x10              verts=5  x3
+     AcDbDictionary                         x2
+     Ks_GroupData                           x2
+     AcDbGroup                              x2
+     Ks_Shape       U200                    x1
+     Ks_Plate       600x140x10             verts=5 HOLES=12  x1
 
-  JOIN  ->  1 object(s)
-     AcDbPolyline                           x1
+  UNDO  ->  56 object(s)
+     AcDbDictionary                         x20
+     AcDbXrecord                            x15
+     Ks_Bolt                                x8
+     AcDbGroup                              x4
+     Ks_GroupData                           x4
+     Ks_Plate       400x400x10             verts=5 HOLES=4 CONN[Brace Plate(t10,p0,b0)]  x2
+     Ks_Plate       250x200x10             verts=5 HOLES=4 CONN[Brace Plate(t10,p0,b0)]  x2
+     Ks_ShapeReference                         x1
 
-  PS_PLATE  ->  1 object(s)
-     Ks_Plate       800x200x10             verts=5  x1
+  -VIEW  ->  5 object(s)
+     Ks_Bolt                                x4
+     Ks_ShapeReference                         x1
 
-  3DROTATE  ->  3 object(s)
-     AcDbDictionary                         x1
-     AcDbSolidBackground                         x1
-     AcDbXrecord                            x1
+  DIMLINEAR  ->  15 object(s)
+     AcDbLine                               x3
+     AcDbPoint                              x3
+     Ks_ShapeReference                         x2
+     AcDbBlockReference                         x2
+     AcDbBlockBegin                         x1
+     AcDbBlockEnd                           x1
+     AcDbBlockTableRecord                         x1
+     AcDbMText                              x1
+     AcDbRotatedDimension                         x1
 
-  DIMLINEAR  ->  39 object(s)
-     AcDbLine                               x9
-     AcDbPoint                              x9
-     AcDbBlockReference                         x6
-     AcDbBlockBegin                         x3
-     AcDbBlockEnd                           x3
-     AcDbBlockTableRecord                         x3
-     AcDbMText                              x3
-     AcDbRotatedDimension                         x3
+  JOIN  ->  2 object(s)
+     AcDbPolyline                           x2
+
+  PS_PLATE  ->  2 object(s)
+     Ks_Plate       800x80x10              verts=5  x1
+     Ks_Plate       600x180x10             verts=5  x1
+
+  PS_BOLT  ->  12 object(s)
+     Ks_Bolt                                x12
 
   UNISOLATEOBJECTS  ->  1 object(s)
      AcDbXrecord                            x1
 
-  PS_BOLT  ->  32 object(s)
-     Ks_Bolt                                x32
-
   joints created in this lesson:
-     (none)
+     Brace Plate(t10,p0,b0)  x4
 
-  holes created in this lesson: 3 objects carried holes
+  holes created in this lesson: 5 objects carried holes

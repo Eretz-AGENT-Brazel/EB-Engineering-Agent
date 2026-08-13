@@ -323,6 +323,36 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > on the assumption that the bolt I got was the bolt I asked for. **Reading the bolt back out of the
 > model destroyed it.** *Read back what you gave it* applies to the thing the software chose, too.
 
+> ## ⛔⛔ AND THE MIRROR ERROR: THE IRON-RULE ALARM FIRED ON A **CORRECT** JOINT (lesson 6, 13/08)
+> Amir modelled a bolted end-plate splice with **slotted holes**. Both instruments condemned it:
+> ```
+> vfy_fit     bolts=16 OK=12  BOLT-NO-HOLE=4      <- the iron-rule alarm, the loudest flag we have
+> JOINT AUDIT 428 / 429 -> *** DRILLED-NOT-BOLTED ***
+> ```
+> **Both were wrong, and the cause is two measured facts that compound:**
+> 1. ⭐⭐ **A `Ks_Bolt`'s bounding box is DEGENERATE** — `lo == hi` in both transverse directions
+>    (`lo=[9567.265, 408.585, 15.0] hi=[9617.265, 408.585, 15.0]`). **The "box" IS the bolt axis**,
+>    so a containment test is really "is this point within TOL of the axis".
+> 2. ⭐⭐ **`PsSingleHoleArray` in `kDoubleHole` mode reports a SLOT as its two END CIRCLES** — each
+>    offset from the slot's centre line by half its travel (7.5 mm here). 7.5 > TOL ⇒ no match,
+>    while the bolt ran exactly down the slot's centre. **A slot also inflates every hole count:
+>    8 reported = 4 slots.**
+>
+> ✅ **`vfy_joined.py` is fixed**: slotted holes are paired and represented by the **pair midpoint**,
+> a slot counts as **one** hole, and the row is tagged `[Nslot]`. After the fix the same joint reads
+> `holes=4 filled=4 bolted` and the audit is CLEAN.
+> ⛔ **The tolerance was NOT widened** — TOL is what stops a neighbouring bolt row claiming a hole.
+> 🔜 **The plugin side (`vfy_fit`, `vfy_bolts`) still has the blind spot** — it needs the same
+> pairing (v185). **Until then: `BOLT-NO-HOLE` on a part that carries slots is SUSPECT until the
+> coordinates are read.** Amir's own practice includes oval holes, so this will recur.
+> ⇒ ⭐⭐⭐ **The pattern across both directions:** on 11/08 the audit called a drilled-and-empty plate
+> "bolted"; on 13/08 it called a correctly bolted plate "not bolted". **Every check needs a
+> known-good AND a known-bad case, and a flag on Amir's own work is a reason to re-read the
+> instrument first.**
+> ⚠️ Environment trap found in the same run: **an unquoted AutoCAD hex handle in PowerShell is
+> parsed as a NUMBER** — `--welded 44D,450,…` turned `44D` into decimal `44`, so a declared member
+> silently read as FLOATING. **Quote every handle list.**
+
 > ## ⛔⛔ `vfy_joined` CALLED A DRILLED, UNBOLTED PLATE "BOLTED" — fixed 11/08 (D.5)
 > The joint audit written after E.4 defined a member as joined **if it carries bolt holes**. That is
 > in its docstring as well as its code, so it was a mistake of reasoning, not a slip.
