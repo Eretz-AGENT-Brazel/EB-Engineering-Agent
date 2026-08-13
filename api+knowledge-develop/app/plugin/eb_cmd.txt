@@ -1,5 +1,3 @@
-reqid=99e89d8e
-op=zoom
-handle=3C8
-margin=0.7
+reqid=764c3b90
+op=whoami
 dwg=lesson-6.dwg
