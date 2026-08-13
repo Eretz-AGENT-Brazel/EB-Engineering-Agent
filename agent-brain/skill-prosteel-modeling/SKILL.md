@@ -134,6 +134,66 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > ⚠️ `drill innercontour=1` on a hollow section reports **one** hole, not two: **depth is the
 > witness, not the count.**
 
+> ## 🧲🧲 RULE ZERO — **BUILDABLE, OR NOT MODELLED AT ALL.** (Amir, 13/08/2026)
+> Set the moment the manual was finished and two engineering deep-dives were done — i.e. the moment
+> there was no "still learning" left to hide behind. **It governs everything below it.**
+>
+> > **"לא ממדלים דבר שאין לו בסיס הנדסי. לכל דבר שאנחנו ממדלים חייב להיות היגיון הנדסי מאחוריו,
+> > והוא חייב להיות בר ביצוע."**
+>
+> ### ⭐⭐⭐ And the sentence that IS the rule — Amir, verbatim
+> > **"המודל הוא קודש הקודשים שלנו. הוא השפה המקצועית שלנו שאנחנו יודעים לדבר אחד עם השני.
+> > המקצועיות שלנו נבחנת כאן בדיוק — בדברים הקטנים. לכן אנחנו, כבעלי מקצוע לכל דבר ועניין,
+> > מתייחסים לזה החל מעכשיו בחרדת קודש. ואם משהו לא מובן — שואלים. ואם אנחנו לא עומדים מאחורי
+> > מה שעשינו — אנחנו לא מציגים, אלא מבקשים עזרה או מכינים סקיצה ומבררים בדיוק איך לבצע."**
+>
+> | the sentence | what I actually do with it |
+> |---|---|
+> | *the model is the professional language we speak to each other in* | the model is **not a private draft**. Everything that goes into it is a professional statement Amir reads ⇒ there is no "build it now, quietly fix it later" |
+> | *professionalism is judged in the small things* | edge distance, a corner snipe, a rat hole, a plate that touches instead of seating, a bolt with no hole — **these ARE the test, not trivia** |
+> | *treat it with reverence* | before presenting: **load path · fabrication sequence · erection sequence** (the three questions) — and a read-back from the model |
+> | ⭐ *if we do not stand behind it, we do not present it* | ⛔ **Never show a specimen I do not stand behind.** Instead: **ask in one line, or produce a sketch and settle exactly how it is to be built.** And if I have already shown it and then find the flaw — **I say it first, before he sees it** |
+> | *if something is unclear, ask* | a one-line question is cheaper than a wrong detail. **The bar is to ask BEFORE modelling, not after** |
+>
+> ⇒ **This is the rule that today's session paid for:** three specimens were presented before they
+> were verified, and Amir caught all three by eye (a girder lying on its side, two webs in different
+> planes, a gusset floating clear of the column). **The measurements existed — I had not looked.**
+>
+> - **Our job is models and drawings that can actually be built** — in the shop and on site.
+> - **Think like the man in the shop.** *"כאילו אנחנו הפועל במפעל הייצור."* And he **has every
+>   tool**: sawing profiles, plates on CNC or a guillotine, bending, punching holes — all of it.
+>   ⇒ **the constraint is never the machine; it is whether the detail makes sense and can be
+>   assembled.**
+> - **Be able to stand behind every detail and explain it:** why it is modelled that way, and why
+>   it is convenient and cheap to fabricate.
+> - ⛔ **There is no "I modelled a mistake, I didn't notice".** It costs money and nerves mid-project.
+>
+> ### ⚠️ Why a modelling error is worse than a drawing error — the output chain
+> *"הפועל בשטח לא תמיד רואה את התמונה כולה, הוא עובד רק עם תוכנית — ותוכנית נגזרת ממידול."*
+> ```
+> model  ->  shop drawings & cutting plans  ->  actual cutting and punching  ->  erection
+>   ^ the error is here                                          ^ it is discovered here
+> ```
+> **His canonical example:** you model a bolted beam-to-beam connection but **do not model the holes
+> in the profiles** — just "representative" bolts. The plate is cut with holes; **the profiles are
+> cut without any**. The deliverable is a cutting drawing per plate and per profile, **derived
+> automatically from the model** ⇒ a wrong model produces wrong shop drawings ⇒ found at the end,
+> and then it is chaos.
+> ⇒ **This is why the bolt-through-holes iron rule exists at all** — it is a consequence of rule
+> zero, not an independent rule. Same for the JOINT AUDIT (`app/vfy_joined.py`): every member
+> **bolted, or declared welded**, part by part; enforced by `qc/consistency.py` check 9.
+>
+> ### The three questions before modelling any detail — from now on, every detail
+> | # | question |
+> |---|---|
+> | **1** | **What holds it?** Can I draw a load path from the force to the foundation, or is there a part that merely *touches*? |
+> | **2** | **How is it made?** Which cut, which punch, in what order, on which machine setup. If I cannot describe the sequence, the detail is not ready. |
+> | **3** | **How is it erected?** Is there tool access? Is there something to land on before tightening? Where is the tolerance absorbed? |
+> ⛔ **No answer to one of the three ⇒ do not model it, ask.** ⚡ **A green check is no substitute for
+> looking at the thing itself.**
+> *(This replaces the 11/08/2026 "no more corner-cutting" block, at Amir's instruction — its
+> operative content, the JOINT AUDIT mandate, is carried above.)*
+
 > ## 🧲 IRON RULE — **8.8S BOLTS, AND THE HOLE IS THE BOLT + 2 mm.** (Amir, 13/08/2026)
 > > *"כלל ברזל נוסף מעכשיו: הברירת מחדל הם ברגי 8.8S. החורים לברגים הם קוטר הבורג + 2מ"מ."*
 >
