@@ -1,1 +1,6 @@
 ﻿{"t":"11:30:18","ev":"learn_start"}
+{"t":"11:34:48","ev":"obj_add","class":"AcDbDictionary","handle":"424","cmd":""}
+{"t":"11:34:48","ev":"obj_add","class":"AcDbXrecord","handle":"425","cmd":""}
+{"t":"11:34:48","ev":"obj_add","class":"AcDbViewTableRecord","handle":"423","cmd":""}
+{"t":"11:34:48","ev":"obj_erase","handle":"423"}
+{"t":"11:36:35","ev":"learn_stop"}
