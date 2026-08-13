@@ -1,1 +1,1 @@
-﻿EB_OK whoami doc=C:\Users\User\Desktop\EB PROSTEEL AGENT\api+knowledge-develop\projects\lesson-6\lesson-6.dwg entities=104 reqid=764c3b90
+﻿EB_OK whoami doc=C:\Users\User\Desktop\EB PROSTEEL AGENT\api+knowledge-develop\projects\lesson-7\lesson-7.dwg entities=0 reqid=65dd254a
