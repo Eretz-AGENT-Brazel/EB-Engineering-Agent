@@ -11,6 +11,26 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 `app/…`, `qc/…`, `knowledge/…`, `projects/…` path in this skill is relative to that folder.
 (`agent-brain/PROGRAM.md`, `PROGRESS.md` and `standards/` sit at the repo root.)
 
+> ## 🧲 IRON RULE — **8.8S BOLTS, AND THE HOLE IS THE BOLT + 2 mm.** (Amir, 13/08/2026)
+> > *"כלל ברזל נוסף מעכשיו: הברירת מחדל הם ברגי 8.8S. החורים לברגים הם קוטר הבורג + 2מ"מ."*
+>
+> | | |
+> |---|---|
+> | **style** | **`8.8S`** — `DEFAULT_BOLT_STYLE` in `app/eb_api.py`, injected into every bolt op that names no style |
+> | **hole** | **bolt ⌀ + 2 mm** ⇒ `drill`/`drillfield` with **`dia=<bolt> play=2`**. M16→**⌀18** · M20→**⌀22** · M24→**⌀26** |
+>
+> ⭐ **This is also the pairing the 8.8 table can actually build.** The matrix was measured over 36
+> specimens before the rule was set: the `8.8S` table pairs on **+2 only** and **refuses ⌀19 and
+> ⌀23** outright. Full table: `knowledge/learning/findings/BOLT-STYLES-AND-HOLES.md`.
+> 🛑 **SUPERSEDES the +3 shop rule** (*"M16→⌀19, M20→⌀23, 3 mm"*) that this file carried from
+> 09/08/2026 until today. **Older models legitimately contain ⌀19 and ⌀23** — read them as they
+> are, never "fix" them unasked; **new work is +2.**
+> ⚠️ **Scope: bolt holes in steel.** Cast-in anchors are a different case and are unchanged
+> (a measured floor detail used ⌀28 for a ⌀20 anchor to absorb casting inaccuracy). If a detail
+> needs anything other than +2, that is **a question for Amir**, not a silent choice.
+> ⚠️ `dia=` in the drill ops is the **BOLT** diameter, and the hole comes out `dia + play` — so
+> `dia=20 play=2` is a ⌀22 hole. Never pass the hole diameter as `dia`.
+
 > ## 🧲 IRON RULE — A BOLT PASSES THROUGH **HOLES**. NO EXCEPTIONS.
 > Amir said this four separate times on 09/08 and closed with:
 > **"כלל ברזל — תורה מסיני — אין כאן משחקים, זה קריטי מאוד הכלל הזה."**
@@ -845,7 +865,9 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 >
 > Five things the manual changed that measurement then confirmed:
 > - **`Diameter` in a drill field is the BOLT diameter** — hole = bolt + `Workloose`.
->   Measured: `dia=23,play=3` → a **⌀26** hole. Correct call is `dia=20,play=3` → ⌀23.
+>   Measured: `dia=23,play=3` → a **⌀26** hole (asking for the *hole* size gives you +3 on top).
+>   🧲 **The call to make is `dia=<bolt> play=2`** — `dia=20 play=2` → ⌀22, the iron rule of
+>   13/08/2026. *(This line used to prescribe `play=3` → ⌀23, from the retired +3 rule.)*
 > - **Base-plate shortening = plate thickness + grout** (measured 20 and 55), not thickness.
 > - **A cope creates no objects** — it shortens the beam (4850→4840). Census is the wrong
 >   instrument; `Create()` returned **False** while it had worked.
@@ -1754,13 +1776,13 @@ straight back. Verify every planned key against `op=dumpcat` before building.
 
 ## Amir's confirmed practice (source of truth, not guesses)
 
-- **M16 → hole ⌀19 · M20 → hole ⌀23** — 3 mm clearance, the shop's practice (EN 1090-2's default is
-  2 mm; a declared shop practice wins over the standard's default). **This applies to steel-to-steel
-  bolting.**
-  🛑 **BUT: from CODE this pairing is unreachable with a grade-8.8 bolt** — the 8.8 table refuses
-  ⌀19 and ⌀23 (measured 13/08, six styles; see `BOLT-STYLES-AND-HOLES.md`). His **dialog** does it;
-  `PsCreateBolt` does not. **The grade is the standing decision (`8.8S`); the clearance is the open
-  question — ask, never silently drill +2 or silently switch style.** Cast-in anchors are different: a measured floor detail used a **⌀28 hole for a ⌀20
+- 🧲 **BOLT HOLES ARE BOLT ⌀ + 2 mm, AND THE BOLT IS `8.8S`** — the iron rule at the top of this
+  file, set by Amir on **13/08/2026**. M16→⌀18 · M20→⌀22 · M24→⌀26.
+  🛑 **This REPLACED the +3 rule** that stood here from 09/08 to 13/08/2026 (*"M16 → ⌀19 ·
+  M20 → ⌀23, 3 mm clearance"*). It was retired the day the style×hole matrix was measured: the
+  8.8 table **refuses ⌀19 and ⌀23**, so +3 and a grade-8.8 bolt could not both be built from code.
+  ⚠️ **Models built before that date carry ⌀19/⌀23 by design** — read them, do not correct them.
+  **This applies to steel-to-steel bolting.** Cast-in anchors are different: a measured floor detail used a **⌀28 hole for a ⌀20
   anchor — 8 mm clearance** — to absorb casting inaccuracy (which then requires a plate washer), while
   wall plates drilled into existing concrete used **⌀27 for M24, 3 mm**. Clearance follows how the
   anchor gets into the concrete, not one rule.

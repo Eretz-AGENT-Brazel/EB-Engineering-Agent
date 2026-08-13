@@ -84,8 +84,11 @@ From 713 holes in one real model:
 take M16. And **284 of the holes were in profiles**, not plates. Never apply one bolt size across a
 model; never drill only into plates.
 
-Clearance is **3 mm** in this shop (M16→⌀19, M20→⌀23). EN 1090-2's default is 2 mm — **a declared shop
-practice overrides the standard's default.**
+🧲 **Clearance is 2 mm** — M16→⌀18 · M20→⌀22 · M24→⌀26, bolt style **`8.8S`**. Iron rule, Amir,
+**13/08/2026**, and it also happens to be EN 1090-2's normal clearance.
+🛑 **It replaced the 3 mm rule** that this file recorded from the access-platform model (⌀19 ×236,
+⌀23 ×176). ⚠️ **Those counts stay true of that model** — pre-13/08 work legitimately carries +3;
+read it as it is and never "correct" it unasked. New work is +2.
 
 ## Ribs / stiffeners (ריפים)
 

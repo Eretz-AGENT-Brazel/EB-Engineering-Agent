@@ -1,5 +1,5 @@
-reqid=497b3c07
-op=boltparts
-handles=33A
-style=8.8S
+reqid=99e89d8e
+op=zoom
+handle=3C8
+margin=0.7
 dwg=lesson-6.dwg

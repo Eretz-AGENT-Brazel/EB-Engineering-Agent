@@ -45,12 +45,25 @@ with a grade-8.8 bolt.** ⌀19 and ⌀23 are refused by the 8.8 table, and the s
 them return the next bolt size up. This is not an opinion about the practice; it is what the
 installed tables contain.
 
-**Three ways out, and it is Amir's call which:**
-| # | what | cost |
+### ✅ DECIDED THE SAME DAY — Amir, 13/08/2026, as an IRON RULE
+
+> *"כלל ברזל נוסף מעכשיו: הברירת מחדל הם ברגי 8.8S. **החורים לברגים הם קוטר הבורג + 2מ"מ**."*
+
+**Option 1 was chosen: grade 8.8 with +2 mm holes.** So the standing pairing is
+**M16 → ⌀18 · M20 → ⌀22 · M24 → ⌀26**, style **`8.8S`** — and it is exactly what the table builds.
+Called as **`dia=<bolt> play=2`** (`dia` is the BOLT diameter; the hole comes out `dia + play`).
+
+The two rejected routes stay recorded, because knowing *why* they were rejected is what stops
+them coming back:
+| # | what | why not |
 |---|---|---|
-| **1** *(recommended)* | keep **8.8**, drill at **+2** (`play=2`): 18 / 22 / 26 | the hole is 1 mm tighter than the shop habit. It is also EN 1090-2's normal clearance |
-| 2 | keep **+3** holes, accept **`DIN7990`** | bolt goes up a size (M22 for a ⌀23 hole) and the grade is **not in the part-list name** |
-| 3 | keep **+3** holes, place the bolt **manually** (`CreateSingleBolt`: start, end, dia, style) | bypasses the table, so M20 8.8/S in a ⌀23 hole is buildable — but it is the manual route with the silent-failure history (B.15) |
+| 2 | keep **+3** holes, accept **`DIN7990`** | the bolt goes up a size (M22 in a ⌀23 hole) and the grade is **not in the part-list name** |
+| 3 | keep **+3** holes, place the bolt **manually** (`CreateSingleBolt`) | buildable, but it is the manual route with the ~400-silent-failure history (B.15) |
+
+⚠️ **Older models legitimately carry ⌀19 and ⌀23** (the access-platform model has ⌀19 ×236 and
+⌀23 ×176). **Read them as they are; never "correct" them unasked.** The rule governs new work.
+⚠️ **Scope is bolt holes in steel.** Cast-in anchors are unchanged — a measured floor detail used
+⌀28 for a ⌀20 anchor to absorb casting inaccuracy. Anything other than +2 is a **question**.
 
 ### ⭐ What `/S`, `/TB`, `/TF` mean — they are not variants of the same bolt
 AS/NZS 1252 **tightening categories**: `8.8/S` snug-tightened · `8.8/TB` fully tensioned, bearing ·

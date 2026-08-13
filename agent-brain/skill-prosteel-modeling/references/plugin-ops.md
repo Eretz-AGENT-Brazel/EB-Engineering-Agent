@@ -1286,7 +1286,7 @@ Still unused on the class itself: `SetOffset`, `SetAutomatic`, `CreateLogicalLin
 
 | op | what it does | verified |
 |---|---|---|
-| **`drillfield`** | A drill **field** in ONE call: `x=3*81 y=2*156`, the manual's syntax, explicit axes | ✅ 6 holes, pitches 81/81 and 156, ⌀23 from `dia=20 play=3` |
+| **`drillfield`** | A drill **field** in ONE call: `x=3*81 y=2*156`, the manual's syntax, explicit axes | ✅ 6 holes, pitches 81/81 and 156. 🧲 **Call it as `dia=<bolt> play=2`** — iron rule 13/08/2026, so M20 → ⌀22. *(The ⌀23 measured here came from `play=3`, the retired rule.)* |
 | **`conn`** | ONE generic op for all six beam connections: `shear` · `webangle` · `endplate` · `cope` · `haunch` · `purlin` | ✅ 5 of 6. Purlin needs two segments + a socket |
 | **`group`** | Create group / subgroup / assembly | ✅ — full chapter in the B.28 section below |
 | **`posnum`** | Read `Posnum` · `Sendnum` · `Name` · `Weight` · `Article` for every part | ✅ the before/after instrument that never existed |

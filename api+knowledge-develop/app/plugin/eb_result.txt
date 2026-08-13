@@ -1,1 +1,1 @@
-﻿EB_ERR boltparts parts=1 holesOnParts=24 style='8.8S' created=0 boltCount=0 create=False census=104->104  (B.15.1: holes further apart than 'Gap distance', or angles differing by more than 'Angle difference', cannot be bolted) reqid=497b3c07
+﻿EB_OK zoom handle=3C8 w=1202.082 h=707.903 margin=0.7 reqid=99e89d8e

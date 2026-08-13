@@ -20,6 +20,7 @@
 - [Anchorage findings](anchorage-findings.md) — מחקר ביסוס עמודים: 3 פערים בפרט הסטנדרטי של EB (120מ"מ = לחיצה בלבד · אין מסלול גזירה · חסרות דסקיות פלטה)
 - [Two-phase program](two-phase-program.md) — ⚡ MASTER PLAN (2026-07-29): Phase 1 = modeling skills + console API via copy-models & learning-mode lessons (open-ended); Phase 2 = standards/design-checking — LOCKED until Amir declares Phase 1 done. Charter: EB PROSTEEL AGENT\agent-brain\PROGRAM.md
 - [Positioning solved](positioning-solved.md) — ‏מספור פוזיציות מהקוד עובד; ⚠️ CheckTwoPartsAreEqual הוא מבחן הזהות היחיד שרואה חיתוכים (IsEqualTo מלכודת)
+- [Bolt rule 8.8S +2](bolt-rule-8-8s-plus2.md) — ⚡ כלל ברזל 13/08: ברגי 8.8S כברירת מחדל · חור = קוטר הבורג + 2מ"מ (מחליף את +3)
 - [Bolts follow holes](bolts-follow-holes.md) — ⚡ הרצף של אמיר: DRILL ואז בחירת 2 חלקים; הברגים נגזרים מהחורים. מקור 400 כשלי הברגים = השימוש במסלול הידני
 - [Two APIs — COM wrapper](two-apis-com-wrapper.md) — ⚡ כש-.NET לא נקשר לישות קיימת, `PSCOMWRAPPERLib` כן (`doc.HandleToObject`); `PsGrid` הוא המקרה המוכח
 - [Section variety](section-variety.md) — ⚡ הרגל עבודה מ-07/08: לגוון פרופילים מתוך 357 הקטלוגים; מפתח חתך = מחרוזת אטומה, לחפש ולא להרכיב

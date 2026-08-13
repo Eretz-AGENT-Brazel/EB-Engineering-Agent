@@ -92,8 +92,12 @@ designed for**. Do not use these for design checking — Phase 2 is locked — b
 never overwrite them with zeros by rebuilding a joint from an empty object.
 
 ### `HoleWorkLoose` = hole clearance
-Present on every class. This is where Amir's shop rule lives: **M16 → ⌀19, M20 → ⌀23, 3 mm clearance**.
-Set it from the standard, not from the default.
+Present on every class. This is where the factory rule lives.
+🧲 **IRON RULE, Amir 13/08/2026: clearance is 2 mm** — M16 → ⌀18 · M20 → ⌀22 · M24 → ⌀26, with
+bolt style **`8.8S`**. Set it explicitly; do not inherit the template's value.
+🛑 **Replaced the 3 mm rule** (M16→⌀19, M20→⌀23) that stood here until 13/08/2026 — the measured
+`8.8S` bolt table **refuses ⌀19 and ⌀23**, so that pairing could not be built from code at all.
+Matrix: `knowledge/learning/findings/BOLT-STYLES-AND-HOLES.md`.
 
 ### `CreateGroup`
 Present on every class. **Makes the joint's parts one group.** This is the API expression of Amir's

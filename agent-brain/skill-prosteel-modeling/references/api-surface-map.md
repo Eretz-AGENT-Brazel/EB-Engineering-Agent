@@ -123,7 +123,9 @@ SetSingleHoleField(dia)                       SetLinearHoleField(dia, XField, YF
 SetRadialHoleField(dia, radius, count)        SetRadialHoleRange(from, to)
 SetHoleType · SetHoleBoltType · SetDrillType  SetRotateSlottedHoles(bool)  ← slotted holes
 SetHoleDepth · SetDeepStart · SetHoleCounter · SetHoleStep
-SetHoleWorkloose(v)   ← HOLE CLEARANCE: M16→⌀19, M20→⌀23 (3 mm, Amir's shop rule)
+SetHoleWorkloose(v)   ← HOLE CLEARANCE. 🧲 IRON RULE, Amir 13/08/2026: **2 mm**
+                        M16→⌀18 · M20→⌀22 · M24→⌀26, with bolt style 8.8S.
+                        (Replaced the 3 mm rule: the 8.8 table refuses ⌀19/⌀23.)
 SetXYPlane(X, Y) · SetNormal · SetInsertPoint · SetCoordinateSystem
 SetXPosition / SetYPosition (PositionSelection) · SetXOffset / SetYOffset
 SetIgnoreInnerContour · SetMidLineAlignement
