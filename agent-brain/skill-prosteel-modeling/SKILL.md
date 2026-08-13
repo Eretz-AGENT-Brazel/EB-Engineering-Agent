@@ -59,6 +59,28 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > ⇒ reaming · a fin plate with **ONE** bolt line absorbs **10–15°** of plan skew, two lines cap you
 > at **~1.6°** ⇒ **skewed joint ⇒ single bolt line.**
 >
+> ### ⭐⭐⭐ Bracing — AMIR'S OWN FRAMING, and it is the one to carry (13/08/2026)
+> He drew the distinction himself, and it separates two things that look identical:
+> | where the diagonal is | what it does — his words | against what |
+> |---|---|---|
+> | **in a rectangular frame of BEAMS** | *"חיזוק הקריסה המקבילית"* | the frame's own shape changing |
+> | **on VERTICAL elements, between steel columns** | *"משמעותו **כמו קיר בטון**. תורם ליציבות המבנה לקריסה"* | **wind and EARTHQUAKE** — horizontal load on the whole structure |
+> ⇒ **A vertical braced bay IS a steel shear wall.** Same job as a concrete wall: a stiff vertical
+> plane carrying horizontal force from roof to foundation. That analogy hands you the whole check
+> list — load path, cumulative shear, plan symmetry/torsion, and **uplift concentrated at the two
+> columns of the bay** (a wall's boundary elements). Differences that matter to us: the bay is
+> **light**, it is **bolted so it can be added or removed later**, and ⚠️ **the diagonal blocks the
+> bay** — a door or a passage forces V/Λ, K or an eccentric detail.
+> 🧲 **And what SEISMIC adds, which is a fabrication fact, not a design one:** reversing cyclic load
+> means the system must **dissipate energy**, so ⇒ **the connection is designed for the MEMBER'S
+> CAPACITY, not for its design force** <span>(capacity design)</span>. **A gusset that looks
+> oversized in a seismic bay probably is not — that is exactly where value engineering must not go
+> without asking.** Slip also stops being acceptable, so **categories B/C and preloaded bolts**
+> appear instead of A, with a documented tightening procedure and faying-surface treatment — real
+> cost that belongs in the quote. ⇒ **One mandatory question when a drawing arrives: is this bay
+> seismic?** The answer changes the connection, not the member. 🔒 Behaviour factors and ductility
+> classes are the signing engineer's, not ours.
+>
 > ### Bracing — what it actually does (Amir's two questions)
 > ⭐ An unbraced pinned rectangle is a **mechanism**, not a weak frame; no section fixes it.
 > ⭐⭐ Brace-vs-moment-frame stiffness reduces to `(h/i)²·(h/L_d)²·cos²θ/12` → **≈39× per kg** for
