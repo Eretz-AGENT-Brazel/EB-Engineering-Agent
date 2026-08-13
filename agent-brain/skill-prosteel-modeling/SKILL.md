@@ -11,6 +11,43 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 `app/…`, `qc/…`, `knowledge/…`, `projects/…` path in this skill is relative to that folder.
 (`agent-brain/PROGRAM.md`, `PROGRESS.md` and `standards/` sit at the repo root.)
 
+> ## 🔬 CONNECTION ENGINEERING — the research, and the three things the software taught it back
+> Full report: **`research/beam-connections/`** (`מחברי-קורות-פלדה.pdf`, 12 pp) + `IMPLEMENTATION.md`.
+> Commissioned by Amir 13/08/2026. What matters for modelling:
+>
+> ⛔⛔ **NEVER through-bolt the wall of a hollow section.** Measured: a knife plate at mid-depth of
+> an SHS200 leaves the packet `wall 95…100 · plate −6…+6` = **89 mm of void**, and `boltparts`
+> **refused**. It was right: the bolt would be in bending and the nut is unreachable. ⇒ **weld at a
+> tube crossing; bolt at a plate-to-plate LAP where the plies touch.** Built that way: 4 × `M16 x 50
+> 8.8/S`, packet **24 = 12+12**, spare 26, `GAP-IN-PACKET=0`.
+> ⭐ **When the software refuses, read the geometry before looking for a workaround — sometimes the
+> refusal IS the rule.**
+>
+> ⭐⭐⭐ **`collision minvol=100` caught two defects that `vfy_fit` and the JOINT AUDIT both called
+> clean:**
+> | hits | cause | fix |
+> |---|---|---|
+> | 4 near each corner | **the brace setback was measured to the AXIS.** The envelope corner sits half-width off the axis and digs into the chord long after the axis has cleared | `s ≥ (hw·|p·n| + clear)/|u·n|` → 385.6, use **400** (was 250) |
+> | 4 at the bolt positions | the bolts **fouled the tube the lap plate sat on** — a lap bolted *over* a member needs that member drilled too | move the bolt group **off the tube footprint** |
+> | 2 at the crossing | the interruption was set **exactly** to the formula ⇒ **tangent** ⇒ tessellation touches | full formula **+ 5 mm nominal clearance** |
+> ⇒ **A collision run is not cosmetic — it is the only gate that sees geometry the others never test.**
+> ⇒ And **E.5's rule again, paid for twice: POSITION BY THE ENVELOPE, NEVER BY THE AXIS.**
+>
+> 🛑 **The model corrected the research.** The interruption of a crossing member is **not** `w/sinφ` —
+> that ignores the width of the *interrupted* member, whose end face is square:
+> ```
+> half-gap ≥ ( w_A/2 + (w_B/2)·cos φ ) / sin φ        (w/sinφ is only the first term)
+> ```
+> At φ=58.11° with both members 200: first term **117.8**, full formula **180.0** — a **53 %**
+> under-prediction, and the collision count went 2 → 0 when it was applied.
+> ⇒ `w/sinφ` is right for a rod or a thin plate, **wrong for a tube of comparable width.**
+>
+> ⚠️ **`collision box=` selects only parts wholly INSIDE the box** — a small box returned `parts=2`
+> and missed real hits. **Size the box to contain whole members.**
+> ✅ **`miter` confirmed: one call cuts BOTH members** — 4 corners, `cutPlanes=2` on each.
+> ⚠️ `drill innercontour=1` on a hollow section reports **one** hole, not two: **depth is the
+> witness, not the count.**
+
 > ## 🧲 IRON RULE — **8.8S BOLTS, AND THE HOLE IS THE BOLT + 2 mm.** (Amir, 13/08/2026)
 > > *"כלל ברזל נוסף מעכשיו: הברירת מחדל הם ברגי 8.8S. החורים לברגים הם קוטר הבורג + 2מ"מ."*
 >

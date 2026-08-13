@@ -5,3 +5,21 @@
 {"op": "beam", "args": {"kind": "standard", "name": "HE200A", "catalog": "DIN_HEA", "p1": "774.879,3856.573,0", "p2": "1774.879,3856.573,0", "rot": 0, "dwg": "lesson-6.dwg"}, "handle": "33B", "ts": "10:23:26"}
 {"op": "beam", "args": {"kind": "standard", "name": "HE200A", "catalog": "DIN_HEA", "p1": "-225.121,3856.573,0", "p2": "774.879,3856.573,0", "rot": 0, "dwg": "lesson-6.dwg"}, "handle": "3C6", "ts": "11:13:21"}
 {"op": "beam", "args": {"kind": "standard", "name": "HE200A", "catalog": "DIN_HEA", "p1": "774.879,3856.573,0", "p2": "1774.879,3856.573,0", "rot": 0, "dwg": "lesson-6.dwg"}, "handle": "3C7", "ts": "11:13:21"}
+{"op": "beam", "args": {"kind": "standard", "name": "SHS200X200X5", "catalog": "BS_HYBOX_SHS", "p1": "12000.000,6100.000,0", "p2": "15800.000,6100.000,0", "rot": 0, "dwg": "lesson-6.dwg"}, "handle": "551", "ts": "13:10:47"}
+{"op": "beam", "args": {"kind": "standard", "name": "SHS200X200X5", "catalog": "BS_HYBOX_SHS", "p1": "12000.000,8100.000,0", "p2": "15800.000,8100.000,0", "rot": 0, "dwg": "lesson-6.dwg"}, "handle": "552", "ts": "13:10:47"}
+{"op": "beam", "args": {"kind": "standard", "name": "SHS200X200X5", "catalog": "BS_HYBOX_SHS", "p1": "12100.000,6000.000,0", "p2": "12100.000,8200.000,0", "rot": 0, "dwg": "lesson-6.dwg"}, "handle": "553", "ts": "13:10:47"}
+{"op": "beam", "args": {"kind": "standard", "name": "SHS200X200X5", "catalog": "BS_HYBOX_SHS", "p1": "15700.000,6000.000,0", "p2": "15700.000,8200.000,0", "rot": 0, "dwg": "lesson-6.dwg"}, "handle": "554", "ts": "13:10:48"}
+{"op": "miter", "args": {"cut": "551", "other": "553", "type": 1, "dwg": "lesson-6.dwg"}, "handle": null, "ts": "13:10:48"}
+{"op": "miter", "args": {"cut": "551", "other": "554", "type": 1, "dwg": "lesson-6.dwg"}, "handle": null, "ts": "13:10:48"}
+{"op": "miter", "args": {"cut": "552", "other": "553", "type": 1, "dwg": "lesson-6.dwg"}, "handle": null, "ts": "13:10:48"}
+{"op": "miter", "args": {"cut": "552", "other": "554", "type": 1, "dwg": "lesson-6.dwg"}, "handle": null, "ts": "13:10:48"}
+{"op": "beam", "args": {"kind": "standard", "name": "SHS200X200X5", "catalog": "BS_HYBOX_SHS", "p1": "12318.539,6221.411,0", "p2": "15481.461,7978.589,0", "rot": 0, "dwg": "lesson-6.dwg"}, "handle": "555", "ts": "13:10:49"}
+{"op": "beam", "args": {"kind": "standard", "name": "SHS200X200X5", "catalog": "BS_HYBOX_SHS", "p1": "12318.539,7978.589,0", "p2": "13797.044,7157.198,0", "rot": 0, "dwg": "lesson-6.dwg"}, "handle": "556", "ts": "13:10:49"}
+{"op": "beam", "args": {"kind": "standard", "name": "SHS200X200X5", "catalog": "BS_HYBOX_SHS", "p1": "14002.956,7042.802,0", "p2": "15481.461,6221.411,0", "rot": 0, "dwg": "lesson-6.dwg"}, "handle": "557", "ts": "13:10:49"}
+{"op": "beam", "args": {"kind": "standard", "name": "SHS200X200X5", "catalog": "BS_HYBOX_SHS", "p1": "12318.539,7978.589,0", "p2": "13797.044,7157.198,0", "rot": 0, "dwg": "lesson-6.dwg"}, "handle": "559", "ts": "13:13:31"}
+{"op": "beam", "args": {"kind": "standard", "name": "SHS200X200X5", "catalog": "BS_HYBOX_SHS", "p1": "14002.956,7042.802,0", "p2": "15481.461,6221.411,0", "rot": 0, "dwg": "lesson-6.dwg"}, "handle": "55A", "ts": "13:13:31"}
+{"op": "beam", "args": {"kind": "standard", "name": "SHS200X200X5", "catalog": "BS_HYBOX_SHS", "p1": "12449.663,6294.257,0", "p2": "15350.337,7905.743,0", "rot": 0, "dwg": "lesson-6.dwg"}, "handle": "597", "ts": "13:17:30"}
+{"op": "beam", "args": {"kind": "standard", "name": "SHS200X200X5", "catalog": "BS_HYBOX_SHS", "p1": "12449.663,7905.743,0", "p2": "13790.730,7160.705,0", "rot": 0, "dwg": "lesson-6.dwg"}, "handle": "598", "ts": "13:17:30"}
+{"op": "beam", "args": {"kind": "standard", "name": "SHS200X200X5", "catalog": "BS_HYBOX_SHS", "p1": "14009.270,7039.295,0", "p2": "15350.337,6294.257,0", "rot": 0, "dwg": "lesson-6.dwg"}, "handle": "599", "ts": "13:17:31"}
+{"op": "beam", "args": {"kind": "standard", "name": "SHS200X200X5", "catalog": "BS_HYBOX_SHS", "p1": "12449.663,7905.743,0", "p2": "13738.281,7189.844,0", "rot": 0, "dwg": "lesson-6.dwg"}, "handle": "5A6", "ts": "13:18:30"}
+{"op": "beam", "args": {"kind": "standard", "name": "SHS200X200X5", "catalog": "BS_HYBOX_SHS", "p1": "14061.719,7010.156,0", "p2": "15350.337,6294.257,0", "rot": 0, "dwg": "lesson-6.dwg"}, "handle": "5A7", "ts": "13:18:30"}
