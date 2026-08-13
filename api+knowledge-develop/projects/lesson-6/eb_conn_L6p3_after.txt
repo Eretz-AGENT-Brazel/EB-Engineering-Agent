@@ -1,0 +1,56 @@
+LINK	421	Ks_Shape	PS_Shape	0	type=11/kConnectWithFreePlate name=Endplate connection ident=13 - 36 desc= modi=1 parts=2 bolts=4 extra=0
+MEMB	421	0	parts=428,429 (2/2 filled)	bolts=43A,43B,43C,43D (4/4 filled)	extra=	target=422
+LINK	422	Ks_Shape	PS_Shape	0	type=12/kConnectedBy name=Conn. Shape ident= desc= modi=3 parts=0 bolts=0 extra=0
+MEMB	422	0	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=421
+LINK	428	Ks_Plate	PS_Plate	0	type=10/kPlateConnectionLink name=Brace Plate ident= desc= modi=0 parts=0 bolts=0 extra=0
+MEMB	428	0	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=421
+LINK	429	Ks_Plate	PS_Plate	0	type=10/kPlateConnectionLink name=Brace Plate ident= desc= modi=0 parts=0 bolts=0 extra=0
+MEMB	429	0	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=422
+LINK	4E9	Ks_Shape	PS_Shape	0	type=3/kAngleCutLink name=Anglecut ident= desc= modi=1 parts=0 bolts=0 extra=0
+MEMB	4E9	0	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=4ED
+LINK	4E9	Ks_Shape	PS_Shape	1	type=3/kAngleCutLink name=Anglecut ident= desc= modi=1 parts=0 bolts=0 extra=0
+MEMB	4E9	1	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=4EC
+LINK	4EA	Ks_Shape	PS_Shape	0	type=3/kAngleCutLink name=Anglecut ident= desc= modi=1 parts=0 bolts=0 extra=0
+MEMB	4EA	0	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=4EC
+LINK	4EA	Ks_Shape	PS_Shape	1	type=3/kAngleCutLink name=Anglecut ident= desc= modi=1 parts=0 bolts=0 extra=0
+MEMB	4EA	1	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=4ED
+LINK	4EC	Ks_Shape	PS_Shape	0	type=3/kAngleCutLink name=Anglecut ident= desc= modi=1 parts=0 bolts=0 extra=0
+MEMB	4EC	0	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=4EA
+LINK	4EC	Ks_Shape	PS_Shape	1	type=3/kAngleCutLink name=Anglecut ident= desc= modi=1 parts=0 bolts=0 extra=0
+MEMB	4EC	1	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=4E9
+LINK	4ED	Ks_Shape	PS_Shape	0	type=3/kAngleCutLink name=Anglecut ident= desc= modi=1 parts=0 bolts=0 extra=0
+MEMB	4ED	0	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=4EA
+LINK	4ED	Ks_Shape	PS_Shape	1	type=3/kAngleCutLink name=Anglecut ident= desc= modi=1 parts=0 bolts=0 extra=0
+MEMB	4ED	1	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=4E9
+LINK	4FA	Ks_Shape	PS_Shape	0	type=3/kAngleCutLink name=Anglecut ident= desc= modi=1 parts=0 bolts=0 extra=0
+MEMB	4FA	0	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=504
+LINK	4FA	Ks_Shape	PS_Shape	1	type=3/kAngleCutLink name=Anglecut ident= desc= modi=1 parts=0 bolts=0 extra=0
+MEMB	4FA	1	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=505
+LINK	4FB	Ks_Shape	PS_Shape	0	type=3/kAngleCutLink name=Anglecut ident= desc= modi=1 parts=0 bolts=0 extra=0
+MEMB	4FB	0	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=504
+LINK	4FB	Ks_Shape	PS_Shape	1	type=3/kAngleCutLink name=Anglecut ident= desc= modi=1 parts=0 bolts=0 extra=0
+MEMB	4FB	1	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=505
+LINK	504	Ks_Shape	PS_Shape	0	type=3/kAngleCutLink name=Anglecut ident= desc= modi=1 parts=0 bolts=0 extra=0
+MEMB	504	0	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=4FA
+LINK	504	Ks_Shape	PS_Shape	1	type=3/kAngleCutLink name=Anglecut ident= desc= modi=1 parts=0 bolts=0 extra=0
+MEMB	504	1	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=4FB
+LINK	505	Ks_Shape	PS_Shape	0	type=3/kAngleCutLink name=Anglecut ident= desc= modi=1 parts=0 bolts=0 extra=0
+MEMB	505	0	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=4FB
+LINK	505	Ks_Shape	PS_Shape	1	type=3/kAngleCutLink name=Anglecut ident= desc= modi=1 parts=0 bolts=0 extra=0
+MEMB	505	1	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=4FA
+LINK	50C	Ks_Shape	PS_Shape	0	type=3/kAngleCutLink name=Anglecut ident= desc= modi=1 parts=0 bolts=0 extra=0
+MEMB	50C	0	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=50F
+LINK	50C	Ks_Shape	PS_Shape	1	type=3/kAngleCutLink name=Anglecut ident= desc= modi=1 parts=0 bolts=0 extra=0
+MEMB	50C	1	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=510
+LINK	50D	Ks_Shape	PS_Shape	0	type=3/kAngleCutLink name=Anglecut ident= desc= modi=1 parts=0 bolts=0 extra=0
+MEMB	50D	0	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=510
+LINK	50D	Ks_Shape	PS_Shape	1	type=3/kAngleCutLink name=Anglecut ident= desc= modi=1 parts=0 bolts=0 extra=0
+MEMB	50D	1	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=50F
+LINK	50F	Ks_Shape	PS_Shape	0	type=3/kAngleCutLink name=Anglecut ident= desc= modi=1 parts=0 bolts=0 extra=0
+MEMB	50F	0	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=50D
+LINK	50F	Ks_Shape	PS_Shape	1	type=3/kAngleCutLink name=Anglecut ident= desc= modi=1 parts=0 bolts=0 extra=0
+MEMB	50F	1	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=50C
+LINK	510	Ks_Shape	PS_Shape	0	type=3/kAngleCutLink name=Anglecut ident= desc= modi=1 parts=0 bolts=0 extra=0
+MEMB	510	0	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=50D
+LINK	510	Ks_Shape	PS_Shape	1	type=3/kAngleCutLink name=Anglecut ident= desc= modi=1 parts=0 bolts=0 extra=0
+MEMB	510	1	parts= (0/0 filled)	bolts= (0/0 filled)	extra=	target=50C
