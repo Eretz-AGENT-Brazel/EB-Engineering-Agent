@@ -1,1 +1,1 @@
-﻿EB_OK zoom handle=597 w=4196.924 h=2500.844 margin=0.4 reqid=2959e4ff
+﻿EB_OK zoom handle=695 w=1157.958 h=1983.107 margin=1.3 reqid=ed9b8307

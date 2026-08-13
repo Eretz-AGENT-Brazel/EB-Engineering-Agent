@@ -2,50 +2,45 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="utf-8">
-<title>מחברי קורות פלדה — מחקר הנדסי · ארץ ברזל</title>
+<title>מחברי קורות פלדה — מחקר הנדסי ומעשי · ארץ ברזל</title>
 <style>
-  @page { size: A4; margin: 16mm 14mm; }
+  @page { size: A4; margin: 15mm 13mm; }
   * { box-sizing: border-box; }
-  body { font-family: "Segoe UI", "Arial", sans-serif; direction: rtl; text-align: right;
-         color: #16202b; line-height: 1.55; font-size: 10.5pt; margin: 0; }
-  h1 { font-size: 22pt; margin: 0 0 4px; color: #0d2a4a; }
-  h2 { font-size: 15pt; margin: 26px 0 8px; color: #0d2a4a; border-bottom: 2.5px solid #0d2a4a;
-       padding-bottom: 4px; page-break-after: avoid; }
-  h3 { font-size: 12pt; margin: 16px 0 6px; color: #1c4f82; page-break-after: avoid; }
-  h4 { font-size: 10.8pt; margin: 12px 0 4px; color: #37546f; }
-  p, li { orphans: 3; widows: 3; }
-  table { border-collapse: collapse; width: 100%; margin: 8px 0 14px; font-size: 9.3pt;
+  body { font-family: "Segoe UI", Arial, sans-serif; direction: rtl; text-align: right;
+         color: #16202b; line-height: 1.5; font-size: 10pt; margin: 0; }
+  h1 { font-size: 21pt; margin: 0 0 4px; color: #0d2a4a; }
+  h2 { font-size: 14.5pt; margin: 24px 0 7px; color: #0d2a4a; border-bottom: 2.5px solid #0d2a4a;
+       padding-bottom: 3px; page-break-after: avoid; }
+  h3 { font-size: 11.6pt; margin: 15px 0 5px; color: #1c4f82; page-break-after: avoid; }
+  h4 { font-size: 10.4pt; margin: 11px 0 3px; color: #37546f; page-break-after: avoid; }
+  table { border-collapse: collapse; width: 100%; margin: 7px 0 12px; font-size: 8.9pt;
           page-break-inside: avoid; }
-  th, td { border: 1px solid #b9c6d3; padding: 4px 6px; vertical-align: top; }
+  th, td { border: 1px solid #b9c6d3; padding: 3.5px 5px; vertical-align: top; }
   th { background: #e8eef5; color: #0d2a4a; font-weight: 600; }
   td.n { text-align: center; white-space: nowrap; }
-  code, .mono { font-family: Consolas, "Courier New", monospace; font-size: 9pt;
-                background: #f2f5f8; padding: 0 3px; border-radius: 2px; direction: ltr;
-                display: inline-block; }
-  pre { background: #f2f5f8; border-right: 3px solid #1c4f82; padding: 8px 10px; direction: ltr;
-        text-align: left; font-family: Consolas, monospace; font-size: 8.8pt; overflow: visible;
-        white-space: pre-wrap; page-break-inside: avoid; }
+  code, .mono { font-family: Consolas, monospace; font-size: 8.6pt; background: #f2f5f8;
+                padding: 0 3px; border-radius: 2px; direction: ltr; display: inline-block; }
+  pre { background: #f2f5f8; border-right: 3px solid #1c4f82; padding: 7px 9px; direction: ltr;
+        text-align: left; font-family: Consolas, monospace; font-size: 8.3pt;
+        white-space: pre-wrap; page-break-inside: avoid; margin: 6px 0; }
   .box { border: 1px solid #c8d4e0; border-right: 4px solid #1c4f82; background: #f7fafd;
-         padding: 8px 12px; margin: 10px 0; page-break-inside: avoid; }
+         padding: 7px 11px; margin: 9px 0; page-break-inside: avoid; }
   .warn { border-right-color: #b8860b; background: #fdfaf1; }
   .stop { border-right-color: #a3312c; background: #fdf4f3; }
   .ok   { border-right-color: #1f7a4d; background: #f2fbf6; }
-  .tag { display: inline-block; font-size: 8pt; padding: 1px 6px; border-radius: 9px;
-         border: 1px solid #8fa5ba; color: #24425f; background: #eef3f8; margin-inline-end: 4px; }
+  .amir { border-right-color: #6b3fa0; background: #f7f3fc; }
+  .tag { display: inline-block; font-size: 7.6pt; padding: 0 5px; border-radius: 9px;
+         border: 1px solid #8fa5ba; color: #24425f; background: #eef3f8; }
   .t-code { border-color: #1f7a4d; color: #145c39; background: #eefaf3; }
   .t-shop { border-color: #b8860b; color: #7a5a06; background: #fdf8ec; }
   .t-meas { border-color: #6b3fa0; color: #4a2a72; background: #f5f0fb; }
-  .cover { text-align: center; padding: 40px 0 10px; border-bottom: 3px double #0d2a4a; }
-  .cover .sub { color: #4b6b85; }
-  .lead { font-size: 11pt; color: #33475b; }
-  ul { margin: 4px 0 8px; padding-inline-start: 20px; }
-  li { margin: 2px 0; }
-  figure { margin: 10px 0; page-break-inside: avoid; text-align: center; }
-  figcaption { font-size: 8.6pt; color: #4a6076; margin-top: 3px; }
-  .toc a { text-decoration: none; color: #1c4f82; }
-  .grid2 { display: flex; gap: 12px; }
-  .grid2 > div { flex: 1; }
-  .fn { font-size: 8.6pt; color: #5a7085; }
+  .cover { text-align: center; padding: 26px 0 8px; border-bottom: 3px double #0d2a4a; }
+  .lead { font-size: 10.6pt; color: #33475b; }
+  ul, ol { margin: 3px 0 7px; padding-inline-start: 19px; }
+  li { margin: 1.5px 0; }
+  figure { margin: 9px 0; page-break-inside: avoid; text-align: center; }
+  figcaption { font-size: 8.3pt; color: #4a6076; margin-top: 2px; }
+  .fn { font-size: 8.3pt; color: #5a7085; }
   svg { direction: ltr; }
 </style>
 </head>
@@ -53,447 +48,709 @@
 
 <div class="cover">
   <h1>מחברי קורות פלדה</h1>
-  <div class="lead">מחקר הנדסי מקיף — שיטות חיבור, יתרונות וחסרונות,<br>
-  חיזוק אלכסונים, ושאלות ההכרעה לפני בחירת מחבר</div>
-  <p class="fn">הוכן עבור <b>ארץ ברזל</b> · 13 באוגוסט 2026 · מסלול 4 (מחקר הנדסי) של פרויקט EB PROSTEEL AGENT<br>
-  בהזמנת אמיר, בהמשך לשיעור 6 (מחברי קורות)</p>
+  <div class="lead">הפרקטיקה של החיבור — פלאנג, ווב, ניצול גיאומטריית הפרופיל,<br>
+  חיתוכים בזווית, וחיזוק אלכסונים: מה זה נותן ואיך זה נבנה</div>
+  <p class="fn"><b>ארץ ברזל</b> · 13 באוגוסט 2026 · מהדורה ב' — מורחבת לפי הערותיו של אמיר<br>
+  ‏7 פרקי פרקטיקה (‏2,251 שורות מחקר) · ‏7 מדגמים שנבנו ונמדדו בתוכנה</p>
 </div>
 
 <div class="box stop">
-<b>מסגרת הסמכות — לקרוא לפני הכול.</b>
-ארץ ברזל <b>מייצרת ואינה מתכננת עומסים</b>. המסמך הזה הוא <b>הבנה לצורך מידול נכון ו-value
-engineering</b> — לזהות מתי פרט מפורט מעל הנדרש ולכמת בכמה — <b>ולא סמכות תכנון ולא בדיקת עמידה
-בתקן</b>. כל טענה מסומנת במקורה:
-<span class="tag t-code">סעיף תקן</span> <span class="tag t-shop">נוהג בית-מלאכה</span>
-<span class="tag t-meas">נמדד במודל שלנו</span> — ואינן מעורבבות. מה שהקונסטרוקטור החתום אישר —
-לא נוגעים; פער בין סעיף תקן לפרט של אמיר הוא <b>שאלה</b>, לא תיקון.
+<b>מסגרת הסמכות.</b> ארץ ברזל <b>מייצרת ואינה מתכננת עומסים</b>. המסמך הוא <b>הבנה לצורך מידול
+נכון ו-value engineering</b> — ולא סמכות תכנון ולא בדיקת עמידה בתקן. כל טענה מסומנת:
+<span class="tag t-code">תקן</span> <span class="tag t-shop">נוהג</span>
+<span class="tag t-meas">נמדד אצלנו</span>. מה שהקונסטרוקטור אישר — לא נוגעים; פער בין סעיף תקן
+לפרט של אמיר הוא <b>שאלה</b>. ‏🔒 שלב 2 (תקנים) נעול.
 </div>
 
-<h2 id="toc">תוכן</h2>
-<div class="toc">
-<table>
-<tr><td>1</td><td><a href="#c1">חיבורי ברגים — חמש קטגוריות ושבע טיפולוגיות</a></td>
-    <td>5</td><td><a href="#c5">חיזוק אלכסונים: מה זה נותן ואיך מתכננים את המחבר</a></td></tr>
-<tr><td>2</td><td><a href="#c2">חיבורי ריתוך — שתי משפחות, וכל השאר פרטים</a></td>
-    <td>6</td><td><a href="#c6">פרופילים חלולים — הפרק שאמיר נגע בו היום</a></td></tr>
-<tr><td>3</td><td><a href="#c3">שיטות שאינן ריתוך ואינן ברגים — שמונה, וכולן אמיתיות</a></td>
-    <td>7</td><td><a href="#c7">‏24 השאלות לפני שקובעים מחבר</a></td></tr>
-<tr><td>4</td><td><a href="#c4">יתרונות וחסרונות — טבלת 12 קריטריונים</a></td>
-    <td>8</td><td><a href="#c8">מהמחבר אל המודל + value engineering במספרים</a></td></tr>
-</table>
+<div class="box amir">
+<b>מה השתנה במהדורה ב'.</b> אמיר קרא את המהדורה הראשונה ואמר: <i>"מאד חסר לי התוכן על סוגי
+החיבורים… איך מחברים פלאנגים בין קורות, איך מחברים קורה בווב, איך מנצלים את התכונות
+הגיאומטריות של הפרופיל לחיבור נוח בשטח ונוח לייצור… רוצה יותר פרקטיקה, והרבה ממנה… מה שבפועל
+מייצר הפועל בשטח ולא המהנדס שמתכנן."</i> ובנוסף ביקש <b>דגש על אלכסונים, סוגי חיזוק אלכסוני
+וחתוכים בזווית</b>, ושתי שאלות: <b>מה מסגרת מחוזקת באלכסונים באמת מחזקת, ומה נותנים אלכסונים בין
+עמודים במבנה שלם.</b> ‏⇒ נוספו <b>שבעה פרקי פרקטיקה</b>, <b>שש סקיצות</b>, ופרק יישום עם
+<b>שבעה מדגמים שנבנו בתוכנה ונמדדו</b>. וגם <b>שני תיקונים לטענות שלי עצמי</b> (§1.3, §4.2).
 </div>
 
-<!-- ==================================================================== -->
-<h2 id="c1">1. חיבורי ברגים — חמש קטגוריות ושבע טיפולוגיות</h2>
-
-<p>ההבחנה החשובה ביותר, ושתי השאלות שמפרידות ביניהן: <b>איך הכוח עובר</b> ו-<b>האם הבורג מותח
-מראש</b>. ‏<span class="tag t-code">EN 1993-1-8 טבלה 3.2</span></p>
-
+<h2 style="margin-top:18px">תוכן</h2>
 <table>
-<tr><th>קטגוריה</th><th>הכוח</th><th>העיקרון</th><th>מתיחה מראש</th><th>מתי משתמשים</th></tr>
-<tr><td class="n"><b>A</b></td><td class="n">גזירה</td><td><b>נשיאה (bearing)</b> — הבורג נשען על דופן החור ונגזר</td><td class="n">לא</td><td>ברירת המחדל בבניין. הזול, הפשוט, מספיק ברוב המקרים</td></tr>
-<tr><td class="n"><b>B</b></td><td class="n">גזירה</td><td><b>עמידה בהחלקה בשירות</b> — לא מחליק בעומסי שימוש, מותר להחליק לנשיאה בעומס הקצה</td><td class="n">כן</td><td>כשהחלקה מפריעה לשימוש (מכונות, מסילות)</td></tr>
-<tr><td class="n"><b>C</b></td><td class="n">גזירה</td><td><b>עמידה בהחלקה בעומס הקצה</b> — אסור להחליק בכלל</td><td class="n">כן</td><td>חיבורים סייסמיים, מנופים, עייפות, חורים אובליים ארוכים</td></tr>
-<tr><td class="n"><b>D</b></td><td class="n">משיכה</td><td>בורג לא מותח במשיכה</td><td class="n">לא</td><td>עומס סטטי בלבד</td></tr>
-<tr><td class="n"><b>E</b></td><td class="n">משיכה</td><td>בורג מותח במשיכה — מקטין תנועה ומשפר עייפות</td><td class="n">כן</td><td>עייפות, חיבורי מומנט עם דרישת קשיחות</td></tr>
+<tr><td class="n">1</td><td>הפרופיל כערכת חלקים — חלון ההברגה, הווב השטוח, הגייג'</td>
+    <td class="n">8</td><td>שיטות שאינן ריתוך ואינן ברגים — שמונה</td></tr>
+<tr><td class="n">2</td><td><b>חיבור פלאנג-אל-פלאנג — התקן של ארץ ברזל</b></td>
+    <td class="n">9</td><td>יתרונות וחסרונות — 12 קריטריונים</td></tr>
+<tr><td class="n">3</td><td><b>חיבור בווב — ומה מגביל אותו</b></td>
+    <td class="n">10</td><td>פרופילים חלולים</td></tr>
+<tr><td class="n">4</td><td><b>חתוכים בזווית — הטקסונומיה, הנוסחה, המחיר</b></td>
+    <td class="n">11</td><td>בית-מלאכה ושטח — מה הפועל עושה</td></tr>
+<tr><td class="n">5</td><td><b>אלכסונים — שתי השאלות של אמיר</b></td>
+    <td class="n">12</td><td><b>יישום בתוכנה — 7 מדגמים נמדדים</b> + מיפוי טיפוס→op</td></tr>
+<tr><td class="n">6</td><td>קטגוריות ברגים וארבעה מסלולי כשל</td>
+    <td class="n">13</td><td>‏24 השאלות לפני שקובעים מחבר</td></tr>
+<tr><td class="n">7</td><td>ריתוך — שתי משפחות וחשבון ה-a²</td><td colspan="2"></td></tr>
 </table>
 
+<!-- ================================================================= -->
+<h2>1. הפרופיל כערכת חלקים — ומה זה מאפשר לחבר</h2>
+<p>ההסתכלות שהופכת פרופיל מגולגל מ"קורה" ל<b>ערכת חלקים לחיבור</b>: שני אגפים = שתי פלטות
+שטוחות שפניהן החיצוניים פתוחים לעולם · ווב = פלטה במרכז, נגישה משני צדדים · <b>רדיוס השורש r</b>
+= הסיבה שאף פלטה לא מונחת שטוח עד הפינה.</p>
+
+<figure>
+<svg width="620" height="235" viewBox="0 0 620 235">
+  <g stroke="#0d2a4a" stroke-width="1.6" fill="#dfe8f1">
+    <path d="M60 30 h180 v22 h-79 v106 h79 v22 h-180 v-22 h79 v-106 h-79 z"/>
+  </g>
+  <g stroke="#a3312c" stroke-width="1.1" fill="none" stroke-dasharray="4 3">
+    <path d="M60 41 h180"/><path d="M60 169 h180"/>
+  </g>
+  <g font-size="9" fill="#24425f" direction="ltr">
+    <text x="250" y="35">b (רוחב אגף)</text>
+    <text x="250" y="46">tf</text>
+    <text x="250" y="112">tw</text>
+    <text x="250" y="175">d = h − 2tf − 2r  ← הווב השטוח, וזה הגובה הפנוי לפלטה</text>
+    <text x="250" y="192">r  ← רדיוס השורש: כאן פלטה מפסיקה להיות מונחת</text>
+    <text x="250" y="209">חצי-גייג' = W/2 ← חייב לפנות tw/2 + r + רדיוס הסוקט</text>
+    <text x="105" y="20">h</text>
+  </g>
+  <g stroke="#1f7a4d" stroke-width="1.4" fill="none">
+    <circle cx="120" cy="55" r="7"/><circle cx="180" cy="55" r="7"/>
+    <path d="M120 62 v10 M180 62 v10"/>
+    <text x="106" y="86" font-size="8.5" fill="#145c39" direction="ltr">W (גייג' הפרופיל)</text>
+  </g>
+  <g stroke="#b8860b" stroke-width="1.3" fill="none">
+    <path d="M152 52 a18 18 0 0 0 -9 9"/><path d="M148 158 a18 18 0 0 1 -5 -9"/>
+    <text x="95" y="130" font-size="8.5" fill="#7a5a06" direction="ltr">r</text>
+  </g>
+</svg>
+<figcaption>שלושת המספרים שקובעים כל פרט: הווב השטוח d, רדיוס השורש r, וחלון ההברגה של האגף.</figcaption>
+</figure>
+
+<h3>1.1 המידות שקובעות, לפי חתך</h3>
+<table>
+<tr><th>חתך</th><th>h · tw · tf · r</th><th><b>d = ווב שטוח</b></th><th>פנוי למפתח</th><th>גייג' <span class="mono">W</span></th></tr>
+<tr><td class="n">IPE 200</td><td class="n">200 · 5.6 · 8.5 · 12</td><td class="n"><b>159</b></td><td class="n">~150</td><td class="n">—</td></tr>
+<tr><td class="n">IPE 300</td><td class="n">300 · 7.1 · 10.7 · 15</td><td class="n"><b>248.6</b></td><td class="n">~240</td><td class="n"><b>80</b> <span class="tag t-meas">נמדד</span></td></tr>
+<tr><td class="n">IPE 500</td><td class="n">500 · 10.2 · 16 · 21</td><td class="n"><b>426</b></td><td class="n">~415</td><td class="n">—</td></tr>
+<tr><td class="n">HE 200 A</td><td class="n">190 · 6.5 · 10 · 18</td><td class="n"><b>134</b></td><td class="n">125–130</td><td class="n">—</td></tr>
+<tr><td class="n">HE 300 B</td><td class="n">300 · 11 · 19 · 27</td><td class="n"><b>208</b></td><td class="n">~200</td><td class="n"><b>120</b> <span class="tag t-meas">נמדד</span></td></tr>
+</table>
+<p class="fn">⭐ <b>הפרופיל נושא את הגייג' שלו,</b> והתוכנה יודעת אותו: בשדה קידוח אצלנו
+<span class="mono">y=2*W</span> נתן <b>120</b> על HE300B ו-<b>80</b> על IPE300
+<span class="tag t-meas">נמדד</span>. ⇒ <b>אל תמציא מרווח ברגים באגף — קרא את הגייג' של החתך.</b></p>
+
+<h3>1.2 ⭐ חלון ההברגה של האגף — ולמה הכלי, ולא הכוח, קובע את הטיפולוגיה</h3>
+<p>כדי להבריג באגף משני צידי הווב צריך ש<b>חצי-הגייג'</b> יקיים בו-זמנית:</p>
+<pre>גדול מ:   tw/2 + r + רדיוס הסוקט        (אחרת המפתח נתקע ברדיוס השורש)
+קטן מ:    b/2 − 1.2·d0                   (אחרת אין מרחק קצה)</pre>
+<table>
+<tr><th>חתך + בורג</th><th>מינימום מהכלי</th><th>מקסימום מהקצה</th><th>הכרעה</th></tr>
+<tr><td>‏IPE 200 + M16</td><td class="n">32.8</td><td class="n">28.4</td><td>⛔ <b>החלון סגור — חוסר 4.4 מ"מ.</b> הפתרונות: מפתח טבעת, ירידה ל-M12, או <b>לזנוח את פרט האגף</b> ולעבור לפלטת קצה/ווב</td></tr>
+<tr><td><b>‏IPE 300 + M20</b></td><td class="n">39.55</td><td class="n">48.6</td><td>⭐ הגייג' התקני <span class="mono">W=80</span> ⇒ חצי 40 = <b>0.45 מ"מ מעל הסוקט</b>. <b>הגייג' הוא גודל הכלי</b>, ולכן אסור "לרכז" אותו פנימה</td></tr>
+<tr><td>‏IPE 500 + M20</td><td class="n">47.1</td><td class="n">73.6</td><td>חלון רחב — שורה לכל צד בנוחות</td></tr>
+</table>
+
+<h3>1.3 🛑 תיקון לטענה שלי מהמהדורה הראשונה</h3>
 <div class="box warn">
-<b>מה זה אומר ל-EB בפועל:</b> ‏<span class="tag t-shop">נוהג</span> כמעט כל מה שאנחנו מייצרים הוא
-<b>קטגוריה A</b> — ברגי 8.8 בהידוק רגיל (‏<span class="mono">8.8/S</span> ב-ProSteel, שזו קטגוריית
-ההידוק <span class="mono">snug-tightened</span> של AS/NZS 1252). ‏<b>מתיחה מראש (B/C/E) היא החלטה
-יקרה</b>: היא דורשת ברגי <span class="mono">HV/HR</span> לפי EN 14399 עם אום ודסקית תואמים, נוהל
-הידוק מבוקר (מומנט / סיבוב-אום / דסקית-חיווי), <b>וטיפול פני-מגע</b> — ולכן אם שרטוט דורש
-<span class="mono">preloaded</span> בלי סיבה מוצהרת, <b>זו בדיוק שאלת ה-value engineering</b>.
+כתבתי ש"פלטת הווב 150 יושבת בתוך ווב חופשי של 170, עשרה מ"מ מכל צד". <b>זה היה שגוי</b>: 170 הוא
+‏<span class="mono">h−2tf</span> ומתעלם מ<b>רדיוס השורש</b>. הווב השטוח של HE200A הוא
+<b><span class="mono">d = 190 − 20 − 2×18 = 134</span></b>. ⇒ הפלטה 150 <b>רוכבת 8 מ"מ על כל
+רדיוס שורש</b>, ובליטת השורש שם היא <b>1.88 מ"מ</b> — כלומר הפלטה נשענת על שני הרדיוסים
+ומרווחת באמצע, והברגים סוגרים את הפער בכפיפה.
+<b>ריפוי זול: ‏snipe ‏20×20 בארבע הפינות, או פלטה 130.</b> ❓ <b>שאלה לאמיר, לא תיקון</b> —
+אם בפועל הפלטה נכנסת ומתהדקת, אז זה נוהג מוכח בשטח שגובר על החשבון.
 </div>
 
-<h3>1.1 מה קובע את כושר הבורג — ארבעה מסלולי כשל, לא אחד</h3>
-<p><span class="tag t-code">EN 1993-1-8 §3.6</span> חיבור מוברג נכשל באחד מארבעה, והחלש שבהם קובע:</p>
+<h3>1.4 שני כללי אצבע שנמדדו על הברגים שלנו</h3>
 <table>
-<tr><th>מסלול</th><th>הביטוי</th><th>מה שולט בו בפועל</th></tr>
-<tr><td><b>גזירת הבורג</b></td><td class="mono">F<sub>v,Rd</sub> = α<sub>v</sub> f<sub>ub</sub> A / γ<sub>M2</sub></td><td>‏α<sub>v</sub>=0.6 כשמישור הגזירה בהברגה (‏8.8), ‏0.5 ל-10.9. ‏<b>מישור גזירה בגוף החלק חזק יותר</b></td></tr>
-<tr><td><b>נשיאה בפלדה</b></td><td class="mono">F<sub>b,Rd</sub> = k<sub>1</sub> α<sub>b</sub> f<sub>u</sub> d t / γ<sub>M2</sub></td><td><b>עובי הפלטה ומרחקי הקצה</b> — לא הבורג. פלטה דקה = הנשיאה קובעת</td></tr>
-<tr><td><b>משיכה בבורג</b></td><td class="mono">F<sub>t,Rd</sub> = 0.9 f<sub>ub</sub> A<sub>s</sub> / γ<sub>M2</sub></td><td>שטח ההברגה, ותופעת ה-<b>prying</b> שמגדילה את הכוח בפועל</td></tr>
-<tr><td><b>ניקוב הפלטה</b></td><td class="mono">B<sub>p,Rd</sub> = 0.6 π d<sub>m</sub> t<sub>p</sub> f<sub>u</sub> / γ<sub>M2</sub></td><td>ראש/אום שנשלף דרך פלטה דקה — <b>המסלול שנשכח</b></td></tr>
+<tr><th>הכלל</th><th>הבדיקה</th></tr>
+<tr><td><b>אורך בורג</b> <span class="mono">L = חבילה + 1.6d</span>, מעוגל למעלה ל-5</td><td>שחזר את <b>כל ארבעת</b> הברגים שנמדדו: ‏M20×55 (חבילה 20) · M20×60 (26.5) · M16×50 (24) · M16×55 (28.5) <span class="tag t-meas">נמדד</span></td></tr>
+<tr><td><b>‏spare = אורך נומינלי − חבילה</b> יושב על <b>22–31</b></td><td>‏26 · 26.5 · 33.5 · 35 בכל המדגמים ⇒ אום + דסקית + הברגה בולטת</td></tr>
 </table>
-<p class="fn">‏<b>ועוד שני כשלים שהם של החיבור ולא של הבורג:</b> <b>block tearing</b> (קריעת גוש
-פלדה סביב קבוצת ברגים) ו-<b>long joints</b> — בחיבור ארוך מ-‎15d הברגים אינם מתחלקים שווה,
-ו-EN מוריד את הכושר במקדם <span class="mono">β<sub>Lf</sub></span>. ⇒ <b>שורה ארוכה של ברגים
-אינה יעילה</b>; עדיף פחות ברגים גדולים או פריסה מרובעת.</p>
 
-<h3>1.2 חורים, מרווחים ומרחקי קצה — כאן חיים כללי הברזל</h3>
+<!-- ================================================================= -->
+<h2>2. חיבור פלאנג-אל-פלאנג — התקן של ארץ ברזל</h2>
+
+<div class="box amir">
+<b>הפרט, במילים של אמיר עצמו:</b> <i>"הפלטה נמצאת מעל הפלאנג העליון ובנוסף יש פלטה מתחת לפלאנג
+התחתון. במקרה זה אין פה קשר ריתוך. הפלטה מיוצרת בנפרד, והפרופילים מיוצרים בנפרד, ובשטח מחברים
+ביניהם עם הפלטה והברגים."</i><br>
+⇒ <b>שחבור מוברג לחלוטין, ארבע פלטות מבחוץ, אפס ריתוך שדה, אפס ריתוך מפעל בפרט עצמו.</b>
+זה התקן, וכל השאר בפרק הזה נמדד מולו.
+</div>
+
+<figure>
+<svg width="640" height="200" viewBox="0 0 640 200">
+  <g stroke="#0d2a4a" stroke-width="1.5">
+    <rect x="40" y="70" width="250" height="12" fill="#dfe8f1"/>
+    <rect x="40" y="118" width="250" height="12" fill="#dfe8f1"/>
+    <rect x="40" y="82" width="250" height="36" fill="#eef3f8"/>
+    <rect x="350" y="70" width="250" height="12" fill="#dfe8f1"/>
+    <rect x="350" y="118" width="250" height="12" fill="#dfe8f1"/>
+    <rect x="350" y="82" width="250" height="36" fill="#eef3f8"/>
+    <rect x="180" y="56" width="280" height="14" fill="#f7e9c9"/>
+    <rect x="180" y="130" width="280" height="14" fill="#f7e9c9"/>
+    <rect x="180" y="86" width="280" height="28" fill="#f0f6de" opacity="0.85"/>
+  </g>
+  <g fill="#a3312c" stroke="none">
+    <circle cx="215" cy="63" r="3.2"/><circle cx="255" cy="63" r="3.2"/><circle cx="295" cy="63" r="3.2"/>
+    <circle cx="345" cy="63" r="3.2"/><circle cx="385" cy="63" r="3.2"/><circle cx="425" cy="63" r="3.2"/>
+    <circle cx="215" cy="137" r="3.2"/><circle cx="255" cy="137" r="3.2"/><circle cx="295" cy="137" r="3.2"/>
+    <circle cx="345" cy="137" r="3.2"/><circle cx="385" cy="137" r="3.2"/><circle cx="425" cy="137" r="3.2"/>
+    <circle cx="230" cy="94" r="3"/><circle cx="270" cy="94" r="3"/><circle cx="370" cy="94" r="3"/><circle cx="410" cy="94" r="3"/>
+    <circle cx="230" cy="106" r="3"/><circle cx="270" cy="106" r="3"/><circle cx="370" cy="106" r="3"/><circle cx="410" cy="106" r="3"/>
+  </g>
+  <g stroke="#a3312c" stroke-width="1" stroke-dasharray="3 3"><path d="M320 40 v120"/></g>
+  <g font-size="8.6" fill="#33475b">
+    <text x="300" y="34">הצומת</text>
+    <text x="470" y="52">פלטת אגף עליון — רוחב = רוחב האגף בדיוק</text>
+    <text x="470" y="155">פלטת אגף תחתון</text>
+    <text x="150" y="102">פלטות ווב (שתיים, אחת מכל צד)</text>
+  </g>
+</svg>
+<figcaption>התקן של ארץ ברזל: ארבע פלטות מבחוץ, הכל מוברג בשטח. אדום = ברגים.</figcaption>
+</figure>
+
+<h3>2.1 רוחב הפלטה — ושתי תשובות שונות לגמרי</h3>
+<table>
+<tr><th></th><th>מוברג</th><th>מרותך</th></tr>
+<tr><td>רוחב</td><td><b>= רוחב האגף בדיוק</b> (200 על אגף 200)</td><td><b>‏b − 2(a+4) ≈ 180</b></td></tr>
+<tr><td>למה</td><td>⭐ <b>מיושר בעין, אפס מדידה בשטח</b> — הפלטה ממרכזת את עצמה על האגף. זו החלטת ייצור, לא אסתטיקה</td><td>רוחב 200 <b>חוסם את התפר האורכי</b> — אין מקום להניח את הצוואר בקצה</td></tr>
+</table>
+<p class="fn"><span class="tag t-shop">נוהג</span> <b>פלטה פנימית מכפילה את מישורי הגזירה</b>: פלטה חיצונית לבד = גזירה חד-מישורית;
+פלטה פנימית בין האגפים מוסיפה מישור שני ⇒ ‏94 → <b>188 kN</b> לבורג M20 ⇒ חצי ברגים.
+⚠️ ובמאקרו השחבור <b>שש תיבות סימון מייצרות שמונה פלטות</b> <span class="tag t-meas">נמדד</span> —
+כל פלטה פנימית נחתכת לשתי רצועות כי הווב חוצה את הפן הפנימי של האגף. <b>הרצועה הפנימית חייבת
+snipe ‏20×20</b>, והיא מורכבת <b>לפני</b> שהקורה מונחת.</p>
+
+<h3>2.2 האגף העליון הלא-מוברג — מה זה עולה במספרים</h3>
+<div class="box warn">
+במדגם הראשון של אמיר האגף העליון נותר <b>ללא ברגים</b> (הוא לא הצליח לקדוח, ובצדק לא מידל בורג
+בלי חור). המשמעות המדודה: שחבור שבו רק הווב והאגף התחתון מוברגים מעביר בסדר גודל של
+<b>‏17% מ-M<sub>pl</sub></b>, מול <b>~74%</b> כשגם האגף העליון מוברג. ⇒ <b>זה לא "פרט חסר" אלא
+חיבור אחר לגמרי.</b><br>
+🛠️ <b>והתיקון בשטח, כפי שהוא נעשה בפועל:</b> מקדחה מגנטית, <b>‏45–60 דקות</b> לצומת —
+<b>וחייבים לקדוח דרך הפלטה עצמה כתבנית</b>. שש-עשרה חורים על 800 מ"מ במרווח 2 מ"מ
+<b>לא יתלכדו</b> אחרת.
+</div>
+
+<h3>2.3 ⭐ ולמה בכלל צריך rat hole בשחבור מרותך</h3>
+<p><span class="tag t-shop">נוהג</span> את תפר האגף אי אפשר להריץ לרוחב האגף עד הסוף — <b>הווב
+באמצע</b>. לכן חותכים בווב <b>חור גישה (rat hole)</b> בצומת ווב-אגף: רדיוס <b>35</b> או snipe
+‏<b>50</b>. בלי זה מקבלים <b>תפר מופסק בדיוק בנקודת המאמץ הגבוה</b> — וזה גם הסבר למה בגרסה
+המוברגת של אמיר אין את הבעיה הזאת בכלל.</p>
+
+<!-- ================================================================= -->
+<h2>3. חיבור בווב — ומה מגביל אותו</h2>
+<figure>
+<svg width="640" height="170" viewBox="0 0 640 170">
+  <g stroke="#0d2a4a" stroke-width="1.5">
+    <rect x="30" y="20" width="16" height="130" fill="#dfe8f1"/>
+    <rect x="46" y="70" width="52" height="18" fill="#f7e9c9"/>
+    <rect x="80" y="62" width="110" height="34" fill="#eef3f8"/>
+    <circle cx="60" cy="79" r="3" fill="#a3312c" stroke="none"/><circle cx="88" cy="79" r="3" fill="#a3312c" stroke="none"/>
+    <text x="40" y="165" font-size="8.6" fill="#33475b" direction="rtl">פלטת גזירה</text>
+
+    <rect x="230" y="20" width="16" height="130" fill="#dfe8f1"/>
+    <rect x="246" y="60" width="34" height="38" fill="#d8ebe0"/>
+    <path d="M246 60 h34 M246 98 h34" stroke="#1f7a4d"/>
+    <rect x="270" y="62" width="110" height="34" fill="#eef3f8"/>
+    <circle cx="258" cy="70" r="3" fill="#a3312c" stroke="none"/><circle cx="258" cy="88" r="3" fill="#a3312c" stroke="none"/>
+    <text x="238" y="165" font-size="8.6" fill="#33475b" direction="rtl">זוג זוויתנים</text>
+
+    <rect x="430" y="20" width="16" height="130" fill="#dfe8f1"/>
+    <path d="M446 96 h44 v10 h-44 z" fill="#f7e9c9"/>
+    <rect x="446" y="62" width="110" height="34" fill="#eef3f8"/>
+    <circle cx="470" cy="79" r="3" fill="#a3312c" stroke="none"/>
+    <text x="438" y="165" font-size="8.6" fill="#33475b" direction="rtl">מושב — הקורה נשענת לפני שמבריגים</text>
+  </g>
+</svg>
+<figcaption>שלוש הדרכים בווב. השלישית היא פרט בטיחות בהרכבה: הקורה יושבת לפני שיד נכנסת לחבר.</figcaption>
+</figure>
+
+<table>
+<tr><th>הפרט</th><th>מה מעביר</th><th>למה הפועל אוהב/שונא אותו</th></tr>
+<tr><td><b>פלטת גזירה</b></td><td>גזירה</td><td>⭐ <b>המנוף מניח את הקורה על הברגים</b> — הכי מהיר. אקסצנטריות קטנה, נסבלת</td></tr>
+<tr><td><b>זוג זוויתנים</b></td><td>גזירה, סימטרי</td><td>אפס אקסצנטריות, אבל <b>פי שניים חלקים וברגים</b></td></tr>
+<tr><td><b>מושב / זווית נשיאה</b></td><td>גזירה</td><td><b>נושא לפני ההידוק</b> ⇒ בטיחות; בולט</td></tr>
+<tr><td><b>פלטת קצה</b></td><td>גזירה (+מומנט בגרסה מוארכת)</td><td>אורך הקורה הופך <b>קריטי</b> — סבילות אפס</td></tr>
+<tr><td><b>קורה במפתן, אגפים בגובה אחד</b></td><td>גזירה</td><td>מחייב <b>קיטום</b> — ראו §4.4</td></tr>
+</table>
+
+<div class="box">
+<b>⭐ האילוץ שקובע כמה ברגים אפשר בכלל:</b> ב-HE200A נשארים <b>134 מ"מ</b> ווב שטוח ורק
+<b>~100</b> שמישים למפתח ⇒ <b>שתי שורות M20, לא יותר.</b> ולא בגלל כושר — <b>בגלל מקום.</b><br>
+<span class="tag t-meas">נמדד</span> ובפרט של אמיר האילוץ נדחק דווקא ב<b>מרחק הקצה</b>: שורות
+ב-‏<span class="mono">z=±50</span> בפלטה 150 נותנות <b>e₂ = 25</b> מול
+<b>1.2·d₀ = 26.4</b> <span class="tag t-code">EN 1993-1-8 טבלה 3.3</span> — חוסר של 1.4 מ"מ,
+<b>שנסגר בשורות ב-±48 בלי לשנות פלטה</b>. ❓ מובא כשאלה, לא כתיקון.
+</div>
+<p class="fn"><b>שני מספרים שמסבירים למה הווב הוא החלק ה"בטוח":</b> חור בווב עולה
+<b>~1.9%</b> מ-I<sub>y</sub>, ובאגף <b>10.7%</b>. וגם בתוכנה: הווב אינו מתווכח, בעוד שבורר האגף
+של המקדח <b>מתויג הפוך</b> (§7.3). ⚠️ ובקורה נמוכה עם שני ברגים <b>האקסצנטריות קובעת ולא
+הגזירה</b> (‏99 kN מול 94 ב-e=60) ⇒ מקרבים את קו הברגים לתומך.</p>
+
+<!-- ================================================================= -->
+<h2>4. חתוכים בזווית — הפרק שאמיר ביקש להדגיש</h2>
+
+<h3>4.1 למה זה נמצא כמעט בכל פרויקט</h3>
+<p><b>כי יציבות דורשת שילוש (triangulation), ושילוש פירושו מוטות שמגיעים בזוויות שאינן 90°.</b>
+וכל הגעה כזאת דורשת <b>קצה חתוך בזווית, גאסט, או שניהם</b>. מכאן זה מגיע: אלכסוני ייצוב · שיפועי
+גג · מסבכים · מסגרות משופעות · צמתים לא-אורתוגונליים בפלאן · גשרונים וקנופיות · כל מעבר בין
+מפלסים.</p>
+
+<h3>4.2 ⭐⭐⭐ אורך ההפסקה במפגש שני מוטות — הנוסחה, ותיקון שני לעצמי</h3>
+<figure>
+<svg width="600" height="215" viewBox="0 0 600 215">
+  <g stroke="#0d2a4a" stroke-width="1.5">
+    <path d="M60 180 L360 40" stroke="#1c4f82" stroke-width="26" stroke-linecap="butt" fill="none" opacity="0.5"/>
+    <path d="M70 40 L235 133" stroke="#b8860b" stroke-width="26" fill="none" opacity="0.75"/>
+    <path d="M295 168 L460 60" stroke="#b8860b" stroke-width="26" fill="none" opacity="0.75"/>
+  </g>
+  <g stroke="#a3312c" stroke-width="1.2" fill="none" stroke-dasharray="4 3">
+    <path d="M235 133 L295 168"/>
+  </g>
+  <g font-size="9" fill="#24425f" direction="ltr">
+    <text x="215" y="196">הפער</text>
+    <text x="370" y="30">המוט הרצוף עובר</text>
+    <text x="470" y="90">המופסק נחתך</text>
+    <text x="120" y="120" fill="#1f7a4d">φ</text>
+  </g>
+  <g font-size="9.5" fill="#0d2a4a" direction="ltr">
+    <text x="300" y="140">חצי-פער = (w/2)·cot(φ/2)</text>
+    <text x="300" y="156">‎= ( w_A/2 + (w_B/2)·cos φ ) / sin φ</text>
+  </g>
+</svg>
+<figcaption>הצטלבות שני מוטות: אחד עובר, השני נפסק. הפינה של פאת הקצה היא שנוגעת — לא הציר.</figcaption>
+</figure>
+<div class="box warn">
+במהדורה הראשונה כתבתי <span class="mono">w / sin φ</span>. <b>זה רק האיבר הראשון</b> — הוא מפנה
+את רוחב המוט <b>הרצוף</b> ומתעלם מכך שגם למוט <b>המופסק</b> יש רוחב, ופאת הקצה שלו מרובעת עם
+<b>שתי פינות שבולטות הצידה</b>. לשני מוטות ברוחב זהה יש זהות שהופכת את זה לחשבון כיס:
+<b><span class="mono">חצי-פער = (w/2)·cot(φ/2)</span></b>, והטעות הנאיבית היא בדיוק
+<span class="mono">(1 + cos φ)</span>.
+</div>
+<table>
+<tr><th>‏φ בין המוטות</th><th>נאיבי (w/2)/sinφ</th><th><b>המלא (w/2)·cot(φ/2)</b></th><th>תת-הערכה</th><th>מה זה אומר</th></tr>
+<tr><td class="n">90°</td><td class="n">100</td><td class="n"><b>100</b></td><td class="n">0%</td><td>בזווית ישרה הנאיבי נכון</td></tr>
+<tr><td class="n">67.4° <span class="fn">(מסגרת D)</span></td><td class="n">108.3</td><td class="n"><b>149.0</b></td><td class="n">+38%</td><td>הפער שנמדד: <b>133.3</b></td></tr>
+<tr><td class="n">58.1° <span class="fn">(המדגם שלי)</span></td><td class="n">117.8</td><td class="n"><b>180.0</b></td><td class="n">+53%</td><td>‏117.8 ⇒ 2 התנגשויות · 185 ⇒ <b>0</b></td></tr>
+<tr><td class="n">30°</td><td class="n">200</td><td class="n"><b>373</b></td><td class="n">+87%</td><td>⚠️ <b>בצלבים שטוחים הפרטים נופלים</b></td></tr>
+</table>
+<div class="box amir">
+<b>ואמיר סגר את השאלה הזאת, וזו התשובה שקובעת:</b> <i>"תתאר לעצמך, פרקטית, איך מחברים בייצור
+‏2 פרופילים זהים באלכסונים שצריכים לעבור באותו מישור? זה לא הגיוני, ואפילו יותר מזה — ישר
+ייווצר לנו בעיית התנגשות בתוכנה. מידלתי כאן מסגרת מלבנית <b>מרותכת כולה</b> עם חיזוקי אלכסונים
+<b>חתוכים בזווית</b> שירותכו למסגרת הכללית."</i><br>
+⇒ ‏<b>שני מוטות אינם יכולים לתפוס נפח אחד</b>, ולכן אחד עובר והשני נחתך — <b>וזה הנימוק, לפני
+כל נוסחה.</b> ‏⚠️ ובקצה <b>חתוך בזווית שנשען על הפאה</b> החשבון שונה מקצה מרובע: הפאה מונחת על
+המשטח ואין פינה בולטת, ולכן הדרישה נופלת חזרה ל-<span class="mono">w/sin φ</span>.
+<b>קצה מרובע ⇒ ‏cot(φ/2). קצה חתוך בזווית ⇒ w/sinφ.</b> שתי הנוסחאות נכונות — <b>לשתי הכנות
+קצה שונות</b>, וזה ההבדל שהחסרתי.
+</div>
+
+<h3>4.3 הטקסונומיה, והמחיר בייצור</h3>
+<table>
+<tr><th>החיתוך</th><th>מה זה</th><th>מתי</th><th>המחיר בבית-מלאכה</th></tr>
+<tr><td><b>מיטר</b></td><td>כל מוט נחתך בחצי הזווית הכלולה</td><td>פינת מסגרת, שני מוטות זהים</td><td>זווית אחת במסור — <b>זול</b>, אבל <b>שני מוטות ולא אחד</b></td></tr>
+<tr><td><b>קצה משופע (bevel/skew)</b></td><td>מישור אחד בזווית</td><td>מוט שנפגש עם פאה משופעת</td><td>הגדרת מסור אחת — <b>הזול ביותר</b></td></tr>
+<tr><td><b>קיטום (cope)</b></td><td>הסרת אגף (וחלק מהווב)</td><td>קורה לתוך ווב מפתן, אגפים בגובה אחד</td><td><b>יקר</b>: מכונת קיטום או חיתוך + השחזה</td></tr>
+<tr><td><b>‏rat hole</b></td><td>רדיוס בפינה הפנימית</td><td>בכל קיטום ובכל תפר שחוצה צומת</td><td>זול, <b>וחובה</b> — פינה חדה = מקור סדק</td></tr>
+<tr><td><b>‏snipe / קיטום פינה</b></td><td>חיתוך פינת פלטה</td><td>לפנות רדיוס שורש או תפר</td><td>זניח — <b>וחוסך התאמה בשטח</b></td></tr>
+<tr><td><b>הכנת תפר (V/X/K/J)</b></td><td>שיפוע לחדירה מלאה</td><td>‏CJP</td><td>יקר: הכנה + NDT</td></tr>
+<tr><td><b>צומת משופע בפלאן</b></td><td>מוט שמגיע בזווית ≠ 90° בפלאן</td><td>רשתות לא-אורתוגונליות</td><td>ראו §4.5 — <b>או שמעבירים את הזווית לפלטה</b></td></tr>
+</table>
+<div class="box ok">
+<b>⭐⭐ עמוד השדרה של הפרק, ובמשפט אחד:</b> <b>להעביר את הזווית אל תוך פלטה, לא אל תוך המוט.</b>
+פלטה נחתכת בטבלה דו-ממדית — <b>כל זווית באותו מחיר</b>. מוט דורש <b>הגדרת מכונה לכל מישור</b>.
+<span class="tag t-meas">נמדד</span> וההוכחה במודל של אמיר עצמו: מסגרת A (מיתר רצוף + עמוד
+מותאם) נותנת <b><span class="mono">cutPlanes=0</span></b> ומידה אחת בסרט מודד; מסגרת B (פינות
+במיטר) נותנת <b>שמונה מישורי חיתוך</b> ושתי זוויות לכל מוט.
+</div>
+
+<h3>4.4 הקיטום, במידות</h3>
+<figure>
+<svg width="580" height="185" viewBox="0 0 580 185">
+  <g stroke="#0d2a4a" stroke-width="1.5">
+    <rect x="40" y="20" width="16" height="150" fill="#dfe8f1"/>
+    <rect x="24" y="20" width="48" height="12" fill="#dfe8f1"/>
+    <rect x="24" y="158" width="48" height="12" fill="#dfe8f1"/>
+    <path d="M72 40 h150 v12 h-150 z" fill="#eef3f8"/>
+    <path d="M72 52 h150 v46 h-150 z" fill="#eef3f8"/>
+    <path d="M72 98 h150 v12 h-150 z" fill="#eef3f8"/>
+    <path d="M72 20 h34 v20 h-34 z" fill="#fdf4f3" stroke="#a3312c" stroke-dasharray="3 2"/>
+    <circle cx="106" cy="44" r="8" fill="none" stroke="#a3312c" stroke-dasharray="2 2"/>
+  </g>
+  <g font-size="8.8" fill="#33475b">
+    <text x="240" y="30">האגף העליון מוסר — זה הקיטום</text>
+    <text x="240" y="52">אורך הקיטום = עומק המפתן/2 + סבילות</text>
+    <text x="240" y="74">עומק = tf(תומך) + r + מרווח</text>
+    <text x="240" y="96">‏rat hole ברדיוס 10–35 בפינה הפנימית</text>
+    <text x="240" y="118">בלי הרדיוס — פינה חדה = מקור סדק</text>
+  </g>
+</svg>
+<figcaption>קיטום קורה במפתן: מה מוסר, ולמה הפינה הפנימית חייבת רדיוס.</figcaption>
+</figure>
+
+<h3>4.5 שלושה חשבונות שמונעים פסולת בבית-מלאכה</h3>
+<table>
+<tr><th>החשבון</th><th>המספר</th><th>מה קורה בלעדיו</th></tr>
+<tr><td><b>מוט על שיפוע</b><br><span class="mono">ארוך − קצר = h·tan γ</span></td><td>מוט 200 על שיפוע 20% ⇒ <b>40 מ"מ</b> הפרש בין הפאות</td><td>מידת אורך "יחידה" שגויה ב-40 מ"מ ⇒ מוט לפח</td></tr>
+<tr><td><b>סבילות זווית</b></td><td>‏1° על פריסת ברגים 400 ⇒ <b>6.99 מ"מ</b> מול מרווח חור 2</td><td>הברגה שלא נכנסת ⇒ <b>הרחבה בשטח (reaming)</b></td></tr>
+<tr><td><b>סבילות צומת משופע</b></td><td>פלטת גזירה עם <b>קו ברגים אחד</b> סופגת <b>10–15°</b>; שני קווים בגייג' 70 מגבילים ל-<b>~1.6°</b></td><td>⭐ ולכן בצומת משופע: <b>קו ברגים אחד</b></td></tr>
+</table>
+
+<!-- ================================================================= -->
+<h2>5. חיזוק אלכסונים — שתי השאלות של אמיר, בתשובה מלאה</h2>
+
+<h3>5.1 "מסגרת מרובעת שמחוזקת באלכסונים — מה זה נותן לה בדיוק?"</h3>
+<figure>
+<svg width="620" height="175" viewBox="0 0 620 175">
+  <g stroke="#a3312c" stroke-width="2.4" fill="none">
+    <path d="M40 140 h150 v-100 h-150 z"/>
+    <path d="M40 140 l30 -12 M190 140 l30 -12" stroke-dasharray="3 3" stroke-width="1.2"/>
+    <path d="M70 128 h150 v-100 h-150 z" stroke-dasharray="5 4" stroke-width="1.3"/>
+    <text x="70" y="165" font-size="9" fill="#a3312c" direction="rtl">מנגנון — נכנע ללא כל התנגדות</text>
+  </g>
+  <g stroke="#1f7a4d" stroke-width="2.4" fill="none">
+    <path d="M330 140 h150 v-100 h-150 z"/>
+    <path d="M330 140 L480 40" stroke-width="3"/>
+    <text x="352" y="165" font-size="9" fill="#145c39" direction="rtl">משולש — הצורה נעולה</text>
+  </g>
+  <g font-size="9" fill="#24425f" direction="ltr">
+    <text x="500" y="70">N = H / cos θ</text>
+    <text x="500" y="86">עמודים: ± H·h / B</text>
+    <text x="500" y="102">בסיס: עקירה</text>
+  </g>
+</svg>
+<figcaption>מלבן עם צמתים מפורקים הוא מנגנון. האלכסון הופך אותו לשני משולשים — וכוחות עוברים צירית.</figcaption>
+</figure>
+<ol>
+<li><b>זה לא "מחזק" — זה הופך אי-יציבות ליציבות.</b> מלבן עם ארבעה צמתים מפורקים הוא <b>מנגנון</b>
+בעל דרגת חופש אחת (קריסת מקבילית). שום הגדלת חתך לא פותרת מנגנון.</li>
+<li><b>מחליף כפיפה בכוח צירי.</b> וזה כל הסיפור הכספי: <span class="tag t-meas">חישוב</span>
+יחס הקשיחות אלכסון מול מסגרת-כפיפה מסתכם אלגברית ב-
+<span class="mono">(h/i)²·(h/L_d)²·cos²θ/12</span>; ל-HE200B בגובה 4 מ' זה
+<b>‏46.8² × 0.308 × 0.0577 ≈ 39</b> ⇒ <b>פי ~39 קשיחות לכל קילוגרם פלדה.</b> כדי לקנות אותה
+קשיחות בכפיפה צריך <b>פי ~7 פלדה</b> (‏HE400B במקום HE200B).</li>
+<li><b>מקצר אורך קריסה</b> של מה שהוא מחזיק.</li>
+<li><b>המסגרת עומדת לבד בהרכבה</b> לפני שהכול הודק — נושא בטיחות.</li>
+</ol>
+<div class="box">
+<b>שני מספרים שמפתיעים:</b><br>
+⭐ <b>קשיחות אלכסון לקילוגרם אינה תלויה בחתך שבחרת:</b>
+<span class="mono">K/m = E·cos²θ/(ρL²)</span> — השטח מצטמצם. ‏SHS100×100×5 ו-L90×90×9 יצאו
+<b>0.353 ו-0.355 kN/mm לק"ג</b>. ⇒ <b>בחירת החתך היא החלטת קריסה וכושר, לא קשיחות-למשקל.</b><br>
+⭐ <b>הזווית האופטימלית נגזרת ולא מצוטטת:</b> <span class="mono">B = h√2</span> ⇒
+<b>θ = 35.26°</b> — <b>והאופטימום שטוח</b> (‏27°–45° בתוך 8%). ⇒ אין סיבה לעקם גיאומטריה בשביל זווית.
+</div>
+
+<h3>5.2 "מבנה שלם על עמודים, ואלכסונים בין העמודים — מה זה נותן?"</h3>
+<p><b>שרשרת מסלול העומס, קישור-קישור:</b></p>
+<pre>רוח על החיפוי → מריצים/גירטים → מישור הגג או הרצפה (אלכסוני פלאן / דיאפרגמה)
+   → הרצועות המיוצבות האנכיות (האלכסונים בין העמודים) → בסיסי העמודים → היסודות</pre>
+<p><b>כל קישור שחסר הופך את המבנה למנגנון באותו כיוון.</b> וגם כשהכושר מספיק — התזוזה (drift)
+נכשלת הרבה לפני.</p>
+<table>
+<tr><th>מה זה מייצב</th><th>המספר שממחיש</th></tr>
+<tr><td><b>גזירה מצטברת</b></td><td>⭐ האלכסון בקומה התחתונה נושא את <b>סכום כל מה שמעליו</b>. בדוגמה של 3 קומות: כוח האלכסון גדל <b>×3.7</b>, אבל כוח העמוד גדל <b>×7</b> ומגיע ל-<b>280 kN עקירה</b> בבסיס. <b>לכן הגאסטים בקומה התחתונה הם הגדולים בבניין.</b></td></tr>
+<tr><td><b>פיתול בפלאן</b></td><td>מישור מיוצב אחד לכל כיוון הוא <b>מנגנון פיתולי</b>; עמוד פינה עולה מ-66.7 ל-<b>166.7 kN (×2.5)</b>. ⇒ <b>לפחות שני מישורים לא-קוליניאריים בכל כיוון, וסימטריה.</b></td></tr>
+<tr><td><b>אורך קריסה</b></td><td>עמוד ברצועה מיוצבת מקבל אורך קריסה קצר במישור הזה; האלכסון גם מייצב מיתר לחוץ ואגף עליון של קורה</td></tr>
+<tr><td><b>רגישות לסדר שני</b></td><td>קשיחות הייצוב היא בדיוק מה שקובע את רגישות ה-P-Δ <span class="tag t-code">EN 1993-1-1, בשם התקן</span></td></tr>
+</table>
+<div class="box warn">
+<b>⚠️ ומה זה אומר לארץ ברזל, בכסף:</b> רצועה מיוצבת היא <b>פלדה זולה וחיבורים יקרים</b>.
+<span class="tag t-meas">חישוב</span> בדוגמה: <b>107 ק"ג צינור</b> מול <b>47 ק"ג גאסטים + 10
+חורים + 350 מ"מ תפר</b> — <b>על גיאומטריה שאינה חוזרת</b>. ⇒ כששרטוט מגיע, שתי שאלות:
+האם כוחות האלכסון עקביים עם גיאומטריית הרצועה, והאם הגאסטים תוכננו לכוח <b>או הועתקו מפרויקט אחר</b>.<br>
+⛔ <b>ובסיס העמוד של רצועה מיוצבת הוא הבסיס היחיד בבניין עם עקירה אמיתית</b> — והפרט הסטנדרטי
+שלנו הוא פרט לחיצה בלבד ללא מסלול גזירה מוצהר (מחקר הביסוס). <b>זו שאלה לקונסטרוקטור לפני ייצור.</b>
+</div>
+
+<h3>5.3 הטיפולוגיות, ומה כל אחת עושה לפועל</h3>
+<table>
+<tr><th>הטיפוס</th><th>מתי</th><th>הקצה בבית-מלאכה</th><th>המלכודת</th></tr>
+<tr><td><b>אלכסון בודד</b></td><td>הזול; כיוון עומס אחד דומיננטי</td><td>שני קצוות בזווית + גאסט</td><td>אסימטרי</td></tr>
+<tr><td><b>צלב X</b></td><td>הנפוץ — כל כיוון מפעיל את המתוח</td><td>אחד רצוף, השני <b>חתוך בזווית</b></td><td>⭐ <b>הצומת הוא שחבור בעומס מלא</b> — הכוח הצירי קבוע לאורך המוט, ולכן "שני ברגים שיחזיקו" נכשל בעומס הראשון</td></tr>
+<tr><td><b>‏V / Λ</b></td><td>כשצריך פתח באמצע</td><td>שני קצוות לצומת אחד</td><td>כוח אנכי לא-מאוזן לאמצע הקורה</td></tr>
+<tr><td><b>K</b></td><td>מסגרות גבוהות</td><td>צומת באמצע העמוד</td><td>מכניס כוח לאמצע עמוד</td></tr>
+<tr><td><b>מוטות מתיחה</b></td><td>קל ואסתטי</td><td>עיניות ומותחנים</td><td>⛔ <b>לא לערבב עם אלכסוני לחיצה באותה רצועה</b></td></tr>
+<tr><td><b>אלכסוני פלאן/גג</b></td><td>אוספים ומעבירים לרצועות</td><td>חיבורים קלים</td><td>נשכחים, ואז אין דיאפרגמה</td></tr>
+</table>
+<p class="fn">⭐ <b>הגאסט משורטט, לא מחושב:</b> <span class="mono">LINE→JOIN→PS_PLATE</span>, וההוכחה
+היא הפלטה של אמיר עצמו — <b>684.08 × 103.55 × 10</b>, מידות לא-עגולות
+<span class="tag t-meas">נמדד</span>. <b>העובי נקבע מאורך הקצה החופשי</b> (עד ~42·t ב-S235,
+‏~34·t ב-S355), לא מהמאמץ.</p>
+
+<!-- ================================================================= -->
+<h2>6. חיבורי ברגים — חמש הקטגוריות וארבעה מסלולי הכשל</h2>
+<p>שתי שאלות מפרידות בין הקטגוריות: <b>איך הכוח עובר</b> ו-<b>האם הבורג מותח מראש</b>.
+<span class="tag t-code">EN 1993-1-8 טבלה 3.2</span></p>
+<table>
+<tr><th>קטגוריה</th><th>הכוח</th><th>העיקרון</th><th>מתיחה</th><th>מתי</th></tr>
+<tr><td class="n"><b>A</b></td><td class="n">גזירה</td><td><b>נשיאה</b> — הבורג נשען על דופן החור ונגזר</td><td class="n">לא</td><td><b>ברירת המחדל בבניין</b>; מספיק ברוב המקרים</td></tr>
+<tr><td class="n"><b>B</b></td><td class="n">גזירה</td><td>עמידה בהחלקה <b>בשירות</b></td><td class="n">כן</td><td>כשהחלקה מפריעה לשימוש</td></tr>
+<tr><td class="n"><b>C</b></td><td class="n">גזירה</td><td>עמידה בהחלקה <b>בעומס הקצה</b></td><td class="n">כן</td><td>סייסמי, מנופים, עייפות, סלוטים ארוכים</td></tr>
+<tr><td class="n"><b>D</b></td><td class="n">משיכה</td><td>לא מותח</td><td class="n">לא</td><td>עומס סטטי</td></tr>
+<tr><td class="n"><b>E</b></td><td class="n">משיכה</td><td>מותח — פחות תנועה, עייפות טובה יותר</td><td class="n">כן</td><td>עייפות, מומנט עם דרישת קשיחות</td></tr>
+</table>
+<div class="box warn">
+<span class="tag t-shop">נוהג</span> כמעט כל מה שאנחנו מייצרים הוא <b>קטגוריה A</b> — ברגי 8.8
+בהידוק רגיל (<span class="mono">8.8/S</span> ב-ProSteel = קטגוריית ההידוק snug של AS/NZS 1252).
+<b>מתיחה מראש היא החלטה יקרה</b>: ברגי HV/HR לפי EN 14399 עם אום ודסקית תואמים, נוהל הידוק
+מבוקר <b>וטיפול פני-מגע</b> ⇒ אם שרטוט דורש preloaded בלי סיבה מוצהרת — <b>זו שאלת ה-value
+engineering.</b>
+</div>
+<table>
+<tr><th>מסלול הכשל</th><th>הביטוי</th><th>מה שולט בפועל</th></tr>
+<tr><td><b>גזירת הבורג</b></td><td class="mono">α<sub>v</sub> f<sub>ub</sub> A / γ<sub>M2</sub></td><td>‏α=0.6 כשמישור הגזירה בהברגה. ⭐ ובבורג ISO 4014 תקני מישור הגזירה <b>תמיד</b> בהברגה (<span class="mono">b = 2d+6 = 46</span>) ⇒ <b>94 kN ל-M20 הוא המספר, ואין לשפרו באורך</b></td></tr>
+<tr><td><b>נשיאה בפלדה</b></td><td class="mono">k<sub>1</sub> α<sub>b</sub> f<sub>u</sub> d t / γ<sub>M2</sub></td><td><b>עובי הפלטה ומרחקי הקצה</b> — לא הבורג</td></tr>
+<tr><td><b>משיכה</b></td><td class="mono">0.9 f<sub>ub</sub> A<sub>s</sub> / γ<sub>M2</sub></td><td>שטח ההברגה + תופעת ה-<b>prying</b></td></tr>
+<tr><td><b>ניקוב הפלטה</b></td><td class="mono">0.6 π d<sub>m</sub> t<sub>p</sub> f<sub>u</sub> / γ<sub>M2</sub></td><td>ראש/אום שנשלף דרך פלטה דקה — <b>המסלול שנשכח</b></td></tr>
+</table>
+<p class="fn">ועוד שני כשלים שהם של <b>החיבור</b> ולא של הבורג: <b>block tearing</b> (קריעת גוש),
+ו-<b>חיבור ארוך</b> — מעל <span class="mono">15d</span> הברגים אינם מתחלקים שווה ו-EN מוריד
+במקדם <span class="mono">β<sub>Lf</sub></span> ⇒ <b>שורה ארוכה אינה יעילה</b>.</p>
 <table>
 <tr><th>גודל</th><th>הכלל</th><th>מקור</th></tr>
-<tr><td>מרווח חור לבורג — <b>רגיל</b></td><td><b>2 מ"מ</b> ל-M16…M24 · 1 מ"מ ל-M12/M14 · 3 מ"מ מ-M27</td><td><span class="tag t-code">EN 1090-2 טבלה 11</span></td></tr>
-<tr><td>הכלל של ארץ ברזל</td><td>🧲 <b>חור = קוטר הבורג + 2 מ"מ</b> (‏M16→⌀18 · M20→⌀22 · M24→⌀26)</td><td><span class="tag t-shop">אמיר, 13/08/2026</span> — ומתלכד עם המרווח הרגיל של התקן</td></tr>
-<tr><td>חור מוגדל / אובלי</td><td>מותר בקטגוריות מסוימות; אובלי דורש <b>דסקית פלטה</b> ומגביל את מסלול העומס</td><td><span class="tag t-code">EN 1090-2</span> + <span class="tag t-shop">נוהג</span></td></tr>
+<tr><td>מרווח חור רגיל</td><td><b>2 מ"מ</b> ל-M16…M24 · 1 ל-M12/M14 · 3 מ-M27</td><td><span class="tag t-code">EN 1090-2</span></td></tr>
+<tr><td>🧲 הכלל של ארץ ברזל</td><td><b>חור = קוטר הבורג + 2</b> (‏18 / 22 / 26)</td><td><span class="tag t-shop">אמיר, 13/08/2026</span> — ומתלכד עם התקן</td></tr>
 <tr><td>מרחק קצה מינימלי</td><td class="mono">e<sub>1</sub>, e<sub>2</sub> ≥ 1.2 d<sub>0</sub></td><td><span class="tag t-code">EN 1993-1-8 טבלה 3.3</span></td></tr>
 <tr><td>מרווח בין ברגים</td><td class="mono">p<sub>1</sub> ≥ 2.2 d<sub>0</sub> · p<sub>2</sub> ≥ 2.4 d<sub>0</sub></td><td><span class="tag t-code">אותה טבלה</span></td></tr>
-<tr><td>מרווח מקסימלי</td><td class="mono">≤ 14t או 200 מ"מ</td><td>מונע פתיחת פערים וקורוזיה</td></tr>
 </table>
-<div class="box">
-<b>המספרים של EB מול הכללים — בדיקה מהירה:</b> ‏<span class="tag t-meas">נמדד</span> במדגמי שיעור 6
-היו ברגי M20 בחור ⌀22, פסיעה <b>100</b> ומרחק קצה <b>50</b>. ‏מול הכללים: ‏d<sub>0</sub>=22 ⇒
-מינימום פסיעה 48.4 ומינימום מרחק קצה 26.4. ⇒ <b>הפרט של אמיר יושב בנוחות בתוך הכללים, בפקטור ~2</b>
-— וזה בדיוק מה שמאפשר עבודה בשטח עם מפתח.
+<p class="fn"><span class="tag t-meas">נמדד</span> הפרט של אמיר: M20, פסיעה <b>100</b>, מרחק קצה
+<b>50</b> ⇒ מול מינימום 48.4 ו-26.4 — <b>יושב בנוחות, בפקטור ~2</b>, וזה מה שמאפשר עבודה עם
+מפתח בשטח.</p>
+
+<!-- ================================================================= -->
+<h2>7. חיבורי ריתוך — שתי משפחות, וחשבון ה-a²</h2>
+<table>
+<tr><th>משפחה</th><th>מה זה</th><th>מתי</th><th>המחיר</th></tr>
+<tr><td><b>תפר פינה</b> <span class="fn">fillet</span></td><td>משולש בזווית, בלי הכנת קצה</td><td><b>‏90% מהעבודה</b></td><td>נפח ∝ <b>ריבוע</b> הצוואר</td></tr>
+<tr><td><b>חדירה מלאה</b> <span class="fn">CJP</span></td><td>קצה מוכן, חדירה לכל העובי</td><td>המשכיות מרותכת, עייפות</td><td>הכנה + UT/RT + לעיתים חימום</td></tr>
+<tr><td><b>חדירה חלקית</b> <span class="fn">PJP</span></td><td>חדירה מבוקרת</td><td>בין השניים</td><td>קשה לאמת בשדה</td></tr>
+</table>
+<table>
+<tr><th>פלדה</th><th>f<sub>u</sub></th><th>β<sub>w</sub></th><th>f<sub>vw,d</sub></th><th>a=4</th><th>a=6</th><th>a=8</th></tr>
+<tr><td class="n">S235</td><td class="n">360</td><td class="n">0.80</td><td class="n">208</td><td class="n">0.83 kN/mm</td><td class="n">1.25</td><td class="n">1.66</td></tr>
+<tr><td class="n">S275</td><td class="n">430</td><td class="n">0.85</td><td class="n">234</td><td class="n">0.94</td><td class="n">1.40</td><td class="n">1.87</td></tr>
+<tr><td class="n"><b>S355</b></td><td class="n">490</td><td class="n">0.90</td><td class="n"><b>252</b></td><td class="n"><b>1.01</b></td><td class="n"><b>1.51</b></td><td class="n"><b>2.01</b></td></tr>
+</table>
+<div class="box warn">
+<b>💰 חשבון ה-value engineering של הריתוך:</b> מעבר מ-<b>a=5</b> ל-<b>a=8</b> נותן 60% כושר
+ומעלה את נפח המתכת ב-<b>2.56×</b> — וגם את הזמן, החוט, הגז והעיוות. ⇒ <b>תפר גדול מדי אינו
+ביטחון אלא עלות</b>, ולעיתים נזק (יותר חום ⇒ יותר עיוות ⇒ יותר יישור).
+<span class="tag t-shop">נוהג</span> <b>a ≈ 0.7t</b> של החלק הדק נותן תפר בכושר החומר; מעבר לזה
+אין תמורה.
+</div>
+<p class="fn"><b>ומה שקובע אם ריתוך בכלל מתאים:</b> גישה לאקדח · מיקום (מעל הראש = איטי, יקר
+ואיכות נמוכה) · <b>עיוות</b> (הפרט צריך להיות מתוכנן לעיוות, לא לתקן אותו אחר כך) · ריתוכיות
+החומר (‏CEV, חימום מוקדם) · <b>מחלקת ביצוע EXC</b> שקובעת את היקף ה-NDT
+<span class="tag t-code">EN 1090-2</span> · ועייפות — תפר פינה חד-צדדי במשיכה הוא הפרט הגרוע ביותר.</p>
+
+<!-- ================================================================= -->
+<h2>8. שיטות שאינן ריתוך ואינן ברגים — שמונה, וכולן אמיתיות</h2>
+<table>
+<tr><th>השיטה</th><th>הנישה האמיתית</th><th>המגבלה</th></tr>
+<tr><td><b>פינים</b></td><td><b>סמך מפורש</b>: מוט מתיחה, תלייה — מעביר גזירה <b>ומאפשר סיבוב</b></td><td>דיוק מכני; אין מומנט</td></tr>
+<tr><td><b>מוטות מתיחה</b></td><td><b>ייצוב במשיכה בלבד</b> — קל, אסתטי, מהיר</td><td>אפס לחיצה; דורש מתיחה מוקדמת</td></tr>
+<tr><td><b>בורג חד-צדדי</b> <span class="fn">blind</span></td><td>⭐ <b>פרופיל חלול סגור</b> — אין גישה לאום</td><td>כושר נמוך יותר, יקר, אישור יצרן</td></tr>
+<tr><td><b>מלחציים</b> <span class="fn">clamps</span></td><td><b>שיפוצים ופלדה קיימת</b>: אפס קידוח, אפס אש, וניתן לכיוון</td><td>כושר מוגבל; רגיש לצבע ולניקיון</td></tr>
+<tr><td><b>ברגים קודחים</b></td><td>פח, מריצים, גימור</td><td>⛔ <b>לא קונסטרוקטיבי</b> — אצלנו רק בהצהרת אמיר</td></tr>
+<tr><td><b>מסמרות</b></td><td>שימור מבנים היסטוריים</td><td>אין תעשייה מודרנית</td></tr>
+<tr><td><b>יציקות / צמתים יצוקים</b></td><td>צמתים מרובי-מוטות בגיאומטריה מסובכת</td><td>תבנית, זמן אספקה, מחיר</td></tr>
+<tr><td><b>הדבקה</b></td><td>חיזוק בפחמן, איטום, פרטים משניים</td><td>אין תקינה מבנית שגרתית; זחילה, אש</td></tr>
+</table>
+<div class="box ok">
+<b>⭐ והמשפחה שהיא התשובה בפועל: היברידי.</b> הפרט הנפוץ בעולם אינו "מרותך" ואינו "מוברג" אלא
+<b>מרותך בבית-מלאכה ומוברג בשטח</b>. זו הסיבה שכל הטיפולוגיה של §2–§3 קיימת: להעביר את הריתוך
+לתנאים שבהם הוא זול ומבוקר, ולהשאיר לשטח את מה שמהיר ונבדק בעין.
+<span class="tag t-shop">אמיר</span> ⚠️ <b>ובשחבור שלו גם זה לא — שם הכול מוברג, כולל במפעל.</b>
 </div>
 
-<h3>1.3 שבע הטיפולוגיות — מה כל אחת עושה ומה היא לא עושה</h3>
+<!-- ================================================================= -->
+<h2>9. יתרונות וחסרונות — טבלת 12 קריטריונים</h2>
 <table>
-<tr><th>הטיפוס</th><th>איך זה נראה</th><th>מעביר</th><th>הערך</th><th>המחיר</th></tr>
-<tr><td><b>פלטת קצה</b><br><span class="fn">end plate</span></td><td>פלטה מרותכת לקצה הקורה, מוברגת לאגף/לפלטה נגדית</td><td>גזירה + <b>מומנט</b> (בגרסה מוארכת עם ריפים)</td><td>הקשיח שיש; חיבור המשך אמיתי</td><td>רגיש לדיוק אורך הקורה; מומנט דורש ריפים</td></tr>
-<tr><td><b>פלטת גזירה</b><br><span class="fn">fin plate / shear tab</span></td><td>פלטה מרותכת לתומך, מוברגת לגוף הקורה</td><td><b>גזירה בלבד</b></td><td>הזול והמהיר להרכבה; סובלני לאורך</td><td>אינו מעביר מומנט; דורש קיטום (cope) לפעמים</td></tr>
-<tr><td><b>זוג זוויתנים</b><br><span class="fn">double angle cleat</span></td><td>שני זוויתנים משני צידי הגוף</td><td>גזירה, סימטרי</td><td>אין אקסצנטריות; קלאסי ואמין</td><td>יותר חלקים, יותר ברגים</td></tr>
-<tr><td><b>שחבור</b><br><span class="fn">splice</span></td><td>פלטות כיסוי על אגפים וגוף</td><td>הכול — <b>המשכיות מלאה</b></td><td>מאריך פרופיל בלי ריתוך שדה</td><td>הרבה ברגים; זה מה שאמיר מידל היום</td></tr>
-<tr><td><b>פלטת בסיס</b></td><td>פלטה + עוגנים לבטון</td><td>לחיצה, משיכה, גזירה (עם lug)</td><td>מעביר לבטון</td><td>סובל מסבילות היציקה</td></tr>
-<tr><td><b>גאסט</b><br><span class="fn">gusset</span></td><td>פלטה בצומת שאלכסונים מוברגים אליה</td><td>כוחות ציריים מכמה כיוונים</td><td><b>הפתרון של האלכסון</b> (פרק 5)</td><td>גיאומטריה לא-מלבנית; קל לטעות</td></tr>
-<tr><td><b>מושב / זווית נשיאה</b><br><span class="fn">seat / bracket</span></td><td>זוויתן/מושב מתחת לקורה</td><td>גזירה, וגם עוזר בהרכבה</td><td><b>הקורה נשענת לפני שמבריגים</b> — יתרון בטיחות בהרכבה</td><td>בולט; לפעמים לא אסתטי</td></tr>
+<tr><th>קריטריון</th><th>ברגים A</th><th>ברגים מותחים</th><th>ריתוך</th><th>מוטות/פינים</th><th>מלחציים</th></tr>
+<tr><td>כושר לחלק</td><td>בינוני</td><td>בינוני-גבוה</td><td><b>גבוה</b></td><td>גבוה במשיכה</td><td>נמוך</td></tr>
+<tr><td>קשיחות</td><td>החלקה קטנה</td><td><b>ללא החלקה</b></td><td><b>מונוליטי</b></td><td>גמיש</td><td>גמיש</td></tr>
+<tr><td>עייפות</td><td>סביר</td><td><b>טוב</b></td><td>רגיש לפרט</td><td>טוב</td><td>לא לעייפות</td></tr>
+<tr><td>עלות במפעל</td><td>זול</td><td>זהה + בקרה</td><td><b>הזול</b></td><td>יקר</td><td>—</td></tr>
+<tr><td>עלות בשטח</td><td><b>הזול והמהיר</b></td><td>יקר</td><td><b>יקר מאוד</b></td><td>זול</td><td><b>הזול</b></td></tr>
+<tr><td>ספיגת סבילויות</td><td>טובה (2 מ"מ)</td><td>טובה</td><td><b>הגרועה</b></td><td>מותחן = כיוון</td><td><b>מעולה</b></td></tr>
+<tr><td>בדיקה</td><td><b>בעין ובמפתח</b></td><td>מומנט, מתועד</td><td>מעבדה</td><td>בעין</td><td>מומנט</td></tr>
+<tr><td>הפיכות</td><td><b>מלאה</b></td><td>מלאה</td><td>אין</td><td>מלאה</td><td><b>מלאה</b></td></tr>
+<tr><td>קורוזיה</td><td>פערים — לאטום</td><td>אותו דבר</td><td><b>רצף</b></td><td>תלוי</td><td>פוגע בצבע</td></tr>
+<tr><td>עיוות בייצור</td><td>אין</td><td>אין</td><td><b>יש</b></td><td>אין</td><td>אין</td></tr>
+<tr><td>דרישת מקצוע</td><td>בסיסית</td><td>נוהל + כלים</td><td><b>רתך מוסמך</b></td><td>מכונאות</td><td>בסיסית</td></tr>
+<tr><td>מהירות הרכבה</td><td><b>גבוהה</b></td><td>בינונית</td><td>נמוכה</td><td>גבוהה</td><td>גבוהה</td></tr>
+</table>
+<p class="fn"><b>הכלל שנגזר מכל הטבלה:</b> <b>הריתוך הולך לבית-המלאכה, הברגים הולכים לשטח.</b>
+כל פרט שמכריח ריתוך שדה צריך להצדיק את עצמו — וכשהוא נדרש בפועל, זה בדרך כלל <b>סימן שסבילות
+או פרט לא נסגרו מראש</b>.</p>
+
+<!-- ================================================================= -->
+<h2>10. פרופילים חלולים — מחברים משלהם וכשלים משלהם</h2>
+<table>
+<tr><th>הבעיה</th><th>למה</th><th>הפתרון בפרקטיקה</th></tr>
+<tr><td><b>אין גישה לאום</b></td><td>החתך סגור</td><td>בורג חד-צדדי · פלטת קצה מרותכת · <b>פלטה בחריץ (knife plate) מרותכת</b></td></tr>
+<tr><td><b>הדופן דקה</b></td><td>‏5 מ"מ ב-200×200</td><td><b>לא להבריג דרך הדופן</b> — להעביר דרך פלטה מרותכת</td></tr>
+<tr><td><b>חלל פנימי בחבילה</b></td><td>⭐ <span class="tag t-meas">נמדד</span> <b>89 מ"מ אוויר</b> בין הדופן לפלטה במרכז ⇒ בורג בכפיפה, אום לא נגיש, ו-<span class="mono">boltparts</span> <b>מסרב</b></td><td>ריתוך בצומת; הברגה בלפוף פלטה-אל-פלטה</td></tr>
+<tr><td><b>ניקוב פני המיתר</b></td><td>מוט צר על פני מיתר</td><td>יחס רוחב מספק, פלטת חלוקה, או מיתר עבה יותר</td></tr>
+<tr><td><b>פלסטיפיקציה של פני המיתר</b></td><td>מוד הכשל השולט ב-T/Y/X</td><td><span class="tag t-code">CIDECT / EN 1993-1-8 §7</span> — פר-טיפוס צומת</td></tr>
+<tr><td><b>פינה</b></td><td>שני מוטות באותו נפח</td><td>⭐ <b>מיטר</b> — <span class="tag t-meas">נמדד</span> ‏24 חיתוכים על 12 מוטות, 2 לכל אחד</td></tr>
+<tr><td><b>קורוזיה פנימית</b></td><td>חלל סגור</td><td>לאטום מלא או לנקז ולאוורר</td></tr>
+</table>
+<p class="fn"><b>מיפוי צמתים:</b> ‏T/Y · X · K/N (עם <b>פער</b> או <b>חפיפה</b>). כלל אצבע:
+<b>פער ≥ סכום שני העוביים</b>, וחפיפה שאינה מזערית.</p>
+
+<!-- ================================================================= -->
+<h2>11. בית-מלאכה ושטח — מה הפועל באמת עושה</h2>
+<table>
+<tr><th>#</th><th>בבית-מלאכה</th><th>מה זה מגביל</th></tr>
+<tr><td class="n">1</td><td>סימון ומדידה</td><td>מידה אחת מהשרטוט = פחות טעויות מחישוב באתר</td></tr>
+<tr><td class="n">2</td><td>חיתוך לאורך (מסור, הגדרת זווית)</td><td><b>כל מישור חיתוך = הגדרה נוספת</b></td></tr>
+<tr><td class="n">3</td><td>קידוח / ניקוב — <b>מ-NC</b></td><td>⭐ <b>חור שמודל שגוי נקדח שגוי.</b> מסלול ה-NC הוא הפרק הקריטי</td></tr>
+<tr><td class="n">4</td><td>קיטום</td><td>מכונה נפרדת</td></tr>
+<tr><td class="n">5</td><td>התאמה, הצמדה, ריתוך</td><td>מיקום = תפר; <b>סדר ריתוך = עיוות</b></td></tr>
+<tr><td class="n">6</td><td>יישור, ניקוי, צבע, סימון</td><td>גלוון <b>סוגר חורים</b> ומשנה חיכוך</td></tr>
+</table>
+<div class="box">
+<b>⭐ המעבר מ-+3 ל-+2 מעביר אחריות מהשטח אל המודל.</b> ‏M20 בחור ⌀22 נותן
+<b>±1.0 מ"מ לכל צד</b>. שתי קבוצות חורים שכל אחת שוגה 1.0 בכיוון הנגדי <b>צורכות את כל
+המרווח, באפס עתודה</b> <span class="tag t-meas">חישוב</span>. ⇒ מה שמפצה: חורים אובליים
+בכיוון הנכון, פלטות מילוי, ובמקרה הגרוע קידוח בשטח דרך הפלטה כתבנית.
+</div>
+<table>
+<tr><th>מה שהופך פרט לזול</th><th>מה שמייקר אותו</th></tr>
+<tr><td>חזרתיות (פחות סוגי פלטות ⇒ פחות תוכניות חיתוך)</td><td>ריתוך שדה, ובמיוחד מעל הראש</td></tr>
+<tr><td>חיתוך במישור אחד</td><td>חיתוך בשני מישורים = שתי הגדרות</td></tr>
+<tr><td>גודל בורג ודרגה <b>אחת</b> לפרויקט</td><td>עירוב M16/M20 ו-8.8/10.9 באותו אתר</td></tr>
+<tr><td>חלקים סימטריים ו<b>פרטים שמצמידים את עצמם</b> (כתף, מושב, עוצר)</td><td>פלטה שדורשת מיקום לשבריר מ"מ</td></tr>
+</table>
+<p class="fn">⭐ <b>הדוגמה של אמיר, שהיא הכלל:</b> עבודת מדרגות לגן ילדים עם <b>7 עוביי פלטות
+ו-100 תוכניות חיתוך שונות</b>, כמעט בלי חזרתיות — <i>"מתכון מושלם לטעויות"</i>. ‏3 עוביים
+במקום 7 חוסכים חומר <b>ואת הטעויות</b>.</p>
+
+<!-- ================================================================= -->
+<h2>12. יישום בתוכנה — שבעה מדגמים, כולם נמדדו</h2>
+<p>כל מדגם נבנה, נקרא בחזרה מהמודל, ועבר את השערים. ‏🧲 בכולם: סגנון <b>8.8S</b> וחור =
+<b>בורג + 2</b>.</p>
+<table>
+<tr><th>#</th><th>המדגם</th><th>מה נמדד</th><th>התנגשויות</th></tr>
+<tr><td class="n">1</td><td><b>פלטת גזירה</b> (מאקרו)</td><td><span class="mono">FL110×10</span> + <b>4 × M16x50 8.8/S</b>, חורים ⌀18, חבילה 24</td><td class="n">0</td></tr>
+<tr><td class="n">2</td><td><b>זוג זוויתנים</b> (מאקרו)</td><td>‏2 × <span class="mono">EA70×70×8</span> + 6 ברגים, 16 חורים ⌀18</td><td class="n">0</td></tr>
+<tr><td class="n">3</td><td><b>פלטת קצה</b> (מאקרו)</td><td><span class="mono">FL200×10</span> <b>עם 4 חורים אובליים — ברירת המחדל של התוכנה</b> + 4 ברגים</td><td class="n">0</td></tr>
+<tr><td class="n">4</td><td><b>קורה מקוטמת במפתן</b></td><td>מפתן IPE500 ווב אנכי + IPE300, אגפים בגובה אחד, <span class="mono">polyCuts=1</span></td><td class="n">⚠️ 4 פתוחות</td></tr>
+<tr><td class="n">5</td><td><b>ברך במיטר</b> (‏IPE300)</td><td>שני הווב במישור אחד, <span class="mono">cutPlanes=1</span> בכל אחד</td><td class="n">0</td></tr>
+<tr><td class="n">6</td><td><b>צלב SHS עם צומת</b></td><td>‏4 מיטרים · אלכסון רצוף + מופסק · פלטת צומת · לפוף מוברג 4 × M16</td><td class="n">0</td></tr>
+<tr><td class="n">7</td><td>⭐ <b>הפרט של אמיר</b>: אלכסון על גאסט מוקשח</td><td>עמוד <b>פלאנג אל האלכסון</b> · פלטה 15×300×700 שטוחה על האגף · <b>גאסט משולש חתוך ב-45°</b> · 4 × M16, <span class="mono">vfy_fit 4/4</span></td><td class="n">0</td></tr>
 </table>
 
 <figure>
-<svg width="640" height="150" viewBox="0 0 640 150">
-  <g stroke="#0d2a4a" fill="none" stroke-width="1.6">
-    <!-- end plate -->
-    <rect x="20" y="20" width="18" height="110" fill="#dfe8f1"/>
-    <rect x="38" y="45" width="6" height="60" fill="#c9d8e6"/>
-    <rect x="44" y="60" width="90" height="30" fill="#eef3f8"/>
-    <circle cx="41" cy="58" r="3" fill="#a3312c" stroke="none"/><circle cx="41" cy="92" r="3" fill="#a3312c" stroke="none"/>
-    <!-- fin plate -->
-    <rect x="200" y="20" width="18" height="110" fill="#dfe8f1"/>
-    <rect x="218" y="65" width="55" height="20" fill="#c9d8e6"/>
-    <rect x="250" y="60" width="90" height="30" fill="#eef3f8"/>
-    <circle cx="258" cy="75" r="3" fill="#a3312c" stroke="none"/><circle cx="238" cy="75" r="3" fill="#a3312c" stroke="none"/>
-    <!-- double angle -->
-    <rect x="400" y="20" width="18" height="110" fill="#dfe8f1"/>
-    <path d="M418 60 h30 v-8 M418 90 h30 v8" stroke="#1f7a4d"/>
-    <rect x="418" y="52" width="30" height="46" fill="#d8ebe0"/>
-    <rect x="448" y="60" width="90" height="30" fill="#eef3f8"/>
-    <circle cx="433" cy="65" r="3" fill="#a3312c" stroke="none"/><circle cx="433" cy="85" r="3" fill="#a3312c" stroke="none"/>
+<svg width="600" height="215" viewBox="0 0 600 215">
+  <g stroke="#0d2a4a" stroke-width="1.6">
+    <rect x="60" y="20" width="42" height="180" fill="#dfe8f1"/>
+    <rect x="102" y="45" width="14" height="130" fill="#f7e9c9"/>
+    <path d="M116 60 L116 170 L250 60 Z" fill="#fdf6e3" stroke="#b8860b"/>
+    <path d="M150 152 L330 40 L352 76 L172 188 Z" fill="#e7eef7" stroke="#1c4f82"/>
   </g>
-  <g font-size="10" fill="#33475b" text-anchor="middle" direction="rtl">
-    <text x="77" y="145">פלטת קצה</text><text x="270" y="145">פלטת גזירה</text><text x="470" y="145">זוג זוויתנים</text>
+  <g fill="#a3312c" stroke="none">
+    <circle cx="176" cy="139" r="3.6"/><circle cx="200" cy="124" r="3.6"/>
+    <circle cx="196" cy="158" r="3.6"/><circle cx="220" cy="143" r="3.6"/>
+  </g>
+  <g font-size="9" fill="#33475b">
+    <text x="270" y="120">‏1. העמוד מסובב — <b>פלאנג</b> אל האלכסון</text>
+    <text x="270" y="139">‏2. פלטה שטוחה מרותכת על האגף ⇒ נגד <b>מעיכה</b></text>
+    <text x="270" y="158">‏3. גאסט <b>ניצב</b> לה, <b>חתוך בזווית האלכסון</b></text>
+    <text x="270" y="177">‏4. האלכסון בלפוף, הרבדים נוגעים, 4 ברגים</text>
   </g>
 </svg>
-<figcaption>שלוש הטיפולוגיות הנפוצות לקורה־אל־עמוד. אדום = ברגים. הראשונה מעבירה מומנט, השתיים האחרות גזירה בלבד.</figcaption>
+<figcaption>הפרט שאמיר הכתיב, כפי שנבנה ונמדד: פלטה שטוחה על האגף, גאסט ניצב חתוך בזווית, אלכסון בלפוף.</figcaption>
 </figure>
 
-<!-- ==================================================================== -->
-<h2 id="c2">2. חיבורי ריתוך — שתי משפחות, וכל השאר פרטים</h2>
-
+<h3>12.1 ⛔ ומה שהתוכנה לימדה — ארבעה כללים שנקנו בטעויות שלי</h3>
 <table>
-<tr><th>משפחה</th><th>מה זה</th><th>כושר</th><th>מתי</th><th>המחיר</th></tr>
-<tr><td><b>תפר פינה</b><br><span class="fn">fillet</span></td><td>משולש בזווית בין שני חלקים; אין הכנת קצה</td><td>נקבע ע"י <b>הצוואר</b> a</td><td><b>90% מהעבודה.</b> פלטה-לפרופיל, ריפים, גאסטים</td><td>נפח מתכת גדל ב-<b>ריבוע</b> הצוואר</td></tr>
-<tr><td><b>תפר חדירה מלאה</b><br><span class="fn">CJP / butt</span></td><td>קצוות מוכנים (‏V/X/U), חדירה לכל העובי</td><td><b>כמו החומר הבסיסי</b></td><td>חיבור המשך מרותך, שינוי עובי, דרישת עייפות</td><td>הכנת קצה, ‏NDT ב-UT/RT, לעיתים חימום מוקדם</td></tr>
-<tr><td><b>חדירה חלקית</b><br><span class="fn">PJP</span></td><td>חדירה מבוקרת פחות מהעובי</td><td>ביניים</td><td>כשלא צריך כושר מלא אבל צריך יותר מ-fillet</td><td>קשה לאמת בשדה</td></tr>
-<tr><td class="fn">תפרי חור/חריץ, תפרים לסירוגין</td><td colspan="4" class="fn">נישות: העברת גזירה בין פלטות חופפות, וחיסכון מתכת במוטות ארוכים (אסור באזורי קורוזיה/עייפות)</td></tr>
-</table>
-
-<h3>2.1 הנוסחה שמכריעה — ולמה &laquo;להוסיף עוד ריתוך&raquo; זו טעות כספית</h3>
-<p><span class="tag t-code">EN 1993-1-8 §4.5.3</span> בשיטה הפשוטה:
-<span class="mono">f<sub>vw,d</sub> = (f<sub>u</sub>/√3) / (β<sub>w</sub> γ<sub>M2</sub>)</span>,
-והכושר לאורך יחידה הוא <span class="mono">f<sub>vw,d</sub> · a</span>.</p>
-<table>
-<tr><th>פלדה</th><th>f<sub>u</sub></th><th>β<sub>w</sub></th><th>f<sub>vw,d</sub></th><th>תפר a=4</th><th>a=6</th><th>a=8</th></tr>
-<tr><td class="n">S235</td><td class="n">360</td><td class="n">0.80</td><td class="n">208 MPa</td><td class="n">0.83 kN/mm</td><td class="n">1.25</td><td class="n">1.66</td></tr>
-<tr><td class="n">S275</td><td class="n">430</td><td class="n">0.85</td><td class="n">234 MPa</td><td class="n">0.94 kN/mm</td><td class="n">1.40</td><td class="n">1.87</td></tr>
-<tr><td class="n"><b>S355</b></td><td class="n">490</td><td class="n">0.90</td><td class="n"><b>252 MPa</b></td><td class="n"><b>1.01 kN/mm</b></td><td class="n"><b>1.51</b></td><td class="n"><b>2.01</b></td></tr>
+<tr><th>מה קרה</th><th>הכלל שנשאר</th></tr>
+<tr><td>‏`boltparts` סירב פלטת סכין בתוך צינור: <b>89 מ"מ חלל בחבילה</b></td><td>⛔ <b>אין הברגה דרך דופן פרופיל חלול.</b> ריתוך בצומת, הברגה בלפוף. וכשהתוכנה מסרבת — <b>לקרוא את הגיאומטריה, לא לחפש עקיפה</b></td></tr>
+<tr><td>‏`rot=90` השכיב מפתן IPE500; ‏`rot=0` שם ווב במישור הלא נכון; בעמוד HE300B <b>המעטפת ריבועית ואינה יכולה להעיד</b></td><td>🧲 <b>מספר סיבוב אינו הבטחה.</b> <b>חור ניסוי הוא העד</b>: עומק 11 = ווב, 300 = אגף <span class="tag t-meas">נמדד</span></td></tr>
+<tr><td>‏`plate9 at=` הוא <b>מרכז</b> — קיבלתי חדירה של 6 מ"מ במקום לפוף, ו-`boltparts` <b>סירב בצדק</b></td><td>אחרי כל הצבה — <b>לקרוא את המעטפת</b>, לא להניח</td></tr>
+<tr><td>תיבת התנגשות שלא הכילה את המפתן החזירה "0" ⇒ בדיקה עיוורת</td><td>⚠️ <b>‏`collision box=` בוחר רק חלקים שנמצאים במלואם בתיבה</b></td></tr>
 </table>
 <div class="box warn">
-<b>‏💰 חשבון ה-value engineering של הריתוך.</b> נפח המתכת בתפר פינה ‏∝ a². מעבר מ-<b>a=5</b>
-ל-<b>a=8</b> נותן 60% כושר ומעלה את נפח המתכת ב-<b>‏2.56×</b> — וגם את הזמן, החוט, הגז והעיוות.
-⇒ <b>תפר גדול מדי אינו &laquo;ביטחון&raquo; אלא עלות</b>, ולעיתים נזק: יותר חום ⇒ יותר עיוות ⇒
-יותר יישור. הכלל המעשי: <span class="tag t-shop">נוהג</span> <b>a ≈ 0.7t</b> של החלק הדק נותן תפר
-בכושר החומר; מעבר לזה אין תמורה.
+<b>⚠️ ומה שנשאר פתוח, במפורש:</b> במדגם 4 (קורה מקוטמת) נשארו <b>4 התנגשויות בנפח ≥500 מ"מ³</b>
+בדיוק במיקומי הברגים. מה שכן נמדד: הקיטום <b>קיים</b> (<span class="mono">polyCuts=1</span>) אבל
+תבנית <span class="mono">default/Standard</span> נותנת קיטום זעיר (<span class="mono">radius 8.5,
+webDist 5</span>) — <b>לא 85 מ"מ של אגף</b>; ושורת הברגים הראשונה יושבת <b>בדיוק על פאת הקצה של
+הקורה (מרחק קצה 0)</b>, כי התבנית ממקמת את הברגים <b>ביחס לפלטה</b> ואף אחד לא בודק את הקורה.
+<b>זה ממצא, לא תירוץ: הפרט הזה עוד לא נסגר.</b>
 </div>
 
-<h3>2.2 מה שקובע אם ריתוך בכלל מתאים</h3>
-<ul>
-<li><b>גישה.</b> אין גישה לאקדח = אין תפר. בפרופיל חלול סגור אפשר לרתך רק מבחוץ.</li>
-<li><b>מיקום.</b> תפר מלמטה (overhead) איטי, יקר ואיכותו נמוכה. <span class="tag t-shop">נוהג</span> בבית-מלאכה מסובבים את החלק; בשטח לא תמיד אפשר.</li>
-<li><b>עיוות.</b> חום ⇒ התכווצות ⇒ עיקום. סדר ריתוך, ריתוך סימטרי וריתוך לסירוגין הם הכלים; <b>הפרט צריך להיות מתוכנן לעיוות</b>, לא לתקן אותו אחר כך.</li>
-<li><b>ריתוכיות החומר.</b> ‏<span class="mono">CEV</span> וקבוצת הפלדה קובעים חימום מוקדם; ‏S355 בעוביים גדולים כבר דורש שיקול.</li>
-<li><b>בקרה.</b> ‏<span class="tag t-code">EN 1090-2</span> קושר את היקף ה-NDT ל-<b>מחלקת הביצוע</b> (‏EXC1–EXC4). ⇒ <b>דרישת EXC בשרטוט היא החלטה כספית</b>, ושווה לשאול מאיפה היא באה.</li>
-<li><b>עייפות.</b> ריתוך הוא מרכז ריכוז מאמצים. תפר פינה חד-צדדי במשיכה הוא הפרט הגרוע ביותר לעייפות.</li>
-</ul>
-
-<!-- ==================================================================== -->
-<h2 id="c3">3. שיטות שאינן ריתוך ואינן ברגים — שמונה, וכולן אמיתיות</h2>
-<p><b>התשובה לשאלה &laquo;האם יש עוד?&raquo; היא כן, ולכל אחת נישה שבה היא <i>הפתרון</i> ולא פשרה.</b></p>
+<!-- ================================================================= -->
+<h2>12.2 מהמחבר אל המודל — כל טיפוס והמסלול שמייצר אותו אצלנו</h2>
+<p><span class="tag t-meas">נמדד</span> הכול מהמודל שלנו, לא מהתיעוד.</p>
 <table>
-<tr><th>השיטה</th><th>איך עובד</th><th>הנישה האמיתית</th><th>המגבלה</th></tr>
-<tr><td><b>פינים</b><br><span class="fn">pins</span></td><td>פין גלילי דרך שתי עיניות</td><td><b>סמך מפורש</b>: מוט מתיחה, סמך גשר, תלייה. מעביר גזירה ו<b>מאפשר סיבוב</b></td><td>מחייב דיוק מכני; אין מומנט</td></tr>
-<tr><td><b>מוטות מתיחה</b><br><span class="fn">tension rods</span></td><td>מוט/כבל עם מותחן ועיניות</td><td><b>ייצוב אלכסוני במשיכה בלבד</b> — קל, אסתטי, מהיר. חייב לבוא בזוגות (צלב)</td><td>אפס לחיצה; דורש מתיחה מוקדמת נגד שקיעה</td></tr>
-<tr><td><b>בורג חד-צדדי</b><br><span class="fn">blind / Hollo-Bolt</span></td><td>מתפשט מאחור, מותקן מצד אחד</td><td>⭐ <b>פרופיל חלול סגור</b> — אין גישה לאום מבפנים</td><td>כושר נמוך מבורג רגיל; יקר; אישור יצרן</td></tr>
-<tr><td><b>מלחציים</b><br><span class="fn">clamps</span></td><td>לוכד את האגף בחיכוך, בלי קידוח</td><td><b>שיפוצים וחיבור לפלדה קיימת</b>: אפס קידוח, אפס ריתוך, אפס אש. וניתן לכיוון</td><td>כושר מוגבל; רגיש לניקיון ולעיבוי צבע</td></tr>
-<tr><td><b>ברגים קודחים</b><br><span class="fn">self-drilling</span></td><td>קודח ומתברג בפעולה אחת</td><td>לוחות פח, מריצים, גימור</td><td>⛔ <b>לא לחיבור קונסטרוקטיבי</b>. אצלנו: רק בהצהרה מפורשת של אמיר</td></tr>
-<tr><td><b>מסמרות</b><br><span class="fn">rivets</span></td><td>מסמרת חמה נסגרת בהלימה</td><td>שימור מבנים היסטוריים בלבד</td><td>אין לזה תעשייה מודרנית</td></tr>
-<tr><td><b>יציקות / צמתים יצוקים</b></td><td>צומת יצוק בפלדה</td><td>צמתים מרובי-מוטות בגיאומטריה מסובכת (חלל, מבני זכוכית)</td><td>תבנית, זמן אספקה, מחיר</td></tr>
-<tr><td><b>הדבקה</b><br><span class="fn">adhesive</span></td><td>דבק מבני</td><td>חיזוק בפלטות פחמן, איטום, פרטים משניים</td><td>אין תקינה מבנית שגרתית לפלדה; זחילה, אש</td></tr>
-</table>
-<div class="box ok">
-<b>⭐ והמשפחה שהיא באמת התשובה בפועל: <u>היברידי</u>.</b> הפרט הנפוץ בעולם אינו &laquo;מרותך&raquo;
-ואינו &laquo;מוברג&raquo; אלא <b>מרותך בבית-מלאכה ומוברג בשטח</b>: פלטת קצה מרותכת לקורה במפעל,
-ובשטח רק ברגים. <b>זו הסיבה שהטיפולוגיה של פרק 1 קיימת בכלל</b> — היא הדרך להעביר את הריתוך
-לתנאים שבהם הוא זול ומבוקר, ולהשאיר לשטח את מה שמהיר וניתן לבדיקה בעין.
-</div>
-
-<!-- ==================================================================== -->
-<h2 id="c4">4. יתרונות וחסרונות — טבלת 12 קריטריונים</h2>
-<table>
-<tr><th>קריטריון</th><th>ברגים (קטגוריה A)</th><th>ברגים מותחים (B/C/E)</th><th>ריתוך</th><th>מוטות/פינים</th><th>מלחציים</th></tr>
-<tr><td>כושר לחלק</td><td>בינוני</td><td>בינוני-גבוה</td><td><b>גבוה (עד כושר החומר)</b></td><td>גבוה במשיכה בלבד</td><td>נמוך</td></tr>
-<tr><td>קשיחות</td><td>יש החלקה קטנה</td><td><b>ללא החלקה</b></td><td><b>מונוליטי</b></td><td>גמיש</td><td>גמיש</td></tr>
-<tr><td>עייפות</td><td>סביר</td><td><b>טוב</b></td><td>רגיש — תלוי בפרט</td><td>טוב (פין), תלוי בעין</td><td>לא לעייפות</td></tr>
-<tr><td>עלות בבית-מלאכה</td><td>קידוח — זול</td><td>זהה + בקרה</td><td><b>הזול ביותר במפעל</b></td><td>עיבוד מכני — יקר</td><td>—</td></tr>
-<tr><td>עלות בשטח</td><td><b>הזול והמהיר</b></td><td>יקר (נוהל הידוק)</td><td><b>יקר מאוד</b> (גישה, מחסה, ‏NDT)</td><td>זול</td><td><b>הזול</b></td></tr>
-<tr><td>ספיגת סבילויות</td><td>טובה (מרווח 2 מ"מ)</td><td>טובה</td><td><b>הגרועה</b> — פער = בעיה</td><td>מותחן = כיוון מלא</td><td><b>מעולה</b></td></tr>
-<tr><td>בדיקה</td><td><b>בעין ובמפתח</b></td><td>מומנט/דסקית — מתועד</td><td>‏VT/PT/MT/UT/RT — מעבדה</td><td>בעין</td><td>מומנט</td></tr>
-<tr><td>הפיכות / פירוק</td><td><b>מלאה</b></td><td>מלאה</td><td>אין (חיתוך)</td><td>מלאה</td><td><b>מלאה</b></td></tr>
-<tr><td>קורוזיה</td><td>פערים ומגעים — צריך איטום</td><td>אותו דבר</td><td><b>רצף — הטוב ביותר</b></td><td>תלוי בפרט</td><td>מגע פוגע בצבע</td></tr>
-<tr><td>אש</td><td>טוב</td><td>טוב</td><td>טוב</td><td>מוט דק מתחמם מהר</td><td>חיכוך יורד בחום</td></tr>
-<tr><td>עיוות בייצור</td><td>אין</td><td>אין</td><td><b>יש — צריך לתכנן לו</b></td><td>אין</td><td>אין</td></tr>
-<tr><td>דרישת מקצוע</td><td>בסיסית</td><td>נוהל + כלים</td><td><b>רתך מוסמך + WPS</b></td><td>מכונאות</td><td>בסיסית</td></tr>
-</table>
-<div class="box">
-<b>הכלל שנגזר מכל הטבלה, והוא אחד:</b> <b>הריתוך הולך לבית-המלאכה, הברגים הולכים לשטח.</b>
-כל פרט שמכריח ריתוך שדה צריך להצדיק את עצמו — ובכל מקרה שבו הוא נדרש (פלטה שלא נכנסה, תיקון,
-גיאומטריה שנתגלתה בשטח) הוא <b>סימן לכך שמשהו בפרט או בסבילות לא נסגר מראש</b>.
-</div>
-
-<!-- ==================================================================== -->
-<h2 id="c5">5. חיזוק אלכסונים — מה זה נותן, ואיך מתכננים את המחבר בפועל</h2>
-
-<h3>5.1 מה אלכסון נותן — ארבעה דברים, לא אחד</h3>
-<ol>
-<li><b>מסלול לעומס אופקי.</b> מסגרת מלבנית ללא אלכסון עומדת רק בזכות <b>קשיחות הצמתים</b>; עם
-אלכסון היא הופכת ל<b>משולשים</b>, והמשולש הוא הצורה היחידה שאינה משתנה בלי לשנות אורכי צלעות.
-⇒ הכוחות עוברים <b>צירית</b> ולא בכפיפה, וזה זול בהרבה בחומר.</li>
-<li><b>הקטנת תזוזה אופקית</b> (‏drift) — לרוב זו הדרישה שקובעת את החתך, לא הכושר.</li>
-<li><b>ייצוב נגד קריסה.</b> האלכסון מקצר את <b>אורך הקריסה</b> של מה שהוא מחזיק (עמוד, מיתר לחוץ),
-ולפעמים זה כל תפקידו.</li>
-<li><b>שלמות בהרכבה.</b> מסגרת מיוצבת <b>עומדת לבד</b> לפני שהכול הודק — נושא בטיחות בשטח.</li>
-</ol>
-
-<h3>5.2 שש טיפולוגיות, ומה מבדיל ביניהן</h3>
-<table>
-<tr><th>הטיפוס</th><th>מתי</th><th>נקודת התורפה</th></tr>
-<tr><td><b>אלכסון בודד</b></td><td>הזול; כשמותר עמוס לחיצה בכיוון אחד</td><td>אסימטרי — כוח שונה בשני כיווני העומס</td></tr>
-<tr><td><b>צלב (X)</b></td><td>הנפוץ. כל כיוון עומס מפעיל את האלכסון שנמצא <b>במשיכה</b></td><td>הצומת באמצע — <b>שם כל הפרטים נופלים</b> (פרק 5.4)</td></tr>
-<tr><td><b>V / Λ (chevron)</b></td><td>כשצריך <b>פתח</b> באמצע המסגרת (דלת, מעבר)</td><td>מעביר כוח אנכי לא-מאוזן אל אמצע הקורה</td></tr>
-<tr><td><b>K</b></td><td>מסגרות גבוהות, פירוק לגבהים</td><td>מכניס כוח לאמצע העמוד</td></tr>
-<tr><td><b>ברך</b> (knee)</td><td>כשאין מקום לאלכסון מלא</td><td>יעילות נמוכה</td></tr>
-<tr><td><b>מוטות מתיחה</b></td><td>קל ואסתטי, במשיכה בלבד</td><td>שקיעה עצמית, דורש מתיחה מוקדמת; <b>אפס כושר לחיצה</b></td></tr>
-</table>
-
-<div class="box warn">
-<b>ההחלטה הראשונה, ולפניה אין שום פרט: <u>האם האלכסון לחוץ או מתוח בלבד?</u></b><br>
-<b>מוט מתיחה</b> (‏rod/כבל) — קל, זול, אבל חייב לבוא בצלב ואינו נושא לחיצה בכלל.
-<b>פרופיל חלול</b> (‏SHS/RHS/CHS) — נושא <b>גם לחיצה</b>, ולכן אלכסון בודד מספיק, אבל אז
-<b>אורך הקריסה הוא הפרמטר שקובע את החתך</b> — לא הכושר במשיכה. ‏<span class="tag t-shop">נוהג</span>
-זו גם החלטה כספית: פרופיל חלול שוקל פי כמה ממוט, אבל חוסך את האלכסון השני ואת המותחנים.
-</div>
-
-<h3>5.3 תכנון מחבר אלכסון — שמונה צעדים, בסדר הזה</h3>
-<table>
-<tr><th>#</th><th>הצעד</th><th>מה נקבע בו</th></tr>
-<tr><td class="n">1</td><td><b>נקודת העבודה</b> (‏work point)</td><td>שלושת הצירים — עמוד, קורה, אלכסון — <b>נפגשים בנקודה אחת</b>. כל הסטה יוצרת מומנט אקסצנטרי שמישהו יצטרך לשאת</td></tr>
-<tr><td class="n">2</td><td>פירוק הכוח</td><td class="mono">N = H / cos θ</td></tr>
-<tr><td class="n">3</td><td>בחירת המוט</td><td>משיכה: שטח נטו. לחיצה: <b>גמישות</b> ואורך קריסה</td></tr>
-<tr><td class="n">4</td><td>סוג המחבר לגאסט</td><td>ברגים (פירוק אפשרי, בדיק) או ריתוך (קשיח, זול במפעל)</td></tr>
-<tr><td class="n">5</td><td><b>גיאומטריית הגאסט</b></td><td><b>חתך Whitmore</b>: הכוח מתפזר מהבורג הראשון ב-<b>30°</b> לכל צד; רוחב זה הוא הרוחב הפעיל</td></tr>
-<tr><td class="n">6</td><td><b>עובי הגאסט</b></td><td>נגד <b>קריסת הפלטה</b> (קצה חופשי ארוך = הבעיה) — לא נגד מאמץ בלבד</td></tr>
-<tr><td class="n">7</td><td>קבוצת הברגים</td><td>גזירה, נשיאה, <b>block shear</b>, מרחקי קצה</td></tr>
-<tr><td class="n">8</td><td>סגירת המסלול</td><td>הריתוך גאסט-אל-עמוד/קורה, וכל אקסצנטריות שנשארה</td></tr>
-</table>
-
-<figure>
-<svg width="620" height="260" viewBox="0 0 620 260">
-  <g stroke="#0d2a4a" stroke-width="1.8" fill="none">
-    <rect x="40" y="30" width="20" height="200" fill="#dfe8f1"/>
-    <rect x="40" y="30" width="240" height="18" fill="#dfe8f1"/>
-    <path d="M70 200 L250 60" stroke="#1c4f82" stroke-width="10" stroke-linecap="round"/>
-    <path d="M60 48 L150 48 L60 138 Z" fill="#f7e9c9" stroke="#b8860b"/>
-    <circle cx="88" cy="76" r="3.4" fill="#a3312c" stroke="none"/>
-    <circle cx="108" cy="96" r="3.4" fill="#a3312c" stroke="none"/>
-    <path d="M88 76 L138 56 M88 76 L58 126" stroke="#1f7a4d" stroke-dasharray="4 3" stroke-width="1.2"/>
-    <text x="150" y="52" font-size="10" fill="#1f7a4d" direction="ltr">30°</text>
-    <text x="60" y="140" font-size="10" fill="#1f7a4d" direction="ltr">30°</text>
-    <text x="196" y="120" font-size="11" fill="#1c4f82" direction="ltr">N = H / cos θ</text>
-    <circle cx="50" cy="39" r="4" fill="#a3312c" stroke="none"/>
-    <text x="300" y="42" font-size="10.5" fill="#33475b">נקודת עבודה — שלושת הצירים בנקודה אחת</text>
-    <text x="300" y="80" font-size="10.5" fill="#33475b">חתך Whitmore — התפזרות 30° מהבורג הראשון</text>
-    <text x="300" y="118" font-size="10.5" fill="#33475b">הקצה החופשי הארוך = קריסת הגאסט</text>
-    <text x="300" y="156" font-size="10.5" fill="#33475b">ריתוך הגאסט סוגר את המסלול לעמוד ולקורה</text>
-  </g>
-</svg>
-<figcaption>מחבר אלכסון: נקודת העבודה, פירוק הכוח, חתך Whitmore בפיזור 30°, והקצה החופשי שקובע את העובי.</figcaption>
-</figure>
-
-<h3>5.4 ⭐ דוגמת מידול אמיתית — הצומת שאמיר עצמו מידל היום</h3>
-<p><span class="tag t-meas">נמדד מהמודל</span> מסגרת D בשיעור 6: מסגרת <b>3800×2200</b> מ-
-<span class="mono">SHS200×200×5</span>, ובתוכה <b>צלב</b>. וזה מה שהמדידה מצאה:</p>
-<pre>אלכסון רצוף   50E    L = 3545.0    כיוון (-0.832, -0.555)
-אלכסון מופסק  511    L = 1705.8    כיוון (+0.832, -0.555)
-              513    L = 1705.8    אותו כיוון, קולינארי
-פער בין הקטעים        133.3 מ"מ
-בדיקה:  1705.8 + 133.3 + 1705.8 = 3544.9  =  אורך האלכסון השלם ✔</pre>
-<p>הזווית בין האלכסונים: <span class="mono">cos φ = −0.832·0.832 + 0.555·0.555 = −0.384 ⇒ φ = 112.6°</span>,
-כלומר <b>הזווית החדה ביניהם 67.4°</b>.</p>
-
-<div class="box ok">
-<b>⭐⭐⭐ ולמה בכלל מפסיקים אלכסון אחד? זו לא נוחות — זו הנדסה.</b><br>
-‏(א) <b>אין ברירה גיאומטרית</b>: שני פרופילים חלולים 200 מ"מ אינם יכולים לתפוס את אותו נפח.
-אחד עובר, השני נחתך.<br>
-‏(ב) <b>וכאן הרווח:</b> כשהצלב <u>מחובר</u> בנקודת ההצטלבות, האלכסון הלחוץ מקבל <b>תמיכה
-לרוחב</b> מהאלכסון המתוח — ובפרקטיקה נהוג לקחת את <b>אורך הקריסה כ-‎0.5L</b> במקום L.
-‏<span class="tag t-code">עיקרון מקובל (AISC / EC3 practice)</span> ⇒ <b>הפלטה בצומת אינה קוסמטיקה —
-היא מה שקונה את חצי אורך הקריסה</b>, וזה שווה חתך שלם.<br>
-‏(ג) ולכן <b>פער פתוח הוא הגרוע משני העולמות</b>: האלכסון כבר נחתך (איבד רצף) אבל עדיין לא קיבל
-את התמיכה. ⇒ <b>הפרט חייב להיסגר בפלטה.</b>
-</div>
-
-<div class="box warn">
-<b>וכמה צריך הפער להיות? הנוסחה — ו<u>תיקון שהמודל אילץ</u>.</b><br>
-הניסוח האינטואיטיבי הוא <span class="mono">w / sin φ</span> — ‏<b>והוא חסר</b>. הוא מפנה את
-<i>רוחב המוט הרצוף</i> בלבד ומתעלם מכך שגם ל<b>מוט המופסק יש רוחב</b>, ופאת הקצה שלו מרובעת:
-<pre>נקודה על פאת הקצה:  P = −s·u_B + t·p_B ,  t ∈ [−w_B/2, +w_B/2]
-מרחקה מציר המוט הרצוף:  P·p_A = s·sin φ + t·cos φ
-הפינה הגרועה (t = −w_B/2) קובעת, ולכן:
-
-    חצי-פער  ≥  ( w_A/2  +  (w_B/2)·cos φ )  /  sin φ</pre>
-<b>במדגם שבניתי</b> (‏φ=58.11°, שני המוטות 200): האיבר הראשון לבדו נותן <b>117.8</b> לצד,
-והנוסחה המלאה <b>180.0</b> — <b>תת-הערכה של 53%</b>. ‏<span class="tag t-meas">נמדד</span> ובניתי
-לפי 117.8 ⇒ ‏<span class="mono">collision minvol=100</span> החזיר <b>2 פגיעות</b>; לפי 180+5 ⇒
-‏<b>אפס</b>. ⇒ ‏<b>‏`w/sinφ` נכון למוט/פלטה דקה, ושגוי לפרופיל ברוחב דומה.</b><br>
-‏🔎 <b>ואצל אמיר במסגרת D:</b> ‏<span class="tag t-meas">נמדד</span> הפער <b>133.3 מ"מ</b>, בזווית
-‏67.4° וברוחב 200 ⇒ הנוסחה המלאה דורשת
-<span class="mono">(100 + 100·cos 67.4°)/sin 67.4° = 149.0</span> לצד, כלומר <b>298 מ"מ</b>.
-⇒ הפער שלו <b>קטן מהנדרש</b> — ולכן <b>הפרט שם עוד לא נסגר</b> (וזה מתלכד עם שתי הפלטות ששורטטו
-ונמחקו). <b>זו שאלה לאמיר, לא הנחה שלי.</b>
-</div>
-
-<h4>⛔ ומה שהתוכנה לימדה אותי על הצומת עצמו — הכי חשוב בפרק</h4>
-<p>ניסיתי לבנות את הצומת כ<b>פלטת סכין בתוך הצינור</b> ולהבריג דרכה. ‏<span class="mono">boltparts</span>
-<b>סירב</b>. קריאת הגיאומטריה מסבירה למה, והסירוב <b>נכון הנדסית</b>:</p>
-<pre>דופן הצינור   z 95 … 100        פלטת הסכין   z −6 … +6
-⇒  החבילה מכילה 89 מ"מ של חלל פנימי בתוך הצינור</pre>
-<p>בורג שחוצה 89 מ"מ אוויר נמצא ב<b>כפיפה</b>, והאום <b>אינו נגיש</b>. ⇒ ‏<b>אין הברגה דרך דופן של
-פרופיל חלול</b> — וזה בדיוק מה שפרק 6 אומר. <b>הפתרון: ריתוך בצומת, והברגה בפרט לפוף (lap) של
-פלטה-אל-פלטה שבו הרבדים נוגעים.</b></p>
-<p>הגרסה שנבנתה בפועל, כולה נמדדה (‏<span class="mono">IMPLEMENTATION.md</span>):</p>
-<pre>הצומת            פלטה 760×180×12 על פני הצינורות, z 100…112   ריתוך (מוצהר)
-הפרט המוברג      לפוף פלטה-אל-פלטה: fin 460×300×12 + gusset 500×500×12
-ברגים            4 × M16 x 50 8.8/S   חבילה נמדדת 24 = 12+12   spare 26
-חורים            ⌀18 = M16 + 2       🧲 כלל הברזל של 13/08/2026
-מרחקים           פסיעה 120 ≥ 2.2·18=39.6 ✔   מרחק קצה 50 ≥ 1.2·18=21.6 ✔
-התנגשויות        0  (minvol=100)  — אחרי שלושה תיקונים גיאומטריים</pre>
-
-<!-- ==================================================================== -->
-<h2 id="c6">6. פרופילים חלולים — הפרק שאמיר נגע בו היום</h2>
-<p>ההוספה שלי, כי כל שלב ה' של השיעור היה <span class="mono">SHS</span>, ולפרופיל חלול יש
-<b>מחברים משלו וכשלים משלו</b>.</p>
-<table>
-<tr><th>הבעיה</th><th>למה היא קיימת</th><th>הפתרון בפרקטיקה</th></tr>
-<tr><td><b>אין גישה לאום</b></td><td>החתך סגור</td><td>בורג חד-צדדי (‏Hollo-Bolt) · פלטת קצה מרותכת · פלטה בתוך חריץ (‏slotted plate)</td></tr>
-<tr><td><b>הדופן דקה</b></td><td>‏5 מ"מ ב-200×200 — הנשיאה והניקוב קובעים</td><td>לא להבריג דרך הדופן: להעביר את הכוח דרך פלטה מרותכת</td></tr>
-<tr><td><b>ניקוב פני המיתר</b><br><span class="fn">punching shear</span></td><td>מוט צר דוחף/מושך את פני המיתר</td><td>יחס רוחב (‏β) מספק, פלטת חלוקה, או הגדלת עובי המיתר</td></tr>
-<tr><td><b>פלסטיפיקציה של פני המיתר</b></td><td>מוד הכשל השולט בצמתי ‏T/Y/X</td><td>‏<span class="tag t-code">CIDECT / EN 1993-1-8 §7</span> — נוסחאות פר-טיפוס צומת</td></tr>
-<tr><td><b>פינה במיטר</b></td><td>שני מוטות באותו נפח</td><td>⭐ <b>מיטר 45°</b> — בדיוק מה שאמיר מידל: <span class="tag t-meas">נמדד</span> ‏24 חיתוכי <span class="mono">Anglecut</span> על 12 מוטות, 2 לכל אחד, וכל אחד עם <span class="mono">cutPlanes=2</span> אמיתי</td></tr>
-<tr><td><b>קורוזיה פנימית</b></td><td>חלל סגור</td><td>לאטום מלא, או לנקז ולאוורר. <b>אסור להשאיר חלל פתוח לגשם</b></td></tr>
-</table>
-<p class="fn"><b>מיפוי צמתים:</b> ‏T/Y (מוט אחד), ‏X (שני מוטות מנוגדים), ‏K/N (שני מוטות באותו צד —
-עם <b>פער</b> או <b>חפיפה</b>). כלל אצבע: <b>פער ≥ סכום שני עוביי המוטות</b>, וחפיפה שאינה
-מזערית (חפיפה קטנה מדי גרועה משתי האפשרויות).</p>
-
-<!-- ==================================================================== -->
-<h2 id="c7">7. ‏24 השאלות לפני שקובעים מחבר</h2>
-<p>בסדר שבו הן באמת נשאלות — לא בסדר של ספר.</p>
-
-<h3>א. הכוח וההתנהגות (4)</h3>
-<ol>
-<li>אילו <b>כוחות</b> עוברים בצומת — גזירה, משיכה, מומנט, פיתול — ובאיזה שילוב?</li>
-<li>האם הצומת אמור להיות <b>מפורק (pinned) או קשיח (moment)</b>? <b>ומה הונח בחישוב?</b> — צומת
-שנבנה קשיח כשהחישוב הניח מפורק מעביר מומנט שלא תוכנן.</li>
-<li>יש <b>היפוך כוחות</b> או עומס דינמי/עייפות?</li>
-<li>נדרשת <b>דוקטיליות</b> (סייסמי) — כלומר האם החיבור אמור להיות חזק מהמוט?</li>
-</ol>
-<h3>ב. הגיאומטריה והמפגש (4)</h3>
-<ol start="5">
-<li>האם כל הצירים נפגשים ב<b>נקודת עבודה אחת</b>? אם לא — מי נושא את האקסצנטריות?</li>
-<li>יש <b>גישה לכלים</b>: מפתח, אקדח ריתוך, כלי הידוק? (זו השאלה שהורגת פרטים יפים)</li>
-<li>מה <b>עובי החלק הדק</b>? הוא קובע גם את הנשיאה וגם את גודל התפר.</li>
-<li>האם החתך <b>סגור</b>? (⇒ פרק 6)</li>
-</ol>
-<h3>ג. ייצור והרכבה (5)</h3>
-<ol start="9">
-<li>מה נעשה <b>במפעל</b> ומה <b>בשטח</b>? — <b>השאלה הכספית הגדולה ביותר</b>.</li>
-<li>איך החלק <b>מגיע</b> — מידות שינוע, משקל, מנוף?</li>
-<li>איך הוא <b>נתמך בהרכבה</b> לפני ההידוק הסופי?</li>
-<li>מה <b>סבילות</b> ההרכבה, ומי סופג אותה — חור מוגדר, חור אובלי, פלטת מילוי, או מותחן?</li>
-<li>האם הפרט <b>חוזר</b>? ‏⭐ <b>חזרתיות = פחות תוכניות חיתוך = פחות טעויות = כסף.</b></li>
-</ol>
-<h3>ד. בקרה ואיכות (3)</h3>
-<ol start="14">
-<li>איך <b>בודקים</b> את החיבור — בעין, מפתח מומנט, ‏UT? ומי משלם על זה?</li>
-<li>מה <b>מחלקת הביצוע</b> (‏EXC) שנדרשה, ומאיפה היא באה?</li>
-<li>האם החיבור <b>נגיש לבדיקה חוזרת</b> לאחר סיום?</li>
-</ol>
-<h3>ה. סביבה ואורך חיים (4)</h3>
-<ol start="17">
-<li><b>קורוזיה</b>: פערים, מגעים דו-מתכתיים, איטום. גלוון חם ⇒ שינוי מקדם החיכוך ומידות החורים.</li>
-<li><b>אש</b>: האם צריך כיסוי, והאם המחבר מפריע לו?</li>
-<li><b>תנועה</b>: התפשטות תרמית, שקיעות — האם הצומת אמור לאפשר תנועה?</li>
-<li><b>פירוק עתידי</b>: הרחבות, שינויים, מיחזור.</li>
-</ol>
-<h3>ו. מסחר וסמכות (4)</h3>
-<ol start="21">
-<li>מה <b>הקונסטרוקטור אישר</b>? — ⚠️ מה שאושר לא נוגעים.</li>
-<li>האם הפרט <b>מפורט מעל הנדרש</b>, ובאיזה מספר? ‏⭐ זו ה-value engineering.</li>
-<li>יש <b>פרט תקני של החברה</b> שאפשר לחזור אליו במקום לתכנן מחדש?</li>
-<li>מה <b>נכנס לפלט</b> — רשימת חלקים, ‏NC, תוכניות ייצור? פרט שאינו ממודל נכון יוצא שגוי בפלט.</li>
-</ol>
-
-<!-- ==================================================================== -->
-<h2 id="c8">8. מהמחבר אל המודל — ומספרי ה-value engineering</h2>
-<p>החלק שהופך את המחקר לכלי עבודה: לכל טיפוס, מה מייצר אותו אצלנו בפועל.
-‏<span class="tag t-meas">נמדד</span> הכול מהמודל שלנו, לא מהתיעוד.</p>
-<table>
-<tr><th>הפרט</th><th>המחלקה / הפקודה</th><th>מצב אצלנו</th></tr>
-<tr><td>פלטת קצה</td><td class="mono">PsStandardPlateConnection · PS_ENDPLATE</td><td>✅ עובד מקוד; ואמיר הריץ אותו היום ידנית (‏<span class="mono">Endplate connection</span>, ‏4 ברגים)</td></tr>
-<tr><td>פלטת גזירה</td><td class="mono">PsShearPlateConnection</td><td>✅ עובד; 3 תבניות מותקנות</td></tr>
-<tr><td>זוג זוויתנים</td><td class="mono">PsWebAngleConnection</td><td>✅ פקודה אחת = הפרט כולו</td></tr>
-<tr><td>שחבור</td><td class="mono">PsSpliceJointConnection</td><td>✅ עובד · ⚠️ 6 תיבות סימון ⇒ <b>8 פלטות</b></td></tr>
+<tr><th>הפרט</th><th>המחלקה / הפקודה</th><th>מצב</th></tr>
+<tr><td>פלטת קצה</td><td class="mono">PsStandardPlateConnection · PS_ENDPLATE</td><td>✅ עובד · <b>ומייצר חורים אובליים כברירת מחדל</b></td></tr>
+<tr><td>פלטת גזירה</td><td class="mono">PsShearPlateConnection</td><td>✅ עובד · המוצר הוא <b>פלדה שטוחה מקטלוג</b> (<span class="mono">FL110×10</span>), לא <span class="mono">Ks_Plate</span> ⇒ <b>אודיט שמחפש פלטות יפספס אותו</b></td></tr>
+<tr><td>זוג זוויתנים</td><td class="mono">PsWebAngleConnection</td><td>✅ פקודה אחת = הפרט כולו (‏2 × EA70×70×8 + 6 ברגים)</td></tr>
+<tr><td>שחבור</td><td class="mono">PsSpliceJointConnection</td><td>✅ · ⚠️ 6 תיבות סימון ⇒ <b>8 פלטות</b></td></tr>
 <tr><td>ריפים</td><td class="mono">PsStiffenerConnection</td><td>✅ מתבנית בלבד; פקודה אחת = 2 ריפים</td></tr>
-<tr><td>קיטום</td><td class="mono">PsCopeConnection</td><td>✅ מתבנית + חובה תומך</td></tr>
-<tr><td>קידוח</td><td class="mono">PsDrillObject</td><td>✅ 🧲 <span class="mono">dia=&lt;בורג&gt; play=2</span> · ⚠️ בורר האגף <b>מתויג הפוך</b> (0=תחתון, 1=עליון), ו-<span class="mono">Both</span> על דופן אחת מייצר <b>שני חורים חופפים</b></td></tr>
-<tr><td>ברגים</td><td class="mono">PsCreateBolt.AddObject+Create</td><td>✅ 🧲 <b>הברגים נגררים מהחורים</b> · ברירת מחדל <span class="mono">8.8S</span></td></tr>
-<tr><td><b>גאסט</b></td><td class="mono">PsGussetConnection</td><td>⛔ <b>אין יוצר</b> — קריאה/עריכה בלבד ⇒ <b>בונים בהרכבה</b>: פלטה + קידוח + הברגה</td></tr>
-<tr><td><b>ייצוב</b></td><td class="mono">PsBracing</td><td>⛔ מסרב ב-13 תצורות; המאקרו אינטראקטיבי ⇒ <b>הרכבה</b></td></tr>
-<tr><td>ריתוך</td><td class="mono">Ks_WeldFlag</td><td>⛔ אינו ניתן ליצירה עצמאית מקוד ⇒ <b>ההצהרה היא המחיר</b></td></tr>
-<tr><td>מיטר</td><td class="mono">PsCutObjects.SetAsMiterCutId</td><td>✅ <b>קריאה אחת חותכת את שני המוטות</b></td></tr>
+<tr><td>קיטום</td><td class="mono">PsCopeConnection</td><td>✅ עובד — <b>אבל אחרי החיבור</b>, ותבנית ברירת המחדל נותנת קיטום זעיר. ⛔ ודף ה-Cope של פלטת הגזירה/הזווית <b>אינרטי</b></td></tr>
+<tr><td>קידוח</td><td class="mono">PsDrillObject</td><td>✅ 🧲 <span class="mono">dia=&lt;בורג&gt; play=2</span> · ⚠️ בורר האגף <b>מתויג הפוך</b> · <span class="mono">Both</span> על דופן אחת ⇒ <b>שני חורים חופפים</b></td></tr>
+<tr><td>ברגים</td><td class="mono">PsCreateBolt.AddObject+Create</td><td>✅ 🧲 <b>נגררים מהחורים</b> · ברירת מחדל <span class="mono">8.8S</span></td></tr>
+<tr><td>מיטר</td><td class="mono">PsCutObjects.SetAsMiterCutId</td><td>✅ <b>קריאה אחת חותכת את שני המוטות</b> (‏4 פינות, <span class="mono">cutPlanes=2</span> בכל אחד)</td></tr>
+<tr><td>פלטה בזווית</td><td class="mono">plate9 mode=poly + ex/ey/ez</td><td>✅ <b>מכבד את מטריצת ההכנסה</b> ⇒ גאסט משולש חתוך בזווית, בכל מישום</td></tr>
+<tr><td><b>גאסט</b></td><td class="mono">PsGussetConnection</td><td>⛔ <b>אין יוצר</b> ⇒ <b>בונים בהרכבה</b>: פלטה + קידוח + הברגה</td></tr>
+<tr><td><b>ייצוב</b></td><td class="mono">PsBracing</td><td>⛔ מסרב ב-13 תצורות ⇒ הרכבה</td></tr>
+<tr><td>ריתוך</td><td class="mono">Ks_WeldFlag</td><td>⛔ אינו ניתן ליצירה עצמאית ⇒ <b>ההצהרה היא המחיר</b></td></tr>
 </table>
-
 <div class="box ok">
-<b>💰 ארבעה מספרים שאפשר להביא לשיחה מול קונסטרוקטור:</b>
+<b>💰 חמישה מספרים לשיחה מול קונסטרוקטור:</b>
 <ul>
-<li><b>תפר ריתוך:</b> ‏a=8 במקום a=5 ⇒ ‏<b>2.56×</b> נפח מתכת עבור 60% כושר.</li>
-<li><b>מתיחה מראש:</b> ‏B/C/E מוסיפים ברגי HV/HR, נוהל הידוק מתועד וטיפול פני-מגע — <b>בלי סיבה
-מוצהרת זו הוצאה מיותרת.</b></li>
-<li><b>חזרתיות:</b> העבודה שדובר בה כאן — <b>7 עוביי פלטות ו-100 תוכניות חיתוך</b> — היא מתכון
-לטעויות. ‏3 עוביים במקום 7 חוסכים גם חומר וגם את הטעויות בשטח.</li>
-<li><b>‏EXC:</b> כל עלייה במחלקת ביצוע מגדילה NDT ותיעוד. <b>אם השרטוט דורש EXC גבוה על פרט
-משני — זו שאלה.</b></li>
+<li><b>ריתוך:</b> ‏a=8 במקום a=5 ⇒ <b>2.56×</b> נפח מתכת עבור 60% כושר.</li>
+<li><b>מתיחה מראש:</b> ‏B/C/E מוסיפים ברגי HV/HR, נוהל מתועד וטיפול פני-מגע — בלי סיבה מוצהרת זו הוצאה.</li>
+<li><b>חזרתיות:</b> ‏7 עוביי פלטות ו-100 תוכניות חיתוך מול 3 עוביים — חומר <b>וטעויות</b>.</li>
+<li><b>אלכסון:</b> קשיחות לקילוגרם <b>אינה תלויה בחתך</b> ⇒ הבחירה היא קריסה וכושר, לא קשיחות-למשקל.</li>
+<li><b>רצועה מיוצבת:</b> ‏107 ק"ג צינור מול <b>47 ק"ג גאסטים + 10 חורים + 350 מ"מ תפר</b> ⇒ פלדה זולה, <b>חיבורים יקרים</b>.</li>
 </ul>
 </div>
+
+<h2>13. ‏24 השאלות לפני שקובעים מחבר</h2>
+<table>
+<tr><th>הכוח וההתנהגות</th><th>הגיאומטריה</th></tr>
+<tr><td>‏1. אילו כוחות עוברים — גזירה, משיכה, מומנט, פיתול?<br>
+‏2. מפורק או קשיח — <b>ומה הונח בחישוב?</b><br>
+‏3. יש היפוך כוחות או עייפות?<br>
+‏4. נדרשת דוקטיליות?</td>
+<td>‏5. כל הצירים בנקודת עבודה אחת? אם לא — מי נושא?<br>
+‏6. <b>יש גישה לכלי?</b> (זו השאלה שהורגת פרטים)<br>
+‏7. מה עובי החלק הדק?<br>
+‏8. החתך סגור? (⇒ אין הברגה דרך הדופן)</td></tr>
+<tr><th>ייצור והרכבה</th><th>בקרה וסביבה</th></tr>
+<tr><td>‏9. <b>מה במפעל ומה בשטח?</b><br>
+‏10. איך החלק מגיע — מידות, משקל, מנוף?<br>
+‏11. איך הוא נתמך <b>לפני</b> ההידוק?<br>
+‏12. מי סופג את הסבילות — חור, סלוט, מילוי, מותחן?<br>
+‏13. <b>האם הפרט חוזר?</b></td>
+<td>‏14. איך בודקים, ומי משלם?<br>
+‏15. מחלקת ביצוע (‏EXC) — מאיפה היא באה?<br>
+‏16. נגיש לבדיקה חוזרת?<br>
+‏17. קורוזיה: פערים, מגעים, גלוון<br>
+‏18. אש · 19. תנועה תרמית · 20. פירוק עתידי</td></tr>
+<tr><th colspan="2">מסחר וסמכות</th></tr>
+<tr><td colspan="2">‏21. מה הקונסטרוקטור אישר? — ⚠️ לא נוגעים · <b>22. האם הפרט מפורט מעל הנדרש, ובאיזה מספר?</b>
+‏· 23. יש פרט תקני של החברה לחזור אליו? · <b>24. מה נכנס לפלט</b> — רשימת חלקים, ‏NC, תוכניות ייצור?</td></tr>
+</table>
 
 <div class="box stop">
-<b>ומה שהמחקר הזה <u>לא</u> עושה:</b> אינו מאשר תכן, אינו בודק עמידה בתקן, ואינו מחליף את
-הקונסטרוקטור החתום. כל מספר כאן הוא <b>הבנה</b> — ובכל מקום שבו הוא נפגש בפרט של ארץ ברזל,
-<b>הפרט המוכח בשטח הוא הסמכות</b> והפער הוא שאלה.
+<b>ומה שהדוח לא עושה:</b> אינו מאשר תכן, אינו בודק עמידה בתקן, ואינו מחליף את הקונסטרוקטור
+החתום. כל מספר כאן הוא <b>הבנה</b>; בכל מקום שהוא נפגש בפרט של ארץ ברזל — <b>הפרט המוכח בשטח
+הוא הסמכות</b>, והפער הוא שאלה.
 </div>
 
-<p class="fn" style="margin-top:22px">‏EB PROSTEEL AGENT · מסלול 4 — מחקר הנדסי · 13/08/2026 ·
-המסמכים הנלווים: <span class="mono">README.md</span> · <span class="mono">IMPLEMENTATION.md</span> ·
+<p class="fn" style="margin-top:16px">‏EB PROSTEEL AGENT · מסלול 4 — מחקר הנדסי · מהדורה ב',
+‏13/08/2026 · פרקי המקור: <span class="mono">research/beam-connections/practice/P1…P7</span>
+(‏2,251 שורות) · היישום: <span class="mono">IMPLEMENTATION.md</span> ·
 המדידות: <span class="mono">lessons/LESSON-06-BEAM-CONNECTIONS.md</span></p>
 
 </body>

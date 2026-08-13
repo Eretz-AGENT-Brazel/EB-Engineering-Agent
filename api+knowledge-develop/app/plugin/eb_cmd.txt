@@ -1,5 +1,5 @@
-reqid=2959e4ff
+reqid=ed9b8307
 op=zoom
-handle=597
-margin=0.4
+handle=695
+margin=1.3
 dwg=lesson-6.dwg

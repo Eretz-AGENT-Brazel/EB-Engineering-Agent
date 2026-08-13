@@ -11,6 +11,70 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 `app/…`, `qc/…`, `knowledge/…`, `projects/…` path in this skill is relative to that folder.
 (`agent-brain/PROGRAM.md`, `PROGRESS.md` and `standards/` sit at the repo root.)
 
+> ## 🏭 THE CRAFT OF THE CONNECTION — 14 measured facts from the practice research (13/08/2026)
+> Amir rejected the first report as too academic and named what he wanted: *"איך מחברים פלאנגים בין
+> קורות, איך מחברים קורה בווב, איך מנצלים את התכונות הגיאומטריות של הפרופיל לחיבור נוח בשטח ונוח
+> לייצור… מה שבפועל מייצר הפועל בשטח ולא המהנדס שמתכנן."* Report: `research/beam-connections/`
+> (‏14-page PDF + 7 chapters, 2,251 lines). What changes how I model:
+>
+> ### The profile's own numbers
+> 🛑 **THE FLAT WEB IS `d = h − 2tf − 2r`, NOT `h − 2tf`** — this file previously said Amir's
+> 800×150×10 web plate had "10 mm each side in a 170 clear web". **Wrong**: HE200A's flat web is
+> **134**, so a 150 plate **rides 8 mm onto each root radius** and its corners hover **1.88 mm**.
+> Fix: snipe 20×20 or a 130 plate. ⇒ **question for Amir, not a correction** — if it seats in the
+> shop, the shop wins.
+> ⭐⭐ **The flange bolting window:** half-gauge must be `> tw/2 + r + socket radius` **and**
+> `< b/2 − 1.2·d0`. IPE300+M20 → the section's own gauge `W=80` clears the socket by **0.45 mm**
+> (so **never "centre" a gauge inwards**); **IPE200+M16 has NO window** — ⇒ **on small sections the
+> TOOL, not the force, picks the typology.** And `y=2*W` in a drill field reads the section's own
+> gauge: **HE300B → 120, IPE300 → 80** (measured).
+> ⭐ **Bolt length `L = packet + 1.6d`, rounded up to 5** — reproduced all four measured bolts
+> (M20×55/60, M16×50/55). Healthy `spare` stays 22–31.
+>
+> ### The two typology families
+> 🧲 **EB's splice standard, in Amir's words:** *"הפלטה מעל הפלאנג העליון ובנוסף פלטה מתחת לפלאנג
+> התחתון. אין פה קשר ריתוך. הפלטה מיוצרת בנפרד, הפרופילים בנפרד, ובשטח מחברים עם הפלטה והברגים."*
+> ⇒ **four plates outside, fully bolted, no welding anywhere in the detail.**
+> ⭐ **Plate width has two answers:** bolted → **exactly the flange width** (self-centring, no site
+> measuring); welded → **b − 2(a+4) ≈ 180**, because a full-width plate blocks the longitudinal weld.
+> ⚠️ **An un-drilled top flange is a different connection, not a missing detail** — order of 17% of
+> M_pl against ~74%. The field fix is a mag drill, 45–60 min, **drilling through the plate as a
+> template** (16 holes over 800 mm at 2 mm clearance will not otherwise line up).
+> ⭐ **Web bolts are the cheap ones:** a hole costs ~1.9% of Iy in the web against 10.7% in a flange,
+> and the flat-web/spanner limit (HE200A: 134 flat, ~100 usable) caps you at **two M20 rows**.
+>
+> ### Angled cuts — and BOTH formulas are right
+> ⭐⭐⭐ **Square-cut end:** `half-gap ≥ (w/2)·cot(φ/2)` — the naive `w/sinφ` under-predicts by
+> exactly `(1+cos φ)` (+38% at 67°, +53% at 58°, **+87% at 30°** ⇒ shallow crosses are where details
+> fail). **Angle-cut end that beds on the crossing member's face:** the requirement falls back to
+> **`w/sinφ`**, because there is no protruding corner. **Two preparations, two formulas.**
+> 🧲 **And Amir's reasoning comes first:** *"איך מחברים 2 פרופילים זהים באלכסונים שצריכים לעבור
+> באותו מישור? זה לא הגיוני… ישר ייווצר לנו בעיית התנגשות"* ⇒ one runs through, the other is cut at
+> the angle and welded. His frame D is **a fully welded frame with angle-cut braces — nothing open**.
+> ⭐⭐ **Move the angle into a PLATE, never into a MEMBER.** A plate is cut on a 2D table — every
+> angle costs the same; a member needs a machine setup per plane. Measured in his own model: fitted
+> post = `cutPlanes=0` + one tape dimension; mitred corner = 8 cut planes and two angles per member.
+> ⭐ Shop arithmetic that prevents scrap: `long − short = h·tan γ` (a 200-deep member on a 20% roof
+> differs by **40 mm** end to end) · **1° over a 400 bolt spread = 6.99 mm** against 2 mm clearance
+> ⇒ reaming · a fin plate with **ONE** bolt line absorbs **10–15°** of plan skew, two lines cap you
+> at **~1.6°** ⇒ **skewed joint ⇒ single bolt line.**
+>
+> ### Bracing — what it actually does (Amir's two questions)
+> ⭐ An unbraced pinned rectangle is a **mechanism**, not a weak frame; no section fixes it.
+> ⭐⭐ Brace-vs-moment-frame stiffness reduces to `(h/i)²·(h/L_d)²·cos²θ/12` → **≈39× per kg** for
+> HE200B at 4 m; buying that stiffness in bending costs **~7× the steel**.
+> ⭐ **Stiffness per kilogram is independent of the section** (`E·cos²θ/ρL²` — the area cancels;
+> SHS100×100×5 and L90×90×9 both ≈0.35 kN/mm per kg) ⇒ the section is a **buckling/capacity**
+> decision, never a stiffness-per-weight one. Optimum angle **35.26°**, flat within 8% over 27–45°.
+> ⭐ **Cumulative shear:** the lowest brace carries everything above — in a 3-storey example the
+> brace force grows ×3.7 but the **column force ×7, ending at 280 kN uplift**. ⇒ the lowest gussets
+> are the biggest in the building, **and a braced-bay base is the one base with real uplift** — which
+> our anchorage research says EB's standard base does not cover. **Pre-production question.**
+> ⭐ **The X crossing is a full-load splice** (axial force is constant along the member) — "two bolts
+> to hold it" fails on first load.
+> 💰 A braced bay is **cheap steel and expensive connections**: 107 kg of tube against 47 kg of
+> gusset + 10 holes + 350 mm of weld, on non-repeating geometry.
+
 > ## 🔬 CONNECTION ENGINEERING — the research, and the three things the software taught it back
 > Full report: **`research/beam-connections/`** (`מחברי-קורות-פלדה.pdf`, 12 pp) + `IMPLEMENTATION.md`.
 > Commissioned by Amir 13/08/2026. What matters for modelling:
