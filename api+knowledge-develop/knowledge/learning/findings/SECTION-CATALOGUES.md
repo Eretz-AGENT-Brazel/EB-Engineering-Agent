@@ -19,6 +19,18 @@ The library is not internally consistent, and a wrong key fails quietly:
 | **embedded space** | `RO 219.1x8` has a space after `RO`; `RQ200x8` has none |
 | **catalogue name ≠ what you type** | `DIN HALBE IPE` finds nothing; the real name is `DIN_HALBE IPE` (underscore, then space) |
 | **the stored name is different again** | pass `DIN_QUADRATROHR` → the model stores `DIN.DIN_QUADROHR`; `DIN WINKEL VD` → `DIN.DIN_WINK_GL_VD`; `DIN FLACHEISEN` → `DIN.DIN_FLACH` |
+
+### 🆕 Keys measured on 13/08/2026 (lesson 6 + the connection research)
+
+| passed as | stored in the model | note |
+|---|---|---|
+| `SHS100X100X4` | **`BRITAIN.BS_CELSIUS_SHS`** | Amir's own choice for the small tube |
+| `SHS200X200X5` | **`BRITAIN.BS_HYBOX_SHS`** | ⭐⭐ **a DIFFERENT British SHS catalogue for a different size, in the same session** — the strongest possible illustration of *look the key up, never construct it* |
+| `U200` | **`FRANCE.FR_UPN`** | the channel he used; `rot` read back as `37.5` while the envelope was axis-aligned |
+| `HE200A` / `HE300B` | `DIN.DIN_HEA` / `DIN.DIN_HEB` | catalogues `DIN_HEA` / `DIN_HEB` |
+| `IPE300` / `IPE500` | `DIN.DIN_IPE` | |
+| `FL 150x12` | `DIN.DIN_FLACH` | note the **space** in the passed name |
+| `EA70X70X8` · `110X10` · `200X10` | — | ⚠️ produced **by the macros** (web-angle cleats, fin plate, end plate): the fin plate and end plate come out as **catalogue FLAT BARS, not `Ks_Plate`** ⇒ an audit that queries plates will miss them |
 | **keys are upper-cased on write** | asked `RQ200x8`, model holds `RQ200X8`; asked `HD260x68,15`, model holds `HD260X68,15` |
 
 ⇒ A model dumped with `dumpfull` **cannot be fed straight back** into `shape` — the catalogue

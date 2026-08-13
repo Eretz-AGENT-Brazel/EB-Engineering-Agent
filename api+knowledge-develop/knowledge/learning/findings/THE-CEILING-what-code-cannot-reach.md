@@ -12,6 +12,20 @@ thing by composition from calls that do work.**
 
 ---
 
+## 0. Added 13/08/2026 — lesson 6 and the connection research
+
+| what | evidence | where |
+|---|---|---|
+| **A bolt style will refuse a hole diameter it has no row for — silently** | ‏36 specimens, one variable at a time: **`8.8S`/`8.8TB`/`8.8TF` accept 18/22/26 and REFUSE 19 and 23**; `DIN7990` accepts 23 and returns **M22**; `DIN933` accepts 19 and returns **M18**. The API says only `create=False`; **ProSteel's own channel says `CANNOT DETERMINE BOLTS => NO BOLTS`** | `BOLT-STYLES-AND-HOLES.md` |
+| **The dialog can bolt a pairing the API cannot** | Amir's own `PS_BOLT` produced `M20 x 60 8.8/S` through ⌀23 holes; from code that pairing is unreachable. **Another instance of "the manual describes the dialog"** | lesson 6 |
+| **No through-bolting the wall of a hollow section** | a knife plate at mid-depth of an SHS200 leaves **89 mm of void** in the packet; `boltparts` refuses — **and the refusal is correct engineering** (bolt in bending, nut unreachable) | research §10 |
+| **`collision`'s pairing filter and `bolts=` are inert** | `bolts=0` changed nothing (4 hits → 4 hits), confirming D.5's finding that the Options pairing filter does not reach the class from code | 13/08 |
+| ⚠️ **`collision box=` selects only parts WHOLLY inside the box** | a box that excluded a 2 m girder returned **`collisions=0`** on a junction that has 4. **Size the box to contain whole members** — this is a usage trap, not a refusal | 13/08 |
+| **The Cope page of the shear-plate / web-angle classes stays inert** | `conn kind=shear cope=1` left `polyCuts=0`; only `PsCopeConnection` copes — **and it must run AFTER the connection**, or the connection's own end cut wipes it | 13/08, confirming B.19/B.20 |
+| ⭐ **What DID open** | `plate9 mode=poly` **honours the insertion matrix** (a triangular gusset built in the XZ plane at z=400…1100) — unlike `polyplate`, which is z=0 only · and `miter` **cuts both members in one call** (4 corners, `cutPlanes=2` each) | 13/08 |
+
+---
+
 ## 1. Closed — measured, repeatedly, do not retry
 
 | what | evidence | chapter |

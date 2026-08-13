@@ -10,6 +10,20 @@
 (the command-line channel). Every "verified" line below was measured by reading the model back —
 the op count is not quoted here either, for the same reason.*
 
+> ## 🆕 MEASURED 13/08/2026 — read this block before calling drill, bolt, plate9, miter or collision
+>
+> | op | what changed |
+> |---|---|
+> | **all bolt ops** | 🧲 **`DEFAULT_BOLT_STYLE = "8.8S"` is injected by `eb_api.run` whenever `style` is absent** (`bolt`, `boltfield`, `boltparts`, `boltsingle`, `threadedrod`, `nutonly`, `conn_bolted`). The old helper default was `DIN6914` — a **10.9** bolt. ⚠️ **`8.8S` refuses ⌀19 and ⌀23**; it pairs on **+2** (18→M16, 22→M20, 26→M24). Full matrix: `knowledge/learning/findings/BOLT-STYLES-AND-HOLES.md` |
+> | **`drill` / `drillfield`** | 🧲 call it **`dia=<bolt> play=2`** ⇒ hole = bolt+2 (the iron rule). ⛔ **the `flange` selector is labelled BACKWARDS in our source**: drilling downward, **`0` gives the BOTTOM flange, `1` the TOP, `2` both**. ⛔ **`flange=2` on a part with only ONE wall on the ray (a plate, or a web) makes TWO COINCIDENT HOLES** — drill the shape with `flange=2` **alone**, and the plates in a separate call with no `flange`. ⚠️ `innercontour=1` on a hollow section still reports **one** hole — **depth is the witness, not the count** |
+> | **`boltparts`** | a refusal is information: **no row in the style's table**, or **plies that do not touch**. Read `eb_log.problems()` — ProSteel prints `CANNOT DETERMINE BOLTS => NO BOLTS`. ⚠️ and calling it **once per member while both cover plates are in the selection** bolts the plate-to-plate pairs too — **select the whole joint in ONE call** |
+> | **`plate9`** | ⚠️ **`at=` is the plate's CENTRE** (`at=Y+6` on a 12 mm plate gave 6 mm of interpenetration instead of a lap). ⭐ **`mode=poly` HONOURS the insertion matrix** — a triangular gusset built in the XZ plane at z 400…1100; `ex`/`ey` **must be orthonormal** or the plate is sheared |
+> | **`miter`** | ✅ **one call cuts BOTH members** — verified on 4 SHS corners and an IPE300 knee (`cutPlanes=2` / `1` per end) |
+> | **`collision`** | ⚠️ **`box=` selects only parts WHOLLY inside the box** — a box that excluded a 2 m girder reported `collisions=0` on a junction with 4. ⚠️ `bolts=` and the pairing filter are **inert**. 🧲 keep `minvol=100` on any band with bolts |
+> | **`conn`** | the connection **moves the member**: +40 (fin plate), +184.5 (cleat, end plate), −65 (cope) — **the saw length comes from the connection, not the grid**. ⛔ `cope=1` inside `kind=shear` is inert; run `kind=cope` **after** the connection. ⚠️ the template positions bolts **relative to the PLATE** — check the end distance **in the member** (measured `e1=0` once) |
+> | **`dbase`** | ⛔ **refuses anything that is not `.dbf`.** An `.mdb` **hangs AutoCAD** in an endless loop (CPU pinned, memory flat, no recovery) — the fifth lethal call |
+> | **`vfy_fit` / `vfy_bolts`** | ⛔ **blind to SLOTTED holes** — they reported `BOLT-NO-HOLE` on a *correct* joint, because a slot is reported as its two end circles and a `Ks_Bolt` bbox is **degenerate** (it IS the axis). `app/vfy_joined.py` is fixed (slots paired to their centre line); **the managed side still owes v185** |
+
 > ⚠️ **`_netload()` now PROVES the command is live** before returning, by pinging until it
 > answers. It used to sleep one second and return `None`; on 06/08 the DLL loaded a moment
 > late and the next three ops came back `EB_TIMEOUT` with nothing pointing at the cause.
