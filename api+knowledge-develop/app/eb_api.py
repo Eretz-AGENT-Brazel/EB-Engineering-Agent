@@ -211,9 +211,18 @@ def _send(doc, cmd, tries=15):
     return False
 
 
-def bootstrap(timeout=180):
+def bootstrap(timeout=180, dwg=None):
     """Cold-start the whole stack: launch AutoCAD if down, wait ready,
-    trust plugin dir, NETLOAD, ping. Returns a status dict."""
+    trust plugin dir, NETLOAD, ping. Returns a status dict.
+
+    ⛔ CORRECTED 13/08/2026 -- the launch passes an existing DRAWING, never a template.
+    `/t <template>` creates a new Drawing1, and a new drawing makes ProStructures raise
+    the modal "Measurement Unit" prompt, which CANNOT be dismissed from code (six
+    attempts, 10/08/2026). That was already recorded in
+    knowledge/learning/findings/LETHAL-CALLS-do-not-invoke.md § Recovery, but this
+    function still carried the retracted route -- the exact failure the registration
+    rule exists to catch. Opening an existing drawing never asks.
+    """
     import subprocess
     import pythoncom
     import win32com.client
@@ -221,7 +230,12 @@ def bootstrap(timeout=180):
     try:
         win32com.client.GetActiveObject("AutoCAD.Application")
     except Exception:
-        subprocess.Popen([ACAD_EXE, "/p", PS_ARG, "/t", METRIC_DWT,
+        if not (dwg and os.path.exists(dwg)):
+            return {"ok": False, "error":
+                    "AutoCAD is down and no existing drawing was given. Launching from a "
+                    "template raises the un-closable 'Measurement Unit' dialog -- call "
+                    "bootstrap(dwg=<an existing .dwg>). See LETHAL-CALLS-do-not-invoke.md."}
+        subprocess.Popen([ACAD_EXE, dwg, "/p", PS_ARG,
                           "/ld", "ProStructuresLoader.arx"], cwd=PS_WD)
     # wait for quiescent
     pythoncom.CoInitialize()
@@ -380,7 +394,7 @@ def open_project_cad(dwg_path):
     Used by the console's 'open project file' button. Retries transient COM flakes."""
     import pythoncom
     import win32com.client
-    st = bootstrap()
+    st = bootstrap(dwg=dwg_path if os.path.exists(dwg_path) else None)
     if not st.get("ok"):
         return st
     last = None

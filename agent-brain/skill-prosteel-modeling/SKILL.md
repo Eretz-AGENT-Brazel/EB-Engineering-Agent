@@ -939,6 +939,12 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > `references/api-surface-map.md` · **what the plugin can already do:**
 > `references/plugin-ops.md` (65 ops, what each is verified to do, and what is still open).
 >
+> 📐 **And when the job arrives as a customer PDF rather than a lesson:**
+> `references/reading-supplied-drawings.md` — pull the **vector geometry** out of the sheet
+> instead of scaling the picture, fit the scale inside one view, read the hollow section as
+> four parallel lines, and **prove the whole reading against the stated weight before modelling.**
+> Mounting is the gap a drawing rarely closes — ask one line rather than average two readings.
+>
 > ⚠️ **The dump is not the last word — the compiler is.** It hides index parameters on
 > properties (`get_Entry(short)`, `get_EdgePoint(PositionSelection, PositionSelection)`) and
 > renders `ref` as `Type&`. An independent check once declared `get_Entry` non-existent; it

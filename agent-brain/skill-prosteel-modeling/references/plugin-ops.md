@@ -3490,3 +3490,99 @@ WELDED (declared)          legitimate; the declaration is the price
 ```
 **Calibrated in one band on both a known-bad and a known-good case:** 12 bolted plates `filled=4`,
 14 refused plates `filled=0`, 2 floating members; 24 bolts × 2 plies = 48 fills = 12 × 4.
+
+---
+
+# 🏗️ 13/08/2026 — first real customer job (MARTAR pile template) and what it measured
+
+*Modelled from a supplied PDF, not from a lesson. Every line below was read back out of the
+model or out of the drawing's own vector data. The method for the drawing itself is a separate
+document: [`reading-supplied-drawings.md`](reading-supplied-drawings.md).*
+
+## ⛔⛔ `drill hosts=` DRILLS THE HOSTS — THE `handle` IS NOT DRILLED
+
+The single most expensive finding of the day, and it hits the iron rule directly.
+
+```
+drill handle=<A> hosts=<B>     ->  B gets the hole.  A DOES NOT.
+drill handle=<A>               ->  A gets the hole.
+```
+
+**Measured:** a pin clevis of two plates, drilled with `handle=u1 hosts=u2`. The op answered
+`EB_OK drill dia=30 hosts_ok=1 failed=0` — no warning of any kind — and afterwards
+`mods` read `holeFields=0` on `u1` and `holeFields=1` on `u2`. Twelve of twenty-four plates
+were left unholed on an assembly a pin passes through: **exactly the defect
+`buildable-or-not-modelled` exists to prevent, produced by a call that reported success.**
+
+⇒ ⭐⭐ **After any drilling run, count the holes per part.** `EB_OK` counts nothing:
+
+```python
+for h in parts:
+    n = int(re.search(r'holeFields=(\d+)', run('mods', handle=h)).group(1))
+```
+
+⇒ and the fix is one call per part, not one call per joint.
+
+## 📐 `plate` — `normal` is the plate's **ZAxis**, and `l`/`w` are NOT world X/Y
+
+`center` is the **mid-plane** point; `normal` becomes the thickness direction. `l` goes on the
+plate's local X, `w` on its local Y — and those are derived from the normal, so they move:
+
+| `normal` | XAxis (takes `l`) | YAxis (takes `w`) |
+|---|---|---|
+| `0,0,1` | `1,0,0` | `0,1,0` |
+| `1,0,0` | `0,1,0` | `0,0,1` |
+| `0,1,0` | `-1,0,0` *(note the sign)* | `0,0,1` |
+
+⇒ **read `XAxis`/`YAxis` back before you believe where the 150 went.** Measured on all three.
+
+## ✂️ A cut member has THREE lengths, and `Length` reports the longest
+
+An `RHS200x200x10` brace at 30.4°, cut flush against both chord faces:
+
+| quantity | value | what produces it |
+|---|---:|---|
+| uncut centreline | 2805.9 | `beam(p1,p2)` |
+| **`Length` after both cuts** | **2751.5** | the **longest fibre** — what ProSteel reports and bills |
+| true centreline between the faces | 2410.3 | the number a fabricator means |
+| shortest fibre | 2069.0 | what `cutat mode=straight` leaves |
+
+Each flush cut took only **27.2** off `Length` while moving the centreline **197.6** — and both
+are correct, because the plane meets the near corner 27 mm along and the far corner 368 mm along.
+🛑 **Reading the 27 as "the cut barely did anything" is the trap**; three separate mechanisms
+(`cutat object`, `planecut`, and a hand check) all agreed once the fibre was identified.
+⚠️ **It also over-states weight:** the brace bills 161.8 kg against 141.8 kg of real steel.
+
+### which cut to use for a member butting a face
+
+| want | call |
+|---|---|
+| **flush, angled fit** against another part's face | `planecut at=<a point on that face> normal=<face normal>` — keeps the **−normal** side (measured on an axis-aligned probe: `at=41000 normal=1,0,0` on a 40000→42000 beam left 40000→41000) |
+| square cut standing clear of the other part | `cutat mode=straight` |
+| cut at the other part's own plane | `cutat mode=object` |
+
+## ⚠️ `Weight` on a `Ks_Plate` is NOMINAL — L×W×T, blind to modifications
+
+Two arc facet cuts that visibly rounded a plate's top left the weight **unchanged at 2.057 kg**,
+while `mods` read `facets=2`. ⇒ **weight is not evidence that a cut happened.** The evidence is
+`mods` / `chamfer list`. (Consistent with `computeObjectWeigth` being a `LETHAL-CALLS` entry —
+the honest recomputation is the one that kills the session.)
+
+## ⭕ `chamfer type=2` rounds a corner — two of them make a semicircular top
+
+`chamfer handle=<h> at=<corner point> type=2 d1=R d2=R` on both top corners of a plate, with
+`R = half the width`, produces a proper lug head. Verified `facets 0→1→2` and
+`chamfer list` → `type=2 d1=63 d2=63 edge=2 / edge=3`. `at=` takes a **world point on the
+corner**; no edge index needed.
+
+## 🔧 smaller things, all measured today
+
+| | |
+|---|---|
+| **`eb_list.txt` is pipe-separated** | `handle\|class\|layer`, not tab. Splitting on tab silently yields one field and every later lookup reads the previous part's data |
+| **the window title goes stale after a COM `SaveAs`** | AutoCAD still captioned `[Drawing1.dwg]` long after the document was `test-2026-08-13.dwg`. `eb_shot` matches the pinned name and failed with *"no window titled like…"* ⇒ pass `match='Autodesk AutoCAD 2015'` |
+| ⚠️ **`eb_api.save()` only saves models in `projects/sandbox/`** | the path is hardcoded `PROJECTS/sandbox/<pinned name>`. For a model anywhere else it checks the wrong file. Use the COM route and keep the size+mtime proof |
+| 🛑 **`bootstrap()` carried the retracted `/t <template>` launch** | the route retracted 10/08 because a new drawing raises the un-closable *Measurement Unit* dialog — a live contradiction inside the code while the finding sat correctly in `LETHAL-CALLS`. **Fixed 13/08:** it now takes `dwg=` and refuses to launch without one |
+| ⛔ **`section` on a `Ks_Plate` returned `empty=True`** | in the plate's own mid-plane, on both a plain and a rounded plate (`elements=0 lines=0 arcs=0`). Not chased further — recorded as measured, **not** as a dead end |
+| **stray entities from probes** | an `AcDbRotatedDimension` appeared during the op probing and sat in the model unnoticed until the census. **Census by class, not by count** |
+| ⚠️ **`_model_log` writes to the LAST project folder, not the pinned drawing's** | 140 lines of this job landed in `projects/lesson-6/model_log.jsonl`. The rows do carry `"dwg"`, so nothing was ambiguous — but another project's history was polluted. **Split back out by the `dwg` field, and check the folder after the first op on a new model** |

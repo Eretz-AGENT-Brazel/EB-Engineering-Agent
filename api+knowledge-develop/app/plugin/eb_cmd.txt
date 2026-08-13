@@ -1,5 +1,5 @@
-reqid=30431490
-op=dumpholes
-out=eb_final_holes.txt
-maxx=1000000000.0
-dwg=lesson-6.dwg
+reqid=19959873
+op=zoom
+handle=326,327,328
+margin=2.0
+dwg=test-2026-08-13.dwg
