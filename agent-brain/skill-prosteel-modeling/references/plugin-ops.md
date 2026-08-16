@@ -3732,3 +3732,29 @@ convention set: **`hinged-assemblies.md`**. What the ops themselves did:
 code, part by part off its own definition, lands **20 of 20 members at 0.0000 mm**, plates at
 0.000–0.023, bent plates at 0.001–0.002, and mitred pipes within 0.055 — the last of which is
 **inside the source model's own internal spread** (its two identical handle bars differ by 0.109).
+
+---
+
+## 🔁 LESSON 7, second model — the PUMP CHAMBER (16/08/2026)
+
+140 real parts rebuilt into an emptied drawing. **82 shapes ≤0.059 mm · 44 plates ≤0.001 mm ·
+8 concrete solids 0.0000 · all 26 cut counts matching.** Detail: `hinged-assemblies.md`.
+
+| op | measured |
+|---|---|
+| ⭐⭐ **`dumpmodel` SHAPE `p1→p2` may run OPPOSITE the member's own +Z** | **42 of 82** shapes needed their endpoints swapped before the section frame could be matched. Build once, compare achieved `Z` to target `Z`, swap the ends if opposed, *then* solve `rot`. Nothing in `ext`, `p1` or `L` reveals it |
+| ⭐⭐⭐ **axes print to 3 dp — in `props` AND `propfull`** | the plugin's formatter is the limit, not the data. Feeding them back gives error ∝ part length: **0.0003 of tilt over 2361 mm = 0.103 mm**. Cures: (a) recognise a round angle — `0.342/0.94` is exactly **20°**, and substituting `sin20`/`cos20` took 16 plates from 0.035 to **0.0000**; (b) secant-solve the tilt against the source's extents — took two skins from 0.103 to **0.0000** |
+| ⛔ **do NOT normalise the axis triad component-wise** | normalising X and Z while leaving Y as printed breaks orthogonality; ProSteel re-derives its own frame and the part lands **2.347 mm** out. Pass what was printed, or orthonormalise as a set |
+| ⭐⭐ **correct `at` relative to the `at` you PASSED** | not to the resulting bbox midpoint. For a contour ProSteel re-centres, the two differ by the re-centring offset and the loop re-injects it every pass — that is what moved 16 plates 2.347 mm and then refused to converge |
+| ⚠️ **`solid kind=box` places from a CORNER** | passing the centre put every box out by half a dimension (1200 / 540 mm). Build → measure → correct converges in one pass to **0.0000** |
+| ⚠️ **`solid` reports `new:<handle>`, not `handle=`** | a `handle=` parser silently records nothing while the geometry is built |
+| ⚠️ **`copy` reports `new=<handle>;`** — with a trailing semicolon | strip it, and retry: one call in a long run returned no `new=` at all |
+| **`mirror`** | `handle`/`handles` + `p1`/`p2`/`p3`; **no `copy` flag** — it mirrors in place. To duplicate: `copy … to=0,0,0` first, then mirror the copy |
+| ⭐⭐ **and the result that matters:** | a bent plate produced by **mirroring an already-correct one** landed at **0.010 mm** with its fold vertex exact, against ~5 mm from an hour of parameter fitting. **When a part repeats, PLACE it — do not re-derive it** |
+| ⛔ **`bend` folds only AT AN EDGE of the base plate** | so reproducing a source bent plate requires recovering the base width, and that is **not** `W − flangeLen`: the reported `L×W` is the developed blank and the **bend deduction** sits between them. Four of six were not solved this way — see the open item |
+| ⛔⛔ **a search loop must never delete the handle it recorded as best** | four plates were silently lost to `eWasErased`; the failure only surfaced when the verifier crashed. **Search code is destructive code** — every delete in a loop must ask whether it is the incumbent |
+| ⚠️ **`plateinfo probe=` ignores unknown names silently** | `probe=safe,poly,polygon,contour,…` returned only what it recognised, with no complaint about the rest |
+
+⭐ **Process note worth as much as any op:** 4 % of the parts consumed most of the session, and
+two of the later "improvements" made already-good results worse. **Budget each stuck part:
+after three attempts with no improvement, record it and move on.**

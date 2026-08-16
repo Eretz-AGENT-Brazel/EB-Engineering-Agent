@@ -47,6 +47,38 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > ⭐ The instrument that IS trustworthy here: **`op=equal`** (`CheckTwoPartsAreEqual`) — calibrate
 > it first on a part against itself and on two of the source model's own matching parts.
 >
+> ### ⭐⭐⭐ 5b. WHEN A PART REPEATS, **PLACE IT** — DO NOT RE-DERIVE IT
+> Second model, same lesson (the pump chamber). Four identical bent plates: one was fitted
+> correctly at 0.010 mm; an hour of parameter search on its twin reached only 5 mm. **Mirroring
+> the good one onto the twin landed at 0.010 mm with its fold vertex exact.** Same for the two in
+> the other chamber — they are the first pair translated and rotated about the hinge.
+> ⇒ Build-once-then-replicate is not only the *fast* route, it is the *accurate* one. Reach for
+> `copy` / `mirror` / `align` the moment a part recurs, and reserve fitting for the first instance.
+> ⚠️ `mirror` has **no `copy` flag** — `copy … to=0,0,0` first, then mirror the duplicate.
+>
+> ### ⭐⭐⭐ 5c. NEVER FEED BACK A NUMBER THE SOFTWARE PRINTED ROUNDED
+> `props` **and** `propfull` print axis vectors to **3 decimals**. Passing them back rotates the
+> part by the rounding error, and the error scales with length: on a 2361 mm plate a 0.0003 tilt
+> error is **0.103 mm** at the corner. Two measured cures — recognise the round angle
+> (`0.342/0.94` is exactly **20°**; substituting `sin20`/`cos20` took sixteen plates from 0.035 to
+> **0.0000**), or secant-solve the tilt against the source's own extents.
+> ⛔ And do **not** normalise the triad component-wise: normalising X and Z while leaving Y as
+> printed breaks orthogonality, ProSteel re-derives its own frame, and the part lands 2.3 mm out.
+> ⚠️ Related, same family: **`dumpmodel`'s `p1→p2` can run OPPOSITE the member's own +Z** — 42 of
+> 82 shapes needed their ends swapped, and `ext`/`p1`/`L` are all blind to it.
+> ⚠️ And when re-placing by measurement, correct relative to the **`at` you passed**, never to the
+> resulting bbox midpoint — for a contour ProSteel re-centres, the difference re-injects itself
+> every iteration.
+>
+> ### ⛔⛔ 5d. SEARCH CODE IS DESTRUCTIVE CODE
+> A fitting loop deleted the very handle it had just recorded as its best result. Four plates
+> vanished from the model and nothing said so until the verifier crashed on `eWasErased`.
+> **Every `delete` inside a loop must first ask whether it is the incumbent** — and re-check that
+> the winner is still alive before recording it.
+> ⚠️ Budget it, too: on the pump chamber **4 % of the parts consumed most of the session**, and
+> two late "improvements" made already-good results worse. **Three attempts without improvement
+> ⇒ record it, move on, come back with a different method.**
+>
 > ### ⛔⛔ 5. `rw` MEANS "HAS A SETTER", NEVER "SAFE TO SET"
 > A blanket property sync wrote **`Mirrored`** onto twelve pipes and **displaced them by up to
 > 340 mm**, silently, while every call returned success. ⇒ **Sync only fields proved inert, and
