@@ -79,9 +79,32 @@ Undimensioned *mounting* is the recurring gap: the same lug reads as "on the top
 view and "on the inner face" in another, and both look plausible at render resolution.
 
 > **Ask one line. Do not average the two readings.**
-> On this job the pin assemblies were placed wrongly **twice** — first on the top face, then
-> vertically on the inner face — before the customer's third answer ("horizontal shelf") landed.
-> Each round cost one rebuild; each *guess presented as fact* would have cost a fabricated part.
+> On this job **three separate details were rejected, and not one was a geometry error** — the
+> dimensions were exact every time. All three were *how the part mounts*:
+>
+> | rejected | I had it | it actually was |
+> |---|---|---|
+> | pin plate assembly | on the chord's top face | **internal**, off the inner face |
+> | the same, again | plate 150 out × 100 high | **100 out × 150 high** |
+> | the end plate's bend | folded toward the pipe | folded **back over the profile** |
+>
+> Each rejection cost a rebuild of 24–36 parts. **A guess presented as fact would have cost a
+> fabricated part**, which is the whole point of rule zero.
+
+## ⭐ When the customer draws the answer, read the geometry — do not scale his sketch either
+
+Amir settled the corner-plate contour by drawing a **polyline in the model itself**. Read it with
+COM rather than measuring the screenshot:
+
+```python
+for e in doc.ModelSpace:
+    if 'Polyline' in e.EntityName:
+        co = list(e.Coordinates)        # AcDb3dPolyline -> x,y,z triples
+```
+It gave `(508,1302) (728,1302) (728,1210) (600,1082) (508,1082)` — a 220 × 220 square with a
+128 × 128 chamfer on the inner corner — exact, and mirrorable to the other three corners about the
+assembly centre. ⚠️ **Its z values were meaningless** (42 / 50 / 58 — whatever his osnap caught);
+the contour lives in X-Y. Take the plan shape from the polyline, take the height from the stack.
 
 And when the answer arrives, **re-derive the position from the drawing anyway**: the customer's
 sketch gave the plate sizes, but the drawing's own side view carried the 123 mm vertical extent

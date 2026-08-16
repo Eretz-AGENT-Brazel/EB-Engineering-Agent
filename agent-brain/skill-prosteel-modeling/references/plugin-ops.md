@@ -3586,3 +3586,118 @@ corner**; no edge index needed.
 | ⛔ **`section` on a `Ks_Plate` returned `empty=True`** | in the plate's own mid-plane, on both a plain and a rounded plate (`elements=0 lines=0 arcs=0`). Not chased further — recorded as measured, **not** as a dead end |
 | **stray entities from probes** | an `AcDbRotatedDimension` appeared during the op probing and sat in the model unnoticed until the census. **Census by class, not by count** |
 | ⚠️ **`_model_log` writes to the LAST project folder, not the pinned drawing's** | 140 lines of this job landed in `projects/lesson-6/model_log.jsonl`. The rows do carry `"dwg"`, so nothing was ambiguous — but another project's history was polluted. **Split back out by the `dwg` field, and check the folder after the first op on a new model** |
+
+---
+
+# 🧩 16/08/2026 — the guide assembly (MARTAR), and the ops it cost to learn
+
+*Second day of the first customer job: three telescoping pipe guides pinned into the base.
+178 steel parts, 0 collisions. Everything below was measured, and most of it was measured the
+expensive way — by getting it wrong first in front of the customer.*
+
+## ⛔⛔ `bendtwo` DESTROYS BOTH PLATES WHILE REPORTING FAILURE
+
+```
+bendtwo h1=<pad> h2=<flange> radius=10   ->  EB_ERR ... rc=-1  census=95->95
+```
+…and afterwards **the pad no longer exists**. `EX:eWasErased` on the next call, four
+`Ks_BendPlate` shells in the model carrying `flangeCount=0`, and four pads gone.
+
+I ran **six parameter variants** on the same pair before checking, so four pads were destroyed
+before I noticed. ⇒ ⭐ **After any op that reports failure, count the parts.** A failed call is
+not a no-op; `census` in the reply is the count *at that moment*, not proof nothing was consumed.
+
+## ✅ `bend` is the route that works — B.9.4 ADD SEGMENT
+
+```
+bend handle=<plate> at=<a point on the reference edge> len=58 radius=10 angle=-30 convert=1
+  -> EB_OK bend handle=5FD (was 5FC) AddFlange rc=1 flangeIndex=0 flangeCount=1
+```
+| | |
+|---|---|
+| **returns a NEW handle** | the conversion replaces the entity — `Ks_Plate` becomes `Ks_BendPlate` |
+| `angle` | **deviation from the plate's plane**, and its SIGN picks the fold direction. `+30` folded the flange one way, `-30` the other — 150° included either way |
+| verify with | `bendinfo` → `[0] len=58 ang=-30deg(-0.524rad) r=10`, and its vertices give the far edge so you can prove **which way** it leans |
+| `at` | a world point on the edge to fold about; no edge index needed |
+
+⇒ **the sign is not cosmetic** — on a pipe-guide funnel, folding the wrong way puts the lead-in
+against the pipe instead of over the profile. Read the far-edge vertices back and check the
+direction against the thing it is supposed to guide.
+
+## ⛔ Drilling a HOLLOW section needs `innercontour=1`
+
+Without it the hole stops in the near wall:
+```
+drill ... (no innercontour)  ->  hole 600,250,125 -> 592,250,125     8 mm  = one wall
+drill ... innercontour=1     ->  hole 600,250,125 -> 500,250,125   100 mm  = right through
+```
+The op answers `EB_OK ... holes=1` **both times**. On an RHS ear that a pin passes through, the
+8 mm version is a fabrication defect that reads as success. ⇒ **read the hole's two end points,
+not the count.**
+
+## 📐 `plate9 mode=poly` — the points are LOCAL to the insertion plane
+
+```
+plate9 mode=poly at=600,410,204 ex=1,0,0 ey=0,1,0 ez=0,0,1 t=8 pts=0,0,0;220,0,0;0,220,0   ✅
+plate9 mode=poly at=…            … pts=600,410,204;820,410,204;600,630,204                 ❌ Create()=False
+```
+World coordinates give `Create()=False` **with `checkValidPlate=True`** — the contour is valid, it
+is simply in the wrong frame. And `at` is the **mid-plane**: `at z=204` with `t=8` produced
+`ext=…,200 ; …,208`.
+
+## ⚠️⚠️ `plate(normal=…)` PUTS A SKEWED PLATE ON THE WORLD AXES
+
+The finding that cost the most, because **size and position both read back correct**:
+
+```
+arm / insert / end plate :  XAxis -0.707/0.707/0   ZAxis 0.707/0.707/0    <- the part's own 45 deg system
+PL5 built with normal=   :  XAxis  1/0/0           YAxis 0/1/0            <- WORLD axes, rotated 45 deg off
+```
+`normal=` only fixes the **thickness** direction; the in-plane axes are derived from it and land on
+world X/Y. The plates were the right size, in the right place, with the right thickness — and
+turned 45° against the tube they sit on. The customer saw it before I did.
+
+**Use `ex`/`ey`/`ez` for anything not aligned to the world axes.** The plugin confirms the route in
+its own reply: `via=ecs` (explicit axes) versus `via=matrix` (derived from `normal`).
+
+> ### ⭐⭐ AND THE RULE THIS EXTENDS
+> [[read-back-what-you-gave]] said: never report a creation without reading it back.
+> **That is not enough. Dimensions and position can all be right while the ORIENTATION is wrong.**
+> ⇒ for any part off the world axes, read `XAxis` / `YAxis` / `ZAxis` back too, and compare them
+> against the direction the part is supposed to serve.
+
+## 🔩 sections and pins used here, all looked up not composed
+
+| what | key | catalogue | note |
+|---|---|---|---|
+| guide collar / arm | `RR150x100x8` | `DIN_RECHTECKROHR` | `rot=0` on a beam puts **Height (150) on world Z**, Wide (100) across — verified from `XAxis`/`YAxis` |
+| telescoping insert | `RR120x80x8` | `DIN_RECHTECKROHR` | 120×80 slides inside the arm's 134×84 bore, and **does not collide** — ProSteel respects the hollow |
+| **pins** | **`RD30`** | **`DIN RUNDSTAHL`** | solid round bar, 60 entries. `DIN RUNDROHR` is the **tube** — a different thing |
+
+🧲 **Amir's pin rule, 16/08:** *pin length = the span of hole it must cross + 10 mm.*
+Measured, never assumed: base pins crossed `x 478…622` = 144 → **154**; guide pins spanned 100
+along the pin axis → **110**.
+
+## 🔁 and two habits this job re-proved
+
+- **The collision check is still not idempotent** — it leaves `Ks_VolBody` behind and the next run
+  counts them (4 → 8 with nothing changed). **Delete every non-steel class before any run whose
+  number you intend to quote.**
+- **Census by class, not by count.** An `AcDbRotatedDimension` from an op probe sat in the model
+  unnoticed; only grouping by `EntityName` found it.
+
+## 🛑 the process lesson, which is bigger than any op
+
+Three details were rejected by the customer, and **not one of them was a geometry error** — the
+dimensions were exact every time. All three were **how the part mounts**:
+
+| rejected | I had it | it actually is |
+|---|---|---|
+| pin plate assembly | on the chord's top face | **internal**, off the inner face |
+| the same, again | plate 150 out × 100 high | **100 out × 150 high**, which lands the pin on the guide's 1120 |
+| the bend | folded toward the pipe | folded **back over the profile** |
+
+Each rejection cost a rebuild of 24–36 parts. **A one-line question before modelling is cheaper
+than a sketch afterwards** — and the drawing usually cannot answer a mounting question, because
+the same lug reads as "on the top face" in one view and "on the inner face" in another.
+See [[buildable-or-not-modelled]] and `reading-supplied-drawings.md`.

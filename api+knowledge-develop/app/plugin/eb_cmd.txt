@@ -1,5 +1,5 @@
-reqid=19959873
+reqid=61a19fb8
 op=zoom
-handle=326,327,328
-margin=2.0
+handle=446,447,43E,43F
+margin=0.5
 dwg=test-2026-08-13.dwg

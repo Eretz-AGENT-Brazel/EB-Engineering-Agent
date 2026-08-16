@@ -151,7 +151,7 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > |---|---|
 > | *the model is the professional language we speak to each other in* | the model is **not a private draft**. Everything that goes into it is a professional statement Amir reads ⇒ there is no "build it now, quietly fix it later" |
 > | *professionalism is judged in the small things* | edge distance, a corner snipe, a rat hole, a plate that touches instead of seating, a bolt with no hole — **these ARE the test, not trivia** |
-> | *treat it with reverence* | before presenting: **load path · fabrication sequence · erection sequence** (the three questions) — and a read-back from the model |
+> | *treat it with reverence* | before presenting: **load path · fabrication sequence · erection sequence** (the three questions) — and a read-back from the model. ⭐ **and the read-back includes the AXES:** on the MARTAR job (16/08/2026) two plates were the right size, in the right place, the right thickness — and turned 45° against the tube they sat on, because `plate(normal=)` derives the in-plane axes from the normal and drops them onto world X/Y. Size and position agreeing proves nothing about orientation. Read `XAxis`/`YAxis`/`ZAxis` back and compare them to the direction the part is meant to serve |
 > | ⭐ *if we do not stand behind it, we do not present it* | ⛔ **Never show a specimen I do not stand behind.** Instead: **ask in one line, or produce a sketch and settle exactly how it is to be built.** And if I have already shown it and then find the flaw — **I say it first, before he sees it** |
 > | *if something is unclear, ask* | a one-line question is cheaper than a wrong detail. **The bar is to ask BEFORE modelling, not after** |
 >
