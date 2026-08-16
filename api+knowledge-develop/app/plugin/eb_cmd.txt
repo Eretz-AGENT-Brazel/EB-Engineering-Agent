@@ -1,5 +1,3 @@
-reqid=61a19fb8
-op=zoom
-handle=446,447,43E,43F
-margin=0.5
-dwg=test-2026-08-13.dwg
+reqid=1c858a46
+op=whoami
+dwg=LESSON 7- REBUILD.dwg

@@ -57,3 +57,170 @@
 {"op": "beam", "args": {"kind": "standard", "name": "HE300B", "catalog": "DIN_HEB", "p1": "40900.0,0,0", "p2": "40900.0,0,2000", "rot": 90, "dwg": "lesson-6.dwg"}, "handle": "692", "ts": "15:30:47"}
 {"op": "beam", "args": {"kind": "standard", "name": "HE300B", "catalog": "DIN_HEB", "p1": "32000,12000.0,0", "p2": "32000,12000.0,3000", "rot": 90, "dwg": "lesson-6.dwg"}, "handle": "693", "ts": "15:33:03"}
 {"op": "beam", "args": {"kind": "standard", "name": "FL 150x12", "catalog": "DIN_FLACH", "p1": "32359.4,12000.0,764.1", "p2": "33066.5,12000.0,57.0", "rot": 90, "dwg": "lesson-6.dwg"}, "handle": "696", "ts": "15:33:04"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "21535.0000,1061.0000,235.5000", "p2": "21535.0000,-40.0000,235.5000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "DBF", "ts": "14:38:53"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "19960.0000,1041.0000,235.5000", "p2": "21555.0000,1041.0000,235.5000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "DC0", "ts": "14:38:53"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "19980.0000,-40.0000,235.5000", "p2": "19980.0000,1061.0000,235.5000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "DC1", "ts": "14:38:53"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "21555.0000,-20.0000,235.5000", "p2": "19960.0000,-20.0000,235.5000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "DC2", "ts": "14:38:53"}
+{"op": "beam", "args": {"name": "16ROUND", "catalog": "AS_ROUNDBARS", "p1": "19984.1920,767.5000,499.0030", "p2": "19984.1920,867.5000,499.0030", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "DC3", "ts": "14:38:54"}
+{"op": "beam", "args": {"name": "16ROUND", "catalog": "AS_ROUNDBARS", "p1": "21530.8080,767.5000,499.0030", "p2": "21530.8080,867.5000,499.0030", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "DC4", "ts": "14:38:54"}
+{"op": "beam", "args": {"name": "16ROUND", "catalog": "AS_ROUNDBARS", "p1": "19984.1920,153.5000,499.0030", "p2": "19984.1920,253.5000,499.0030", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "DC5", "ts": "14:38:55"}
+{"op": "beam", "args": {"name": "16ROUND", "catalog": "AS_ROUNDBARS", "p1": "21530.8080,153.5000,499.0030", "p2": "21530.8080,253.5000,499.0030", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "DC6", "ts": "14:38:55"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20598.1910,94.5000,585.3470", "p2": "20588.2220,94.5000,670.3600", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "DC7", "ts": "14:38:55"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20439.2430,94.5000,652.8910", "p2": "20449.2110,94.5000,567.8780", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "DC8", "ts": "14:38:55"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20600.0330,94.5000,661.0770", "p2": "20429.8990,94.5000,641.1270", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "DC9", "ts": "14:38:55"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20599.9790,926.5000,661.0700", "p2": "20429.9530,926.5000,641.1330", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "DCA", "ts": "14:38:56"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20439.2430,926.5000,652.8910", "p2": "20449.2110,926.5000,567.8780", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "DCB", "ts": "14:38:56"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20598.1910,926.5000,585.3470", "p2": "20588.2220,926.5000,670.3600", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "DCC", "ts": "14:38:56"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20916.8090,926.5000,585.3470", "p2": "20926.7780,926.5000,670.3600", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "DCD", "ts": "14:38:56"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "21075.7570,926.5000,652.8910", "p2": "21065.7890,926.5000,567.8780", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "DCE", "ts": "14:38:56"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20914.9670,926.5000,661.0770", "p2": "21085.1010,926.5000,641.1270", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "DCF", "ts": "14:38:56"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20915.0210,94.5000,661.0700", "p2": "21085.0470,94.5000,641.1330", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "DD0", "ts": "14:38:56"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "21075.7570,94.5000,652.8910", "p2": "21065.7890,94.5000,567.8780", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "DD1", "ts": "14:38:56"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20916.8090,94.5000,585.3470", "p2": "20926.7780,94.5000,670.3600", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "DD2", "ts": "14:38:57"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "45000,40000,0", "p2": "45000,40500,0", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E0A", "ts": "14:56:03"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "45300,40000,0", "p2": "45300,40500,0", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E0B", "ts": "14:56:04"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "45600,40000,0", "p2": "45600,40500,0", "rot": 90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E0C", "ts": "14:56:04"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "45900,40000,0", "p2": "45900,40500,0", "rot": 180, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E0D", "ts": "14:56:04"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "46200,40000,0", "p2": "46200,40500,0", "rot": -90, "offx": 20, "offy": 20, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E0E", "ts": "14:56:04"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "46500,40000,0", "p2": "46500,40500,0", "rot": -90, "offx": -20, "offy": -20, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E0F", "ts": "14:56:05"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "46800,40000,0", "p2": "46800,40500,0", "rot": -90, "offx": 20, "offy": -20, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E10", "ts": "14:56:05"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "47100,40000,0", "p2": "47100,40500,0", "rot": -90, "offx": -20, "offy": 20, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E11", "ts": "14:56:05"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "21535.0000,1061.0000,235.5000", "p2": "21535.0000,-40.0000,235.5000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E12", "ts": "14:57:32"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "19960.0000,1041.0000,235.5000", "p2": "21555.0000,1041.0000,235.5000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E13", "ts": "14:57:33"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "19980.0000,-40.0000,235.5000", "p2": "19980.0000,1061.0000,235.5000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E14", "ts": "14:57:33"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "21555.0000,-20.0000,235.5000", "p2": "19960.0000,-20.0000,235.5000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E15", "ts": "14:57:33"}
+{"op": "miter", "args": {"cut": "E13", "other": "E12", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "14:57:34"}
+{"op": "miter", "args": {"cut": "E13", "other": "E14", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "14:57:34"}
+{"op": "miter", "args": {"cut": "E15", "other": "E12", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "14:57:34"}
+{"op": "miter", "args": {"cut": "E15", "other": "E14", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "14:57:34"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "21535.0000,1061.0000,235.5000", "p2": "21535.0000,-40.0000,235.5000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E19", "ts": "14:59:23"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "19960.0000,1041.0000,235.5000", "p2": "21555.0000,1041.0000,235.5000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E1A", "ts": "14:59:23"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "19980.0000,-40.0000,235.5000", "p2": "19980.0000,1061.0000,235.5000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E1B", "ts": "14:59:23"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "21555.0000,-20.0000,235.5000", "p2": "19960.0000,-20.0000,235.5000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E1C", "ts": "14:59:23"}
+{"op": "miter", "args": {"cut": "E1A", "other": "E19", "type": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "14:59:23"}
+{"op": "miter", "args": {"cut": "E1A", "other": "E1B", "type": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "14:59:23"}
+{"op": "miter", "args": {"cut": "E1C", "other": "E19", "type": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "14:59:23"}
+{"op": "miter", "args": {"cut": "E1C", "other": "E1B", "type": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "14:59:23"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "21535.0000,1061.0000,235.5000", "p2": "21535.0000,-40.0000,235.5000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E1D", "ts": "14:59:25"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "19960.0000,1041.0000,235.5000", "p2": "21555.0000,1041.0000,235.5000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E1E", "ts": "14:59:25"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "19980.0000,-40.0000,235.5000", "p2": "19980.0000,1061.0000,235.5000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E1F", "ts": "14:59:25"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "21555.0000,-20.0000,235.5000", "p2": "19960.0000,-20.0000,235.5000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E20", "ts": "14:59:25"}
+{"op": "miter", "args": {"cut": "E1E", "other": "E1D", "type": 1, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "14:59:25"}
+{"op": "miter", "args": {"cut": "E1E", "other": "E1F", "type": 1, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "14:59:25"}
+{"op": "miter", "args": {"cut": "E20", "other": "E1D", "type": 1, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "14:59:25"}
+{"op": "miter", "args": {"cut": "E20", "other": "E1F", "type": 1, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "14:59:25"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "21535.0000,1061.0000,235.5000", "p2": "21535.0000,-40.0000,235.5000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E21", "ts": "14:59:27"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "19960.0000,1041.0000,235.5000", "p2": "21555.0000,1041.0000,235.5000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E22", "ts": "14:59:27"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "19980.0000,-40.0000,235.5000", "p2": "19980.0000,1061.0000,235.5000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E23", "ts": "14:59:27"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "21555.0000,-20.0000,235.5000", "p2": "19960.0000,-20.0000,235.5000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E24", "ts": "14:59:27"}
+{"op": "miter", "args": {"cut": "E22", "other": "E21", "type": 2, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "14:59:27"}
+{"op": "miter", "args": {"cut": "E22", "other": "E23", "type": 2, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "14:59:27"}
+{"op": "miter", "args": {"cut": "E24", "other": "E21", "type": 2, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "14:59:27"}
+{"op": "miter", "args": {"cut": "E24", "other": "E23", "type": 2, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "14:59:27"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "21535.0000,1061.0000,235.5000", "p2": "21535.0000,-40.0000,235.5000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E25", "ts": "15:00:18"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "19960.0000,1041.0000,235.5000", "p2": "21555.0000,1041.0000,235.5000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E26", "ts": "15:00:18"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "19980.0000,-40.0000,235.5000", "p2": "19980.0000,1061.0000,235.5000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E27", "ts": "15:00:18"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "21555.0000,-20.0000,235.5000", "p2": "19960.0000,-20.0000,235.5000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E28", "ts": "15:00:18"}
+{"op": "miter", "args": {"cut": "E26", "other": "E25", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:00:19"}
+{"op": "miter", "args": {"cut": "E26", "other": "E27", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:00:20"}
+{"op": "miter", "args": {"cut": "E28", "other": "E25", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:00:21"}
+{"op": "miter", "args": {"cut": "E28", "other": "E27", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:00:22"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "21535.0000,1061.0000,235.5000", "p2": "21535.0000,-40.0000,235.5000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E29", "ts": "15:00:59"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "21535.0000,1061.0000,235.5000", "p2": "21535.0000,-40.0000,235.5000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E2A", "ts": "15:01:36"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "21535.0000,1061.0000,235.5000", "p2": "21535.0000,-40.0000,235.5000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E2B", "ts": "15:01:59"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "21535.000000,1061.000000,235.500000", "p2": "21535.000000,-40.000000,235.500000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E33", "ts": "15:04:36"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "19960.000000,1041.000000,235.500000", "p2": "21555.000000,1041.000000,235.500000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E34", "ts": "15:04:36"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "19980.000000,-40.000000,235.500000", "p2": "19980.000000,1061.000000,235.500000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E35", "ts": "15:04:36"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "21555.000000,-20.000000,235.500000", "p2": "19960.000000,-20.000000,235.500000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E36", "ts": "15:04:36"}
+{"op": "miter", "args": {"cut": "E34", "other": "E33", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:04:36"}
+{"op": "miter", "args": {"cut": "E34", "other": "E35", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:04:36"}
+{"op": "miter", "args": {"cut": "E36", "other": "E33", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:04:36"}
+{"op": "miter", "args": {"cut": "E36", "other": "E35", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:04:36"}
+{"op": "beam", "args": {"name": "16ROUND", "catalog": "AS_ROUNDBARS", "p1": "19984.192000,767.500000,499.003000", "p2": "19984.192000,867.500000,499.003000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E37", "ts": "15:04:36"}
+{"op": "beam", "args": {"name": "16ROUND", "catalog": "AS_ROUNDBARS", "p1": "19984.192000,153.500000,499.003000", "p2": "19984.192000,253.500000,499.003000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E38", "ts": "15:04:37"}
+{"op": "beam", "args": {"name": "16ROUND", "catalog": "AS_ROUNDBARS", "p1": "21530.808000,767.500000,499.003000", "p2": "21530.808000,867.500000,499.003000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E39", "ts": "15:04:37"}
+{"op": "beam", "args": {"name": "16ROUND", "catalog": "AS_ROUNDBARS", "p1": "21530.808000,153.500000,499.003000", "p2": "21530.808000,253.500000,499.003000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E3A", "ts": "15:04:37"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20598.191000,94.500000,585.347000", "p2": "20588.222000,94.500000,670.360000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E41", "ts": "15:06:54"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20439.243000,94.500000,652.891000", "p2": "20449.211000,94.500000,567.878000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E42", "ts": "15:06:54"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20600.033000,94.500000,661.077000", "p2": "20429.899000,94.500000,641.127000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E43", "ts": "15:06:54"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20598.191000,926.500000,585.347000", "p2": "20588.222000,926.500000,670.360000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E44", "ts": "15:06:54"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20439.243000,926.500000,652.891000", "p2": "20449.211000,926.500000,567.878000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E45", "ts": "15:06:54"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20599.979000,926.500000,661.070000", "p2": "20429.953000,926.500000,641.133000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E46", "ts": "15:06:55"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20916.809000,926.500000,585.347000", "p2": "20926.778000,926.500000,670.360000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E47", "ts": "15:06:55"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "21075.757000,926.500000,652.891000", "p2": "21065.789000,926.500000,567.878000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E48", "ts": "15:06:55"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20914.967000,926.500000,661.077000", "p2": "21085.101000,926.500000,641.127000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E49", "ts": "15:06:55"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20916.809000,94.500000,585.347000", "p2": "20926.778000,94.500000,670.360000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E4A", "ts": "15:06:55"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "21075.757000,94.500000,652.891000", "p2": "21065.789000,94.500000,567.878000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E4B", "ts": "15:06:55"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20915.021000,94.500000,661.070000", "p2": "21085.047000,94.500000,641.133000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E4C", "ts": "15:06:55"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20598.191000,94.500000,585.347000", "p2": "20588.222000,94.500000,670.360000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E4D", "ts": "15:07:45"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20439.243000,94.500000,652.891000", "p2": "20449.211000,94.500000,567.878000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E4E", "ts": "15:07:45"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20600.033000,94.500000,661.077000", "p2": "20429.899000,94.500000,641.127000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E4F", "ts": "15:07:45"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20598.191000,926.500000,585.347000", "p2": "20588.222000,926.500000,670.360000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E50", "ts": "15:07:45"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20439.243000,926.500000,652.891000", "p2": "20449.211000,926.500000,567.878000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E51", "ts": "15:07:46"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20599.979000,926.500000,661.070000", "p2": "20429.953000,926.500000,641.133000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E52", "ts": "15:07:46"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20916.809000,926.500000,585.347000", "p2": "20926.778000,926.500000,670.360000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E53", "ts": "15:07:46"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "21075.757000,926.500000,652.891000", "p2": "21065.789000,926.500000,567.878000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E54", "ts": "15:07:46"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20914.967000,926.500000,661.077000", "p2": "21085.101000,926.500000,641.127000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E55", "ts": "15:07:46"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20916.809000,94.500000,585.347000", "p2": "20926.778000,94.500000,670.360000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E56", "ts": "15:07:46"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "21075.757000,94.500000,652.891000", "p2": "21065.789000,94.500000,567.878000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E57", "ts": "15:07:46"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20915.021000,94.500000,661.070000", "p2": "21085.047000,94.500000,641.133000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E58", "ts": "15:07:46"}
+{"op": "miter", "args": {"cut": "E4F", "other": "E4D", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:07:47"}
+{"op": "miter", "args": {"cut": "E4F", "other": "E4E", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:07:47"}
+{"op": "miter", "args": {"cut": "E52", "other": "E50", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:07:47"}
+{"op": "miter", "args": {"cut": "E52", "other": "E51", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:07:47"}
+{"op": "miter", "args": {"cut": "E55", "other": "E53", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:07:47"}
+{"op": "miter", "args": {"cut": "E55", "other": "E54", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:07:47"}
+{"op": "miter", "args": {"cut": "E58", "other": "E56", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:07:47"}
+{"op": "miter", "args": {"cut": "E58", "other": "E57", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:07:47"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "21555.000000,1913.866000,235.500000", "p2": "19960.000000,1913.866000,235.500000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E62", "ts": "15:10:19"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "21535.000000,2994.866000,235.500000", "p2": "21535.000000,1893.866000,235.500000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E63", "ts": "15:10:19"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "19960.000000,2974.866000,235.500000", "p2": "21555.000000,2974.866000,235.500000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E64", "ts": "15:10:19"}
+{"op": "beam", "args": {"name": "EA40X40X4", "catalog": "BS_EQUAL", "p1": "19980.000000,1893.866000,235.500000", "p2": "19980.000000,2994.866000,235.500000", "rot": -90, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E65", "ts": "15:10:19"}
+{"op": "miter", "args": {"cut": "E62", "other": "E63", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:10:19"}
+{"op": "miter", "args": {"cut": "E62", "other": "E65", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:10:19"}
+{"op": "miter", "args": {"cut": "E64", "other": "E63", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:10:19"}
+{"op": "miter", "args": {"cut": "E64", "other": "E65", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:10:19"}
+{"op": "beam", "args": {"name": "16ROUND", "catalog": "AS_ROUNDBARS", "p1": "21530.808000,2087.366000,499.003000", "p2": "21530.808000,2187.366000,499.003000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E66", "ts": "15:10:19"}
+{"op": "beam", "args": {"name": "16ROUND", "catalog": "AS_ROUNDBARS", "p1": "19984.192000,2087.366000,499.003000", "p2": "19984.192000,2187.366000,499.003000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E67", "ts": "15:10:20"}
+{"op": "beam", "args": {"name": "16ROUND", "catalog": "AS_ROUNDBARS", "p1": "21530.808000,2701.366000,499.003000", "p2": "21530.808000,2801.366000,499.003000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E68", "ts": "15:10:20"}
+{"op": "beam", "args": {"name": "16ROUND", "catalog": "AS_ROUNDBARS", "p1": "19984.192000,2701.366000,499.003000", "p2": "19984.192000,2801.366000,499.003000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E69", "ts": "15:10:20"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "19792.540000,2860.366000,1088.681000", "p2": "19710.550000,2860.366000,1064.101000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E6A", "ts": "15:10:20"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "19753.624000,2860.366000,920.419000", "p2": "19835.614000,2860.366000,944.998000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E6B", "ts": "15:10:20"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "19717.656000,2860.366000,1077.293000", "p2": "19766.815000,2860.366000,913.312000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E6C", "ts": "15:10:20"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "19792.540000,2028.366000,1088.681000", "p2": "19710.498000,2028.366000,1064.085000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E6D", "ts": "15:10:20"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "19753.571000,2028.366000,920.403000", "p2": "19835.614000,2028.366000,944.998000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E6E", "ts": "15:10:20"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "19717.641000,2028.366000,1077.345000", "p2": "19766.831000,2028.366000,913.260000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E6F", "ts": "15:10:20"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "21722.460000,2860.366000,1088.681000", "p2": "21804.502000,2860.366000,1064.085000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E70", "ts": "15:10:21"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "21761.429000,2860.366000,920.403000", "p2": "21679.386000,2860.366000,944.998000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E71", "ts": "15:10:21"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "21797.359000,2860.366000,1077.345000", "p2": "21748.169000,2860.366000,913.260000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E72", "ts": "15:10:22"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "21722.460000,2028.366000,1088.681000", "p2": "21804.450000,2028.366000,1064.101000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E73", "ts": "15:10:22"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "21761.376000,2028.366000,920.419000", "p2": "21679.386000,2028.366000,944.998000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E74", "ts": "15:10:22"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "21797.344000,2028.366000,1077.293000", "p2": "21748.185000,2028.366000,913.312000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "E75", "ts": "15:10:22"}
+{"op": "miter", "args": {"cut": "E6C", "other": "E6A", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:10:22"}
+{"op": "miter", "args": {"cut": "E6C", "other": "E6B", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:10:22"}
+{"op": "miter", "args": {"cut": "E6F", "other": "E6D", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:10:22"}
+{"op": "miter", "args": {"cut": "E6F", "other": "E6E", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:10:24"}
+{"op": "miter", "args": {"cut": "E72", "other": "E70", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:10:24"}
+{"op": "miter", "args": {"cut": "E72", "other": "E71", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:10:24"}
+{"op": "miter", "args": {"cut": "E75", "other": "E73", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:10:24"}
+{"op": "miter", "args": {"cut": "E75", "other": "E74", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:10:24"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20598.191000,926.500000,585.347000", "p2": "20588.222000,926.500000,670.360000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "EBC", "ts": "15:19:39"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20439.243000,926.500000,652.891000", "p2": "20449.211000,926.500000,567.878000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "EBD", "ts": "15:19:39"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20599.979000,926.500000,661.070000", "p2": "20429.953000,926.500000,641.133000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "EBE", "ts": "15:19:39"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20916.809000,94.500000,585.347000", "p2": "20926.778000,94.500000,670.360000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "EBF", "ts": "15:19:39"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "21075.757000,94.500000,652.891000", "p2": "21065.789000,94.500000,567.878000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "EC0", "ts": "15:19:40"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "20915.021000,94.500000,661.070000", "p2": "21085.047000,94.500000,641.133000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "EC1", "ts": "15:19:40"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "19792.540000,2860.366000,1088.681000", "p2": "19710.550000,2860.366000,1064.101000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "EC2", "ts": "15:19:40"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "19753.624000,2860.366000,920.419000", "p2": "19835.614000,2860.366000,944.998000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "EC3", "ts": "15:19:40"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "19717.656000,2860.366000,1077.293000", "p2": "19766.815000,2860.366000,913.312000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "EC4", "ts": "15:19:40"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "21722.460000,2028.366000,1088.681000", "p2": "21804.450000,2028.366000,1064.101000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "EC5", "ts": "15:19:41"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "21761.376000,2028.366000,920.419000", "p2": "21679.386000,2028.366000,944.998000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "EC6", "ts": "15:19:41"}
+{"op": "beam", "args": {"name": "21.3X2.0CHS", "catalog": "AS_CHS_C350", "p1": "21797.344000,2028.366000,1077.293000", "p2": "21748.185000,2028.366000,913.312000", "rot": 0, "dwg": "LESSON 7- REBUILD.dwg"}, "handle": "EC7", "ts": "15:19:41"}
+{"op": "miter", "args": {"cut": "EBE", "other": "EBC", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:19:41"}
+{"op": "miter", "args": {"cut": "EBE", "other": "EBD", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:19:42"}
+{"op": "miter", "args": {"cut": "EC1", "other": "EBF", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:19:42"}
+{"op": "miter", "args": {"cut": "EC1", "other": "EC0", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:19:42"}
+{"op": "miter", "args": {"cut": "EC4", "other": "EC2", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:19:42"}
+{"op": "miter", "args": {"cut": "EC4", "other": "EC3", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:19:42"}
+{"op": "miter", "args": {"cut": "EC7", "other": "EC5", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:19:42"}
+{"op": "miter", "args": {"cut": "EC7", "other": "EC6", "dwg": "LESSON 7- REBUILD.dwg"}, "handle": null, "ts": "15:19:42"}

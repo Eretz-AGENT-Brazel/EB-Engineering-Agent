@@ -1,1 +1,1 @@
-﻿EB_OK zoom handle=446,447,43E,43F w=1500 h=1815 margin=0.5 reqid=61a19fb8
+﻿EB_OK whoami doc=C:\Users\User\Desktop\EB PROSTEEL AGENT\api+knowledge-develop\projects\lesson-7\LESSON 7- REBUILD.dwg entities=170 reqid=1c858a46

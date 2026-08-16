@@ -1,6 +1,6 @@
 ---
 name: prosteel-modeling
-description: How to model real steel structures in AutoCAD 2015 + ProStructures (ProSteel) V8i SS6 the way Eretz Barzel actually does it — the agent's job is to BE Amir's modeller, taking the grunt work and reaching every function the software has. Covers connections as parametric objects (base plates, end plates, fin plates, web cleats, copes, haunches, purlins, splices, gussets, stiffeners/ריפים), modelled holes at every bolt passage, non-rectangular plate contours, column shortening, build-once-then-replicate as both a modelling method and a fabrication-economics goal, metric-always, the absolute ban on LISP, and the mapped API surface (~1,400 relevant public types across 116 managed assemblies — PsCreateFastener, PsGeometryFunctions, PsMiscTools, PsObjectGroup, PsSelection, PsCollisionCheck, PsCreatePositioning, PsDrillObject, PsEditLogicalLink and the nine connection classes) plus the measured dead ends and a measured performance baseline. Also carries the column-base anchorage engineering (EN 1992-4 / EN 1993-1-8 / AISC DG1) for value engineering, since the company fabricates rather than designs loads. Use whenever modelling, editing, auditing or automating steel in ProSteel/AutoCAD, reading an existing steel model, or deciding whether a detail is modelled correctly for fabrication. Built from live lessons with Amir (Eretz Barzel); every claim was verified by reading the model back, never from a screenshot.
+description: How to model real steel structures in AutoCAD 2015 + ProStructures (ProSteel) V8i SS6 the way Eretz Barzel actually does it — the agent's job is to BE Amir's modeller, taking the grunt work and reaching every function the software has. Covers connections as parametric objects (base plates, end plates, fin plates, web cleats, copes, haunches, purlins, splices, gussets, stiffeners/ריפים), modelled holes at every bolt passage, non-rectangular plate contours, column shortening, hinged assemblies (access-chamber lids, doors on hinge pins, the closed/open state pair, padlock hasps), build-once-then-replicate as both a modelling method and a fabrication-economics goal, metric-always, the absolute ban on LISP, and the mapped API surface (~1,400 relevant public types across 116 managed assemblies — PsCreateFastener, PsGeometryFunctions, PsMiscTools, PsObjectGroup, PsSelection, PsCollisionCheck, PsCreatePositioning, PsDrillObject, PsEditLogicalLink and the nine connection classes) plus the measured dead ends and a measured performance baseline. Also carries the column-base anchorage engineering (EN 1992-4 / EN 1993-1-8 / AISC DG1) for value engineering, since the company fabricates rather than designs loads. Use whenever modelling, editing, auditing or automating steel in ProSteel/AutoCAD, reading an existing steel model, or deciding whether a detail is modelled correctly for fabrication. Built from live lessons with Amir (Eretz Barzel); every claim was verified by reading the model back, never from a screenshot.
 ---
 
 # Modelling steel in ProSteel — the Eretz Barzel way
@@ -10,6 +10,50 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 whose development track lives in `api+knowledge-develop\` since the 12/08/2026 reorg — every
 `app/…`, `qc/…`, `knowledge/…`, `projects/…` path in this skill is relative to that folder.
 (`agent-brain/PROGRAM.md`, `PROGRESS.md` and `standards/` sit at the repo root.)
+
+> ## 🔁 COPYING A DETAIL THAT IS ALREADY IN THE MODEL — the five failures of 16/08/2026
+> Lesson 7: Amir put a finished production model in front of me — access chambers with hinged
+> lids — and said *"you have the example in the model, you don't need to guess anything."*
+> I still got the angles, the walls, the pipe cuts and the lock wrong. **All five causes were
+> process, not knowledge, and all five are cheap to prevent.** Full detail and the engineering:
+> **`references/hinged-assemblies.md`**.
+>
+> ### ⭐⭐⭐ 1. A PART IS **CONTOUR + MODIFICATIONS + INSERTION FRAME**. The summary line is not the part.
+> `props` reported the chamber's long wall as `name='PLATE 1507x600x4'`, so I built a
+> 1507 × 600 rectangle. **The real part is a six-vertex gable** (eave 511.645, apex 600) — the
+> *name is generated from the bounding rectangle*. Same trap on the two lock plates, which are
+> shaped with rounded corners (bulge ±0.414) and which I built as rectangles.
+> ⇒ **Before building any copy, read all three:** `dumpmodel` field 6 or `plateinfo probe=poly`
+> (contour) · `mods` (cuts, holes, facets) · `props` `org`/`X`/`Y`/`Z` (frame). **Then** build.
+>
+> ### ⭐⭐ 2. A MEASUREMENT THAT DOES NOT REACH THE BUILD IS WORTH ZERO
+> `mods` told me `cutPlanes=2` on every frame angle and `cutPlanes=1` on every handle leg. **I
+> printed it, read it, and then built them uncut.** Not a gap in knowledge — a finding that never
+> travelled. ⇒ **Measurements go into the build list, not into the report.**
+>
+> ### ⭐⭐⭐ 3. CHOOSE THE CHECK THAT CAN SEE THE ERROR YOU ARE CAPABLE OF MAKING
+> My first verification compared insertion points and returned **0.0000 mm on all 20 members** —
+> while every angle's L faced the wrong quadrant. **For an angle the envelope and the axis are
+> identical in all four rotations**; `ext`, `p1` and `L` are all blind to it. **Only the section
+> frame `X`/`Y` shows where the material is.** ⇒ match the frame to the original and let the
+> right `rot` fall out of that; never pick `rot` and then "verify" with a bounding box.
+>
+> ### ⭐⭐ 4. A CHECK THAT REPORTS ZERO MUST FIRST BE SHOWN ABLE TO REPORT NON-ZERO
+> My property diff announced *"0 differing fields"* — because **`propfull` writes to a file** and
+> I was diffing two one-line receipts. Within the same hour a contour comparison read the wrong
+> column and called six-point gables "identical". Both were vacuous, both looked like passes.
+> ⇒ this is the calibration rule the verification kit already carries, and it applies to
+> **throwaway comparison scripts** just as much as to plugin ops.
+> ⭐ The instrument that IS trustworthy here: **`op=equal`** (`CheckTwoPartsAreEqual`) — calibrate
+> it first on a part against itself and on two of the source model's own matching parts.
+>
+> ### ⛔⛔ 5. `rw` MEANS "HAS A SETTER", NEVER "SAFE TO SET"
+> A blanket property sync wrote **`Mirrored`** onto twelve pipes and **displaced them by up to
+> 340 mm**, silently, while every call returned success. ⇒ **Sync only fields proved inert, and
+> re-read the GEOMETRY after any property write.** Safe and worth syncing: `Material`,
+> `Resolution`, `HoleDisplayMode`, `Posnum`, and **`VolumeWeightFlag`** — that last one selects
+> the weight *method* (2.540 vs 2.202 kg for the same steel) and **reaches the parts list**.
+> Never: `Mirrored`, `MirrorFlag`, `Wide`, `XAxis`/`YAxis`/`ZAxis`.
 
 > ## 🏭 THE CRAFT OF THE CONNECTION — 14 measured facts from the practice research (13/08/2026)
 > Amir rejected the first report as too academic and named what he wanted: *"איך מחברים פלאנגים בין

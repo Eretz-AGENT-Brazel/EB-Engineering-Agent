@@ -3701,3 +3701,34 @@ Each rejection cost a rebuild of 24–36 parts. **A one-line question before mod
 than a sketch afterwards** — and the drawing usually cannot answer a mounting question, because
 the same lug reads as "on the top face" in one view and "on the inner face" in another.
 See [[buildable-or-not-modelled]] and `reading-supplied-drawings.md`.
+
+---
+
+## 🔁 LESSON 7 — reproducing a detail already in the model (16/08/2026)
+
+Amir's own chamber model rebuilt part for part; 56 pairs compared. Engineering and the
+convention set: **`hinged-assemblies.md`**. What the ops themselves did:
+
+| op | measured |
+|---|---|
+| **`plateinfo probe=poly`** | returns **`polyVerts=<n>`** only — the count, not the points. ⭐ The POINTS are `dumpmodel` **field 6**, in the plate's LOCAL frame, as `x,y,bulge` triples (**bulge ±0.414 = a quarter arc**; the third value is not a z) |
+| **`plate9 mode=poly pts=`** | accepts those triples straight back, **bulges included** — the two shaped lock plates came out identical vertex-for-vertex |
+| ⚠️ **plate contour is RE-CENTRED** | a source plate whose local origin sits off-centre (`−256.145…+255.5`) comes back symmetric (`±255.823`). **The part lands identically in the world (0.0000)**; only the local point list differs, and it cannot be reproduced. Do not chase it |
+| ⚠️ **`dumpmodel` field indices** | `PLATE` → `[6]` contour, `[-1]` world ext · `SHAPE` → `[4]`,`[5]` axis ends · `OTHER` → `[-2]` bbox, `[-1]` ECS. Reading `[-1]` on an OTHER row parses the ECS matrix as coordinates |
+| **`miter cut= other=`** | cuts **both** members, **keeps the nominal `L`**, `type=0/1/2` made no difference on an equal angle. This is the tool for a frame corner **and** for a pipe-to-pipe handle junction |
+| ⛔ **`cutat mode=straight`** | **shortens the member** (pipe `L` 85.595 → 64.391) while also reporting `cutPlanes=1`. Right cut count, wrong part — **not** interchangeable with `miter` |
+| ⚠️ **`beam offx=/offy=`** | **inert** on an equal angle: `ins` stayed `0,0` across four variants and the envelope stayed centred on the axis. The source's `ins=20,20` is bookkeeping (a different section origin), not a placement offset |
+| ⭐⭐ **`beam rot=`** | the ONLY thing that moves an angle's material between quadrants, and **`ext`/`p1`/`L` are all blind to it**. Solve it by matching `props` `X=`/`Y=`/`Z=` to the source and taking the `rot` that produces them |
+| ⛔ **`bend`** | has **no parameter for `UseInnerRadius`**, which `bendinfo` reports as `innerR`. Source caps carry `True`, code-built ones `False`; a fold-radius sweep 1→7 mm bottoms out at **0.229 mm** and cannot compensate. **v185 item** |
+| ⭐ **`bend` returns a NEW handle** on the `convert=1` call — re-acquire before the next flange (already documented; it bit again) |
+| **`equal`** (`CheckTwoPartsAreEqual`) | `a=`,`b=`,`tol=`,`filter=`. **Calibrated:** EQUAL on a part vs itself, EQUAL on the source's own two matching angle pairs, `different` on short-vs-long. It is the right identity test — but it also reports `different` for parts that are geometrically identical and differ only in settings, so pair it with a geometry delta |
+| ⚠️ **`propfull`** | writes to **`eb_propfull.txt`**; the reply is a one-line receipt (`props=93 na=3 tabs=7`). Parse the file: `^\s{2,}(\S+)\s+(\S+)\s+(rw\|r-)\s*=\s*(.*)$` |
+| ⭐ **`propset`** — safe to sync | `Material` · `Resolution` · `HoleDisplayMode` · `Posnum` · **`VolumeWeightFlag`**. 206 fields written and read back, 0 refused |
+| ⛔⛔ **`propset`** — never sync | **`Mirrored`** displaced 12 pipes by up to **340 mm** while returning success. Also refused outright: `TransportName`, `XAxis`, `YAxis`, `ZAxis`. And `Wide` is a *dimension*, not a setting |
+| 🧲 **`VolumeWeightFlag`** | selects the weight **method** — the same L40×40×4 reads **2.540 kg** with it True and **2.202 kg** with it False, and `PaintArea` moves with it. **It reaches the parts list**, so it is not cosmetic |
+| ⚠️ **`wt` ignores cuts on a shape too** | weight was identical before and after all four mitres. The 0.338 kg gap was the *method*, not the geometry — chasing it as a cut error cost three rounds |
+
+⭐ **And the reproducibility number worth remembering:** rebuilding a real production detail from
+code, part by part off its own definition, lands **20 of 20 members at 0.0000 mm**, plates at
+0.000–0.023, bent plates at 0.001–0.002, and mitred pipes within 0.055 — the last of which is
+**inside the source model's own internal spread** (its two identical handle bars differ by 0.109).
