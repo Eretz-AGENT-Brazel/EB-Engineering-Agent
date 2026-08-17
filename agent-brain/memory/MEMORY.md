@@ -1,7 +1,7 @@
 # Memory Index
 
 - [AI Development hub](ai-development-hub.md) — G: drive master spec/roadmap folder for the whole Eretz Barzel AI program (3 threads: company agents, Phase 0 done, TankForge spec)
-- [EB portal](eb-portal.md) — local "Mission Control" portal to manage the whole AI program (plan/sessions/suggestions/decisions); planned 2026-06-17, not yet built
+- [EB portal](eb-portal.md) — local "Mission Control" portal for the whole AI program; built 2026-06-17, ⚠️ **retired & archived to the repo 2026-08-17** (SESSION-START/PROGRESS/RESUME-HERE took over its job)
 - [TankForge project](tankforge-project.md) — internal 3D steel-tank design platform for ארץ ברזל, with planned AI agent
 - [TankForge shell built](tankforge-shell-built.md) — phase 1 (software shell) is done; what it contains and what's next
 - [VESSELS Stage 1](vessels-stage1.md) — spec folder (now inside TankForge\) + Opus 4.8 build brief for evolving TankForge into "EB – Steel Tank Modeling Software"; key factory rules (7850 kg/m³, courses 2015mm, PREBEND, ≤3-weld junctions, HEAT numbers)
