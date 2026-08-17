@@ -103,7 +103,7 @@ parallel. Genuine simultaneity would need two reachable instances, and there is 
 | **R6** | The agent never switches away from a document that is not registered as its own | live: `EB_ERR blocked: … not registered to anyone` |
 | **R7** | Identity is the **full path**; the file name is a label (`dwgpath=` in v185) | two `test.dwg` in different folders get different mailboxes |
 | **R8** | A command file older than 300 s is never executed | plugin `CmdMaxAgeSeconds` — otherwise a stale shared command would run in whatever document happened to be in front |
-| **R9** | ⭐ **An ASSIGNMENT outranks everything.** While Amir has locked the agent to one model, it cannot enter another — not by `use()`, not by `open_model()`, not through `EB_MODEL` | selftest: `EB_ERR assigned` · `ASSIGNED to '…' -- refusing to enter` · the env-var bypass explicitly tested |
+| **R9** | ⭐ **An ASSIGNMENT outranks everything.** While Amir has locked the agent to one model — or to a SET of models, each with its own task — it cannot enter anything outside the set: not by `use()`, not by `open_model()`, not through `EB_MODEL`. *Within* the set, `dwg=`/`EB_MODEL`/`switch` choose which member this op works, and the switch is total (session, pin, channel, activation) | selftest 43/43: `EB_ERR assigned` · `ASSIGNED to '…' -- refusing to enter` · env-var bypass tested both outside (refused) and inside (selects) the set. Live 17/08: both of Amir's situations end-to-end — situation 1 (one model + his own second AutoCAD, 6/6) and situation 2 (a set with per-model tasks, 4/4) |
 
 > **Ownership and assignment are two different questions.** `claim` says *"do not touch
 > MINE"*; `assign` says *"work on THIS one and nothing else"*. The agent legitimately wants

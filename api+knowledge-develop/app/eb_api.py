@@ -174,13 +174,26 @@ def _session_gate(op, kw):
                     "`python app/worksession.py release \"%s\"`."
                     % (name, rec.get("owner"), _when(rec.get("opened")), name))
 
-    lock = ws.assigned(st)
-    if lock and asked and asked.lower() != str(lock.get("name", "")).lower():
-        return ("EB_ERR assigned: the agent is locked to '%s' and the op asked for '%s' -- "
+    locked_names = [n.lower() for n in ws.assigned_names(st)]
+    if locked_names and asked and asked.lower() not in locked_names:
+        return ("EB_ERR assigned: the agent is locked to %s and the op asked for '%s' -- "
                 "refused, nothing was executed. Only Amir lifts it: "
-                "`python app/worksession.py unassign`." % (lock.get("name"), asked))
+                "`python app/worksession.py unassign`."
+                % (", ".join("'%s'" % n for n in ws.assigned_names(st)), asked))
 
     if asked and ses and asked.lower() != str(ses.get("name", "")).lower():
+        # ⭐ WITHIN an assignment set, an explicit dwg= is not a conflict -- it is the
+        # sanctioned way to pick WHICH of Amir's assigned models this op works. The switch
+        # is total (session, pin, channel, activation), not a silent override: the command
+        # travels in the chosen model's own mailbox exactly as if use() had been called.
+        if asked.lower() in locked_names:
+            try:
+                ws.switch(asked)
+                global EXPECT_DWG
+                EXPECT_DWG = (ws.current() or {}).get("name") or asked
+                return None
+            except Exception as e:
+                return "EB_ERR assigned-switch failed: %s" % e
         return ("EB_ERR pin conflict: this process is working in '%s' but the op asked for "
                 "'%s' -- refused, nothing was executed. An explicit dwg= no longer overrules "
                 "the session (it did until 17/08/2026, silently). Switch with "

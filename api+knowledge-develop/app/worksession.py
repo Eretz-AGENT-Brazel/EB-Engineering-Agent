@@ -180,28 +180,59 @@ def agent_session_id():
 # variable. Only Amir lifts it (`worksession.py unassign`). The distinction matters: the
 # agent may legitimately want a second model open (it asked for that capability); the
 # assignment is the way to say "not today".
-def assigned(st=None):
-    """The session the agent is LOCKED to by Amir, or None."""
+def assigned_keys(st=None):
+    """Slots the agent is locked to. Empty list = free."""
     st = st if st is not None else load()
-    key = st.get("assigned")
-    return st.get("sessions", {}).get(key) if key else None
+    a = st.get("assigned")
+    if not a:
+        return []
+    keys = [a] if isinstance(a, str) else list(a)          # a single slot is still valid state
+    return [k for k in keys if k in st.get("sessions", {})]
 
 
-def assign(dwg, task=None, project=None):
-    """Lock the agent to exactly one model. Any other model refuses until unassign()."""
-    ses = open_session(dwg, project=project, task=task, owner=OWNER_AGENT,
-                       force=True, _bypass_assignment=True)
+def assignment(st=None):
+    """The sessions the agent is LOCKED to by Amir (a list, possibly empty)."""
+    st = st if st is not None else load()
+    return [st["sessions"][k] for k in assigned_keys(st)]
+
+
+def assigned(st=None):
+    """The FIRST assigned session, or None. Kept for callers that want one."""
+    a = assignment(st)
+    return a[0] if a else None
+
+
+def assigned_names(st=None):
+    return [s.get("name", "?") for s in assignment(st)]
+
+
+def assign(dwgs, task=None, project=None):
+    """Lock the agent to one model — or to a SET of them, each with its own task.
+
+    ⭐ 17/08/2026: one model is Amir's day-to-day case ("work on this and nothing else").
+    A SET is the case he described for the office: three projects in parallel, a different
+    instruction for each. Both are the same lock; only the size of the list changes.
+    `task` may be one string for all, or a list parallel to `dwgs`.
+    """
+    if isinstance(dwgs, str):
+        dwgs = [dwgs]
+    tasks = task if isinstance(task, (list, tuple)) else [task] * len(dwgs)
+    out = []
+    for i, d in enumerate(dwgs):
+        out.append(open_session(d, project=project,
+                                task=tasks[i] if i < len(tasks) else None,
+                                owner=OWNER_AGENT, force=True, _bypass_assignment=True))
     st = load()
-    st["assigned"] = ses["slot"]
-    st["current"] = ses["slot"]
+    st["assigned"] = [s["slot"] for s in out]
+    st["current"] = out[0]["slot"]
     st["assigned_at"] = time.time()
     save(st)
-    return ses
+    return out
 
 
 def unassign():
     st = load()
-    prev = assigned(st)
+    prev = assignment(st)
     st["assigned"] = None
     st.pop("assigned_at", None)
     save(st)
@@ -218,13 +249,14 @@ def open_session(dwg, project=None, task=None, owner=OWNER_AGENT, force=False,
     """
     dwg = os.path.abspath(dwg) if os.sep in str(dwg) or "/" in str(dwg) else str(dwg)
     st = load()
-    if not _bypass_assignment and st.get("assigned"):
-        lock = st["sessions"].get(st["assigned"]) or {}
-        if key_of(dwg, st) != st["assigned"]:
-            raise RuntimeError(
-                "ASSIGNED to '%s' -- refusing to enter '%s'. Amir locked the agent to that "
-                "one model; lift it with `python app/worksession.py unassign`."
-                % (lock.get("name", "?"), os.path.basename(str(dwg))))
+    keys = assigned_keys(st)
+    if not _bypass_assignment and keys and key_of(dwg, st) not in keys:
+        raise RuntimeError(
+            "ASSIGNED to %s -- refusing to enter '%s'. Amir locked the agent to %s; lift it "
+            "with `python app/worksession.py unassign`."
+            % (", ".join("'%s'" % n for n in assigned_names(st)),
+               os.path.basename(str(dwg)),
+               "that one model" if len(keys) == 1 else "those %d models" % len(keys)))
     key = slot_of(dwg)
     oldkey = key_of(dwg, st)
     prev = st["sessions"].get(oldkey)
@@ -269,8 +301,9 @@ def close_session(dwg=None):
     ses = st["sessions"].pop(key)
     if st.get("current") == key:
         st["current"] = None
-    if st.get("assigned") == key:
-        st["assigned"] = None            # never leave an assignment pointing at nothing
+    keys = [k for k in assigned_keys(st) if k != key]      # never point at nothing
+    st["assigned"] = keys if keys else None
+    if not keys:
         st.pop("assigned_at", None)
     save(st)
     return ses
@@ -307,9 +340,20 @@ def current(st=None):
     models can be worked at once without the processes fighting over one 'current'.
     """
     st = st or load()
-    lock = assigned(st)
-    if lock:
-        return lock                     # an assignment outranks everything, EB_MODEL included
+    keys = assigned_keys(st)
+    if keys:
+        # an assignment outranks everything. Within a multi-model assignment, EB_MODEL and
+        # `current` choose WHICH of the assigned models this process works -- that is the
+        # sanctioned mechanism for working the set -- but nothing outside the set.
+        env = os.environ.get("EB_MODEL", "").strip()
+        if env:
+            k = key_of(env, st)
+            if k in keys:
+                return st["sessions"][k]
+        cur = st.get("current")
+        if cur in keys:
+            return st["sessions"][cur]
+        return st["sessions"][keys[0]]
     env = os.environ.get("EB_MODEL", "").strip()
     if env:
         return find(env, st) or {
@@ -388,11 +432,11 @@ def switch(dwg):
     """Make an already-open session the current one (single-track work)."""
     st = load()
     key = key_of(dwg, st)
-    if st.get("assigned") and key != st["assigned"]:
+    keys = assigned_keys(st)
+    if keys and key not in keys:
         raise RuntimeError(
-            "ASSIGNED to '%s' -- refusing to switch to '%s'. `worksession.py unassign` lifts it."
-            % ((st["sessions"].get(st["assigned"]) or {}).get("name", "?"),
-               os.path.basename(str(dwg))))
+            "ASSIGNED to %s -- refusing to switch to '%s'. `worksession.py unassign` lifts it."
+            % (", ".join("'%s'" % n for n in assigned_names(st)), os.path.basename(str(dwg))))
     if key not in st["sessions"]:
         raise RuntimeError("no session for '%s' -- open it first" % os.path.basename(str(dwg)))
     if st["sessions"][key].get("owner") != OWNER_AGENT:
@@ -420,10 +464,16 @@ def verify_text():
     read the drawing back -- the same rule the whole project runs on.
     """
     st = load()
-    lock, cur = assigned(st), current(st)
+    locks, cur = assignment(st), current(st)
     lines = []
-    lines.append("ASSIGNED : %s" % (("🔒 " + lock["name"] + "   (" + lock["dwg"] + ")")
-                                    if lock else "— (the agent may enter any free model)"))
+    if not locks:
+        lines.append("ASSIGNED : — (the agent may enter any free model)")
+    elif len(locks) == 1:
+        lines.append("ASSIGNED : 🔒 %s   (%s)" % (locks[0]["name"], locks[0]["dwg"]))
+    else:
+        lines.append("ASSIGNED : 🔒 %d models:" % len(locks))
+        for l in locks:
+            lines.append("           %-40s  task: %s" % (l["name"], l.get("task") or "-"))
     lines.append("WILL USE : %s" % (cur["name"] if cur else "— nothing; ops refuse or run unguarded"))
     try:
         sys.path.insert(0, HERE)
@@ -465,7 +515,7 @@ def verify_text():
         p = p.lstrip("*").strip()
         rec = find(p, st)
         who = ("held by " + rec["owner"]) if rec else "not registered"
-        if rec and st.get("assigned") == rec.get("slot"):
+        if rec and rec.get("slot") in assigned_keys(st):
             who += ", ASSIGNED"
         lines.append("  %s %-46s  %s" % ("▶" if star else " ", os.path.basename(p), who))
     return "\n".join(lines)
@@ -497,7 +547,8 @@ def _usage():
             "       worksession.py verify                      # ASK AUTOCAD and compare\n"
             "\n"
             "   ── Amir's two commands ──\n"
-            "       worksession.py assign  <dwg> [--task \"...\"]  # lock the agent to THIS model\n"
+            "       worksession.py assign  <dwg> [<dwg2> ...] [--task \"...\"]\n"
+            "                                                   # lock the agent to THESE models\n"
             "       worksession.py unassign                     # lift the lock\n"
             "       worksession.py claim   <dwg> [--task \"...\"]  # this one is MINE: hands off\n"
             "       worksession.py release <dwg>                # ...and give it back\n"
@@ -530,12 +581,20 @@ def main(argv):
         elif cmd == "verify":
             print(verify_text())
         elif cmd == "assign":
-            s = assign(rest[0], task=flagval("task"), project=flagval("project"))
-            print("🔒 ASSIGNED: the agent works on %s and nothing else.\n   %s\n"
-                  "   lift with: python app/worksession.py unassign" % (s["name"], s["dwg"]))
+            out = assign(rest, task=flagval("task"), project=flagval("project"))
+            if len(out) == 1:
+                print("🔒 ASSIGNED: the agent works on %s and nothing else.\n   %s\n"
+                      "   lift with: python app/worksession.py unassign"
+                      % (out[0]["name"], out[0]["dwg"]))
+            else:
+                print("🔒 ASSIGNED to %d models and nothing else:" % len(out))
+                for s in out:
+                    print("   %-40s  task: %s" % (s["name"], s.get("task") or "-"))
+                print("   lift with: python app/worksession.py unassign")
         elif cmd == "unassign":
-            s = unassign()
-            print("lock lifted (was %s)" % (s["name"] if s else "not set"))
+            prev = unassign()
+            print("lock lifted (was %s)" %
+                  (", ".join(s["name"] for s in prev) if prev else "not set"))
         elif cmd == "open":
             s = open_session(rest[0], project=flagval("project"), task=flagval("task"),
                              force="--force" in flags)

@@ -40,6 +40,9 @@ def main():
     backup = None
     if os.path.exists(ws.STATE):
         backup = open(ws.STATE, encoding="utf-8").read()
+    pin_backup = None
+    if os.path.exists(eb_api._PIN_FILE):
+        pin_backup = open(eb_api._PIN_FILE, encoding="utf-8").read()
     os.environ["EB_AGENT_SESSION"] = "selftest-%d" % int(time.time())
     os.environ.pop("EB_MODEL", None)
     try:
@@ -148,6 +151,42 @@ def main():
         check("...and another model may now be entered",
               ws.open_session(C).get("dwg") == os.path.abspath(C))
         ws.close_session(C)
+
+        # --- 8c. SITUATION 2: a SET of models, each with its own task ---------------------
+        ws.save(ws._blank())
+        D2 = r"C:\models\delta\frame.dwg"
+        out = ws.assign([A, C, D2], task=["task A", "task C", "task D"])
+        check("a set of three is assigned", len(ws.assignment()) == 3)
+        check("each keeps its own task",
+              [s.get("task") for s in ws.assignment()] == ["task A", "task C", "task D"])
+        check("an op on ANY member of the set passes",
+              refusal(dwg=os.path.basename(C)) is None and
+              refusal(dwg=os.path.basename(D2)) is None)
+        r = refusal(dwg="outside.dwg")
+        check("an op OUTSIDE the set is refused", bool(r) and "assigned" in r, repr(r))
+        try:
+            ws.open_session(r"C:\models\other\outside.dwg")
+            check("the agent cannot ENTER a model outside the set", False, "no exception")
+        except RuntimeError as e:
+            check("the agent cannot ENTER a model outside the set", "ASSIGNED" in str(e))
+        os.environ["EB_MODEL"] = C
+        check("EB_MODEL selects WITHIN the set",
+              (ws.current() or {}).get("dwg") == os.path.abspath(C))
+        os.environ["EB_MODEL"] = "outside.dwg"
+        check("EB_MODEL cannot select OUTSIDE the set",
+              (ws.current() or {}).get("dwg") in
+              (os.path.abspath(A), os.path.abspath(C), os.path.abspath(D2)))
+        os.environ.pop("EB_MODEL", None)
+        ws.switch(D2)
+        check("switch works within the set", (ws.current() or {}).get("dwg") == os.path.abspath(D2))
+        ws.close_session(D2)
+        check("closing an assigned model shrinks the lock to the remaining two",
+              len(ws.assignment()) == 2)
+        ws.unassign()
+        check("unassign clears the whole set", ws.assignment() == [])
+
+        # restore the state stage 9 expects
+        ws.save(ws._blank())
         eb_api.use(A, task="lesson 7 rebuild")
         ws.claim(C)
 
@@ -162,6 +201,17 @@ def main():
             open(ws.STATE, "w", encoding="utf-8").write(backup)
         elif os.path.exists(ws.STATE):
             os.remove(ws.STATE)
+        # ⚠️ 17/08/2026: restoring only the JSON was not enough. `use()` also writes the
+        # legacy one-line pin, so a test run left `test.dwg` pinned and the NEXT REAL
+        # COMMAND refused with "attached to the wrong AutoCAD" -- I hit it myself minutes
+        # after adding this file. A test that leaves state behind is a trap for its author.
+        try:
+            if pin_backup is not None:
+                open(eb_api._PIN_FILE, "w", encoding="utf-8").write(pin_backup)
+            elif os.path.exists(eb_api._PIN_FILE):
+                os.remove(eb_api._PIN_FILE)
+        except Exception:
+            pass
 
     print("\n%d passed, %d failed" % (len(PASS), len(FAIL)))
     if FAIL:
