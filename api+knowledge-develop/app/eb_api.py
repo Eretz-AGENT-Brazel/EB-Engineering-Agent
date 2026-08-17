@@ -22,8 +22,8 @@ ROOT = os.path.dirname(HERE)
 PLUG = os.path.join(HERE, "plugin")
 CMD = os.path.join(PLUG, "eb_cmd.txt")
 RES = os.path.join(PLUG, "eb_result.txt")
-DLL = os.path.join(PLUG, "EBAgentApi184.dll")
-RUN_CMD = "EB_RUN184"
+DLL = os.path.join(PLUG, "EBAgentApi185.dll")
+RUN_CMD = "EB_RUN185"
 # ---- which drawing every op is expected to run on -------------------------
 # Twice on 06/08/2026 work landed in the WRONG drawing: first two documents were open
 # at once (Amir spotted the two windows), then opening a Bentley sample silently became
@@ -34,10 +34,29 @@ RUN_CMD = "EB_RUN184"
 # The pin must survive PROCESS boundaries: nearly every action here is a fresh
 # python run, so an in-memory value protects only the script that set it -- which is
 # not the case that goes wrong. It is persisted next to the command file.
+#
+# ⭐ 17/08/2026 -- the pin became a WORK SESSION (app/worksession.py), by Amir's decision
+# that the agent and he must be able to work on different models at the same time. Three
+# measured holes in the old pin, all closed here:
+#   1. It was a default, not a lock: run() injected it only `if "dwg" not in kw`, so an
+#      explicit dwg= overrode it in silence. Now a conflict REFUSES.
+#   2. It never expired. On the morning of 17/08 it still read `test-2026-08-13.dwg`
+#      from the previous day while lesson 7 was the live model.
+#   3. It carried a basename only -- two projects may each hold a `test.dwg`. The session
+#      carries the full path, and v185 checks it with dwgpath=.
+# The legacy one-line file is still written, so anything reading it keeps working.
 _PIN_FILE = os.path.join(PLUG, "eb_expect_dwg.txt")
+
+if HERE not in sys.path:
+    sys.path.insert(0, HERE)
+import worksession as ws                                   # noqa: E402
 
 
 def _read_pin():
+    """Basename of the drawing this process is allowed to touch, or None."""
+    ses = ws.current()
+    if ses:
+        return ses.get("name")
     try:
         v = open(_PIN_FILE, encoding="utf-8").read().strip()
         return v or None
@@ -48,22 +67,266 @@ def _read_pin():
 EXPECT_DWG = _read_pin()
 
 
-def use(dwg_name):
-    """Pin every following op to this drawing (basename), or None to disable.
+def use(dwg_name, task=None, project=None, force=False):
+    """Enter a model: pin every following op to it. `None` leaves the current one.
 
-    Persisted, so the pin holds across separate python runs.
+    Persisted in the work-session registry, so the pin holds across separate python runs
+    AND says who owns the model, when it was entered and what the task is.
     """
     global EXPECT_DWG
-    EXPECT_DWG = os.path.basename(dwg_name) if dwg_name else None
+    if not dwg_name:
+        ws.close_session()
+        EXPECT_DWG = None
+        try:
+            if os.path.exists(_PIN_FILE):
+                os.remove(_PIN_FILE)
+        except Exception:
+            pass
+        return None
+    ses = ws.open_session(dwg_name, project=project, task=task, force=force)
+    EXPECT_DWG = ses["name"]
     try:
-        if EXPECT_DWG:
-            with open(_PIN_FILE, "w", encoding="utf-8") as f:
-                f.write(EXPECT_DWG)
-        elif os.path.exists(_PIN_FILE):
-            os.remove(_PIN_FILE)
+        with open(_PIN_FILE, "w", encoding="utf-8") as f:
+            f.write(EXPECT_DWG)
     except Exception:
         pass
     return EXPECT_DWG
+
+
+def session():
+    """The work session this process is bound to (dict) or None."""
+    return ws.current()
+
+
+def sessions():
+    """Every model currently held, by anyone. Amir's are marked owner=amir."""
+    return ws.sessions()
+
+
+def hands_off(dwg):
+    """Amir declares a drawing his. Every op, netload and variable write refuses it."""
+    s = ws.claim(dwg)
+    return s
+
+
+# ---- the per-model mailbox (v185) -----------------------------------------
+# ONE eb_cmd.txt and ONE eb_result.txt served the whole machine, plus ~40 output files
+# with fixed names (eb_list.txt, eb_propfull.txt, eb_holes.txt ...). Only eb_result.txt
+# carries a reqid, so with two jobs running the result was safe but every other file was
+# not: job A could read the eb_list.txt that job B had just overwritten, silently.
+# v185 gives each drawing its own channel, and derives the channel name from the drawing
+# on BOTH sides (worksession.slot_of == ApiCmds.SlotOf), so nothing has to be negotiated.
+def channel(dwg=None):
+    """Directory of the mailbox for a drawing (created on demand).
+
+    Resolved through the work session, so the full path decides -- `EXPECT_DWG` is only a
+    label and two projects may each own a `test.dwg`.
+    """
+    if not dwg:
+        ses = ws.current()
+        dwg = (ses or {}).get("dwg") or EXPECT_DWG
+    if not dwg:
+        return PLUG
+    return ws.channel_dir(dwg, make=True)
+
+
+def _cmd_path(dwg=None):
+    ch = channel(dwg)
+    return CMD if ch == PLUG else os.path.join(ch, "eb_cmd.txt")
+
+
+def _res_path(dwg=None):
+    ch = channel(dwg)
+    return RES if ch == PLUG else os.path.join(ch, "eb_result.txt")
+
+
+# ops that change nothing and are exactly what you need in order to diagnose a refusal
+_UNGATED_OPS = ("ping", "whoami", "env", "docs")
+
+
+def _when(ts):
+    try:
+        return time.strftime("%d/%m %H:%M", time.localtime(float(ts)))
+    except Exception:
+        return "?"
+
+
+def _session_gate(op, kw):
+    """Return a refusal string, or None to proceed. This is the lock the old pin was not.
+
+    R3 someone else's model is untouchable · R2 an explicit dwg= may not overrule the
+    session · R4 consent expires · R5 while anyone else holds a model, an UNPINNED op is
+    refused outright -- that is precisely the state in which a stray op lands in his file.
+    """
+    if op in _UNGATED_OPS:
+        return None
+    st = ws.load()
+    ses = ws.current(st)
+    asked = os.path.basename(str(kw.get("dwg", "") or "")) or None
+
+    for name in (asked, (ses or {}).get("name")):
+        if not name:
+            continue
+        rec = ws.find(name, st)
+        if rec and rec.get("owner") != ws.OWNER_AGENT:
+            return ("EB_ERR hands-off: '%s' is held by owner=%s since %s -- refused, "
+                    "nothing was executed. Release it with "
+                    "`python app/worksession.py release \"%s\"`."
+                    % (name, rec.get("owner"), _when(rec.get("opened")), name))
+
+    if asked and ses and asked.lower() != str(ses.get("name", "")).lower():
+        return ("EB_ERR pin conflict: this process is working in '%s' but the op asked for "
+                "'%s' -- refused, nothing was executed. An explicit dwg= no longer overrules "
+                "the session (it did until 17/08/2026, silently). Switch with "
+                "eb_api.use(<dwg>) or run it from that model's own session."
+                % (ses.get("name"), asked))
+
+    if ses:
+        stale, why = ws.staleness(ses)
+        if stale:
+            return ("EB_ERR stale session on '%s' (%s) -- refused, nothing was executed. "
+                    "Yesterday's pin is not today's consent: confirm with "
+                    "`python app/worksession.py confirm`, or enter another model."
+                    % (ses.get("name"), why))
+        return None
+
+    foreign = [s for s in st["sessions"].values() if s.get("owner") != ws.OWNER_AGENT]
+    if foreign and not asked:
+        return ("EB_ERR no work session: %s hold%s %s right now, and an unpinned op is how "
+                "work lands in the wrong drawing -- refused. Enter a model first: "
+                "eb_api.use(<dwg>)."
+                % (", ".join(sorted(set(f.get("owner", "?") for f in foreign))),
+                   "" if len(foreign) > 1 else "s",
+                   ", ".join(f.get("name", "?") for f in foreign)))
+    return None
+
+
+# ---- serialising several models through one AutoCAD (layer 3) ---------------
+# AutoCAD is single threaded: one instance runs one command at a time, and every op
+# resolves MdiActiveDocument. So "the agent works on three models at once" means, inside
+# one instance, ACTIVATE-then-FIRE repeated - and two python processes doing that at the
+# same time can interleave (A activates, B activates, A fires into B's document). The
+# guard would refuse rather than corrupt, but a refusal storm is not parallel work.
+# One lock per AutoCAD WINDOW, held across activate+fire, makes it orderly. Different
+# instances have different windows, so genuinely parallel work stays parallel.
+_LOCKDIR = os.path.join(PLUG, "ch", ".locks")
+_LOCK_STALE = 180.0
+
+
+def _instance_key(app=None):
+    try:
+        return "hwnd%d" % int((app or _app()).HWND)
+    except Exception:
+        return "global"
+
+
+def _lock_acquire(key, timeout=90.0):
+    try:
+        os.makedirs(_LOCKDIR, exist_ok=True)
+    except Exception:
+        return None
+    path = os.path.join(_LOCKDIR, key + ".lock")
+    deadline = time.time() + timeout
+    while True:
+        try:
+            fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+            os.write(fd, ("%d %s" % (os.getpid(), EXPECT_DWG or "-")).encode("utf-8"))
+            os.close(fd)
+            return path
+        except FileExistsError:
+            try:
+                age = time.time() - os.path.getmtime(path)
+                if age > _LOCK_STALE:        # a killed process must not block the machine
+                    os.remove(path)
+                    continue
+            except Exception:
+                pass
+            if time.time() > deadline:
+                return None
+            time.sleep(0.15)
+        except Exception:
+            return None
+
+
+def _lock_release(path):
+    try:
+        if path and os.path.exists(path):
+            os.remove(path)
+    except Exception:
+        pass
+
+
+class model(object):
+    """Bind this process to a model for the duration of a block.
+
+    with eb_api.model(r"...\\lesson-7\\pump.dwg", task="rebuild chamber B"):
+        eb_api.run("beam", ...)          # cannot land anywhere else
+
+    Restores the previous binding on exit, so nesting a second model inside a routine
+    cannot leave the caller pointing somewhere it did not choose.
+    """
+
+    def __init__(self, dwg, task=None, project=None, force=False):
+        self.dwg, self.task, self.project, self.force = dwg, task, project, force
+        self._prev = None
+
+    def __enter__(self):
+        self._prev = ws.current()
+        use(self.dwg, task=self.task, project=self.project, force=self.force)
+        return self
+
+    def __exit__(self, *exc):
+        global EXPECT_DWG
+        if self._prev and self._prev.get("dwg"):
+            try:
+                ws.switch(self._prev["dwg"])
+                EXPECT_DWG = self._prev.get("name")
+            except Exception:
+                pass
+        return False
+
+
+def _active_doc_name(app=None):
+    try:
+        return os.path.basename((app or _app()).ActiveDocument.Name)
+    except Exception:
+        return ""
+
+
+def _activate_pinned(name):
+    """Bring OUR document forward inside our own AutoCAD instance.
+
+    This is the document-routing primitive: with several models open in one AutoCAD, an op
+    reaches its model by making that document active first (the plugin resolves
+    MdiActiveDocument, 71 places -- it has no per-op document argument).
+    ⛔ Never switches away from a document someone else holds.
+    """
+    try:
+        app = _app()
+        act = ""
+        try:
+            act = os.path.basename(app.ActiveDocument.Name)
+        except Exception:
+            pass
+        if act and act.lower() == name.lower():
+            return True
+        # ⛔ Never switch away from a document that is not registered as OURS. An
+        # unregistered drawing in front is, by the project's oldest rule, someone else's:
+        # "never close what you did not open" (06/08/2026) -- and switching the view of a
+        # drawing Amir is reading is the same intrusion as closing it. Every document the
+        # agent opens registers itself, so ours are always known.
+        rec = ws.find(act) if act else None
+        if act and (rec is None or rec.get("owner") != ws.OWNER_AGENT):
+            return False
+        for i in range(app.Documents.Count):
+            d = app.Documents.Item(i)
+            if os.path.basename(d.Name).lower() == name.lower():
+                d.Activate()
+                time.sleep(0.4)
+                return os.path.basename(app.ActiveDocument.Name).lower() == name.lower()
+    except Exception:
+        pass
+    return False
 
 
 PROJECTS = os.path.join(ROOT, "projects")
@@ -122,8 +385,19 @@ def acad_instances():
 
     Two AutoCAD *processes* can be running at once. On 06/08/2026 Amir had his own
     Drawing1.dwg open in a second instance while the agent worked in sandbox.dwg.
-    Both instances publish the SAME class moniker, so they cannot be told apart by
-    name -- only by asking each one which drawings it holds.
+
+    🛑 CORRECTED 17/08/2026, measured -- the sentence that used to end this docstring said
+    the two instances "cannot be told apart by name -- only by asking each one which
+    drawings it holds". That is FALSE, and it mattered: with two AutoCAD processes running,
+    the Running Object Table shows TWO entries under the same class moniker
+    `!{0B628DE4-07AD-4284-81CA-5B439F67C5E6}` and **both bind to the same instance** -- the
+    earliest-registered one. The second process is not reachable over COM at all. Killing
+    the first made the second reachable within seconds, so the registration is real but
+    shadowed. A DOCUMENT moniker for the second instance's drawing appeared once in the ROT
+    and was gone minutes later, so that is not a dependable route either.
+    ⇒ This function can return at most ONE instance. See autocad_reachability(), and
+    knowledge/learning/findings/PARALLEL-MODELS.md for what that means for working in
+    parallel with Amir.
     """
     import pythoncom
     import win32com.client
@@ -143,13 +417,56 @@ def acad_instances():
             app = win32com.client.Dispatch(obj.QueryInterface(pythoncom.IID_IDispatch))
             if str(getattr(app, "Name", "")) != "AutoCAD":
                 continue
-            docs = tuple(sorted(app.Documents.Item(i).Name for i in range(app.Documents.Count)))
-            if docs in seen:          # both monikers can resolve to one instance
+            try:
+                fingerprint = int(app.HWND)          # the window IS the instance
+            except Exception:
+                fingerprint = tuple(sorted(app.Documents.Item(i).Name
+                                           for i in range(app.Documents.Count)))
+            if fingerprint in seen:   # the ROT lists the class moniker twice; one instance
                 continue
-            seen.add(docs)
-            out.append((app, list(docs)))
+            seen.add(fingerprint)
+            docs = [app.Documents.Item(i).Name for i in range(app.Documents.Count)]
+            out.append((app, docs))
         except Exception:
             continue
+    return out
+
+
+def autocad_reachability():
+    """How many AutoCADs are RUNNING vs how many can be addressed. Measured, not assumed.
+
+    Returns {"processes": n, "reachable": m, "docs": [...], "hidden": n - m}.
+    On this machine m is always 0 or 1: COM hands out the earliest-registered instance and
+    shadows every later one (measured 17/08/2026, both directions -- the hidden instance
+    became reachable within seconds of the first one exiting).
+    """
+    import subprocess
+    procs = 0
+    try:
+        procs = len([l for l in subprocess.run(
+            ["tasklist", "/FI", "IMAGENAME eq acad.exe", "/NH"],
+            capture_output=True, text=True, timeout=30).stdout.splitlines()
+            if "acad.exe" in l.lower()])
+    except Exception:
+        pass
+    inst = []
+    try:
+        inst = acad_instances()
+    except Exception:
+        pass
+    docs = [os.path.basename(d) for (_a, ds) in inst for d in ds]
+    out = {"processes": procs, "reachable": len(inst), "docs": docs,
+           "hidden": max(0, procs - len(inst))}
+    # ⭐ measured 17/08/2026: AutoCAD does not register in the Running Object Table AT ALL
+    # while a modal dialog is up. After a forced kill the "Drawing Recovery" dialog comes
+    # back with the next launch and holds it there indefinitely -- eight probes over three
+    # minutes all said reachable=0 with the process alive and Responding=True.
+    # ⇒ processes>0 with reachable=0 means A DIALOG, not a dead AutoCAD.
+    if procs > 0 and not inst:
+        out["hint"] = ("AutoCAD is running but has not registered with COM -- a modal dialog "
+                       "is almost certainly holding it (Drawing Recovery / AutoCAD Error "
+                       "Report after a kill). Close it and it registers within seconds. "
+                       "⛔ never press 'Send Report'; never 'Recover' -- the saved file is good.")
     return out
 
 
@@ -187,9 +504,20 @@ def _app():
         except Exception:
             names = []
         if names and not any(want.lower() in n.lower() for n in names):
+            extra = ""
+            try:
+                r = autocad_reachability()
+                if r["hidden"]:
+                    extra = (" -- and %d further AutoCAD process(es) are running that COM "
+                             "CANNOT reach: only the earliest-registered instance is "
+                             "addressable (measured 17/08/2026). If '%s' is open in one of "
+                             "those, close that AutoCAD or close this one; there is no way "
+                             "to address both." % (r["hidden"], want))
+            except Exception:
+                pass
             raise RuntimeError(
-                "attached to the wrong AutoCAD: it holds %s, not '%s' -- refused" %
-                (names, want))
+                "attached to the wrong AutoCAD: it holds %s, not '%s' -- refused%s" %
+                ([os.path.basename(n) for n in names], want, extra))
     return app
 
 
@@ -294,7 +622,12 @@ def enforce_metric():
 
 
 def _app_doc(tries=8):
-    """Robustly obtain (app, doc), retrying transient COM dispatch flakes."""
+    """Robustly obtain (app, doc), retrying transient COM dispatch flakes.
+
+    A REFUSAL is not a flake: "attached to the wrong AutoCAD" will still be true in eight
+    seconds, and retrying it only delays the answer (measured: 9.4 s to say something that
+    was known immediately).
+    """
     last = None
     for _ in range(tries):
         try:
@@ -303,6 +636,11 @@ def _app_doc(tries=8):
             return app, doc
         except Exception as e:
             last = e
+            msg = str(e)
+            if ("attached to the wrong AutoCAD" in msg or
+                    "no AutoCAD instance has" in msg or
+                    "refusing to guess" in msg):
+                raise
             time.sleep(1.0)
     raise RuntimeError("COM not ready: %s" % last)
 
@@ -342,8 +680,11 @@ def _close_stray_docs(keep_name):
         try:
             app, _d = _fresh_doc()
             victim = None
+            held = ws.foreign_names()      # 17/08: a model someone else registered is not a stray
             for i in range(app.Documents.Count):
                 nm = app.Documents.Item(i).Name
+                if os.path.basename(nm).lower() in held:
+                    continue
                 if keep_name.lower() not in nm.lower():
                     victim = app.Documents.Item(i)
                     break
@@ -422,11 +763,24 @@ def open_project_cad(dwg_path):
 
 
 def _fresh_doc():
-    """Always re-acquire a fresh app+doc (COM objects go stale after Documents.Add)."""
+    """Always re-acquire a fresh app+doc (COM objects go stale after Documents.Add).
+
+    ⭐ 17/08/2026 -- THIS is where the pin used to be lost. `_app()` chooses the instance
+    holding the pinned drawing and refuses to guess, but every command actually went out
+    through here, which called GetActiveObject directly: whichever AutoCAD registered in
+    the Running Object Table FIRST. With two processes that is a coin toss, and the losing
+    side is Amir's own session -- `_netload` goes through here too, and it writes FILEDIA
+    and NETLOADs a DLL. Routing it through _app() is what makes "work in parallel" safe.
+    """
     import pythoncom
     import win32com.client
     pythoncom.CoInitialize()
-    app = win32com.client.GetActiveObject("AutoCAD.Application")
+    try:
+        app = _app()
+    except Exception:
+        if EXPECT_DWG:
+            raise                     # pinned and not found: refuse, never fall back
+        app = win32com.client.GetActiveObject("AutoCAD.Application")
     return app, app.ActiveDocument
 
 
@@ -497,20 +851,22 @@ def _netload():
             % (RUN_CMD, os.path.basename(DLL)))
 
 
-def _fire_and_match(reqid, wait):
+def _fire_and_match(reqid, wait, res_path=None):
     """Send EB_RUN and return ONLY a result carrying our reqid (never stale)."""
     if not _send_cmd(RUN_CMD + "\n"):
         return None
     tag = "reqid=" + reqid
+    res_path = res_path or _res_path()
     deadline = time.time() + wait + 8
     while time.time() < deadline:
-        try:
-            if os.path.exists(RES):
-                r = open(RES, encoding="utf-8-sig").read().strip()
-                if tag in r:
-                    return r
-        except Exception:
-            pass
+        for p in (res_path, RES):        # v185 answers in the channel; v184 in the root
+            try:
+                if os.path.exists(p):
+                    r = open(p, encoding="utf-8-sig").read().strip()
+                    if tag in r:
+                        return r
+            except Exception:
+                pass
         time.sleep(0.12)
     return None
 
@@ -696,24 +1052,73 @@ def run(op, wait=5.0, _log=True, **kw):
     # the bolt grade is a standing decision, not a per-call choice
     if op in _BOLT_OPS and "style" not in kw:
         kw = dict(kw, style=DEFAULT_BOLT_STYLE)
+
+    # ---- WORK-SESSION GATE (17/08/2026) ----------------------------------
+    # Three refusals that used to be silent overrides. Diagnostics are exempt: ping and
+    # whoami change nothing and are exactly what you need in order to fix the other two.
+    gate = _session_gate(op, kw)
+    if gate:
+        return gate
+    ses = ws.current()
+    pin = (ses or {}).get("name") or EXPECT_DWG or _read_pin()
+    diag = op in _UNGATED_OPS
+    if not diag:
+        if pin and "dwg" not in kw:
+            kw = dict(kw, dwg=pin)
+        if ses and ses.get("dwg") and os.sep in str(ses.get("dwg")) and "dwgpath" not in kw:
+            # v185 compares the FULL PATH: two projects may each hold a `test.dwg`
+            kw = dict(kw, dwgpath=ses["dwg"])
+
+    # Pre-flight. This used to swallow every failure and fall through to a fire that could
+    # not land, so an unreachable AutoCAD came back as EB_TIMEOUT -- the one message that
+    # says nothing. Now the reason is the answer.
+    app = None
     try:
         app, _ = _app_doc()
-        if not _quiescent(app):
-            return "EB_BUSY AutoCAD עסוק - לחץ ESC ונסה שוב"
-        _dlgs = modal_dialogs()
-        if _dlgs:
-            return ("EB_DIALOG a dialog is waiting and AutoCAD reports itself idle: %s"
-                    % "; ".join(_dlgs))
-    except Exception:
-        pass
-    pin = EXPECT_DWG or _read_pin()
-    if pin and "dwg" not in kw:
-        kw = dict(kw, dwg=pin)
+    except Exception as e:
+        if pin and not diag:
+            return "EB_ERR unreachable: %s" % e
+    if app is not None:
+        try:
+            if not _quiescent(app):
+                return "EB_BUSY AutoCAD עסוק - לחץ ESC ונסה שוב"
+            _dlgs = modal_dialogs()
+            if _dlgs:
+                return ("EB_DIALOG a dialog is waiting and AutoCAD reports itself idle: %s"
+                        % "; ".join(_dlgs))
+        except Exception:
+            pass
+    # A diagnostic goes to the SHARED mailbox on purpose: ping/whoami/docs are what you
+    # reach for when the wrong document is in front, and a per-model channel is exactly
+    # what the plugin would not find in that state. They are read-only and reqid-matched,
+    # and only one instance is ever fired at (see _app()).
+    cmd_path = CMD if diag else _cmd_path()
+    res_path = RES if diag else _res_path()
     body = "\n".join(["reqid=" + reqid, "op=" + op] +
                      ["%s=%s" % (k, v) for k, v in kw.items()]) + "\n"
-    with open(CMD, "w", encoding="utf-8") as f:
-        f.write(body)
-    res = _fire_and_match(reqid, wait)
+    # hold the instance for activate+fire: see _lock_acquire
+    lock = None if diag else _lock_acquire(_instance_key())
+    try:
+        if pin and not diag and not _activate_pinned(pin):
+            # could not bring our model forward. If the reason is that someone else's model
+            # is in front, say so HERE: firing anyway would answer with a timeout, and a
+            # timeout is the one message that means "I have no idea what happened".
+            act = _active_doc_name()
+            rec = ws.find(act) if act else None
+            if act and act.lower() != str(pin).lower() and (
+                    rec is None or rec.get("owner") != ws.OWNER_AGENT):
+                return ("EB_ERR blocked: this AutoCAD has '%s' in front%s -- refusing to "
+                        "switch away from a drawing that is not mine, nothing was executed. "
+                        "Either work '%s' in the instance that holds it, or register the "
+                        "front drawing (`python app/worksession.py claim \"%s\"` if it is "
+                        "yours, `open` if it is the agent's)."
+                        % (act, (" and it is held by owner=" + str(rec.get("owner")))
+                           if rec else " and it is not registered to anyone", pin, act))
+        with open(cmd_path, "w", encoding="utf-8") as f:
+            f.write(body)
+        res = _fire_and_match(reqid, wait, res_path)
+    finally:
+        _lock_release(lock)
     if res is None:                      # watchdog: maybe command not registered
         lp = ""
         try:
@@ -723,9 +1128,32 @@ def run(op, wait=5.0, _log=True, **kw):
             pass
         if "Unknown command" in lp or "NETLOAD" in lp:
             _netload()
-            with open(CMD, "w", encoding="utf-8") as f:
+            with open(cmd_path, "w", encoding="utf-8") as f:
                 f.write(body)
-            res = _fire_and_match(reqid, wait)
+            res = _fire_and_match(reqid, wait, res_path)
+    # ---- self-heal ONE wrong-drawing refusal by activating the pinned document ----
+    # Several models open in one AutoCAD is now normal (Amir, 17/08). The guard is right
+    # to refuse, but the fix is mechanical: bring OUR document forward and run again.
+    # Only once, only when the target is ours, and never when the active document belongs
+    # to someone else -- switching away from a drawing Amir is working in is not ours to do.
+    if res and res.startswith("EB_ERR wrongdoc") and pin:
+        if _activate_pinned(pin):
+            # a NEW reqid: the refusal sitting in the result file carries the old one, and
+            # _fire_and_match would match it instantly and call the refusal an answer
+            reqid2 = uuid.uuid4().hex[:8]
+            body2 = body.replace("reqid=" + reqid, "reqid=" + reqid2, 1)
+            with open(cmd_path, "w", encoding="utf-8") as f:
+                f.write(body2)
+            res2 = _fire_and_match(reqid2, wait, res_path)
+            if res2 is not None:
+                res = res2
+    # The plugin consumes the command file when it reads it; delete it here too, so a
+    # command that was never picked up cannot be executed later by an unrelated EB_RUN.
+    try:
+        if os.path.exists(cmd_path):
+            os.remove(cmd_path)
+    except Exception:
+        pass
     if res is None:
         return "EB_TIMEOUT reqid=%s (no matching result; command may not have executed)" % reqid
     if _log and res.startswith("EB_OK") and op in ("beam", "plate", "bolt", "boltfield", "conn_bolted", "miter"):
@@ -736,6 +1164,9 @@ def run(op, wait=5.0, _log=True, **kw):
 def ensure_doc(dwg_path):
     """Guarantee the project's DWG is the ACTIVE document before modeling."""
     want = os.path.basename(dwg_path).lower()
+    held = ws.find(dwg_path)
+    if held and held.get("owner") != ws.OWNER_AGENT:
+        return False                      # someone else's model: not ours to bring up
     r = run("whoami")
     if want in r.lower():
         return True
@@ -744,18 +1175,47 @@ def ensure_doc(dwg_path):
         for d in list(app.Documents):
             if d.Name.lower() == want:
                 d.Activate()
+                ws.open_session(dwg_path)
                 return True
         if os.path.exists(dwg_path):
             app.Documents.Open(dwg_path)
+            ws.open_session(dwg_path)
             return True
     except Exception:
         pass
     return False
 
 
+def open_model(dwg_path, task=None, project=None, activate=True):
+    """Open ANOTHER model in the AutoCAD we are already working in, and register it.
+
+    This is how the agent comes to hold several models at once (Amir, 17/08/2026: "לכל
+    פרויקט יהיה מודל משלו ואני רוצה שהוא יעבוד על כל אחד בנפרד"). Registering is not
+    bookkeeping: an unregistered drawing in front is treated as somebody else's and the
+    agent will not switch away from it -- so a model opened silently would freeze the
+    instance for everyone.
+    """
+    app = _app()                              # resolve the instance BEFORE re-pinning
+    ses = ws.open_session(dwg_path, project=project, task=task)   # refuses a held model
+    global EXPECT_DWG
+    EXPECT_DWG = ses["name"]
+    for i in range(app.Documents.Count):
+        d = app.Documents.Item(i)
+        if os.path.basename(d.Name).lower() == ses["name"].lower():
+            if activate:
+                d.Activate()
+                time.sleep(0.4)
+            return ses
+    if not os.path.exists(ses["dwg"]):
+        raise RuntimeError("no such drawing: %s" % ses["dwg"])
+    app.Documents.Open(ses["dwg"])
+    time.sleep(1.0)
+    return ses
+
+
 def _stamp():
     try:
-        return os.path.getmtime(RES)
+        return os.path.getmtime(_res_path())
     except OSError:
         return 0
 
@@ -768,10 +1228,23 @@ def _model_log(op, kw, res):
     folder the 12/08 cleanup had removed, in a repo whose convention is lowercase English.
     A logger must never invent a project directory: log only into one that EXISTS, and
     otherwise fall back to the folder of the pinned drawing.
+
+    ⭐ 17/08/2026 -- and the SAME failure happened again from the other side: `data/project.txt`
+    still said `lesson-6`, so a beam created in a sandbox model during the parallel-work test
+    was logged into **lesson 6's** model_log. A global "active project" pointer cannot answer
+    a per-model question. The work session knows which drawing this op is in, so the log now
+    goes to THAT DRAWING'S OWN FOLDER, and the stale pointer is only the last resort.
     """
     try:
-        pid = open(ACTIVE, encoding="utf-8").read().strip() if os.path.exists(ACTIVE) else ""
-        d = os.path.join(PROJECTS, pid) if pid else ""
+        d = ""
+        ses = ws.current()
+        if ses and ses.get("dwg") and (os.sep in str(ses["dwg"])):
+            cand = os.path.dirname(os.path.abspath(ses["dwg"]))
+            if os.path.isdir(cand):
+                d = cand
+        if not d:
+            pid = open(ACTIVE, encoding="utf-8").read().strip() if os.path.exists(ACTIVE) else ""
+            d = os.path.join(PROJECTS, pid) if pid else ""
         if not d or not os.path.isdir(d):
             pin = EXPECT_DWG or _read_pin() or ""
             alt = os.path.join(PROJECTS, os.path.splitext(os.path.basename(pin))[0]) if pin else ""

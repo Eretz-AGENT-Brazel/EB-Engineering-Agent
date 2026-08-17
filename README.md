@@ -78,6 +78,7 @@ EB PROSTEEL AGENT/
 | **איך מפעילים op** | `~/.claude/skills/.../references/plugin-ops.md` | הסקיל, ההערות |
 | **מה התוכנה עושה בדיאלוג** | `DEV/knowledge/learning/manual/<חלק>/MANUAL-NOTES-*` | הסקיל |
 | **מה ה-API מסרב לעשות** | `DEV/knowledge/learning/findings/THE-CEILING-what-code-cannot-reach.md` | הכול |
+| 🔀 **עבודה על כמה מודלים במקביל** | `DEV/knowledge/learning/findings/PARALLEL-MODELS.md` | הסקיל, ‏SESSION-START, ‏README של הנתיב |
 | **⛔ קריאות שהורגות את AutoCAD** | `DEV/knowledge/learning/findings/LETHAL-CALLS-do-not-invoke.md` | הסקיל |
 | **מה הופרך ומתי** | `DEV/qc/retracted.tsv` — *וגם הדלק של השומר* | השומר |
 | **מה נמדד בביקורת פרק** | `DEV/knowledge/learning/audits/AUDIT-*.md` | הערות הפרק |

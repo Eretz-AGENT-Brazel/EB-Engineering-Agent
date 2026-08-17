@@ -1089,10 +1089,18 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > `Drawing1.dwg` in a second instance while the agent worked in `sandbox.dwg`, and said
 > plainly: *"זה קובץ שאני עובד עליו — אל תסגור אותו."* Three separate things broke:
 > 1. `GetActiveObject("AutoCAD.Application")` returns whichever instance registered in the
->    Running Object Table **first** — not the one being worked in. Both instances publish the
->    **same** class moniker, so they cannot be told apart by name, only by asking each one
->    which drawings it holds. ⇒ `eb_api.acad_instances()` + `_app()` now **choose by the pin
->    and refuse rather than guess**.
+>    Running Object Table **first** — not the one being worked in.
+>    🛑 **CORRECTED 17/08/2026, measured.** This line used to continue: *"both instances
+>    publish the same class moniker, so they cannot be told apart by name, only by asking
+>    each one which drawings it holds"* — **the asking is impossible.** With two `acad.exe`
+>    running, the ROT shows two entries under the same moniker and **both bind to the same
+>    instance** (identical `HWND`, identical document list). The second process is
+>    **invisible**, not indistinguishable. Killing the first made the second reachable in
+>    12 s. ⇒ `acad_instances()` can return **at most one**, and the pin-selection branch
+>    built on "choose among candidates" never had a candidate to choose from. What actually
+>    protects the work is that `_app()` **verifies the attached instance holds the pinned
+>    drawing and refuses when it does not** — see `eb_api.autocad_reachability()` and
+>    `findings/PARALLEL-MODELS.md`.
 > 2. `_close_stray_docs` closes anything that is not `keep_name` — which, attached to the
 >    wrong instance, would have **saved and closed Amir's working file**. It now refuses
 >    outright whenever a second `acad.exe` is running. The pin is the protection; closing
@@ -1100,6 +1108,52 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > 3. The screenshot tool photographed **his** window under **my** title (see 👁️ below).
 >
 > ⇒ **The user's own drawing is not a stray document. Never close what you did not open.**
+
+> ## 🔀 WORKING ON MORE THAN ONE MODEL — the work session (17/08/2026, Amir)
+> *"אני צריך לעבוד על פרויקטים נוספים במקביל"*, and then: *"לכל פרויקט יהיה מודל משלו ואני
+> רוצה שהוא יעבוד על כל אחד בנפרד."* The full measured picture:
+> **`findings/PARALLEL-MODELS.md`** — read it before touching this area.
+>
+> **The pin became a WORK SESSION** (`app/worksession.py`). Three holes in the old pin, each
+> measured on the morning of 17/08, each now closed:
+> - it was a **default, not a lock** — `run()` injected it only `if "dwg" not in kw`, so an
+>   explicit `dwg=` overrode it in silence. A conflict now **refuses**.
+> - it **never expired** — it still held `test-2026-08-13.dwg` from the previous day while
+>   lesson 7 was the live model. Consent now expires (10 h / new agent run) and is re-confirmed.
+> - it carried a **basename** — two projects may each hold a `test.dwg`. The session carries
+>   the full path and v185 checks it with `dwgpath=`.
+>
+> **`eb_api.use(dwg, task=…)` enters a model · `eb_api.model(dwg)` is a `with` block ·
+> `eb_api.open_model(dwg)` adds a second model to the same AutoCAD ·
+> `python app/worksession.py claim <dwg>` is how AMIR says "this one is mine".**
+>
+> | the rule | what it looks like when it fires |
+> |---|---|
+> | a model someone else holds is untouchable | `EB_ERR hands-off: '…' is held by owner=amir since …` |
+> | an explicit `dwg=` may not overrule the session | `EB_ERR pin conflict: this process is working in '…'` |
+> | consent expires | `EB_ERR stale session on '…' (untouched for 11.2 hours)` |
+> | unpinned while anyone else holds a model | `EB_ERR no work session: amir holds …` |
+> | never switch away from a document that is not mine | `EB_ERR blocked: … not registered to anyone` |
+> | the pinned model is in an AutoCAD COM cannot see | `EB_ERR unreachable: … 1 further AutoCAD process…` |
+>
+> ⭐⭐ **One mailbox per model** (v185): `app/plugin/ch/<slot>/`. Until v184 the whole machine
+> shared `eb_cmd.txt`, `eb_result.txt` and ~40 **fixed-name** output files, and only the
+> result carried a `reqid` — so two jobs were safe in the answer and unsafe in everything
+> else. The slot is computed from the drawing **on both sides** (`worksession.slot_of` ≡
+> `ApiCmds.SlotOf`, FNV-1a over the full path), so python and the plugin agree without
+> negotiating. Verified live: both produced `d_miscellaneous_dwg_1cef7b2a`.
+>
+> 🛑 **And a bug the channels exposed, worth remembering:** a command file left in a channel
+> was **picked up and executed again** by the next `EB_RUN` that found no fresh command of
+> its own. With `list` that was invisible; with `beam` it is a duplicate part nobody ordered.
+> ⇒ **the plugin now CONSUMES the command file when it reads it** — one file, one execution —
+> and python deletes it too. *A mailbox that is not emptied is a queue.*
+>
+> ⚠️ **`reachable=0` with a process alive means a DIALOG, not a dead AutoCAD.** Measured:
+> after a forced kill, the next launch raises **Drawing Recovery**, and AutoCAD does not
+> register with COM at all while it is up — eight probes over three minutes, `Responding=True`
+> throughout. `WM_CLOSE` on it and registration follows within seconds. ⛔ never *Recover*
+> (the saved file is the good one), never *Send Report*.
 
 > ## 🔇 A SILENT PARAMETER IS A SILENT FAILURE — v48
 > Four plates were created with `at="11000,0,0"` and every one landed on the **origin,

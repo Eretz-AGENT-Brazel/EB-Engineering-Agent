@@ -24,10 +24,46 @@ the op count is not quoted here either, for the same reason.*
 > | **`dbase`** | ⛔ **refuses anything that is not `.dbf`.** An `.mdb` **hangs AutoCAD** in an endless loop (CPU pinned, memory flat, no recovery) — the fifth lethal call |
 > | **`vfy_fit` / `vfy_bolts`** | ⛔ **blind to SLOTTED holes** — they reported `BOLT-NO-HOLE` on a *correct* joint, because a slot is reported as its two end circles and a `Ks_Bolt` bbox is **degenerate** (it IS the axis). `app/vfy_joined.py` is fixed (slots paired to their centre line); **the managed side still owes v185** |
 
+> ## 🔀 NEW 17/08/2026 — every op now travels in ITS OWN MODEL'S MAILBOX
+>
+> **What changed in the protocol** (v185; the full measured picture is in
+> `knowledge/learning/findings/PARALLEL-MODELS.md`):
+>
+> | | before (≤v184) | now (v185) |
+> |---|---|---|
+> | command | one `plugin/eb_cmd.txt` for the whole machine | `plugin/ch/<slot>/eb_cmd.txt`, one per drawing |
+> | result | one `plugin/eb_result.txt` | `plugin/ch/<slot>/eb_result.txt` |
+> | ~40 outputs (`eb_list`, `eb_propfull`, `eb_holes`, `eb_vfy_fit`…) | **fixed names, shared** — a second job overwrote them silently, and only the result carried a `reqid` | written into the same channel |
+> | the slot | — | computed from the drawing **on both sides**: `worksession.slot_of` ≡ `ApiCmds.SlotOf` (FNV-1a over the **full path**). Neither side is told; they agree. Verified live: both said `d_miscellaneous_dwg_1cef7b2a` |
+> | guard | `dwg=<basename>` | `dwg=` **and `dwgpath=<full path>`** — two projects may each hold a `test.dwg` |
+> | a command file | stayed after execution | ⭐ **CONSUMED on read.** One file, one execution |
+>
+> ⛔ **Being in a model is now part of calling an op:** `eb_api.use(dwg, task=…)`, or
+> `with eb_api.model(dwg):`, or `eb_api.open_model(dwg)` for a second one in the same
+> AutoCAD. Refusals name their own fix: `pin conflict` · `hands-off` · `stale session` ·
+> `no work session` · `blocked` · `unreachable`.
+>
+> **🆕 `op=docs`** — which drawings THIS AutoCAD holds and which is in front, answered from
+> inside the process: `EB_OK docs count=2 active=<path> slot=<slot> | <path> | *<path>`
+> (`*` = active). With `ping`, `whoami` and `env` it is **never gated**, and it goes to the
+> shared mailbox so it still answers when the wrong document is in front.
+>
+> ⚠️ **A stale command used to be RE-EXECUTED.** Measured 17/08: a `list` left in a channel
+> was picked up by the next `EB_RUN` (which was carrying a diagnostic), ran a second time,
+> and the caller saw a timeout. Invisible with `list`; a duplicated part with `beam`. Fixed
+> twice over: the plugin deletes the command as it reads it, and ignores any command older
+> than **300 s**.
+
 > ⚠️ **`_netload()` now PROVES the command is live** before returning, by pinging until it
 > answers. It used to sleep one second and return `None`; on 06/08 the DLL loaded a moment
 > late and the next three ops came back `EB_TIMEOUT` with nothing pointing at the cause.
 > The same rule this file preaches, applied to the bridge itself.
+>
+> ⚠️ **`reachable=0` while `acad.exe` is alive means a DIALOG, not a dead AutoCAD**
+> (`eb_api.autocad_reachability()`). After a forced kill the next launch raises **Drawing
+> Recovery**, and AutoCAD does not register with COM at all while it is up — eight probes
+> over three minutes, `Responding=True` the whole time. `WM_CLOSE` it and registration
+> follows in seconds. ⛔ never *Recover* (the saved file is the good one), never *Send Report*.
 
 > ## 💾 SAVE. The drawing on disk was SEVEN HOURS stale.
 > 06/08/2026 — Amir: *"ממליץ לך לשמור את המודל, שאם המחשב ייכבה או התוכנה תקרוס שתהיה לך

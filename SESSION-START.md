@@ -33,6 +33,13 @@
    שנרשמה, והצעד הפתוח הבא.
 7. **אם הסשן כולל מידול:** הסקיל `prosteel-modeling` הוא הידע המעשי; לפני כל ניסיון API —
    ‏`LETHAL-CALLS` ו-`THE-CEILING` שב-`api+knowledge-develop/knowledge/learning/findings/`.
+8. 🔀 **על איזה מודל עובדים — לפני האופ הראשון** (נקבע 17/08/2026):
+   ```bash
+   python "api+knowledge-develop/app/worksession.py" status
+   ```
+   ‏**נכנסים למודל במפורש** — ‏`eb_api.use(<dwg>, task="...")` — ומצהירים לאמיר על מה עובדים.
+   ‏⛔ משמרת שנשארה מאתמול **תסרב** (`EB_ERR stale session`) עד `worksession.py confirm`;
+   זה מכוון. הנוהל המלא: `knowledge/learning/findings/PARALLEL-MODELS.md`.
 
 ## 📢 דיווח המוכנות — פורמט קבוע
 
@@ -55,6 +62,13 @@
 - לפני כל קומיט: `python "api+knowledge-develop/qc/consistency.py"` חייב CLEAN · אחרי כל
   קומיט — פוש (אמיר מתעדכן דרך GitHub).
 - אין "בוצע" בלי מדידה שמוכיחה · הרחבת גבולות משימה = שאלה של שורה אחת קודם.
+- 🔀 **אמיר פותח מודל משלו?** שורה אחת והוא מוגן — הסוכן יסרב לגעת בו, לסגור אותו, ואפילו
+  להחליף ממנו תצוגה:
+  ```bash
+  python "api+knowledge-develop/app/worksession.py" claim "<הנתיב לשרטוט>"
+  ```
+  ⛔ ‏**AutoCAD שני שנפתח לפני של הסוכן — חוסם הכל** (רק מופע אחד נגיש ל-COM; נמדד 17/08).
+  אם הסוכן מדווח `EB_ERR unreachable` — סוגרים אחד מהשניים.
 - ⚠️ **ניסוי ופרט הם שני דברים:** ניסוי — רצועה מוצהרת ב-x≥40000, נמחק אחריו, ואינו מוצג כפרט.
 
 ---

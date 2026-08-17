@@ -52,9 +52,19 @@ api+knowledge-develop/app/plugin/*.pdb
 # Transient op output. Every one of these is written by an op and read straight back;
 # they regenerate on demand and carry no history.
 api+knowledge-develop/app/plugin/eb_*.txt
-!api+knowledge-develop/app/plugin/eb_cmd.txt
-!api+knowledge-develop/app/plugin/eb_result.txt
-!api+knowledge-develop/app/plugin/eb_expect_dwg.txt
+# ⭐ 17/08/2026: the three exceptions that used to sit here (eb_cmd / eb_result /
+# eb_expect_dwg) are gone. They were tracked as "the last live state", and that stopped
+# being true: the command file is now CONSUMED as it is read, the result is written per
+# model into ch/<slot>/, and the pin is a mirror of data/worksession.json. Tracking them
+# only produced a file that flickers in and out of every commit.
+
+# --- added 17/08/2026, the per-model mailboxes and the work-session registry ---
+# One channel folder per open drawing (v185): the same transient command/result/output
+# files as above, only sorted by model instead of shared. Machine state, never content.
+api+knowledge-develop/app/plugin/ch/
+# WHO is working on WHAT right now, with timestamps and owners. It describes this machine
+# at this moment; the PROCEDURE is what belongs in the repo (findings/PARALLEL-MODELS.md).
+api+knowledge-develop/data/worksession.json
 
 # Archived DWG snapshots — kept on disk, out of the repo
 api+knowledge-develop/projects/sandbox/_archive/

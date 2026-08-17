@@ -82,8 +82,13 @@ csc /nologo /target:library /platform:x64 /out:EBAgentApi<N>.dll ^
   /r:"C:\Program Files\Autodesk\AutoCAD 2015\acmgd.dll" ^
   /r:"C:\Program Files\Autodesk\AutoCAD 2015\acdbmgd.dll" ^
   /r:"C:\Program Files\Autodesk\AutoCAD 2015\accoremgd.dll" ^
-  /r:"C:\Program Files\Bentley\ProStructures Ss6 R1\AutoCAD 2015\Prg\ProStructuresNet.dll" EBAgentApi<N>.cs
+  /r:"C:\Program Files\Bentley\ProStructures Ss6 R1\AutoCAD 2015\Prg\ProStructuresNet.dll" ^
+  /r:"C:\Program Files\Bentley\ProStructures Ss6 R1\AutoCAD 2015\Prg\PSN_HollowShapeBracing.dll" EBAgentApi<N>.cs
 ```
+> ⚠️ **The last reference is not optional** — corrected 17/08/2026 while building v185. The
+> command as written here for months omitted `PSN_HollowShapeBracing.dll` and the build fails
+> with four `CS0246` errors on the `macrobrace` op. The macro assemblies are ordinary
+> references: if a future op touches another `PSN_*` type, add that DLL the same way.
 - **A NETLOADed DLL is file-locked** → on every change, compile to a NEW filename (EBAgentApi4.dll, 5...) and update `eb_api.py` DLL/RUN_CMD, OR restart AutoCAD to release the lock. Bump `EB_RUN<N>` command + class name `ApiCmds<N>` to avoid CommandMethod name clashes across loads.
 - Load: `doc.SendCommand('(command "_NETLOAD" "…/EBAgentApiN.dll") ')`.
 - **TRUSTEDPATHS**: SECURELOAD=1 blocks NETLOAD of untrusted paths → eb_api adds the plugin dir to `TRUSTEDPATHS` (do this once per session before NETLOAD; already handled in the launch flow).
