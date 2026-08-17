@@ -1,0 +1,11 @@
+{
+  "name": "EB AI — Mission Control",
+  "tagline": "One home base for the Eretz Barzel AI program.",
+  "updated": "2026-06-17",
+  "currentPhase": "Portal live · TankForge knowledge ingestion · awaiting CAD-agent decisions",
+  "tracks": [
+    { "id": "tankforge", "name": "TankForge", "color": "#e07a3c" },
+    { "id": "agents", "name": "CAD Agents", "color": "#2f6fed" },
+    { "id": "portal", "name": "Portal", "color": "#16a34a" }
+  ]
+}

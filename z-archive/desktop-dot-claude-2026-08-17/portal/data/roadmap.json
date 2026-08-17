@@ -1,0 +1,19 @@
+[
+  { "id": "tf-shell", "track": "tankforge", "title": "Software shell", "detail": "App bar, tool rail, 3D viewport, UL-142/UL-58 calc routing, agent chat stub.", "status": "done" },
+  { "id": "tf-standards", "track": "tankforge", "title": "Standards captured", "detail": "UL 142 + UL 58 + computable rules documented.", "status": "done" },
+  { "id": "tf-knowledge", "track": "tankforge", "title": "Knowledge ingestion", "detail": "Structured knowledge base: materials, drawing conventions, elements.", "status": "active" },
+  { "id": "tf-elements", "track": "tankforge", "title": "Element + PROPERTIES system", "detail": "Per-element data model and live PROPERTIES panel (caps template).", "status": "todo" },
+  { "id": "tf-data", "track": "tankforge", "title": "Project save/load data layer", "detail": "New/edit model, project folders, double-click to open.", "status": "todo" },
+  { "id": "tf-agent", "track": "tankforge", "title": "AI agent engine", "detail": "Element-by-element dialog + standards enforcement.", "status": "todo" },
+  { "id": "tf-docs", "track": "tankforge", "title": "Production Documents engine", "detail": "Auto-generate fabrication + cut/weld drawings with HEAT# & welder traceability.", "status": "todo" },
+  { "id": "ag-phase0", "track": "agents", "title": "Phase 0 — bridge proven", "detail": "Claude → bridge → Advance Steel API; 6 tools; real portal frame.", "status": "done" },
+  { "id": "ag-license", "track": "agents", "title": "License + migration decision", "detail": "Autodesk AEC subscription + Advance Steel vs ProSteel.", "status": "blocked" },
+  { "id": "ag-standards", "track": "agents", "title": "Capture standards + top-5 details", "detail": "Half-day standards session; top repetitive details to tool-ify.", "status": "todo" },
+  { "id": "ag-office", "track": "agents", "title": "Office agents", "detail": "Calendar/tasks; Dikla accounting; Bernie quoting/cost/risk.", "status": "todo" },
+  { "id": "ag-solidedge", "track": "agents", "title": "Solid Edge agent", "detail": "Same bridge pattern, different API.", "status": "todo" },
+  { "id": "pt-plan", "track": "portal", "title": "Portal plan", "detail": "Architecture + sections + workflow locked.", "status": "done" },
+  { "id": "pt-p1", "track": "portal", "title": "Phase 1 — Foundation", "detail": "Server + data store + Dashboard + Roadmap + one-click launch.", "status": "done" },
+  { "id": "pt-p2", "track": "portal", "title": "Phase 2 — Interactive core", "detail": "Sessions log, Inbox, Tasks, Open Questions (full write API + forms).", "status": "done" },
+  { "id": "pt-p3", "track": "portal", "title": "Phase 3 — Depth", "detail": "Decisions, Knowledge browser, global search.", "status": "done" },
+  { "id": "pt-p4", "track": "portal", "title": "Phase 4 — Later/optional", "detail": "Auto-summarize Claude Code transcripts into Sessions; team hosting.", "status": "todo" }
+]

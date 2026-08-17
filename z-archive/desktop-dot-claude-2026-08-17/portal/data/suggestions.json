@@ -1,0 +1,5 @@
+[
+  { "id": "g1", "date": "2026-06-17", "from": "claude", "project": "portal", "text": "Investigate auto-pulling Claude Code session transcripts into the Sessions log (Phase 4).", "status": "open", "notes": "" },
+  { "id": "g2", "date": "2026-06-17", "from": "claude", "project": "tankforge", "text": "Get the editable title-block template + fonts from Amir for the Documents engine.", "status": "open", "notes": "" },
+  { "id": "g3", "date": "2026-06-17", "from": "claude", "project": "tankforge", "text": "Ingest the 36-page Scope accessories catalog + build steel profile section tables.", "status": "open", "notes": "Next ingestion batch." }
+]

@@ -1,0 +1,10 @@
+[
+  { "id": "d1", "date": "2026-06-17", "track": "portal", "decision": "Build a local management portal (Mission Control).", "why": "The single chat window loses the thread across a long multi-track program; need a permanent, navigable home base." },
+  { "id": "d2", "date": "2026-06-17", "track": "portal", "decision": "Portal is local-only, fully interactive, Claude-curated log.", "why": "Matches the 'stay light' principle; reliable; architected to be hostable for the team later." },
+  { "id": "d3", "date": "2026-06-17", "track": "tankforge", "decision": "Treat the two tracks as ONE unified program.", "why": "Resolves the tension between the May 'no custom app' plan and the June TankForge custom-app vision — both valid at different time horizons." },
+  { "id": "d4", "date": "2026-06-17", "track": "tankforge", "decision": "Running plan lives as Markdown in the project repo.", "why": "Amir + Claude steer it directly; can export a docx for the team when needed." },
+  { "id": "d5", "date": "2026-06-17", "track": "tankforge", "decision": "Ingest knowledge before more TankForge code.", "why": "The element system, agent, and drawing engine all depend on a structured knowledge base." },
+  { "id": "d6", "date": "2026-06-17", "track": "tankforge", "decision": "Default material S235JR; default weld process FCAW.", "why": "Confirmed from the real #10,015 fabrication set — used on every element." },
+  { "id": "d7", "date": "2026-05-17", "track": "agents", "decision": "Mechanical CAD = Solid Edge; 3 agents not 2; Bernie also gets a quoting/cost/risk agent.", "why": "Team correction (Dikla/Bernie notes) to the original May plan." },
+  { "id": "d8", "date": "2026-06-16", "track": "tankforge", "decision": "TankForge UI is English / LTR; stay vanilla until the agent phase.", "why": "Aligns with UL terminology; keep it light until complexity justifies a framework." }
+]

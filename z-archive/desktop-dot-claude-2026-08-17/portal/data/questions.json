@@ -1,0 +1,7 @@
+[
+  { "id": "q1", "date": "2026-06-17", "question": "Advance Steel license + migration path — subscribe & migrate, or stay on ProSteel?", "context": "Blocks the CAD agents from working on real jobs.", "answer": "" },
+  { "id": "q2", "date": "2026-06-17", "question": "Units: mm / kg / litres everywhere in TankForge?", "context": "Knowledge Guide says kg default & mm; confirming the rest.", "answer": "" },
+  { "id": "q3", "date": "2026-06-17", "question": "Can you share the title-block template, fonts, and one 'perfect' example drawing?", "context": "Needed to build the Documents engine accurately.", "answer": "" },
+  { "id": "q4", "date": "2026-06-17", "question": "Default impact grade (JR / J0 / J2)?", "context": "For the steel material default.", "answer": "JR — confirmed from the real #10,015 set (all elements S235JR)." },
+  { "id": "q5", "date": "2026-06-17", "question": "Portal visual style & port?", "context": "Look + launch URL.", "answer": "Match TankForge's engineering look; port 8190." }
+]

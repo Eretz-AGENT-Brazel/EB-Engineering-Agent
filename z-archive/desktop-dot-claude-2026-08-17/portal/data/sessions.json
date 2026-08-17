@@ -1,0 +1,42 @@
+[
+  {
+    "id": "s20260617a",
+    "date": "2026-06-17",
+    "title": "Analyzed the AI Development docs & built the running plan",
+    "track": "tankforge",
+    "summary": "Read the whole Ai Development folder (AI-Agents plan, Dikla/Bernie corrections, Phase 0 result, TankForge Vision + Knowledge Guide). Resolved the custom-app-vs-Claude-interface tension into one unified two-track program. Set up the steering process.",
+    "changes": [
+      "Created RUNNING-PLAN.md (unified roadmap + decision log + process)",
+      "Decided: one unified program (CAD agents = bridge, TankForge = future)",
+      "Recorded team corrections: Solid Edge, 3 agents"
+    ],
+    "files": ["web/RUNNING-PLAN.md"]
+  },
+  {
+    "id": "s20260617b",
+    "date": "2026-06-17",
+    "title": "Knowledge ingestion: materials, drawing system, core elements",
+    "track": "tankforge",
+    "summary": "Ingested the real #10,015 fabrication set — the full production-document system. Wrote the structured knowledge base and confirmed company defaults from real drawings (S235JR, FCAW).",
+    "changes": [
+      "knowledge/: materials, drawing-conventions, examples/tank-10015",
+      "elements/: caps, shells, standoffs, manholes-nozzles",
+      "Confirmed defaults S235JR + FCAW; specified the Documents engine"
+    ],
+    "files": ["web/knowledge/README.md", "web/knowledge/drawing-conventions.md", "web/knowledge/examples/tank-10015.md"]
+  },
+  {
+    "id": "s20260617c",
+    "date": "2026-06-17",
+    "title": "Planned & built the management portal",
+    "track": "portal",
+    "summary": "Designed, built, verified and launched EB AI — Mission Control: a local, interactive home base so the program lives outside the chat window. Phases 1–3 complete and running at localhost:8190.",
+    "changes": [
+      "portal/PLAN.md spec",
+      "Built Phases 1–3: server + JSON API + data store + all 8 sections + search",
+      "Verified live (UI render + write round-trip); one-click Portal.bat launcher",
+      "Seeded the data store with the real program state"
+    ],
+    "files": ["portal/PLAN.md", "portal/server.py"]
+  }
+]

@@ -1,0 +1,56 @@
+[
+  {
+    "id": "t1",
+    "date": "2026-06-17",
+    "title": "Continue knowledge ingestion: profiles + accessories catalog",
+    "track": "tankforge",
+    "owner": "claude",
+    "status": "todo",
+    "next": true
+  },
+  {
+    "id": "t2",
+    "date": "2026-06-17",
+    "title": "Decide Advance Steel license + ProSteel-vs-Advance-Steel migration",
+    "track": "agents",
+    "owner": "amir",
+    "status": "blocked",
+    "next": true
+  },
+  {
+    "id": "t3",
+    "date": "2026-06-17",
+    "title": "Keep writing Knowledge Guide elements (shells, manholes, nozzles)",
+    "track": "tankforge",
+    "owner": "amir",
+    "status": "todo",
+    "next": true
+  },
+  {
+    "id": "t4",
+    "date": "2026-06-17",
+    "title": "Build portal Phase 1 (foundation)",
+    "track": "portal",
+    "owner": "claude",
+    "status": "done",
+    "next": false
+  },
+  {
+    "id": "t5",
+    "date": "2026-06-17",
+    "title": "Confirm units (mm / kg / litres) across the software",
+    "track": "tankforge",
+    "owner": "amir",
+    "status": "todo",
+    "next": false
+  },
+  {
+    "id": "t6",
+    "date": "2026-06-17",
+    "title": "Fold element photos into the element knowledge files",
+    "track": "tankforge",
+    "owner": "claude",
+    "status": "todo",
+    "next": false
+  }
+]

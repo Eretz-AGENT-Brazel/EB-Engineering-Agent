@@ -1,0 +1,6 @@
+[
+  { "id": "p-tankforge", "name": "TankForge", "track": "tankforge", "status": "Building", "summary": "EB Steel Tank Modeling Software — 3D design + manufacturing output, with embedded AI agent.", "path": "C:\\Users\\User\\Desktop\\.claude\\web" },
+  { "id": "p-agents", "name": "CAD Agents (company program)", "track": "agents", "status": "Phase 0 done", "summary": "Claude-as-interface agents on each workstation; Advance Steel bridge proven.", "path": "G:\\Shared drives\\...\\Ai Development" },
+  { "id": "p-acad", "name": "AcadAgent", "track": "agents", "status": "Built", "summary": "Free Claude-as-brain agent driving real AutoCAD 2015 + ProSteel (type/voice/sketch).", "path": "C:\\Users\\User\\Desktop\\AcadAgent" },
+  { "id": "p-portal", "name": "Mission Control (this portal)", "track": "portal", "status": "Live (Phases 1–3)", "summary": "Local home base for the whole program — plan, sessions, suggestions, decisions. Built, verified, running at localhost:8190.", "path": "C:\\Users\\User\\Desktop\\.claude\\portal" }
+]

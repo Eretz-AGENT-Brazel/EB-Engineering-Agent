@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EB AI — Mission Control</title>
+  <link rel="stylesheet" href="style.css?v=2" />
+</head>
+<body>
+  <aside id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">EB</div>
+      <div class="brand-text">
+        <strong>Mission Control</strong>
+        <span>Eretz Barzel AI</span>
+      </div>
+    </div>
+    <nav id="nav"></nav>
+    <div class="side-foot">
+      <span id="phase-chip">…</span>
+      <span class="updated" id="updated"></span>
+    </div>
+  </aside>
+
+  <main id="main">
+    <header id="topbar">
+      <h1 id="page-title">Dashboard</h1>
+      <div class="top-actions">
+        <input id="search" type="search" placeholder="Search everything…" />
+      </div>
+    </header>
+    <section id="view"></section>
+  </main>
+
+  <div id="modal-backdrop" class="hidden">
+    <div id="modal">
+      <div id="modal-head"><h3 id="modal-title"></h3><button id="modal-close">×</button></div>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="app.js?v=2"></script>
+</body>
+</html>
