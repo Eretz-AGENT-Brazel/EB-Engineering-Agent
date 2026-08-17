@@ -593,6 +593,10 @@ def _legacy_shrink_guard(check, tsv_path):
 # top-level folder is a STRUCTURE decision, so it must appear both here and in the README map
 # in the same commit. This check failing is the reminder, not an obstacle.
 REPO_ROOT_ALLOW = {".git", ".gitignore", "README.md", "PROGRESS.md", "SESSION-START.md",
+                   # 17/08/2026, at Amir's request: the operating procedure for working on a
+                   # specific model belongs next to the session procedure, not buried in
+                   # findings/. It is the only page HE runs commands from.
+                   "WORKING-ON-MODELS.md",
                    "EB PROSTEEL AGENT.bat",
                    "agent-brain", "api+knowledge-develop", "standards", "z-archive"}
 DEV_ROOT_ALLOW = {"README.md", "app", "assets", "data", "knowledge", "lessons",

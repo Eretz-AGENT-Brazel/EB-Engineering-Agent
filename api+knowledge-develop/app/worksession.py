@@ -132,7 +132,7 @@ def channel_dir(dwg, make=False):
 
 # ---------------------------------------------------------------- state file
 def _blank():
-    return {"version": 1, "current": None, "sessions": {}}
+    return {"version": 1, "current": None, "assigned": None, "sessions": {}}
 
 
 def load():
@@ -171,14 +171,60 @@ def agent_session_id():
 
 
 # ---------------------------------------------------------------- open / close
-def open_session(dwg, project=None, task=None, owner=OWNER_AGENT, force=False):
+# ---------------------------------------------------------------- assignment (Amir's lock)
+# ⭐ 17/08/2026, Amir: "איך אני מוודא שאני משייך לסוכן את המודל הספציפי שאני רוצה שהוא יעבוד
+# עליו ולא יגלוש למודל אחר?"
+# Ownership answers "do not touch MINE". Assignment answers the other half: "work on THIS
+# one and nothing else". While an assignment stands, the agent cannot enter another model
+# at all -- not by use(), not by open_model(), not through the EB_MODEL environment
+# variable. Only Amir lifts it (`worksession.py unassign`). The distinction matters: the
+# agent may legitimately want a second model open (it asked for that capability); the
+# assignment is the way to say "not today".
+def assigned(st=None):
+    """The session the agent is LOCKED to by Amir, or None."""
+    st = st if st is not None else load()
+    key = st.get("assigned")
+    return st.get("sessions", {}).get(key) if key else None
+
+
+def assign(dwg, task=None, project=None):
+    """Lock the agent to exactly one model. Any other model refuses until unassign()."""
+    ses = open_session(dwg, project=project, task=task, owner=OWNER_AGENT,
+                       force=True, _bypass_assignment=True)
+    st = load()
+    st["assigned"] = ses["slot"]
+    st["current"] = ses["slot"]
+    st["assigned_at"] = time.time()
+    save(st)
+    return ses
+
+
+def unassign():
+    st = load()
+    prev = assigned(st)
+    st["assigned"] = None
+    st.pop("assigned_at", None)
+    save(st)
+    return prev
+
+
+def open_session(dwg, project=None, task=None, owner=OWNER_AGENT, force=False,
+                 _bypass_assignment=False):
     """Enter a model. Returns the session dict.
 
     Refuses to enter a drawing that someone else owns unless force=True -- entering a
     model Amir declared his own is exactly the accident this file exists to stop.
+    Refuses ANY other model while an assignment stands.
     """
     dwg = os.path.abspath(dwg) if os.sep in str(dwg) or "/" in str(dwg) else str(dwg)
     st = load()
+    if not _bypass_assignment and st.get("assigned"):
+        lock = st["sessions"].get(st["assigned"]) or {}
+        if key_of(dwg, st) != st["assigned"]:
+            raise RuntimeError(
+                "ASSIGNED to '%s' -- refusing to enter '%s'. Amir locked the agent to that "
+                "one model; lift it with `python app/worksession.py unassign`."
+                % (lock.get("name", "?"), os.path.basename(str(dwg))))
     key = slot_of(dwg)
     oldkey = key_of(dwg, st)
     prev = st["sessions"].get(oldkey)
@@ -223,6 +269,9 @@ def close_session(dwg=None):
     ses = st["sessions"].pop(key)
     if st.get("current") == key:
         st["current"] = None
+    if st.get("assigned") == key:
+        st["assigned"] = None            # never leave an assignment pointing at nothing
+        st.pop("assigned_at", None)
     save(st)
     return ses
 
@@ -258,6 +307,9 @@ def current(st=None):
     models can be worked at once without the processes fighting over one 'current'.
     """
     st = st or load()
+    lock = assigned(st)
+    if lock:
+        return lock                     # an assignment outranks everything, EB_MODEL included
     env = os.environ.get("EB_MODEL", "").strip()
     if env:
         return find(env, st) or {
@@ -336,6 +388,11 @@ def switch(dwg):
     """Make an already-open session the current one (single-track work)."""
     st = load()
     key = key_of(dwg, st)
+    if st.get("assigned") and key != st["assigned"]:
+        raise RuntimeError(
+            "ASSIGNED to '%s' -- refusing to switch to '%s'. `worksession.py unassign` lifts it."
+            % ((st["sessions"].get(st["assigned"]) or {}).get("name", "?"),
+               os.path.basename(str(dwg))))
     if key not in st["sessions"]:
         raise RuntimeError("no session for '%s' -- open it first" % os.path.basename(str(dwg)))
     if st["sessions"][key].get("owner") != OWNER_AGENT:
@@ -355,10 +412,73 @@ def _age(ts):
     return "%.0fm" % m if m < 90 else "%.1fh" % (m / 60.0)
 
 
+def verify_text():
+    """Ask AUTOCAD what it is holding, and compare it to what the registry claims.
+
+    ⭐ This is the answer to "how do I make sure the agent is on MY model and will not
+    drift". A registry is a promise; this reads the running software. Never trust the row,
+    read the drawing back -- the same rule the whole project runs on.
+    """
+    st = load()
+    lock, cur = assigned(st), current(st)
+    lines = []
+    lines.append("ASSIGNED : %s" % (("🔒 " + lock["name"] + "   (" + lock["dwg"] + ")")
+                                    if lock else "— (the agent may enter any free model)"))
+    lines.append("WILL USE : %s" % (cur["name"] if cur else "— nothing; ops refuse or run unguarded"))
+    try:
+        sys.path.insert(0, HERE)
+        import eb_api
+        r = eb_api.run("docs", wait=12.0)
+    except Exception as e:
+        r = "EB_ERR " + str(e)
+    if not r.startswith("EB_OK"):
+        reach = {}
+        try:
+            reach = eb_api.autocad_reachability()
+        except Exception:
+            pass
+        lines.append("AUTOCAD  : could not be read -> %s" % r[:160])
+        if reach:
+            lines.append("           reachability: %s" % reach)
+            if reach.get("hint"):
+                lines.append("           " + reach["hint"])
+        return "\n".join(lines)
+    active = ""
+    if "active=" in r:
+        active = r.split("active=", 1)[1].split(" slot=", 1)[0].strip()
+    lines.append("ACTIVE IN AUTOCAD: %s" % (active or "?"))
+    want = (cur or {}).get("dwg") or ""
+    same = bool(active) and bool(want) and \
+        os.path.normcase(os.path.abspath(active)) == os.path.normcase(os.path.abspath(want))
+    if cur:
+        lines.append("MATCH    : %s" % ("✅ the agent's model IS the one in front"
+                                        if same else
+                                        "⚠️  different — the agent will bring its own model "
+                                        "forward before the next op, or refuse if the one in "
+                                        "front is not its own"))
+    lines.append("")
+    lines.append("open drawings in this AutoCAD:")
+    body = r.split(" reqid=")[0]          # the answer's own tag is not part of a file name
+    for part in body.split(" | ")[1:]:
+        p = part.strip()
+        star = p.startswith("*")
+        p = p.lstrip("*").strip()
+        rec = find(p, st)
+        who = ("held by " + rec["owner"]) if rec else "not registered"
+        if rec and st.get("assigned") == rec.get("slot"):
+            who += ", ASSIGNED"
+        lines.append("  %s %-46s  %s" % ("▶" if star else " ", os.path.basename(p), who))
+    return "\n".join(lines)
+
+
 def status_text():
     st = load()
     cur = current(st)
+    lock = assigned(st)
     out = []
+    if lock:
+        out.append("🔒 ASSIGNED to %s — the agent cannot enter any other model until "
+                   "`worksession.py unassign`." % lock["name"])
     if not st["sessions"]:
         out.append("no work sessions open. Nothing is pinned; ops that carry no dwg= are unguarded.")
     for key, s in sorted(st["sessions"].items(), key=lambda kv: kv[1].get("touched", 0), reverse=True):
@@ -373,11 +493,18 @@ def status_text():
 
 
 def _usage():
-    return ("usage: worksession.py status\n"
+    return ("usage: worksession.py status                      # who holds what right now\n"
+            "       worksession.py verify                      # ASK AUTOCAD and compare\n"
+            "\n"
+            "   ── Amir's two commands ──\n"
+            "       worksession.py assign  <dwg> [--task \"...\"]  # lock the agent to THIS model\n"
+            "       worksession.py unassign                     # lift the lock\n"
+            "       worksession.py claim   <dwg> [--task \"...\"]  # this one is MINE: hands off\n"
+            "       worksession.py release <dwg>                # ...and give it back\n"
+            "\n"
+            "   ── the agent's ──\n"
             "       worksession.py open  <dwg> [--task \"...\"] [--project X] [--force]\n"
             "       worksession.py close [<dwg>]\n"
-            "       worksession.py claim <dwg> [--task \"...\"]      # Amir takes it: agent hands off\n"
-            "       worksession.py release <dwg>\n"
             "       worksession.py switch <dwg>\n"
             "       worksession.py confirm [<dwg>]\n"
             "       worksession.py slot  <dwg>\n")
@@ -400,6 +527,15 @@ def main(argv):
     try:
         if cmd == "status":
             print(status_text())
+        elif cmd == "verify":
+            print(verify_text())
+        elif cmd == "assign":
+            s = assign(rest[0], task=flagval("task"), project=flagval("project"))
+            print("🔒 ASSIGNED: the agent works on %s and nothing else.\n   %s\n"
+                  "   lift with: python app/worksession.py unassign" % (s["name"], s["dwg"]))
+        elif cmd == "unassign":
+            s = unassign()
+            print("lock lifted (was %s)" % (s["name"] if s else "not set"))
         elif cmd == "open":
             s = open_session(rest[0], project=flagval("project"), task=flagval("task"),
                              force="--force" in flags)

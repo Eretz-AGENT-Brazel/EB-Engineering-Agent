@@ -35,11 +35,12 @@
    ‏`LETHAL-CALLS` ו-`THE-CEILING` שב-`api+knowledge-develop/knowledge/learning/findings/`.
 8. 🔀 **על איזה מודל עובדים — לפני האופ הראשון** (נקבע 17/08/2026):
    ```bash
-   python "api+knowledge-develop/app/worksession.py" status
+   python "api+knowledge-develop/app/worksession.py" verify
    ```
    ‏**נכנסים למודל במפורש** — ‏`eb_api.use(<dwg>, task="...")` — ומצהירים לאמיר על מה עובדים.
    ‏⛔ משמרת שנשארה מאתמול **תסרב** (`EB_ERR stale session`) עד `worksession.py confirm`;
-   זה מכוון. הנוהל המלא: `knowledge/learning/findings/PARALLEL-MODELS.md`.
+   זה מכוון. ‏🔒 **הנוהל של אמיר (`assign` · `verify` · `unassign`): [`WORKING-ON-MODELS.md`](WORKING-ON-MODELS.md)**
+   בשורש · המדידות: `knowledge/learning/findings/PARALLEL-MODELS.md`.
 
 ## 📢 דיווח המוכנות — פורמט קבוע
 

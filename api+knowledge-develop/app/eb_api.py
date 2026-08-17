@@ -174,6 +174,12 @@ def _session_gate(op, kw):
                     "`python app/worksession.py release \"%s\"`."
                     % (name, rec.get("owner"), _when(rec.get("opened")), name))
 
+    lock = ws.assigned(st)
+    if lock and asked and asked.lower() != str(lock.get("name", "")).lower():
+        return ("EB_ERR assigned: the agent is locked to '%s' and the op asked for '%s' -- "
+                "refused, nothing was executed. Only Amir lifts it: "
+                "`python app/worksession.py unassign`." % (lock.get("name"), asked))
+
     if asked and ses and asked.lower() != str(ses.get("name", "")).lower():
         return ("EB_ERR pin conflict: this process is working in '%s' but the op asked for "
                 "'%s' -- refused, nothing was executed. An explicit dwg= no longer overrules "
@@ -1109,11 +1115,13 @@ def run(op, wait=5.0, _log=True, **kw):
                     rec is None or rec.get("owner") != ws.OWNER_AGENT):
                 return ("EB_ERR blocked: this AutoCAD has '%s' in front%s -- refusing to "
                         "switch away from a drawing that is not mine, nothing was executed. "
-                        "Either work '%s' in the instance that holds it, or register the "
-                        "front drawing (`python app/worksession.py claim \"%s\"` if it is "
-                        "yours, `open` if it is the agent's)."
+                        "⚠️ ONE AutoCAD window shows ONE document at a time, so working '%s' "
+                        "here would pull the view off '%s'. Three ways out: close/минimise "
+                        "that drawing, hand it to me (`worksession.py open \"%s\"`), or -- if "
+                        "you want to keep working in it while I model -- open YOUR OWN AutoCAD "
+                        "*after* mine, where I cannot reach you at all."
                         % (act, (" and it is held by owner=" + str(rec.get("owner")))
-                           if rec else " and it is not registered to anyone", pin, act))
+                           if rec else " and it is not registered to anyone", pin, act, act))
         with open(cmd_path, "w", encoding="utf-8") as f:
             f.write(body)
         res = _fire_and_match(reqid, wait, res_path)

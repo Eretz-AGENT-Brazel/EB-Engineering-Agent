@@ -118,6 +118,39 @@ def main():
         except RuntimeError:
             check("open refuses to take over a held model", True)
 
+        # --- 8b. THE ASSIGNMENT: Amir locks the agent to one model ------------------------
+        ws.release(C)
+        ws.save(ws._blank())
+        os.environ.pop("EB_MODEL", None)
+        ws.assign(A, task="only this one")
+        check("assignment is recorded", (ws.assigned() or {}).get("dwg") == os.path.abspath(A))
+        check("the assigned model is what the agent will use",
+              (ws.current() or {}).get("dwg") == os.path.abspath(A))
+        check("an op on the assigned model passes", refusal() is None)
+        r = refusal(dwg=os.path.basename(C))
+        check("an op on ANY other model is refused", bool(r) and "assigned" in r, repr(r))
+        try:
+            ws.open_session(C)
+            check("the agent cannot ENTER another model", False, "no exception")
+        except RuntimeError as e:
+            check("the agent cannot ENTER another model", "ASSIGNED" in str(e))
+        try:
+            ws.switch(C)
+            check("the agent cannot SWITCH to another model", False, "no exception")
+        except RuntimeError as e:
+            check("the agent cannot SWITCH to another model", "ASSIGNED" in str(e))
+        os.environ["EB_MODEL"] = C
+        check("EB_MODEL cannot bypass the assignment",
+              (ws.current() or {}).get("dwg") == os.path.abspath(A))
+        os.environ.pop("EB_MODEL", None)
+        ws.unassign()
+        check("unassign frees the agent", ws.assigned() is None)
+        check("...and another model may now be entered",
+              ws.open_session(C).get("dwg") == os.path.abspath(C))
+        ws.close_session(C)
+        eb_api.use(A, task="lesson 7 rebuild")
+        ws.claim(C)
+
         # --- 9. release gives it back -----------------------------------------------------
         ws.release(C)
         check("after release the model is free again",

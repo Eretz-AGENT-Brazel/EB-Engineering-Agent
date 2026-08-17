@@ -50,8 +50,16 @@ is never longer than one. Recorded in `qc/retracted.tsv`.
 
 | | how | what protects him |
 |---|---|---|
-| ⭐ **Same AutoCAD, two documents** *(recommended)* | he opens his drawing in the agent's AutoCAD; he runs `worksession.py claim <dwg>` (or tells the agent to) | the agent **refuses to switch away** from a document that is not registered as its own, refuses every op aimed at his model, and refuses to close it. All three measured |
-| **A second AutoCAD, started AFTER the agent's** | he launches his own AutoCAD | it is **invisible to COM**. The agent physically cannot send it a command, a NETLOAD, or a variable write |
+| ⭐ **A second AutoCAD, started AFTER the agent's** *(recommended — see the window note)* | he launches his own AutoCAD | it is **invisible to COM**. The agent physically cannot send it a command, a NETLOAD, or a variable write |
+| **Same AutoCAD, two documents** | he opens his drawing in the agent's AutoCAD and runs `worksession.py claim <dwg>` | the agent **refuses to switch away** from a document that is not registered as its own, refuses every op aimed at his model, and refuses to close it. All three measured |
+
+⚠️ **Why the order of that table was flipped on the day it was written:** the same-AutoCAD
+arrangement is safe for the DATA and unusable for the EYES. **One MDI window shows one
+document at a time**, so the moment the agent models, the view leaves whatever Amir was
+reading. Nothing is damaged — he simply loses the screen. Measured directly: with `E` in
+front and the agent assigned to `D`, the op refused rather than steal the view, and the way
+to make progress was to give the front drawing to the agent. ⇒ **if he wants to LOOK at his
+model while the agent works, he needs his own window, and it must be launched second.**
 
 ⛔ **The one arrangement that does not work: his AutoCAD started FIRST and the agent's
 second.** Then the agent's own instance is the hidden one, and every op refuses with
@@ -95,6 +103,13 @@ parallel. Genuine simultaneity would need two reachable instances, and there is 
 | **R6** | The agent never switches away from a document that is not registered as its own | live: `EB_ERR blocked: … not registered to anyone` |
 | **R7** | Identity is the **full path**; the file name is a label (`dwgpath=` in v185) | two `test.dwg` in different folders get different mailboxes |
 | **R8** | A command file older than 300 s is never executed | plugin `CmdMaxAgeSeconds` — otherwise a stale shared command would run in whatever document happened to be in front |
+| **R9** | ⭐ **An ASSIGNMENT outranks everything.** While Amir has locked the agent to one model, it cannot enter another — not by `use()`, not by `open_model()`, not through `EB_MODEL` | selftest: `EB_ERR assigned` · `ASSIGNED to '…' -- refusing to enter` · the env-var bypass explicitly tested |
+
+> **Ownership and assignment are two different questions.** `claim` says *"do not touch
+> MINE"*; `assign` says *"work on THIS one and nothing else"*. The agent legitimately wants
+> several models at once — assignment is how Amir says *not today*. Only he lifts it
+> (`worksession.py unassign`). The operating procedure lives in **`WORKING-ON-MODELS.md`**
+> at the repo root, next to `SESSION-START.md`, because it is the page he runs commands from.
 
 ⚠️ **Diagnostics are deliberately exempt** (`ping`, `whoami`, `env`, `docs`): they change
 nothing, they are what you reach for when the wrong document is in front, and they go to the
