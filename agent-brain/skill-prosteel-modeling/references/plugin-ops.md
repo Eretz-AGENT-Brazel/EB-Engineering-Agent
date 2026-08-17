@@ -40,8 +40,15 @@ the op count is not quoted here either, for the same reason.*
 >
 > ⛔ **Being in a model is now part of calling an op:** `eb_api.use(dwg, task=…)`, or
 > `with eb_api.model(dwg):`, or `eb_api.open_model(dwg)` for a second one in the same
-> AutoCAD. Refusals name their own fix: `pin conflict` · `hands-off` · `stale session` ·
-> `no work session` · `blocked` · `unreachable`.
+> AutoCAD. Refusals name their own fix: `assigned` · `pin conflict` · `hands-off` ·
+> `stale session` · `no work session` · `blocked` · `unreachable`.
+>
+> 🔒 **Amir's ASSIGNMENT outranks the whole list** (`worksession.py assign <dwg> [<dwg2>…]`,
+> one task per model): outside the set every route refuses — `use()`, `open_model()`,
+> `switch()`, explicit `dwg=`, `EB_MODEL` — and *inside* the set `dwg=`/`EB_MODEL` select
+> the member with a **total** switch (session, pin, channel, activation move together).
+> Only his `unassign` lifts it; `verify` answers from the running AutoCAD, not the
+> registry. His copy-paste procedure: `WORKING-ON-MODELS.md` at the repo root.
 >
 > **🆕 `op=docs`** — which drawings THIS AutoCAD holds and which is in front, answered from
 > inside the process: `EB_OK docs count=2 active=<path> slot=<slot> | <path> | *<path>`

@@ -1127,14 +1127,53 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > `eb_api.open_model(dwg)` adds a second model to the same AutoCAD ·
 > `python app/worksession.py claim <dwg>` is how AMIR says "this one is mine".**
 >
+> ⭐⭐ **And above all of those sits the ASSIGNMENT — Amir's lock** (added later the same
+> day, when he asked the operational question the build had not answered: *"איך אני מוודא
+> שאני משייך לסוכן את המודל הספציפי… ולא יגלוש למודל אחר?"*). Ownership says *"do not touch
+> MINE"*; assignment says *"work on THIS and nothing else"*:
+> - `worksession.py assign <dwg> [--task …]` — locks the agent to one model. Entering
+>   anything else refuses **by every route**: `use()`, `open_model()`, `switch()`, explicit
+>   `dwg=`, and the `EB_MODEL` env var (each bypass explicitly tested; selftest 43/43).
+> - `worksession.py assign <dwg1> <dwg2> …` — locks to a **SET, each with its own task**
+>   (his situation 2: several projects, a different instruction per model). *Within* the
+>   set, `dwg=`/`EB_MODEL`/`switch` choose the member, and the switch is **total** —
+>   session, pin, channel and document activation move together, so an op can never write
+>   into one model's mailbox while executing in another.
+> - `worksession.py verify` — answers from the RUNNING AutoCAD, not the registry: what is
+>   assigned, what the next op will really use, what is active in front, do they match,
+>   who holds each open drawing. **When Amir asks "תראה לי verify" — run it and paste it.**
+> - Only `worksession.py unassign` (Amir) lifts the lock. `close` of an assigned model
+>   shrinks the set; never leave the lock pointing at nothing.
+>
+> **His two situations, both measured end-to-end 17/08/2026:**
+> 1. **One model for the agent, Amir free** (6/6 gates): agent's AutoCAD launches FIRST,
+>    Amir opens his own SECOND — his is invisible to COM, he opens/closes drawings freely,
+>    nothing the agent does can reach him, and his exit changes nothing.
+> 2. **A set with a task per model** (4/4 gates): ops landed 99-vs-732 entities each in its
+>    own channel, per-model Hebrew tasks kept, outside-the-set refused.
+>
 > | the rule | what it looks like when it fires |
 > |---|---|
+> | ⭐ anything outside Amir's assignment | `EB_ERR assigned: the agent is locked to '…' -- Only Amir lifts it` |
 > | a model someone else holds is untouchable | `EB_ERR hands-off: '…' is held by owner=amir since …` |
 > | an explicit `dwg=` may not overrule the session | `EB_ERR pin conflict: this process is working in '…'` |
 > | consent expires | `EB_ERR stale session on '…' (untouched for 11.2 hours)` |
 > | unpinned while anyone else holds a model | `EB_ERR no work session: amir holds …` |
 > | never switch away from a document that is not mine | `EB_ERR blocked: … not registered to anyone` |
 > | the pinned model is in an AutoCAD COM cannot see | `EB_ERR unreachable: … 1 further AutoCAD process…` |
+>
+> ⚠️ **The MDI lesson that flipped the recommendation:** one AutoCAD window shows ONE
+> document at a time — sharing an instance with Amir is safe for the data and unusable for
+> his eyes (the moment the agent models, the view leaves what he was reading; measured, the
+> op refused rather than steal the view). ⇒ when he wants to WATCH his model while the
+> agent works: **his own AutoCAD, launched second.** The launch order is the one rule he
+> must keep — his instance first would make the AGENT'S the hidden one, and every op then
+> refuses `EB_ERR unreachable` until one of the two closes.
+>
+> 📋 His copy-paste procedure (chat sentences, no commands) lives at the repo root:
+> `WORKING-ON-MODELS.md`, next to SESSION-START.md. When he assigns a model in chat
+> ("אתה עובד רק על X — נעל את עצמך אליו"), run `assign` + `verify` yourself and report
+> locked-model + task + what verify shows.
 >
 > ⭐⭐ **One mailbox per model** (v185): `app/plugin/ch/<slot>/`. Until v184 the whole machine
 > shared `eb_cmd.txt`, `eb_result.txt` and ~40 **fixed-name** output files, and only the
