@@ -11,6 +11,60 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 `app/…`, `qc/…`, `knowledge/…`, `projects/…` path in this skill is relative to that folder.
 (`agent-brain/PROGRAM.md`, `PROGRESS.md` and `standards/` sit at the repo root.)
 
+> ## ⏱️ THE CLOCK IS AN INSTRUMENT TOO — I NEARLY THREW AWAY HALF A NIGHT'S BUILD WINDOW (18/08/2026, model 5)
+> Reading Amir's biggest model so far (`CBC TARA GELLERY`, **861 entities / 785 steel parts**)
+> into a cache, I judged the elapsed time by **counting my own polling round-trips** instead of
+> looking at a clock. I concluded the read had taken **~33 minutes**, wrote that into the
+> project README, declared there was no time left to build — and **recommended building a new
+> plugin op (`propsall`) to fix a bottleneck that does not exist.** One `date` and one
+> `os.path.getmtime` closed it in two seconds:
+> | the phase | measured |
+> |---|---|
+> | `dumpfull2` + `dumpmodel` + `dumpholes` | **< 60 s for all three** — 861 entities, 821 holes |
+> | `props` ×489 + `mods` ×489 + 126 cut planes over COM | **7 min 08 s** ⇒ **≈ 0.39 s per round-trip** |
+> | **the whole read** | **~8 minutes**, not 33 |
+> ⇒ ⭐⭐ **Measure duration against a clock, never against a feeling** — and never propose new
+> code on an unmeasured cost. **The real cost centre is DRILLING, not reading:** model 4 measured
+> 848 `drill` calls at **649 s (0.77 s/hole)**, twice the price of a read call. That is where
+> `drillfield` grouping pays, and the estimate that matters for planning a big model.
+>
+> ### ⚠️ AND TWO WAYS A HEALTHY BUILD LOOKS DEAD FROM THE OUTSIDE
+> **1. One mailbox per MODEL means one per DRAWING — the rebuild is not the source.** Watching the
+> wipe, I polled `ch/<slot>/eb_result.txt` and read a **132-second-old `mods` line**, exactly the
+> signature of a stalled run. The source and the rebuild are different files, so
+> `worksession.slot_of` gives them **different slots**: `model_5_..._d81b075b` (source) vs
+> `model_5_..._3813a733` (rebuild). I was watching the drawing that had finished.
+> ⇒ **When watching a build, poll the TARGET's channel** — `eb_api.channel()` after entering it.
+> **2. `eb_api.delete()` runs over COM, not through the plugin, so it writes NO result file.**
+> A wipe of 861 entities produces total silence in the channel for minutes. The witness that it is
+> alive is the **AutoCAD process's CPU** (`Get-Process acad` → `.CPU` climbing ≈ 1 core), not the
+> mailbox. ⇒ **Before calling a long run hung, check which transport it uses.**
+>
+> ### ⭐ What the cache does NOT carry, measured on this model
+> `night_read` keeps `SHAPE` / `PLATE` / `BOLT` rows; everything else is an **`OTHER`** row and is
+> invisible to it — **68 entities here**: **48 `Ks_VolBody` on layer `PS_Bolt`** (bolts a connection
+> generated), 5 `Ks_BendShape`, 4 `Ks_VolBody` on layer 0, 2 `Ks_Connection`, **2 `AcDb3dSolid` on
+> `REFREG`** (the existing situation as illustration — not steel), 4 lines, a polyline, a rebar
+> manager and a block reference.
+> ⭐ **But `Ks_BendPlate` DOES come through** — it casts to `PsPlate`, so the 8 bend plates are
+> inside the 314 `PLATE` rows and are indistinguishable there. **They will be rebuilt FLAT by
+> `plate9`**, because folding needs `bend` (still a v186 debt: no `UseInnerRadius`, folds only at
+> the end). ⇒ **declare that gap before building, so it is not discovered as a gate failure.**
+>
+> ### ⭐⭐ REPETITION IS A FREE MEASUREMENT, AND HIS OWN MODEL SCORES 7.9:1
+> The plate rows carry a bbox each, so one `sort | uniq -c` over the dump answers Amir's central
+> question before any clustering pass: **314 plates, 40 distinct footprints** — and a single
+> `100×100×10` plate covers **108 of them** (56 + 32 + 20, the same plate read in three
+> orientations). **One cutting drawing instead of 108.** Against the kindergarten-stairs job he
+> cites as the negative example — 7 thicknesses, ~100 cutting drawings, almost nothing repeating.
+> ⇒ **Report the ratio, not the count.** It is the value-engineering number, it costs one command,
+> and it is a fact about HIS practice rather than an opinion about it.
+> ⭐ Same for the section list: **15 sections from 8 catalogues in 4 countries** (`BS_CELSIUS_RHS`,
+> `AS_SHS_C450`, `SW_SO_ROR`, `FR_UPN`, `CN_RZBG`, `DIN_FLACH`, `BS_EQUAL`, `BS_ROHR_COLD`) and
+> **6 hole diameters with 8 bolt types, including 130 grade-4.6 bolts beside the 8.8 structural
+> ones**. His *"vary the profiles, get out of the box"* instruction is not aspirational — it is a
+> description of what his production models already look like.
+
 > ## ⭐⭐⭐ THE HOLES ARE THE DESIGN: 344 BOLTS DERIVED, AND PROSTEEL PICKED THE SOURCE'S OWN LENGTHS (18/08/2026)
 > Model 4 of Amir's own production models — a 66.6 × 12.3 m support grillage, 490 entities — was
 > rebuilt 1:1 and **every one of its 344 bolts came out of `boltparts`, none made by hand.** Two
