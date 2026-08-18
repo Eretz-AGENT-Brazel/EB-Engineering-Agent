@@ -11,6 +11,33 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 `app/…`, `qc/…`, `knowledge/…`, `projects/…` path in this skill is relative to that folder.
 (`agent-brain/PROGRAM.md`, `PROGRESS.md` and `standards/` sit at the repo root.)
 
+> ## ⭐⭐ ONE MISTAKE WEARING THREE MASKS — AND THE MEASUREMENT THAT UNMASKED IT (18/08/2026)
+> Rebuilding a customer wall support (`HE360B`, 140 holes, 56 bolts) produced three separate
+> "API limitations" in one afternoon:
+> | the symptom | what it looked like | what it was |
+> |---|---|---|
+> | 128 holes landed nowhere near the source | *"`drill at=` does not drill at the point you pass"* | the member was rotated |
+> | a `DIN_FLACH` flat bar refused to drill at all, 5 attempts, 2 ops | *"flat bars are dialog-only"* | the flat was rotated |
+> | `boltparts` refused all six joints (`holesOnParts` 28–66) | *"the bolting route is broken"* | the holes were not collinear between parts |
+>
+> **All three were ONE error: four members built with the section turned 90°.**
+> ⚠️ **`rot` as printed by `dumpfull2` round-trips for 90 and −90 — but NOT for 0.** The four
+> members the source prints as `rot=0` came back with h and b swapped (`360×300` → `300×360`).
+> ⇒ ⭐⭐⭐ **Compare the bbox SPAN of every member against the source before building on it.**
+> The skill already said *"measure the span, never copy the dump's angle"*; this is the day it
+> cost an afternoon. One comparison table, four rebuilt members, and all three symptoms vanished:
+> **140/140 holes at 0.0000 mm, `boltparts` created 44 bolts clean, the flat drilled first try.**
+>
+> ⭐ **The flange selector works and matters:** on a correctly oriented `HE360B`, `flange=1` put
+> the hole on the intended flange and `flange=0` put it on the opposite one — **337.5 mm away**,
+> which is exactly `h − tf`. A web pass takes no `flange` at all. Classify each hole first: read
+> its DEPTH from the source (22.5 = flange, 12.5 = web on this section) and drill accordingly.
+> ⭐ **And let ProSteel derive the bolts once the holes are right.** Hand-made bolts at the source's
+> own axes passed the iron rule but read `OVERSIZED=56`; deleting them and running `boltparts` per
+> joint gave **44 bolts, `OK=44`, `OVERSIZED=0`, `GAP-IN-PACKET=0`** — better than the hand-made
+> ones on every count. Bolts that connect steel to CONCRETE have no second steel part, so those
+> (12 wall bolts here) are the legitimate case for creating a bolt directly.
+
 > ## ⛔⛔ THE WORST FAILURE OF 18/08/2026: A **READ** MOVED THE BUILD INTO AMIR'S MODEL
 > Task: learn one of the company's finished models and rebuild it 1:1 beside the original. The
 > rebuild drawing was a **byte copy** of his, opened in the same AutoCAD, and both were in the
