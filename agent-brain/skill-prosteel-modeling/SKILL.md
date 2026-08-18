@@ -40,6 +40,56 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > alive is the **AutoCAD process's CPU** (`Get-Process acad` → `.CPU` climbing ≈ 1 core), not the
 > mailbox. ⇒ **Before calling a long run hung, check which transport it uses.**
 >
+> ### ⭐⭐⭐ A PLATE'S INSERTION POINT IS NOT ITS CENTRE — AND THAT IS WHY 112 HOLES REFUSED TO EXIST
+> The holes segment drilled 821 holes and only **538 of 796 landed at 0.0000 (67.6 %)**, with
+> **157 missing from the drawing entirely**. Broken down by the section that owns the hole, it was
+> three different failures, not one:
+> | the owner | exact | wrong place | **no hole at all** |
+> |---|---|---|---|
+> | `PLATE 6` | 60 | 0 | **112** |
+> | `PLATE 10` | 280 | 52 | 0 |
+> | `U140` (channel) | 44 | **50** | 0 |
+> | `PLATE 12` | **0** | 20 | 0 |
+> | `EA60/EA80` | 102 | 24 | 0 |
+> | `300X12` · `300X10` · `180X10` (base flats) | **52** | 0 | 0 |
+>
+> **My first explanation was wrong and a single probe killed it.** I suspected the retry path —
+> it deletes every hole field (`killholefield`) and re-drills with **`flange=1`**, which this file
+> says must never be given to a plate. But drilling one stripped 6 mm plate **with no `flange` and
+> no retry at all** returned `hosts_ok=0 failed=1` with `holeFields=0` **before and after**: there
+> was nothing there to destroy. ⇒ **refuted, and recorded as refuted.**
+>
+> **What it actually is**, measured by comparing one rebuilt plate's frame against the source:
+> | | `org` | where the material sits (`mid`) |
+> |---|---|---|
+> | source | 1945.728, 2470.589, **6606.49** | z = **6576.49** — **30 mm below `org`** |
+> | rebuild | identical | z = **6606.49** — centred **on** `org` |
+> `W=60`, so **30 = W/2**: the dialog-built plate carries its insertion point **on an edge** with
+> the material hanging to one side, while `plate9 mode=rect at=` **centres the plate about the
+> point**. The plate is the right size, the right thickness and has the right `org` — and its
+> material is **30 mm away in its own plane**, so holes drilled at the source's coordinates fall
+> **outside the steel** and the drill refuses.
+> ⭐⭐ **Confirmed across all 314 plates by arithmetic on the cache alone** — project `centre − org`
+> onto the plate's own in-plane axes `X`/`Y`:
+> | | holes landed | **holes never created** |
+> |---|---|---|
+> | `org` **is** the in-plane centre (209 plates) | **332** | **0** |
+> | `org` is **off-centre** (105 plates) | 80 | **112** |
+> ⇒ **Every one of the 112 missing holes is on an off-centre plate, and not one centred plate lost
+> a hole.** That is a mechanism, not a correlation.
+> 🔧 **The fix is two more of a measurement the tool already makes:** `night_build.plates()` already
+> derives the **thickness** offset (`insheight`, from `mid` against `org`); it needs the same two
+> projections in plane — `dx = (centre−org)·X`, `dy = (centre−org)·Y` — and to build at
+> `org + dx·X + dy·Y`. ⛔ **Not applied unattended:** it touches all 314 plates here and the four
+> models already closed, so it gets run and measured at the start of the next session, not in the
+> last three minutes of this one.
+> ⇒ 🧲 **This is the skill's own rule in a new disguise** — *a part is contour + modifications +
+> **insertion frame***. Same size, same thickness, same `org`, and the steel is still somewhere
+> else. **Read where the material is, never where the point is.**
+> ⭐ The channel misses are the other known lesson: `U140` has flange and web on the same ray, so
+> **classify every hole by its DEPTH in the source before drilling** (flange thickness ⇒ `flange=1`,
+> web thickness ⇒ no `flange`), exactly as model 4 required.
+>
 > ### ⭐ What the cache does NOT carry, measured on this model
 > `night_read` keeps `SHAPE` / `PLATE` / `BOLT` rows; everything else is an **`OTHER`** row and is
 > invisible to it — **68 entities here**: **48 `Ks_VolBody` on layer `PS_Bolt`** (bolts a connection
