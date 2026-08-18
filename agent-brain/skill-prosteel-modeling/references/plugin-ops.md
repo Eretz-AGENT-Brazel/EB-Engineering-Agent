@@ -3801,3 +3801,20 @@ code, part by part off its own definition, lands **20 of 20 members at 0.0000 mm
 ⭐ **Process note worth as much as any op:** 4 % of the parts consumed most of the session, and
 two of the later "improvements" made already-good results worse. **Budget each stuck part:
 after three attempts with no improvement, record it and move on.**
+
+---
+
+## v185 · 18/08/2026 — measured on the first customer model of the "learn an existing model" track
+
+| op / call | what was measured |
+|---|---|
+| **`eb_api.build_target(dwg)`** | **NEW.** Declares the one drawing this work may create or destroy in. Writing ops and `delete` refuse while the session points elsewhere. Born the day a `props(dwg=<other model>)` read moved 18 creations into the SOURCE drawing instead of the rebuild |
+| **`eb_api.delete(handle[, dwg])`** | now runs the session gate, activates the target and **re-reads the active document** before erasing. It used to erase from whatever was in front. ⚠️ it can also report `EB_ERR` for a delete that succeeded |
+| `whoami` | ⚠️ **UNGATED → does not activate the pinned document.** Fire `list` (gated) first, then assert |
+| `polycut shape=circle r= at= xaxis= yaxis= depth=` | builds a circular cut; `area` in the receipt confirms it (πr²). **`depth` moves only the START of the cut prism**; the far end is fixed |
+| `plate9 ... insheight=±t/2` | insert point on a face rather than the mid-plane; `+` grows along +normal from `at` |
+| `beam ... mirror=1` | sets **`ymir`**, reverses `p1→p2`, and leaves `MirrorFlag=0`. Reaches the same section frame a dialog X-mirror does |
+| `copy handles= to=dx,dy,dz` | translation vector is **`to=`**, not `by=`. 18 parts × 11 copies in 3.8 s |
+| `dumpholes` | ⚠️ blind to holes modelled as **poly-cuts** — answered `holes=0` on a plate carrying four ⌀19 |
+| `posauto dry=1` | ⚠️ writes `eb_posauto.txt` to the **shared plugin folder**, not the model's channel |
+| COM `Ks_ComEditModification` → `GetPolyCut` → `Ks_ComPolyCut.GetPolygon` | **reads a polyCut's outline** — the capability this file listed as missing. Vertex = `(x, y, bulge)` |

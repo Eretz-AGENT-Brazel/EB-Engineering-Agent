@@ -11,6 +11,113 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 `app/…`, `qc/…`, `knowledge/…`, `projects/…` path in this skill is relative to that folder.
 (`agent-brain/PROGRAM.md`, `PROGRESS.md` and `standards/` sit at the repo root.)
 
+> ## ⛔⛔ THE WORST FAILURE OF 18/08/2026: A **READ** MOVED THE BUILD INTO AMIR'S MODEL
+> Task: learn one of the company's finished models and rebuild it 1:1 beside the original. The
+> rebuild drawing was a **byte copy** of his, opened in the same AutoCAD, and both were in the
+> assignment set. Mid-build I read his plates' frames with `props(handle=..., dwg=<his model>)`.
+>
+> ⭐⭐⭐ **Inside an assignment set, `dwg=` is a TOTAL switch — session, pin, channel AND the
+> ACTIVE DOCUMENT.** Every op that followed created in **his** drawing: 18 parts, plus a scrap
+> deletion by handle that erased the object carrying that handle **there** (handles are
+> per-document; the one I hit was a `PcRebarManager`).
+>
+> **Why nothing caught it:** two byte-identical drawings agree on every census, every dump and
+> every staging-area listing. `whoami` was the only witness — and ⚠️ **`whoami` is in
+> `_UNGATED_OPS`, so it does NOT activate the pinned document**: it answers about whatever is in
+> front. Asserting with it right after `use()` reads the OLD document and looks like proof.
+> ⇒ **Fire one GATED op first (`list`), then assert `whoami`.**
+>
+> ### ✅ The gate that now exists — `eb_api.build_target(<dwg>)`
+> Declares the one drawing this work may CREATE or DESTROY in. Every writing op (and `delete`)
+> refuses while the session points elsewhere; reads stay free, so measuring the source mid-build
+> is still allowed — it just can no longer be followed by a build that lands there.
+> ```
+> EB_ERR build target: this work builds into 'X - REBUILD.dwg' but the op would run in 'X.dwg'
+> -- refused, nothing was executed
+> ```
+> ⚠️ And `eb_api.delete()` had **no gate at all** until that day — it erased from whatever
+> document was in front. It now runs the session gate, activates, and **re-reads the active
+> document name** before erasing.
+>
+> ### ✅ The recovery, and why it cost nothing
+> **Nothing had been saved.** So: close the contaminated document with `Close(False)` and reopen
+> it from disk — the one case where discarding is the correct call, because the changes being
+> discarded are mine and unwanted. Verified afterwards by **inventory**, not by feel: 48 shapes +
+> 168 plates, the top plate's 4 cuts still there, position numbers intact, x-range unchanged, and
+> the file's size and mtime identical before and after (145,289 bytes, 02/07/2026 17:01).
+> ⇒ ⭐ **Check `os.path.getsize`/`getmtime` on the source at the start and the end of any session
+> that opens a customer model.** It is the cheapest possible proof that his file was never touched.
+> ⚠️ A document can report `Saved=False` after nothing but READ ops (plugin ops touch it). Do not
+> read that as "I changed something" — and do not save it to make the flag go away.
+
+> ## 🕳️ A HOLE CAN BE A **polyCut**, AND THEN EVERY HOLE INSTRUMENT REPORTS ZERO (18/08/2026)
+> His transformer-base top plate carries **4 ⌀ 19 holes on a 450×450 pattern** — and
+> `dumpholes` answered `objs=216 withholes=0 holes=0`. They are modelled as **poly-cuts**, not as
+> drill holes, so `dumpholes`, `vfy_fit` and `vfy_bolts` are all blind to them, and `mods` shows
+> them only as a count (`polyCuts=4`).
+> ⇒ **`holes=0` on a plate is not proof there are no holes — read `mods` too.**
+> 🧲 Amir, asked whether that is deliberate: **"לא זה לא משפיע"** — it does not affect the CNC
+> output. So it is a legitimate way to model a hole in this shop; **read it, do not correct it.**
+>
+> ### ⭐⭐ AND THE READER EXISTS — IN THE **COM WRAPPER** (this file used to call it missing)
+> ```python
+> em  = app.GetInterfaceObject("PSCOMWRAPPER.Ks_ComEditModification")
+> em.SetObject(doc.HandleToObject(handle));  n = em.PolyCutCount
+> pc  = app.GetInterfaceObject("PSCOMWRAPPER.Ks_ComPolyCut")
+> em.GetPolyCut(em.GetPolyCutHandleFromNumber(i), pc)      # InsertPoint/EndPoint/Xaxis/Yaxis/Flag
+> pg  = app.GetInterfaceObject("PSCOMWRAPPER.Ks_ComPolygon")
+> pc.GetPolygon(pg);  pg.VertexCount;  pg.GetVertex(k)     # -> (x, y, BULGE)
+> ```
+> **The third component of a vertex is the BULGE**, so a circle reads as two vertices at
+> `(±r, 0)` with `bulge = 1.0` (`tan(θ/4)`, θ = 180°). That is how ⌀ 19 was measured.
+> ⚠️ Reproducing one from code: `polycut shape=circle r= at= depth=` — **`depth` is the start
+> offset back along the normal, and the far end is fixed**, so the cut PRISM comes out asymmetric
+> against a dialog-made one. The hole is identical; only the cut object's extent and its `Flag`
+> differ, and neither reaches the steel.
+> ⚠️ `wt`, `cutArea` and `paintArea` are **nominal** — identical on the cut and the uncut plate.
+> The skill already said that of `Weight`; it is true of all three.
+
+> ## 🧭 FOUR CORNERS, FOUR SECTION FRAMES — AND THE DUMP SHOWS NONE OF THEM (18/08/2026)
+> The 48 corner angles of his 12 stools print **one identical ecs triad** in `dumpfull2`
+> (`1/0/0;0/1/0;0/0/1`) and split 24/24 on `MirrorFlag`. Their real orientations are **four
+> distinct section frames**, visible only in `props` `X=`/`Y=`/`Z=`. This is the skill's own rule
+> — *only the section frame shows where the material is* — caught by an instrument that looks
+> authoritative.
+>
+> ⭐ **The method that settled it in one pass:** build **8 probes** in a test strip
+> (`rot ∈ {0,90,180,270} × mirror ∈ {0,1}`), read every frame back, and match each corner to its
+> recipe. Measured, for a vertical member:
+> | frame X / Y / Z | recipe |
+> |---|---|
+> | `1/0/0 · 0/1/0 · 0/0/1` | `rot=0 mirror=0` |
+> | `-1/0/0 · 0/1/0 · 0/0/-1` | `rot=0 mirror=1` |
+> | `1/0/0 · 0/-1/0 · 0/0/-1` | `rot=180 mirror=1` |
+> | `-1/0/0 · 0/-1/0 · 0/0/1` | `rot=180 mirror=0` |
+> ⚠️ **`beam mirror=1` sets `ymir`, not `mir`** — and reverses `p1→p2`. His dialog-built angles
+> reach the same frame through an X-mirror running upward. **Identical frame, identical bbox,
+> identical solid; different flags.** `MirrorFlag` is not writable from code, so this delta is
+> accepted and recorded, not chased.
+>
+> ⭐ **`plate9 insheight = ±t/2` puts the insert point on a FACE instead of the mid-plane** —
+> `+t/2` grows the material along +normal from `at`, `-t/2` along −normal. That is how a
+> dialog-made plate reads (`org` on the face, `mid` spanning to the far face), and it is what
+> makes an insertion point match a model built by hand.
+
+> ## 🔢 WHEN THE MODEL ALREADY CARRIES POSITION NUMBERS, THEY ARE THE AUTHORITY ON WHAT REPEATS
+> `posauto dry=1` clustered his 216 parts into **10 distinct** — and `op=equal` called two plain
+> 660×660×16 plates with no modifications at all **different**. ProSteel's own numbering, already
+> in the drawing, says otherwise: `pos='704' count=1/12`, `pos='701' count=1/48`.
+> ⇒ **Read `props` → `pos`/`count` before running a clustering pass**, and treat a disagreement as
+> a fault in the instrument until proved otherwise. (`CheckTwoPartsAreEqual` is still the only
+> test that sees cuts — but it answered a different question here than the part list does.)
+> ⚠️ `posauto` writes `eb_posauto.txt` into the **shared plugin folder**, not the per-model
+> channel — a v185 leak, and with two models open its output belongs to whoever ran last.
+> ⚠️ `eb_api.delete()` can return `EB_ERR` for a delete that **succeeded**; six "failures" in a
+> row turned out to be six erased entities. **Read the model back; the error text is not evidence.**
+> ⚠️ `op=copy` translates with **`to=<dx,dy,dz>`** — there is no `by=`. 11 copies of an 18-part
+> unit took **3.8 s**.
+
+
 > ## 🔁 COPYING A DETAIL THAT IS ALREADY IN THE MODEL — the five failures of 16/08/2026
 > Lesson 7: Amir put a finished production model in front of me — access chambers with hinged
 > lids — and said *"you have the example in the model, you don't need to guess anything."*

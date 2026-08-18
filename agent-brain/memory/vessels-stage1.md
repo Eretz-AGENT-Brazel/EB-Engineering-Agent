@@ -7,7 +7,7 @@ metadata:
   originSessionId: f91b529d-dc89-40b6-9887-8daf2489a303
 ---
 
-`C:\Users\User\Desktop\TankForge\VESSLES SOFTWARE- STAGE 1\` is the Stage-1 spec/knowledge folder for evolving [[tankforge-project]] into **"EB – Steel Tank Modeling Software"** (brand: EB-VESSELS). **Amir's rule (2026-07-13): EVERYTHING lives inside `TankForge\`** — the spec folder was moved into it; code is developed directly in `TankForge\app\` (no copies). NOTE: an empty leftover shell of the old folder may remain on the Desktop (the Knowledge guide .docx was open/locked in Word during the move) — safe to delete once Word is closed.
+`C:\Users\User\Desktop\EB VESSELS AGENT\VESSLES SOFTWARE- STAGE 1\` is the Stage-1 spec/knowledge folder for evolving [[tankforge-project]] into **"EB – Steel Tank Modeling Software"** (brand: EB-VESSELS). **Amir's rule (2026-07-13): EVERYTHING lives inside `TankForge\`** — the spec folder was moved into it; code is developed directly in `TankForge\app\` (no copies). NOTE: an empty leftover shell of the old folder may remain on the Desktop (the Knowledge guide .docx was open/locked in Word during the move) — safe to delete once Word is closed.
 
 **The deliverable I produced (2026-07-12):** `OPUS-4.8-DEVELOPMENT-BRIEF.md` — a full implementation brief for **Opus 4.8** (the model Amir designated to write the code), + `_BRIEF-ASSETS\` (extracted doc texts, the knowledge guide's 7 embedded drawings, 10015 GA render).
 

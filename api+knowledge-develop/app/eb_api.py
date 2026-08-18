@@ -143,6 +143,38 @@ def _res_path(dwg=None):
 # ops that change nothing and are exactly what you need in order to diagnose a refusal
 _UNGATED_OPS = ("ping", "whoami", "env", "docs")
 
+# ⛔⛔ THE BUILD TARGET (18/08/2026). Ops that CHANGE the model. A read may wander between the
+# models of an assignment set; a build may not. See build_target() below for what this cost.
+_WRITING_OPS = (
+    "beam", "plate", "plate9", "polyplate", "arcplate", "shape", "solid", "bend", "bendtwo",
+    "bendshape", "grid", "gridcolumns", "workframe", "frame", "stiffener", "purlin",
+    "bolt", "boltfield", "boltparts", "conn", "conn_bolted", "connbase", "connsplice",
+    "connstiff", "connremove", "connset", "drill", "drillfield", "drillspecial", "touchdrill",
+    "polycut", "outlet", "detailcut", "planecut", "cutat", "miter", "chamfer", "edgechamfer",
+    "boolean", "copy", "mirror", "rotate", "replicate", "clonemodel", "clonedrills",
+    "group", "groupauto", "groupedit", "setlayer", "setpoly", "shapeedit", "platepoly",
+    "posnum", "posset", "posauto", "anchor", "killholefield", "save", "delete",
+)
+
+_BUILD_TARGET = None
+
+
+def build_target(dwg=None):
+    """Declare (or clear) the ONE drawing this process may create or destroy geometry in.
+
+    Amir's assignment says WHICH MODELS the agent may touch. This says which one the CURRENT
+    WORK builds into -- a narrower question, and the one that went wrong on 18/08/2026: a
+    `props(dwg=<source>)` read switched the session, and the eighteen parts that followed were
+    created in Amir's model instead of the rebuild. Nothing failed; the two drawings were
+    copies of each other, so every count agreed with expectation.
+
+    Set it to the rebuild before building, and every creating op refuses the moment the
+    session is pointing somewhere else. Pass None to clear.
+    """
+    global _BUILD_TARGET
+    _BUILD_TARGET = os.path.basename(str(dwg)) if dwg else None
+    return _BUILD_TARGET
+
 
 def _when(ts):
     try:
@@ -160,6 +192,15 @@ def _session_gate(op, kw):
     """
     if op in _UNGATED_OPS:
         return None
+    if _BUILD_TARGET and op in _WRITING_OPS:
+        here = (ws.current() or {}).get("name") or ""
+        asked_dwg = os.path.basename(str(kw.get("dwg", "") or "")) or here
+        if asked_dwg.lower() != _BUILD_TARGET.lower():
+            return ("EB_ERR build target: this work builds into '%s' but the op would run in "
+                    "'%s' -- refused, nothing was executed. A read of another model switches "
+                    "the session (and the active document) with it; re-enter the target with "
+                    "eb_api.use(...) before creating anything, or clear it with "
+                    "eb_api.build_target(None)." % (_BUILD_TARGET, asked_dwg or "?"))
     st = ws.load()
     ses = ws.current(st)
     asked = os.path.basename(str(kw.get("dwg", "") or "")) or None
@@ -1556,16 +1597,39 @@ def nc_data():
     """Production: generate NC/CNC data for the factory."""
     return _raw("_PS_NC_DATA ")
 
-def delete(handle):
+def delete(handle, dwg=None):
     """Erase one entity by handle via COM (keeps native semantics).
 
     Uses _app_doc, not _app().ActiveDocument: a COM call issued right after a heavy
     plugin run (a collision check over 132 parts) raises AttributeError on
     ActiveDocument while AutoCAD is still settling. _app_doc retries that away.
+
+    ⛔⛔ GATED SINCE 18/08/2026. This is the most destructive call in the file and it was
+    the only one that consulted nothing: it erased from whatever document was in front. An
+    op cannot do that -- `_session_gate` refuses another owner's model and `_activate_pinned`
+    refuses to switch away from a drawing that is not ours -- so `delete` now goes through
+    both, and then READS THE ACTIVE DOCUMENT BACK before erasing anything. Caught while the
+    agent was locked to Amir's model and about to wipe a rebuild copy.
     """
+    kw = {} if dwg is None else {"dwg": dwg}
+    refusal = _session_gate("delete", kw)      # "delete" is in _WRITING_OPS via this call
+    if refusal:
+        return refusal
+    ses = ws.current()
+    want = os.path.basename(str(dwg or (ses or {}).get("name") or EXPECT_DWG or ""))
+    if not want:
+        return ("EB_ERR no work session: delete refuses to erase without one -- "
+                "enter the model first with eb_api.use(<dwg>)")
     app, doc = _app_doc()
     if not _quiescent(app):
         return "EB_BUSY"
+    if not _activate_pinned(want):
+        return ("EB_ERR blocked: could not bring '%s' forward -- refusing to erase, "
+                "nothing was executed" % want)
+    act = _active_doc_name()
+    if not act or act.lower() != want.lower():
+        return ("EB_ERR wrongdoc: expected='%s' active='%s' -- refusing to erase, "
+                "nothing was executed" % (want, act))
     try:
         ent = doc.HandleToObject(handle)
         ent.Delete()
