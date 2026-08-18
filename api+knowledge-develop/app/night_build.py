@@ -127,22 +127,40 @@ class Build(object):
         t0 = time.time()
         for p in self.d["plates"]:
             pr = p.get("props", {})
-            L, W, H = (pr.get("L"), pr.get("W"), pr.get("H"))
-            ex, ey = axes(pr, "X"), axes(pr, "Y")
+            L, W, H = pr.get("L"), pr.get("W"), pr.get("H")
+            ax, ay, az = axes(pr, "X"), axes(pr, "Y"), axes(pr, "Z")
             org = pr.get("org")
-            if not (L and W and H and ex and ey and org):
+            if not (L and W and H and ax and ay and az and org):
                 self.notes.append("plate %s: props incomplete, skipped" % p["h"])
                 continue
-            # which way the material grows from the insertion plane: read `mid`, not a guess
-            ins = float(H) / 2.0
+            fL, fW, fH = float(L), float(W), float(H)
+            X, Y, Z = num(ax), num(ay), num(az)
+
+            # WHICH AXIS CARRIES L? Predict the bbox both ways and keep the one that matches
+            # the source's own. `L along the frame's X` held on model 2 and failed on model 3.
+            def predict(e1, e2):
+                return tuple(round(abs(fL * e1[i]) + abs(fW * e2[i]) + abs(fH * Z[i]), 1)
+                             for i in range(3))
+            want = tuple(round(v, 1) for v in num(p["dims"]))
+            if predict(X, Y) == want:
+                ex, ey = ax, ay
+            elif predict(Y, X) == want:
+                ex, ey = ay, ax
+            else:
+                ex, ey = ax, ay
+                self.notes.append("plate %s: neither axis mapping predicts the source bbox "
+                                  "(%s vs %s/%s)" % (p["h"], want, predict(X, Y), predict(Y, X)))
+
+            # WHERE IS THE MATERIAL relative to the insertion point? Read it, do not assume:
+            # signed distance from org to the middle of `mid`, along the plate normal.
+            ins = 0.0
             mid = pr.get("mid", "")
             if "->" in mid:
                 a, b = [num(x) for x in mid.split("->")]
-                z = num(axes(pr, "Z") or "0,0,1")
-                if sum((b[i] - a[i]) * z[i] for i in range(3)) < 0:
-                    ins = -ins
+                o = num(org)
+                ins = sum(((a[i] + b[i]) / 2.0 - o[i]) * Z[i] for i in range(3))
             self.fire("plate9", p["h"], mode="rect", at=org, l=L, w=W, t=H,
-                      ex=ex, ey=ey, insheight=ins)
+                      ex=ex, ey=ey, insheight=round(ins, 4))
         print("plates: %d/%d, %.0fs"
               % (len([1 for p in self.d["plates"] if p["h"] in self.map]),
                  len(self.d["plates"]), time.time() - t0))
@@ -243,28 +261,44 @@ class Build(object):
         groups = sorted({tuple(sorted(v)) for v in lines.values() if len(v) > 1})
         for g in groups:
             eb_api.run("boltparts", handles=",".join(g), style="8.8S")
-        # 2) a bolt with no second STEEL part (a fixing into concrete) is created directly
+        # 2) a bolt with no second STEEL part (a fixing into concrete) is created directly.
+        #    IDENTITY IS THE AXIS, not the midpoint: ProSteel seats its bolt through the packet
+        #    with head and nut offsets, so the same fastener can have a midpoint tens of mm from
+        #    the source's. Comparing midpoints produced 72 bolts against a source of 48, twice.
         eb_api.run("dumpmodel")
         have = []
         for l in io.open(os.path.join(eb_api.channel(), "eb_model.txt"), encoding="utf-8-sig"):
             f = l.rstrip("\n").split("\t")
             if f[0] == "BOLT" and len(f) > 9 and ";" in f[9]:
                 p = f[9].split(";")
-                a, b = num(p[0]), num(p[1])
-                have.append([(a[i] + b[i]) / 2 for i in range(3)])
+                have.append((num(p[0]), num(p[1])))
+
+        def same_axis(a1, b1, a2, b2, tol=3.0):
+            d = [b1[i] - a1[i] for i in range(3)]
+            L = sum(x * x for x in d) ** 0.5
+            if L == 0:
+                return False
+            d = [x / L for x in d]
+            for pt in (a2, b2):                      # both ends of the candidate on that line?
+                w = [pt[i] - a1[i] for i in range(3)]
+                t = sum(w[i] * d[i] for i in range(3))
+                perp = sum((w[i] - t * d[i]) ** 2 for i in range(3)) ** 0.5
+                if perp > tol:
+                    return False
+            return True
+
         added = 0
         for b in self.d["bolts"]:
             if ";" not in (b.get("axis") or ""):
                 continue
             p = b["axis"].split(";")
             a, c = num(p[0]), num(p[1])
-            mid = [(a[i] + c[i]) / 2 for i in range(3)]
-            if any(sum((mid[i] - h[i]) ** 2 for i in range(3)) ** 0.5 < 15 for h in have):
+            if any(same_axis(h[0], h[1], a, c) for h in have):
                 continue
             if eb_api.run("bolt", p1=p[0], p2=p[1], dia=b.get("dia") or 24,
                           style="8.8S", len=b.get("len") or 85).startswith("EB_OK"):
                 added += 1
-                have.append(mid)
+                have.append((a, c))
         print("bolts: %d joints bolted by ProSteel, %d created directly" % (len(groups), added))
         self.checkpoint("bolts")
 
