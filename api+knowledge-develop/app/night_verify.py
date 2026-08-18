@@ -103,6 +103,39 @@ def compare(src, rbd, mapping):
     # ---- cut planes
     ns = sum(len(v) for v in src["cuts"].values())
     nr = sum(len(v) for v in rbd["cuts"].values())
+    # ⛔⛔ THE TWO GATES WHOSE ABSENCE LET A WHOLE MODEL PASS WRONG (18/08/2026).
+    # A rib and the rectangle around it agree on every gate above -- bbox, centre, dims,
+    # thickness, even hole positions -- so 245 plates were rebuilt square and nothing said so
+    # until Amir said it. And an equal angle reads identically in all four rotations, so 112
+    # members carried the wrong section frame while the span gate stayed green.
+    # A gate that cannot fail is not a gate.
+    ncmp = bad = 0
+    for a in src["plates"]:
+        b = R.get(mapping.get(a["h"]))
+        if not b or not a.get("pts") or not b.get("pts"):
+            continue
+        ncmp += 1
+        if a["pts"] != b["pts"]:
+            bad += 1
+    out.append(("plate CONTOUR", "%d differ of %d compared (%d without a contour)"
+                % (bad, ncmp, len(src["plates"]) - ncmp), bad == 0))
+
+    for key, lst_s in (("shape FRAME", src["shapes"]),
+                       ("plate FRAME", src["plates"])):
+        n = w = 0
+        for a in lst_s:
+            b = R.get(mapping.get(a["h"]))
+            if not b:
+                continue
+            fa = tuple(a.get("props", {}).get(k) for k in "XYZ")
+            fb = tuple(b.get("props", {}).get(k) for k in "XYZ")
+            if None in fa or None in fb:
+                continue
+            n += 1
+            if fa != fb:
+                w += 1
+        out.append((key, "%d of %d differ" % (w, n), w == 0))
+
     out.append(("cut planes", "%d source / %d rebuild" % (ns, nr), ns == nr))
 
     # ---- holes: nearest match, and its depth and diameter
