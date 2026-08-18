@@ -258,6 +258,12 @@ def open_session(dwg, project=None, task=None, owner=OWNER_AGENT, force=False,
     dwg = os.path.abspath(dwg) if os.sep in str(dwg) or "/" in str(dwg) else str(dwg)
     st = load()
     keys = assigned_keys(st)
+    # ⭐ 18/08/2026: the assignment binds THE AGENT, so it may only ever refuse the agent.
+    # Measured the hard way: Amir opened his own client drawing, I went to protect it with
+    # `claim`, and claim was refused because I was assigned elsewhere -- his own hands-off
+    # command blocked by my lock. Anyone who is not the agent passes this gate.
+    if owner != OWNER_AGENT:
+        _bypass_assignment = True
     if not _bypass_assignment and keys and key_of(dwg, st) not in keys:
         raise RuntimeError(
             "ASSIGNED to %s -- refusing to enter '%s'. Amir locked the agent to %s; lift it "
@@ -318,7 +324,11 @@ def close_session(dwg=None):
 
 
 def claim(dwg, owner=OWNER_AMIR, task=""):
-    """Amir declares a drawing his. The agent will refuse to touch it from here on."""
+    """Amir declares a drawing his. The agent will refuse to touch it from here on.
+
+    ⭐ Never blocked by an assignment: `assign` is a leash on the agent, and a leash on the
+    agent cannot bind the man holding it (measured 18/08/2026 -- it did, once).
+    """
     return open_session(dwg, task=task, owner=owner, force=True)
 
 

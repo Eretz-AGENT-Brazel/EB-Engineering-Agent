@@ -1129,7 +1129,7 @@ def run(op, wait=5.0, _log=True, **kw):
                 return ("EB_ERR blocked: this AutoCAD has '%s' in front%s -- refusing to "
                         "switch away from a drawing that is not mine, nothing was executed. "
                         "⚠️ ONE AutoCAD window shows ONE document at a time, so working '%s' "
-                        "here would pull the view off '%s'. Three ways out: close/минimise "
+                        "here would pull the view off '%s'. Three ways out: close/minimise "
                         "that drawing, hand it to me (`worksession.py open \"%s\"`), or -- if "
                         "you want to keep working in it while I model -- open YOUR OWN AutoCAD "
                         "*after* mine, where I cannot reach you at all."

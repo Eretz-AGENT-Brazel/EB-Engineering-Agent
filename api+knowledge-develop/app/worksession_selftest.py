@@ -189,6 +189,16 @@ def main():
               ws.open_session(C).get("dwg") == os.path.abspath(C))
         ws.close_session(C)
 
+        # --- 8b2. Amir can always claim, even mid-assignment (measured hole, 18/08) -------
+        ws.save(ws._blank())
+        ws.assign(A, task="only this one")
+        ws.claim(C, task="mine")
+        check("Amir can CLAIM another drawing while the agent is assigned",
+              (ws.find(os.path.basename(C)) or {}).get("owner") == ws.OWNER_AMIR)
+        check("...and the agent still cannot enter it",
+              bool(refusal(dwg=os.path.basename(C))))
+        ws.release(C)
+
         # --- 8c. SITUATION 2: a SET of models, each with its own task ---------------------
         ws.save(ws._blank())
         D2 = _fixture("delta", "frame.dwg")
