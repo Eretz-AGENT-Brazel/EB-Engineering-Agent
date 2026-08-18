@@ -17,7 +17,7 @@
 |---|---|---|
 | `model 1_Transformer Base model.dwg` | done | 216/216 חלקים, 0 חסרים/עודפים |
 | `model 2_kuperdam WALL SUPPORT - 2 FAB.dwg` | done | 30/30 חלקים · 140/140 חורים 0.0000 · 0 התנגשויות |
-| `model 3_kuperdam DRILL BASE -3 - FAB.dwg` | pending |  |
+| `model 3_kuperdam DRILL BASE -3 - FAB.dwg` | working | started started=1787066279 |
 | `model 4_kuperdam SUPPORT BEAMS 4+5 - FAB.dwg` | pending |  |
 | `model 5_CBC TARA GELLERY.dwg` | pending |  |
 | `model 6.dwg` | pending |  |

@@ -18,6 +18,7 @@ import io
 import os
 import re
 import sys
+import time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DEV = os.path.dirname(HERE)
@@ -104,8 +105,13 @@ def main(argv):
     if cmd == "next":
         # never hand out a second model while one is marked working
         for p in drawings():
-            if state.get(os.path.basename(p), ("pending", ""))[0] == "working":
-                print("BUSY " + p)
+            st, note = state.get(os.path.basename(p), ("pending", ""))
+            if st == "working":
+                # a run in flight owns the queue. Only when the mark has gone stale does the
+                # next run reclaim it -- otherwise two runs fight over one drawing.
+                m = re.search(r"started=(\d+)", note)
+                age = int((time.time() - int(m.group(1))) / 60) if m else 999
+                print("BUSY %s age=%dmin" % (p, age))
                 return 0
         for p in drawings():
             if state.get(os.path.basename(p), ("pending", ""))[0] == "pending":
@@ -124,7 +130,10 @@ def main(argv):
         if st not in STATUSES:
             print("status must be one of: " + ", ".join(STATUSES))
             return 2
-        state[b] = (st, " ".join(argv[3:]).replace("|", "/"))
+        note = " ".join(argv[3:]).replace("|", "/")
+        if st == "working":
+            note = (note + " started=%d" % int(time.time())).strip()
+        state[b] = (st, note)
         write_queue(state)
         print("%s -> %s" % (b, st))
         return 0
