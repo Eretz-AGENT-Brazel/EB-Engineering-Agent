@@ -103,10 +103,20 @@ class Build(object):
         print("wiped %d copied parts" % len(hs))
 
     def frame_of(self, handle):
-        """The section frame as props prints it -- the only witness to where the material is."""
-        r = eb_api.run("props", handle=handle)
-        d = dict(re.findall(r"(X|Y|Z)=('[^']*'|[^ ]+)", r))
-        return (d.get("X"), d.get("Y"), d.get("Z"))
+        """The section frame as props prints it -- the only witness to where the material is.
+
+        ⚠️ AND IT MUST BE ABLE TO SAY "I DON'T KNOW". Reading 175 frames straight after 175
+        builds, AutoCAD answered EB_BUSY on some of them; the empty parse then looked exactly
+        like a frame that disagreed, and ten correct members were reported as wrong. A check
+        that cannot distinguish "differs" from "could not read" manufactures defects.
+        """
+        for attempt in range(4):
+            r = eb_api.run("props", handle=handle)
+            d = dict(re.findall(r"(X|Y|Z)=('[^']*'|[^ ]+)", r))
+            if d.get("X") and d.get("Y") and d.get("Z"):
+                return (d["X"], d["Y"], d["Z"])
+            time.sleep(0.5 + attempt)
+        return None                      # unreadable -- NOT a mismatch
 
     def shapes(self):
         """⭐⭐⭐ THE SECTION FRAME IS A PARAMETER. HAND IT OVER; DO NOT SEARCH FOR IT.
@@ -136,24 +146,32 @@ class Build(object):
                       p1=s["p1"], p2=s["p2"], rot=s["rot"], mirror=s["mir"])
             ax, ay = axes(s["props"], "X"), axes(s["props"], "Y")
             if ax and ay:
-                kw["ax"], kw["ay"] = ax, ay
+                # ⚠️ AND `rot` STILL TURNS ON TOP OF THE AXES YOU HAND OVER. Measured on
+                # model 5, and the correlation is total: every member whose frame came out
+                # right carried rot=0 (153 of them), and every member whose frame came out
+                # wrong carried rot=90, -90 or 180 (22). The dump's rotation is already
+                # BAKED INTO the axes -- applying it again turns the section a second time.
+                kw["ax"], kw["ay"], kw["rot"] = ax, ay, 0
             self.fire("beam", s["h"], **kw)
 
         # verify, and REPORT rather than hunt: a member whose frame still disagrees is a
         # finding for the morning, not something to attack with a destructive loop.
-        wrong = 0
+        wrong = unread = 0
         for s in self.d["shapes"]:
             t = self.map.get(s["h"])
             src = tuple(s["props"].get(k) for k in "XYZ")
             if not t or None in src:
                 continue
-            if self.frame_of(t) != src:
+            got = self.frame_of(t)
+            if got is None:
+                unread += 1
+            elif got != src:
                 wrong += 1
                 if wrong <= 10:
                     self.notes.append("shape %s (%s): frame %s, source wanted %s"
-                                      % (s["h"], s["sec"], self.frame_of(t), src))
-        print("shapes: %d built, %d frames still disagree, %.0fs"
-              % (len([1 for s in self.d["shapes"] if s["h"] in self.map]), wrong,
+                                      % (s["h"], s["sec"], got, src))
+        print("shapes: %d built, %d frames still disagree, %d unreadable, %.0fs"
+              % (len([1 for s in self.d["shapes"] if s["h"] in self.map]), wrong, unread,
                  time.time() - t0))
         self.checkpoint("shapes")
 
@@ -190,7 +208,20 @@ class Build(object):
             # it needs no in-plane centring correction at all: the contour already carries
             # where the material sits relative to the insertion point.
             if p.get("pts"):
-                if self.fire("plate9", p["h"], mode="poly", pts=p["pts"], at=org, t=H,
+                # ⭐⭐ AND `at` IS NOT THE INSERTION POINT -- IT IS WHERE THE CONTOUR'S BBOX
+                # CENTRE MUST LAND. `plate9 mode=poly` re-centres the polygon about `at`
+                # (this file already says "for a contour ProSteel re-centres"), and it centres
+                # the contour's BOUNDING BOX, not its centroid: a contour running y -100..85
+                # comes back -92.5..92.5, every vertex shifted by the same 7.5. So a plate
+                # whose contour is asymmetric about its own origin lands displaced by exactly
+                # that asymmetry -- measured on model 5 as 69 plates out of place by 20 and
+                # 70 mm, while their shapes were perfect. Aim at the bbox centre instead.
+                v = [[float(x) for x in q.split(",")] for q in p["pts"].split(";")]
+                cx = (min(q[0] for q in v) + max(q[0] for q in v)) / 2.0
+                cy = (min(q[1] for q in v) + max(q[1] for q in v)) / 2.0
+                o, eX, eY = num(org), num(ax), num(ay)
+                at = ",".join("%.4f" % (o[i] + cx * eX[i] + cy * eY[i]) for i in range(3))
+                if self.fire("plate9", p["h"], mode="poly", pts=p["pts"], at=at, t=H,
                              ex=ax, ey=ay, ez=az, insheight=round(ins, 4)):
                     self.shaped += 1
                 continue

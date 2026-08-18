@@ -53,6 +53,40 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > ⇒ **Count what the shop cuts.** A cutting drawing is made from a contour, not from a bbox, so a
 > repetition ratio measured on bboxes over-counts and is worth nothing to Amir.
 
+> ## ⭐⭐⭐ THE FRAME AND THE CONTOUR ARE PARAMETERS — HAND THEM OVER, DO NOT SEARCH (19/08/2026)
+> Rebuilding Amir's 785-part gallery, four separate "orientation problems" turned out to be one
+> sentence: **the creator will take the answer if you give it to it.**
+>
+> | what I did | what it cost | what actually works |
+> |---|---|---|
+> | built a plate from `L`/`W`/`H` | **245 of 314 the wrong shape** | `plate9 mode=poly pts=<the source contour verbatim>` |
+> | searched `rot`×`mirror` for a member's frame | 35 min per pass, and **it could not reach 15 frames at all** | **`beam ax=<props X> ay=<props Y>`** → `SetXAxis`/`SetYAxis`, exact on the first build |
+> | swapped p1/p2 when the source Z disagreed | **inverted all 175 members** | nothing — the beam op's Z already follows `p1→p2` |
+>
+> ### ⚠️ THE THREE TRAPS AROUND THOSE PARAMETERS, ALL MEASURED
+> **1. `rot` STILL TURNS ON TOP OF THE AXES YOU HAND OVER.** The correlation was total: of 175
+> members, **every one whose frame came out right carried `rot=0` (153)**, and **every one that
+> came out wrong carried `rot=90`, `−90` or `180` (22)**. The dump's rotation is already baked
+> into the axes it printed. ⇒ **pass `ax`/`ay` AND `rot=0`.**
+> **2. `mode=poly` RE-CENTRES THE CONTOUR ON ITS BOUNDING BOX, about `at`.** A contour running
+> `y −100…85` comes back `−92.5…92.5` — every vertex shifted by the same 7.5. The shape is
+> untouched; the plate MOVES. Measured: **69 plates displaced by 20 and 70 mm with perfect
+> shapes.** ⇒ **`at` is not the insertion point — it is where the contour's bbox centre must
+> land:** `at = org + cx·X + cy·Y`, with `cx`,`cy` the contour's own bbox centre.
+> **3. `mirror=1` REVERSES `p1→p2`.** So a search whose later candidates carry `mirror=1` leaves
+> the member pointing backwards, and a search that does not restore its starting point on failure
+> is worse than no search — **175 of 175 frames wrong, Z inverted on every one**, and the gates
+> are the only reason it was seen. *(5d — search code is destructive code — for the third time.)*
+>
+> ### ⭐⭐ AND A CONTOUR GATE MUST COMPARE THE SHAPE, NOT THE PRINTED STRING
+> Because ProSteel re-centres, **91 contours differed as printed and 0 differed in shape.**
+> Normalise both rings on their bounding box before comparing, and round to **0.01 mm** — a
+> centroid normalisation at 3 dp called three identical rectangles different on a `.9965`
+> boundary. ⇒ report the re-centred ones as *"only re-centred"*, never as defects.
+> ⚠️ Same discipline one level down: `frame_of()` read `props` right after 175 builds, got
+> **`EB_BUSY`**, and reported ten correct members as wrong. **A check that cannot say "I could
+> not read this" manufactures defects.** It retries, and returns `None` for unreadable.
+
 > ## 🧭 A GATE THAT CANNOT FAIL IS NOT A GATE — 112 WRONG FRAMES UNDER A GREEN SHEET (18/08/2026)
 > The same night the ribs were caught, the member gates were caught too. `night_verify` measured
 > bbox span, bbox corner, plate centre, plate dims, cut planes, hole position/depth/diameter and

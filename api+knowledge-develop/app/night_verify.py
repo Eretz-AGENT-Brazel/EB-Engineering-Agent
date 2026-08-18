@@ -109,16 +109,38 @@ def compare(src, rbd, mapping):
     # until Amir said it. And an equal angle reads identically in all four rotations, so 112
     # members carried the wrong section frame while the span gate stayed green.
     # A gate that cannot fail is not a gate.
-    ncmp = bad = 0
+    # ⚠️ AND IT MUST COMPARE THE SHAPE, NOT THE LOCAL ORIGIN. `plate9 mode=poly` RE-CENTRES
+    # the contour about `at` -- this file's own note, "for a contour ProSteel re-centres".
+    # Measured on model 5: 91 contours differ as printed and only **3 differ in shape**; the
+    # other 88 are the same polygon written about a different origin (e.g. y -100..85 becomes
+    # -92.5..92.5, every vertex shifted by the same 7.5) while the plate's WORLD centre is
+    # identical to 0.0000 mm. Comparing the printed strings would have condemned 88 correct
+    # plates -- and the origin shift IS worth reporting, just not as a defect.
+    def ring(t):
+        v = [tuple(round(float(x), 4) for x in q.split(",")) for q in t.split(";")]
+        return v[:-1] if len(v) > 1 and v[0] == v[-1] else v
+
+    def shape_of(r):
+        # normalise on the BBOX, the same thing ProSteel re-centres on, and round only to
+        # 0.01 mm: a centroid normalisation rounded to 3 dp called three identical rectangles
+        # different because one landed on a .9965 boundary.
+        cx = (min(q[0] for q in r) + max(q[0] for q in r)) / 2.0
+        cy = (min(q[1] for q in r) + max(q[1] for q in r)) / 2.0
+        return sorted((round(q[0] - cx, 2), round(q[1] - cy, 2), q[2]) for q in r)
+
+    ncmp = bad = shifted = 0
     for a in src["plates"]:
         b = R.get(mapping.get(a["h"]))
         if not b or not a.get("pts") or not b.get("pts"):
             continue
         ncmp += 1
         if a["pts"] != b["pts"]:
-            bad += 1
-    out.append(("plate CONTOUR", "%d differ of %d compared (%d without a contour)"
-                % (bad, ncmp, len(src["plates"]) - ncmp), bad == 0))
+            if shape_of(ring(a["pts"])) != shape_of(ring(b["pts"])):
+                bad += 1
+            else:
+                shifted += 1
+    out.append(("plate CONTOUR", "%d differ in SHAPE of %d (%d only re-centred, %d no contour)"
+                % (bad, ncmp, shifted, len(src["plates"]) - ncmp), bad == 0))
 
     for key, lst_s in (("shape FRAME", src["shapes"]),
                        ("plate FRAME", src["plates"])):
