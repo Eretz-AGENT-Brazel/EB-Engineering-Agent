@@ -46,10 +46,26 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > generated), 5 `Ks_BendShape`, 4 `Ks_VolBody` on layer 0, 2 `Ks_Connection`, **2 `AcDb3dSolid` on
 > `REFREG`** (the existing situation as illustration — not steel), 4 lines, a polyline, a rebar
 > manager and a block reference.
-> ⭐ **But `Ks_BendPlate` DOES come through** — it casts to `PsPlate`, so the 8 bend plates are
-> inside the 314 `PLATE` rows and are indistinguishable there. **They will be rebuilt FLAT by
-> `plate9`**, because folding needs `bend` (still a v186 debt: no `UseInnerRadius`, folds only at
-> the end). ⇒ **declare that gap before building, so it is not discovered as a gate failure.**
+> ⭐⭐ **But `Ks_BendPlate` DOES come through — and there is an exact test for it.** It casts to
+> `PsPlate`, so the 8 bend plates sit inside the 314 `PLATE` rows with no class column to give them
+> away. The geometry gives them away instead:
+> | | |
+> |---|---|
+> | `props` **`L=2756.283`** | the **DEVELOPED** length — the flat blank as it is cut |
+> | bbox **`2462 × 1490 × 156`** | the **FOLDED** envelope — and **156 of height** where the plate is 4 mm thick |
+> ⇒ ⭐⭐ **A FLAT plate's bbox span IS its own `L`/`W`/`H`, in some order. If it is not, the part is
+> folded.** Calibrated on this model: **8 flagged, all 8 the bend plates, zero false positives and
+> zero misses**, with the 306 flat plates as the control. That hands the cache a `bend` flag with no
+> new reader and no second visit to the model.
+> ⭐ **And it announced itself before I looked:** I wrote the gap into the README in advance, and
+> `plates` then emitted exactly 8 notes naming exactly those handles. `night_build` now says
+> **"plate X is a BEND PLATE, built FLAT: developed … against a folded envelope of …"** instead of
+> its old *"neither axis mapping predicts the source bbox"*, which reads like a bug in the axis
+> logic and points the reader at the wrong file. Folding itself still needs `bend` — a v186 debt
+> (no `UseInnerRadius`, folds only at the end).
+> 🧲 What they are, from the numbers: **4 mm sheet, 2462 long, ~1490 wide, 156 fold height** —
+> the gallery's **deck pans** (two carry a `polyCut`). 4 mm is the thickness Amir models
+> *"marug 4+1"* grating at.
 >
 > ### ⭐⭐ REPETITION IS A FREE MEASUREMENT, AND HIS OWN MODEL SCORES 7.9:1
 > The plate rows carry a bbox each, so one `sort | uniq -c` over the dump answers Amir's central

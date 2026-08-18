@@ -148,8 +148,25 @@ class Build(object):
                 ex, ey = ay, ax
             else:
                 ex, ey = ax, ay
-                self.notes.append("plate %s: neither axis mapping predicts the source bbox "
-                                  "(%s vs %s/%s)" % (p["h"], want, predict(X, Y), predict(Y, X)))
+                # A FLAT plate's bbox span IS its own L/W/H in some order. When it is not, the
+                # part is a Ks_BendPlate: props L is the DEVELOPED length (the flat blank) while
+                # the bbox is the FOLDED envelope -- measured on model 5, where 8 deck pans read
+                # L=2756.283 against a bbox of 2462 x 1490 x 156. The cache carries no AutoCAD
+                # class, so this comparison is the only witness; calibrated on that model at
+                # 8 flagged / 8 bend plates / 0 false positives against 306 flat ones.
+                # Say so, because "neither axis mapping predicts the bbox" reads like a bug in
+                # the axis logic and sent a reader looking in the wrong place.
+                flat = sorted([round(fL, 1), round(fW, 1), round(fH, 1)])
+                if flat != sorted(want):
+                    self.notes.append(
+                        "plate %s is a BEND PLATE, built FLAT: developed %sx%sx%s against a "
+                        "folded envelope of %s -- folding needs `bend`, a v186 debt "
+                        "(no UseInnerRadius, folds only at the end)"
+                        % (p["h"], L, W, H, want))
+                else:
+                    self.notes.append("plate %s: neither axis mapping predicts the source bbox "
+                                      "(%s vs %s/%s)"
+                                      % (p["h"], want, predict(X, Y), predict(Y, X)))
 
             # WHERE IS THE MATERIAL relative to the insertion point? Read it, do not assume:
             # signed distance from org to the middle of `mid`, along the plate normal.
