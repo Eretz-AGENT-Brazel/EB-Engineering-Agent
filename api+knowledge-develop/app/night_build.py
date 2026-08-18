@@ -125,6 +125,8 @@ class Build(object):
 
     def plates(self):
         t0 = time.time()
+        self.inplane = 0
+        self.shaped = 0
         for p in self.d["plates"]:
             pr = p.get("props", {})
             L, W, H = pr.get("L"), pr.get("W"), pr.get("H")
@@ -136,6 +138,20 @@ class Build(object):
             fL, fW, fH = float(L), float(W), float(H)
             X, Y, Z = num(ax), num(ay), num(az)
 
+            # ⛔⛔ THE CONTOUR IS THE PART. Building from L/W/H makes a RECTANGLE, and on
+            # model 5 only 69 of 314 plates are rectangles -- 237 are not and 306 carry more
+            # than four vertices. Every rib came out square until the polygon was read.
+            # `pts` is in the plate's OWN frame (the same frame props prints as X/Y), so
+            # at=org + ex=X + ey=Y reproduces it exactly -- and, unlike the rectangle route,
+            # it needs no in-plane centring correction at all: the contour already carries
+            # where the material sits relative to the insertion point.
+            if p.get("pts"):
+                if self.fire("plate9", p["h"], mode="poly", pts=p["pts"], at=org, t=H,
+                             ex=ax, ey=ay, ez=az, insheight=round(ins, 4)):
+                    self.shaped += 1
+                continue
+
+            # --- no contour (a Ks_BendPlate: PolyOf answers 'not-PsPlate') -> rectangle ----
             # WHICH AXIS CARRIES L? Predict the bbox both ways and keep the one that matches
             # the source's own. `L along the frame's X` held on model 2 and failed on model 3.
             def predict(e1, e2):
@@ -148,39 +164,29 @@ class Build(object):
                 ex, ey = ay, ax
             else:
                 ex, ey = ax, ay
-                # A FLAT plate's bbox span IS its own L/W/H in some order. When it is not, the
-                # part is a Ks_BendPlate: props L is the DEVELOPED length (the flat blank) while
-                # the bbox is the FOLDED envelope -- measured on model 5, where 8 deck pans read
-                # L=2756.283 against a bbox of 2462 x 1490 x 156. The cache carries no AutoCAD
-                # class, so this comparison is the only witness; calibrated on that model at
-                # 8 flagged / 8 bend plates / 0 false positives against 306 flat ones.
-                # Say so, because "neither axis mapping predicts the bbox" reads like a bug in
-                # the axis logic and sent a reader looking in the wrong place.
                 flat = sorted([round(fL, 1), round(fW, 1), round(fH, 1)])
                 if flat != sorted(want):
                     self.notes.append(
                         "plate %s is a BEND PLATE, built FLAT: developed %sx%sx%s against a "
-                        "folded envelope of %s -- folding needs `bend`, a v186 debt "
-                        "(no UseInnerRadius, folds only at the end)"
+                        "folded envelope of %s -- folded separately after the plates segment"
                         % (p["h"], L, W, H, want))
                 else:
                     self.notes.append("plate %s: neither axis mapping predicts the source bbox "
                                       "(%s vs %s/%s)"
                                       % (p["h"], want, predict(X, Y), predict(Y, X)))
-
-            # WHERE IS THE MATERIAL relative to the insertion point? Read it, do not assume:
-            # signed distance from org to the middle of `mid`, along the plate normal.
-            ins = 0.0
-            mid = pr.get("mid", "")
-            if "->" in mid:
-                a, b = [num(x) for x in mid.split("->")]
-                o = num(org)
-                ins = sum(((a[i] + b[i]) / 2.0 - o[i]) * Z[i] for i in range(3))
-            self.fire("plate9", p["h"], mode="rect", at=org, l=L, w=W, t=H,
+            oc = num(org)
+            cc = num(p["c"])
+            eX, eY = num(ex), num(ey)
+            dx = sum((cc[i] - oc[i]) * eX[i] for i in range(3))
+            dy = sum((cc[i] - oc[i]) * eY[i] for i in range(3))
+            at = ",".join("%.4f" % (oc[i] + dx * eX[i] + dy * eY[i]) for i in range(3))
+            if round(abs(dx), 1) + round(abs(dy), 1) > 0.05:
+                self.inplane += 1
+            self.fire("plate9", p["h"], mode="rect", at=at, l=L, w=W, t=H,
                       ex=ex, ey=ey, insheight=round(ins, 4))
-        print("plates: %d/%d, %.0fs"
+        print("plates: %d/%d, %d from their real CONTOUR, %d rectangles re-centred, %.0fs"
               % (len([1 for p in self.d["plates"] if p["h"] in self.map]),
-                 len(self.d["plates"]), time.time() - t0))
+                 len(self.d["plates"]), self.shaped, self.inplane, time.time() - t0))
         self.checkpoint("plates")
 
     def cuts(self):
@@ -210,28 +216,73 @@ class Build(object):
             L = sum(x * x for x in v) ** 0.5
             want.setdefault(t, []).append((a, [x / L for x in v], float(h["d"]),
                                            [(a[i] + b[i]) / 2 for i in range(3)]))
+
+        def drill_part(t, variant):
+            """Re-drill one part from scratch under one flange rule."""
+            m = re.search(r"holeFields=(\d+)", eb_api.run("mods", handle=t))
+            for i in range(int(m.group(1)) - 1, -1, -1):
+                eb_api.run("killholefield", handle=t, field=i)
+            for a, n, dia, mid in want[t]:
+                kw = dict(handle=t, at="%.4f,%.4f,%.4f" % tuple(a),
+                          n="%.6f,%.6f,%.6f" % tuple(n), dia=dia, play=0)
+                if variant is not None:
+                    kw["flange"] = variant
+                eb_api.run("drill", **kw)
+
         for t, lst in want.items():
             for a, n, dia, mid in lst:
                 eb_api.run("drill", handle=t, at="%.4f,%.4f,%.4f" % tuple(a),
                            n="%.6f,%.6f,%.6f" % tuple(n), dia=dia, play=0)
         miss = self.hole_report()
-        # self-correction: whatever missed its mark gets the other flange
+
+        # ⭐⭐ THE FLANGE SELECTOR IS A CHOICE BETWEEN WALLS, AND THE RIGHT ONE IS NOT ALWAYS 1.
+        # Until 18/08/2026 the retry re-drilled every missed part with flange=1 and stopped.
+        # Measured on model 5, the leftovers were a single exact number per section:
+        #   EA60X60X6 -> 54.0 mm = leg 60 - t 6 | EA80X80X8 -> 72.0 = 80 - 8
+        #   U140      -> 53.0 mm = b 60 - tw 7
+        # i.e. the hole was in the OTHER leg / the OTHER wall -- flange=1 was simply the wrong
+        # half of a binary choice. So try the variants in order and keep the FIRST that lands
+        # every hole on that part, and if none does, restore the one that placed the most.
+        # (5d -- search code is destructive code: each attempt wipes the part's fields, so the
+        # winner is re-applied at the end rather than assumed to still be in place.)
         if miss:
-            for t, items in miss.items():
-                nfields = int(re.search(r"holeFields=(\d+)",
-                                        eb_api.run("mods", handle=t)).group(1))
-                for i in range(nfields - 1, -1, -1):
-                    eb_api.run("killholefield", handle=t, field=i)
-                for a, n, dia, mid in want[t]:
-                    eb_api.run("drill", handle=t, at="%.4f,%.4f,%.4f" % tuple(a),
-                               n="%.6f,%.6f,%.6f" % tuple(n), dia=dia, play=0, flange=1)
+            for t in list(miss.keys()):
+                best_v, best_n = None, -1
+                for variant in (1, 0, 2):
+                    drill_part(t, variant)
+                    landed = self.landed_on(t, want[t])
+                    if landed > best_n:
+                        best_v, best_n = variant, landed
+                    if landed == len(want[t]):
+                        break
+                if best_n < len(want[t]):
+                    drill_part(t, best_v)          # put the least-bad one back
+                    self.notes.append("part %s: best flange=%s placed %d/%d holes"
+                                      % (t, best_v, best_n, len(want[t])))
             miss = self.hole_report()
-            if miss:
-                self.notes.append("holes still off on %d part(s) after the flange retry"
-                                  % len(miss))
         print("holes: %d wanted, off-position parts left: %d, %.0fs"
               % (len(self.d["holes"]), len(miss or {}), time.time() - t0))
         self.checkpoint("holes")
+
+    def landed_on(self, t, wanted):
+        """How many of this part's wanted holes are actually at their source position."""
+        eb_api.run("dumpholes")
+        got = []
+        cur = None
+        for l in io.open(os.path.join(eb_api.channel(), "eb_holes_all.txt"),
+                         encoding="utf-8-sig"):
+            f = l.rstrip(chr(10)).split(chr(9))
+            if f[0] == "OBJ":
+                cur = f[1]
+            elif f[0] == "HOLE" and cur == t:
+                a, b = num(f[5]), num(f[6])
+                got.append([(a[i] + b[i]) / 2 for i in range(3)])
+        n = 0
+        for a, nv, dia, mid in wanted:
+            if got and min(sum((mid[i] - g[i]) ** 2 for i in range(3)) ** 0.5
+                           for g in got) <= 0.01:
+                n += 1
+        return n
 
     def hole_report(self):
         """Which parts carry holes that are not where the source has them."""

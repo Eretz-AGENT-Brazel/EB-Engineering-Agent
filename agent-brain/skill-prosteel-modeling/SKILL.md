@@ -11,6 +11,48 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 `app/…`, `qc/…`, `knowledge/…`, `projects/…` path in this skill is relative to that folder.
 (`agent-brain/PROGRAM.md`, `PROGRESS.md` and `standards/` sit at the repo root.)
 
+> ## ⛔⛔⛔ I BUILT 314 PLATES AS RECTANGLES. ONLY 69 OF THEM ARE RECTANGLES. (18/08/2026, model 5)
+> Amir stopped the run with one sentence — *"אני אראה את זה בחומרה אם לא תדייק את כל הפלטות, את
+> כל הצורה שלהם — **יש לך המון ריפים שם**"* — and he was right before any measurement existed.
+> `dumppoly` on his model, one call, whole model:
+> ```
+> EB_OK dumppoly plates=314 nonrect=237 verts>4=306 err=8
+> ```
+> **69 rectangles out of 314.** I had built every one of them from `props` `L`/`W`/`H` via
+> `plate9 mode=rect`, so **245 plates carried the wrong shape** — every rib came out square, with
+> its diagonal corner filled in. The gates I had run could not see it: bbox, centre, thickness,
+> axes and hole positions are all **identical** for a rib and for the rectangle that contains it.
+> ⇒ 🧲 **This is lesson 7's first failure at scale** — *a part is contour + modifications +
+> insertion frame; the summary line is not the part.* `name='PLATE 100x100x10'` is generated
+> **from the bounding rectangle**, and so is `L`/`W`/`H`. **Neither is the shape.**
+>
+> ### ⭐⭐ THE CONTOUR IS ONE CALL, AND IT WAS IN THE OP LIST THE WHOLE TIME
+> **`dumppoly`** walks every plate in the drawing and writes `handle · class · layer · nVertices ·
+> RectangleMode · points`, and **counts `nonrect` and `verts>4` for you in the result line** — the
+> exact number that tells you whether a rectangle build is defensible. It costs seconds on 861
+> entities, against `plateinfo probe=poly` one plate at a time.
+> ⭐ **The points come back in the plate's OWN frame** — the same frame `props` prints as `X`/`Y` —
+> so the rebuild is a straight substitution:
+> ```
+> plate9 mode=poly pts=<the contour verbatim> at=<props org> ex=<X> ey=<Y> ez=<Z> t=<H> insheight=<…>
+> ```
+> Measured on one of his ribs: **the contour string came back byte-identical**, `X`/`Y`/`Z` identical,
+> `mid` identical, **bbox centre 0.0000 mm**.
+> ⭐⭐ **And it retires a correction rather than adding one:** the contour already carries where the
+> material sits relative to the insertion point, so the in-plane `centre − org` offset that the
+> rectangle route needs (the W/2 bug below) **does not arise at all** on a poly plate.
+> ⚠️ **`Ks_BendPlate` answers `not-PsPlate` to `GetPolygon`** — 8 of the 314 here — so the bend
+> plates are the one case that still goes through the rectangle route.
+>
+> ### ⭐⭐ AND THE REPETITION NUMBER ONLY MEANS SOMETHING WHEN IT IS COUNTED ON CONTOURS
+> I first reported this model as *"314 plates, 40 distinct footprints, one 100×100×10 plate serving
+> 108 places"* — counted on **bounding boxes**, which is the same instrument that hid the ribs. The
+> honest figure is **31 distinct CONTOURS over 306 plates**, and the biggest family is 82 plates of
+> one cut-corner rib (`50,50 · 50,25 · −25,−50 · −50,−50 · −50,50` — a 100×100 with the corner away
+> from the load taken off, exactly as this file describes a rib).
+> ⇒ **Count what the shop cuts.** A cutting drawing is made from a contour, not from a bbox, so a
+> repetition ratio measured on bboxes over-counts and is worth nothing to Amir.
+
 > ## ⏱️ THE CLOCK IS AN INSTRUMENT TOO — I NEARLY THREW AWAY HALF A NIGHT'S BUILD WINDOW (18/08/2026, model 5)
 > Reading Amir's biggest model so far (`CBC TARA GELLERY`, **861 entities / 785 steel parts**)
 > into a cache, I judged the elapsed time by **counting my own polling round-trips** instead of

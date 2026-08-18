@@ -59,11 +59,24 @@ def read(dwg, out):
     eb_api.run("dumpfull2")
     eb_api.run("dumpmodel")
     eb_api.run("dumpholes")
+    # ⛔⛔ THE CONTOUR, and it is not optional. Until 18/08/2026 this reader took a plate's
+    # L/W/H and nothing else, so every plate was rebuilt as a RECTANGLE. Measured on model 5:
+    # of 314 plates only 69 are rectangles -- 237 are not, and 306 carry more than four
+    # vertices. Ribs, gussets and cut-corner plates were all coming out square. `dumppoly`
+    # answers for the whole model in ONE call and reports nonrect/verts>4 itself.
+    eb_api.run("dumppoly")
     ch = eb_api.channel()
 
     d = {"source": dwg,
          "size": os.path.getsize(dwg), "mtime": os.path.getmtime(dwg),
          "shapes": [], "plates": [], "bolts": [], "holes": [], "cuts": {}, "mods": {}}
+
+    poly = {}
+    for r in rows(ch, "eb_poly.txt"):
+        if r[0].endswith("POLY") and len(r) > 6:
+            # local (x, y, BULGE) per vertex, closed (last == first). A bulge is tan(theta/4);
+            # model 5 carries none, but a rounded corner would live here and nowhere else.
+            poly[r[1]] = {"n": int(r[4]), "rect": r[5], "pts": r[6]}
 
     for r in rows(ch, "eb_full2.txt"):
         if r[0] == "SHAPE":
@@ -71,8 +84,10 @@ def read(dwg, out):
                                 "len": r[6], "rot": r[9], "off": r[10], "mir": r[12],
                                 "bbox": r[16] if len(r) > 16 else ""})
         elif r[0] == "PLATE":
-            d["plates"].append({"h": r[1], "c": r[2], "dims": r[3], "axes": r[4],
-                                "layer": r[5] if len(r) > 5 else ""})
+            pl = {"h": r[1], "c": r[2], "dims": r[3], "axes": r[4],
+                  "layer": r[5] if len(r) > 5 else ""}
+            pl.update(poly.get(r[1], {}))
+            d["plates"].append(pl)
 
     for r in rows(ch, "eb_model.txt"):
         if r[0] == "BOLT":
@@ -118,9 +133,11 @@ def read(dwg, out):
 
     with io.open(out, "w", encoding="utf-8") as f:
         f.write(json.dumps(d, ensure_ascii=False, indent=1))
-    print("shapes %d | plates %d | bolts %d | holes %d | parts with cuts %d | mods on %d"
-          % (len(d["shapes"]), len(d["plates"]), len(d["bolts"]), len(d["holes"]),
-             len(d["cuts"]), len(d["mods"])))
+    nrect = len([1 for p in d["plates"] if p.get("rect") == "1"])
+    print("shapes %d | plates %d (%d rectangular, %d SHAPED) | bolts %d | holes %d | "
+          "parts with cuts %d | mods on %d"
+          % (len(d["shapes"]), len(d["plates"]), nrect, len(d["plates"]) - nrect,
+             len(d["bolts"]), len(d["holes"]), len(d["cuts"]), len(d["mods"])))
     print("cached -> " + out)
     return d
 
