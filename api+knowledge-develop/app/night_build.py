@@ -53,6 +53,14 @@ class Build(object):
         self.map_path = os.path.splitext(cache)[0] + "-map.json"
         self.map = (json.load(io.open(self.map_path, encoding="utf-8"))
                     if os.path.exists(self.map_path) else {})
+        # ⭐ THE FRAME SEARCH IS EXPENSIVE AND ITS ANSWER NEVER CHANGES. Finding which
+        # rot/mirror reproduces a member's section frame costs up to 8 delete+build+read
+        # cycles; on model 5 that is ~35 minutes for 175 members. The answer is a property of
+        # (section, direction, source frame), so it is written down and reused: a later
+        # rebuild of the same model applies it directly and the search never runs again.
+        self.frames_path = os.path.splitext(cache)[0] + "-frames.json"
+        self.frames = (json.load(io.open(self.frames_path, encoding="utf-8"))
+                       if os.path.exists(self.frames_path) else {})
         self.notes = []
 
     # ---------------------------------------------------------------- plumbing
@@ -66,6 +74,7 @@ class Build(object):
 
     def save_map(self):
         json.dump(self.map, io.open(self.map_path, "w", encoding="utf-8"))
+        json.dump(self.frames, io.open(self.frames_path, "w", encoding="utf-8"))
 
     def fire(self, op, src_h, **kw):
         r = eb_api.run(op, **kw)
@@ -93,34 +102,77 @@ class Build(object):
             eb_api.delete(h)
         print("wiped %d copied parts" % len(hs))
 
+    def frame_of(self, handle):
+        """The section frame as props prints it -- the only witness to where the material is."""
+        r = eb_api.run("props", handle=handle)
+        d = dict(re.findall(r"(X|Y|Z)=('[^']*'|[^ ]+)", r))
+        return (d.get("X"), d.get("Y"), d.get("Z"))
+
     def shapes(self):
         t0 = time.time()
+        self.swapped = 0
+        # ⭐⭐ THE ENDS FIRST, AND IT IS ARITHMETIC, NOT A SEARCH. This file's own rule:
+        # "dumpmodel's p1->p2 can run OPPOSITE the member's own +Z -- 42 of 82 shapes needed
+        # their ends swapped, and ext/p1/L are all blind to it". When they do, NO rotation can
+        # reproduce the source frame, because rot turns the section about an axis that is
+        # already pointing the wrong way. Measured on model 5: the search exhausted all eight
+        # rot/mirror variants on dozens of members for exactly this reason.
+        # The source's own Z axis says which way the member runs, so compare and swap.
         for s in self.d["shapes"]:
+            srcZ = s["props"].get("Z")
+            if srcZ and "->" not in s["p1"]:
+                z = [float(v) for v in srcZ.split("/")]
+                a, b = num(s["p1"]), num(s["p2"])
+                d3 = [b[i] - a[i] for i in range(3)]
+                if sum(d3[i] * z[i] for i in range(3)) < 0:
+                    s["p1"], s["p2"] = s["p2"], s["p1"]
+                    self.swapped += 1
+            known = self.frames.get(s["h"])
             self.fire("beam", s["h"], kind="standard", name=s["sec"], catalog=s["cat"],
-                      p1=s["p1"], p2=s["p2"], rot=s["rot"], mirror=s["mir"])
-        # self-correction: any member whose span disagrees with the source is turned 90 deg
-        eb_api.run("dumpfull2")
-        got = {r[1]: r for r in [l.rstrip().split("\t") for l
-               in io.open(os.path.join(eb_api.channel(), "eb_full2.txt"),
-                          encoding="utf-8-sig") if l.strip()] if r[0] == "SHAPE"}
-        fixed = 0
+                      p1=s["p1"], p2=s["p2"],
+                      rot=(known[0] if known else s["rot"]),
+                      mirror=(known[1] if known else s["mir"]))
+
+        # ⛔⛔ THE SELF-CORRECTION USED TO COMPARE THE BBOX SPAN, AND A BBOX IS BLIND.
+        # This file's own rule: "for an angle the envelope and the axis are identical in all
+        # four rotations -- only the section frame X/Y shows where the material is". Measured
+        # on model 5: the span check passed 175 members while **112 of them carried the wrong
+        # frame**, nearly all differing by exactly 180 deg (X and Y both negated). On a
+        # symmetric tube that moves no steel; on an angle, a channel or a flat it does, and it
+        # is what left 74 holes in the wrong leg after every flange variant had been tried.
+        # So compare the FRAME the source printed, and let rot/mirror fall out of it.
+        want_first = [(180, None), (90, None), (270, None), (0, None),
+                      (0, 1), (180, 1), (90, 1), (270, 1)]
+        fixed = tried = 0
         for s in self.d["shapes"]:
             t = self.map.get(s["h"])
-            if not t or t not in got or not s["bbox"]:
+            src = (s["props"].get("X"), s["props"].get("Y"), s["props"].get("Z"))
+            if not t or None in src:
                 continue
-            if span(s["bbox"]) == span(got[t][16]):
+            if self.frame_of(t) == src:
                 continue
-            eb_api.delete(t)
-            rot = (float(s["rot"] or 0) + 90) % 360
-            if self.fire("beam", s["h"], kind="standard", name=s["sec"], catalog=s["cat"],
-                         p1=s["p1"], p2=s["p2"], rot=rot, mirror=s["mir"]):
-                fixed += 1
-        print("shapes: %d built, %d re-oriented (rot+90), %.0fs"
-              % (len([1 for s in self.d["shapes"] if s["h"] in self.map]), fixed,
-                 time.time() - t0))
-        if fixed:
-            self.notes.append("%d members needed rot+90 -- the dump's rot=0 does not "
-                              "round-trip" % fixed)
+            tried += 1
+            base = float(s["rot"] or 0)
+            for drot, mir in want_first:
+                eb_api.delete(t)
+                rot = (base + drot) % 360
+                t = self.fire("beam", s["h"], kind="standard", name=s["sec"],
+                              catalog=s["cat"], p1=s["p1"], p2=s["p2"], rot=rot,
+                              mirror=(s["mir"] if mir is None else mir))
+                if not t:
+                    self.notes.append("shape %s: rebuild refused at rot%+d mirror=%s"
+                                      % (s["h"], drot, mir))
+                    break
+                if self.frame_of(t) == src:
+                    fixed += 1
+                    self.frames[s["h"]] = [rot, (s["mir"] if mir is None else mir)]
+                    break
+            else:
+                self.notes.append("shape %s (%s): no rot/mirror reproduced the source frame "
+                                  "%s" % (s["h"], s["sec"], src))
+        print("shapes: %d built, %d ends swapped, %d frames disagreed, %d corrected, %.0fs"
+              % (len([1 for s in self.d["shapes"] if s["h"] in self.map]), self.swapped,
+                 tried, fixed, time.time() - t0))
         self.checkpoint("shapes")
 
     def plates(self):
@@ -137,6 +189,16 @@ class Build(object):
                 continue
             fL, fW, fH = float(L), float(W), float(H)
             X, Y, Z = num(ax), num(ay), num(az)
+
+            # WHERE IS THE MATERIAL relative to the insertion point, along the normal? Read
+            # it, do not assume: the signed distance from `org` to the middle of `mid`. Both
+            # build routes need it, so it is computed before either of them.
+            ins = 0.0
+            mid = pr.get("mid", "")
+            if "->" in mid:
+                a, b = [num(x) for x in mid.split("->")]
+                o = num(org)
+                ins = sum(((a[i] + b[i]) / 2.0 - o[i]) * Z[i] for i in range(3))
 
             # ⛔⛔ THE CONTOUR IS THE PART. Building from L/W/H makes a RECTANGLE, and on
             # model 5 only 69 of 314 plates are rectangles -- 237 are not and 306 carry more
