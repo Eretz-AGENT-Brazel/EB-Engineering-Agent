@@ -216,6 +216,14 @@ def assign(dwgs, task=None, project=None):
     """
     if isinstance(dwgs, str):
         dwgs = [dwgs]
+    if not dwgs:
+        raise RuntimeError("assign takes at least one .dwg")
+    for d in dwgs:                                   # the lock refuses nonsense, it does not
+        d = str(d)                                   # register it (measured hole, 18/08/2026)
+        if not d.lower().endswith(".dwg"):
+            raise RuntimeError("not a drawing: %r -- assign takes .dwg paths" % d)
+        if (os.sep in d or "/" in d) and not os.path.isfile(d):
+            raise RuntimeError("no such drawing on disk: %s" % d)
     tasks = task if isinstance(task, (list, tuple)) else [task] * len(dwgs)
     out = []
     for i, d in enumerate(dwgs):
@@ -566,13 +574,27 @@ def main(argv):
         print(status_text())
         return 0
     cmd = argv[0].lower()
-    rest = [a for a in argv[1:] if not a.startswith("--")]
-    flags = [a for a in argv[1:] if a.startswith("--")]
+    # A FLAG VALUE IS NOT A MODEL. Measured 18/08/2026, the first real `assign`:
+    # `assign <dwg> --task "rebuild it 1:1"` left the task text in the positional list
+    # and locked the agent to TWO models -- the second one named after the task.
+    VALUE_FLAGS = ("--task", "--project")
+    rest, flags, skip = [], [], False
+    for a in argv[1:]:
+        if skip:
+            skip = False
+            continue
+        if a.startswith("--"):
+            flags.append(a)
+            skip = a in VALUE_FLAGS          # `--task=X` carries its own value: nothing to skip
+        else:
+            rest.append(a)
 
     def flagval(name):
         for i, a in enumerate(argv):
             if a == "--" + name and i + 1 < len(argv):
                 return argv[i + 1]
+            if a.startswith("--" + name + "="):
+                return a.split("=", 1)[1]
         return None
 
     try:

@@ -8,7 +8,9 @@ Run:  python app/worksession_selftest.py
 """
 
 import os
+import shutil
 import sys
+import tempfile
 import time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -18,9 +20,25 @@ if HERE not in sys.path:
 import worksession as ws          # noqa: E402
 import eb_api                     # noqa: E402
 
-A = r"C:\models\alpha\test.dwg"          # same basename, different folder, on purpose
-B = r"C:\models\beta\test.dwg"
-C = r"C:\models\gamma\pump.dwg"
+# ⚠️ 18/08/2026: these used to be paths under a C:\models that does not exist. Then
+# `assign` learned to refuse anything that is not an existing .dwg -- and a test running
+# against fixtures the real command rejects is not testing the real command. Now they are
+# real empty files, still SAME BASENAME IN DIFFERENT FOLDERS, which is the point of A vs B.
+FIXTURES = tempfile.mkdtemp(prefix="ws_selftest_")
+
+
+def _fixture(folder, name):
+    d = os.path.join(FIXTURES, folder)
+    if not os.path.isdir(d):
+        os.makedirs(d)
+    p = os.path.join(d, name)
+    open(p, "wb").close()
+    return p
+
+
+A = _fixture("alpha", "test.dwg")        # same basename, different folder, on purpose
+B = _fixture("beta", "test.dwg")
+C = _fixture("gamma", "pump.dwg")
 
 PASS, FAIL = [], []
 
@@ -121,6 +139,25 @@ def main():
         except RuntimeError:
             check("open refuses to take over a held model", True)
 
+        # --- 8a2. the lock refuses nonsense (both measured on 18/08/2026, first real use) --
+        ws.save(ws._blank())
+        try:
+            ws.assign("Learn and rebuild it 1:1")          # a task text, not a drawing
+            check("assign refuses a path that is not a .dwg", False, "no exception")
+        except RuntimeError as e:
+            check("assign refuses a path that is not a .dwg", "not a drawing" in str(e))
+        try:
+            ws.assign(os.path.join(FIXTURES, "nope", "ghost.dwg"))
+            check("assign refuses a .dwg that is not on disk", False, "no exception")
+        except RuntimeError as e:
+            check("assign refuses a .dwg that is not on disk", "no such drawing" in str(e))
+        ws.save(ws._blank())
+        ws.main(["assign", A, "--task", "rebuild it 1:1 beside the original"])
+        check("the CLI does not mistake a flag VALUE for a model",
+              len(ws.assignment()) == 1, repr(ws.assigned_names()))
+        check("...and the task still lands on it",
+              (ws.assigned() or {}).get("task") == "rebuild it 1:1 beside the original")
+
         # --- 8b. THE ASSIGNMENT: Amir locks the agent to one model ------------------------
         ws.release(C)
         ws.save(ws._blank())
@@ -154,7 +191,7 @@ def main():
 
         # --- 8c. SITUATION 2: a SET of models, each with its own task ---------------------
         ws.save(ws._blank())
-        D2 = r"C:\models\delta\frame.dwg"
+        D2 = _fixture("delta", "frame.dwg")
         out = ws.assign([A, C, D2], task=["task A", "task C", "task D"])
         check("a set of three is assigned", len(ws.assignment()) == 3)
         check("each keeps its own task",
@@ -212,6 +249,7 @@ def main():
                 os.remove(eb_api._PIN_FILE)
         except Exception:
             pass
+        shutil.rmtree(FIXTURES, ignore_errors=True)
 
     print("\n%d passed, %d failed" % (len(PASS), len(FAIL)))
     if FAIL:
