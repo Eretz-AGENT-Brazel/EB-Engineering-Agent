@@ -109,70 +109,52 @@ class Build(object):
         return (d.get("X"), d.get("Y"), d.get("Z"))
 
     def shapes(self):
-        t0 = time.time()
-        self.swapped = 0
-        # ⭐⭐ THE ENDS FIRST, AND IT IS ARITHMETIC, NOT A SEARCH. This file's own rule:
-        # "dumpmodel's p1->p2 can run OPPOSITE the member's own +Z -- 42 of 82 shapes needed
-        # their ends swapped, and ext/p1/L are all blind to it". When they do, NO rotation can
-        # reproduce the source frame, because rot turns the section about an axis that is
-        # already pointing the wrong way. Measured on model 5: the search exhausted all eight
-        # rot/mirror variants on dozens of members for exactly this reason.
-        # The source's own Z axis says which way the member runs, so compare and swap.
-        for s in self.d["shapes"]:
-            srcZ = s["props"].get("Z")
-            if srcZ and "->" not in s["p1"]:
-                z = [float(v) for v in srcZ.split("/")]
-                a, b = num(s["p1"]), num(s["p2"])
-                d3 = [b[i] - a[i] for i in range(3)]
-                if sum(d3[i] * z[i] for i in range(3)) < 0:
-                    s["p1"], s["p2"] = s["p2"], s["p1"]
-                    self.swapped += 1
-            known = self.frames.get(s["h"])
-            self.fire("beam", s["h"], kind="standard", name=s["sec"], catalog=s["cat"],
-                      p1=s["p1"], p2=s["p2"],
-                      rot=(known[0] if known else s["rot"]),
-                      mirror=(known[1] if known else s["mir"]))
+        """⭐⭐⭐ THE SECTION FRAME IS A PARAMETER. HAND IT OVER; DO NOT SEARCH FOR IT.
 
-        # ⛔⛔ THE SELF-CORRECTION USED TO COMPARE THE BBOX SPAN, AND A BBOX IS BLIND.
-        # This file's own rule: "for an angle the envelope and the axis are identical in all
-        # four rotations -- only the section frame X/Y shows where the material is". Measured
-        # on model 5: the span check passed 175 members while **112 of them carried the wrong
-        # frame**, nearly all differing by exactly 180 deg (X and Y both negated). On a
-        # symmetric tube that moves no steel; on an angle, a channel or a flat it does, and it
-        # is what left 74 holes in the wrong leg after every flange variant had been tried.
-        # So compare the FRAME the source printed, and let rot/mirror fall out of it.
-        want_first = [(180, None), (90, None), (270, None), (0, None),
-                      (0, 1), (180, 1), (90, 1), (270, 1)]
-        fixed = tried = 0
+        Measured on model 5, one member, four builds:
+            p1->p2 as cached, no axes  ->  1/0/0 | 0/1/0 | 0/0/1
+            ends swapped               -> -1/0/0 | 0/1/0 | 0/0/-1   (Z reversed)
+            **as cached + ax= ay=      ->  0/-1/0 | 1/0/0 | 0/0/1   EXACTLY the source**
+        `beam` passes `ax`/`ay` to PsShapeCoordinateSystem.SetXAxis/SetYAxis, so the source's
+        own frame goes straight in and the member lands right the first time.
+
+        Two things this replaces, both of which cost a night:
+        ⛔ **the rot/mirror SEARCH** -- up to 8 delete+build+read cycles per member (35 minutes
+           for 175), and it left the LAST attempt in place when nothing matched instead of the
+           best one. Since the last candidate carried mirror=1, and **`beam mirror=1` reverses
+           p1->p2** (this file says so), every unmatched member ended up pointing backwards:
+           175 of 175 frames wrong, with the Z axis inverted on every one. A search that does
+           not restore its own starting point is worse than no search -- 5d, again.
+        ⛔ **the endpoint swap** derived from the source Z. The measurement above shows the
+           beam op's Z already follows p1->p2 faithfully, so the swap inverted what was right.
+           The 39 "backwards" members were an artefact of comparing against a frame the first
+           build had not been given.
+        """
+        t0 = time.time()
+        for s in self.d["shapes"]:
+            kw = dict(kind="standard", name=s["sec"], catalog=s["cat"],
+                      p1=s["p1"], p2=s["p2"], rot=s["rot"], mirror=s["mir"])
+            ax, ay = axes(s["props"], "X"), axes(s["props"], "Y")
+            if ax and ay:
+                kw["ax"], kw["ay"] = ax, ay
+            self.fire("beam", s["h"], **kw)
+
+        # verify, and REPORT rather than hunt: a member whose frame still disagrees is a
+        # finding for the morning, not something to attack with a destructive loop.
+        wrong = 0
         for s in self.d["shapes"]:
             t = self.map.get(s["h"])
-            src = (s["props"].get("X"), s["props"].get("Y"), s["props"].get("Z"))
+            src = tuple(s["props"].get(k) for k in "XYZ")
             if not t or None in src:
                 continue
-            if self.frame_of(t) == src:
-                continue
-            tried += 1
-            base = float(s["rot"] or 0)
-            for drot, mir in want_first:
-                eb_api.delete(t)
-                rot = (base + drot) % 360
-                t = self.fire("beam", s["h"], kind="standard", name=s["sec"],
-                              catalog=s["cat"], p1=s["p1"], p2=s["p2"], rot=rot,
-                              mirror=(s["mir"] if mir is None else mir))
-                if not t:
-                    self.notes.append("shape %s: rebuild refused at rot%+d mirror=%s"
-                                      % (s["h"], drot, mir))
-                    break
-                if self.frame_of(t) == src:
-                    fixed += 1
-                    self.frames[s["h"]] = [rot, (s["mir"] if mir is None else mir)]
-                    break
-            else:
-                self.notes.append("shape %s (%s): no rot/mirror reproduced the source frame "
-                                  "%s" % (s["h"], s["sec"], src))
-        print("shapes: %d built, %d ends swapped, %d frames disagreed, %d corrected, %.0fs"
-              % (len([1 for s in self.d["shapes"] if s["h"] in self.map]), self.swapped,
-                 tried, fixed, time.time() - t0))
+            if self.frame_of(t) != src:
+                wrong += 1
+                if wrong <= 10:
+                    self.notes.append("shape %s (%s): frame %s, source wanted %s"
+                                      % (s["h"], s["sec"], self.frame_of(t), src))
+        print("shapes: %d built, %d frames still disagree, %.0fs"
+              % (len([1 for s in self.d["shapes"] if s["h"] in self.map]), wrong,
+                 time.time() - t0))
         self.checkpoint("shapes")
 
     def plates(self):

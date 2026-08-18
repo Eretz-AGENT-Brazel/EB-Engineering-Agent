@@ -53,6 +53,31 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > ⇒ **Count what the shop cuts.** A cutting drawing is made from a contour, not from a bbox, so a
 > repetition ratio measured on bboxes over-counts and is worth nothing to Amir.
 
+> ## 🧭 A GATE THAT CANNOT FAIL IS NOT A GATE — 112 WRONG FRAMES UNDER A GREEN SHEET (18/08/2026)
+> The same night the ribs were caught, the member gates were caught too. `night_verify` measured
+> bbox span, bbox corner, plate centre, plate dims, cut planes, hole position/depth/diameter and
+> bolt axes — **and passed 175 members while 112 of them carried the wrong section frame.**
+> ⇒ **A bbox cannot see a rotation that maps the envelope onto itself**: 180° on any symmetric
+> tube or flat, and *all four* rotations on an equal angle. This file already said it —
+> *"only the section frame X/Y shows where the material is"* — and the checker did not implement it.
+>
+> ### ⭐ The chain, in the order it actually resolved
+> | # | symptom | cause | fix |
+> |---|---|---|---|
+> | 1 | 74 holes in the wrong leg, and **`flange` 1/0/2 all failed** | the MEMBER was turned, not the drill | compare `props X/Y/Z` to the source and search `rot`/`mirror` |
+> | 2 | the search **exhausted all eight variants** on dozens of members | ⭐⭐ **`p1→p2` ran OPPOSITE the member's own +Z** — rot turns the section about an axis already pointing the wrong way, so no rotation can ever match. **39 of 175 here** | compare `p2−p1` against the source's `Z` and **swap the ends** — arithmetic, not a search |
+> | 3 | the search costs up to 8 delete+build+read cycles per member (~35 min for 175) | the answer is a **property of the part** and never changes | write it to `<cache>-frames.json` and apply it directly next time |
+> ⇒ ⭐⭐ **The offsets named the cause before the code did:** every leftover hole was off by a single
+> exact number per section — `EA60X60X6 → 54.0 = leg 60 − t 6`, `EA80X80X8 → 72.0 = 80 − 8`,
+> `U140 → 53.0 = b 60 − tw 7`. **A distance equal to a section dimension is a wrong-wall error;
+> a distance equal to the plate thickness is a wrong-face error.** Read the number, don't guess.
+>
+> ### ✅ The two gates that now exist, because their absence is what let it through
+> **`plate CONTOUR`** — the polygon string per paired plate (a rib against its rectangle) — and
+> **`shape FRAME` / `plate FRAME`** — `props X/Y/Z` per paired part.
+> 🧲 **The rule to carry:** when a rebuild passes every gate, ask *which error would still be
+> invisible?* Here the answer was "shape" and "orientation", and both were nameable in advance.
+
 > ## ⏱️ THE CLOCK IS AN INSTRUMENT TOO — I NEARLY THREW AWAY HALF A NIGHT'S BUILD WINDOW (18/08/2026, model 5)
 > Reading Amir's biggest model so far (`CBC TARA GELLERY`, **861 entities / 785 steel parts**)
 > into a cache, I judged the elapsed time by **counting my own polling round-trips** instead of
