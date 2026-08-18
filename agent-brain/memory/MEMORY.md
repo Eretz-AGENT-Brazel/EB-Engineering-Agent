@@ -42,4 +42,5 @@
 - [Hinged assemblies](hinged-assemblies.md) — ⚡ שיעור 7: שוחות עם דלתות על צירים · ‏`16ROUND` = סימן הזמנה ולא חלק · ידיות צינור חצי צול · הדלת בשני מצבים, 100.000° בדיוק
 - [Parallel models](parallel-models.md) — ⚡ נכנסים למודל במפורש · שרטוט לא-רשום לא נוגעים · רק **מופע AutoCAD אחד** נגיש ל-COM
 - [Build target](build-target.md) — ⚡ קריאה ממודל אחר מחליפה את המסמך הפעיל — והבנייה שאחריה נוחתת שם; מצהירים `build_target` לפני שבונים
+- [One error, three masks](one-error-three-masks.md) — ⚡ לפני שמסיקים שה-API מוגבל — להשוות מוטת bbox מול המקור; טעות מידול אחת מתחפשת לשלוש
 - [Copy from the model](copy-from-the-model.md) — ⚡⚡ יש דוגמה במודל ⇒ לא מנחשים ולא שואלים, משווים · חלק = קונטור+מודיפיקציות+מסגרת, לא שורת הסיכום
