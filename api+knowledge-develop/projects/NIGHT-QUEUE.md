@@ -18,7 +18,7 @@
 | `model 1_Transformer Base model.dwg` | done | 216/216 חלקים, 0 חסרים/עודפים |
 | `model 2_kuperdam WALL SUPPORT - 2 FAB.dwg` | done | 30/30 חלקים · 140/140 חורים 0.0000 · 0 התנגשויות |
 | `model 3_kuperdam DRILL BASE -3 - FAB.dwg` | partial | גיאומטריה מאומתת: 44 פרופילים ו-132 לוחות ב-0.000 מ"מ · 96/96 חורים · 8/8 חיתוכים · פתוח: הושבת 48 הברגים (188 התנגשויות מול 0 במקור) |
-| `model 4_kuperdam SUPPORT BEAMS 4+5 - FAB.dwg` | pending |  |
+| `model 4_kuperdam SUPPORT BEAMS 4+5 - FAB.dwg` | done | 13/13 שערים: 35 פרופילים + 110 לוחות ב-0.0000 · 848/848 חורים (מיקום+עומק+קוטר) · 23/23 חיתוכים · 344 ברגים מ-boltparts, vfy_fit זהה למקור · 0 התנגשויות |
 | `model 5_CBC TARA GELLERY.dwg` | pending |  |
 | `model 6.dwg` | pending |  |
 

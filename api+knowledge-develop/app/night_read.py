@@ -25,6 +25,21 @@ if HERE not in sys.path:
 import eb_api  # noqa: E402
 
 
+def iface(app, name, tries=12):
+    """`GetInterfaceObject` can answer 'Call was rejected by callee' -- that is AutoCAD BUSY,
+    not a missing class. Measured 18/08/2026 on model 4, where the plugin was still settling
+    after ~500 `props` calls. Retry with a short back-off instead of losing the whole read."""
+    import time as _t
+    last = None
+    for i in range(tries):
+        try:
+            return app.GetInterfaceObject(name)
+        except Exception as e:          # pywintypes.com_error and friends
+            last = e
+            _t.sleep(0.5 + 0.5 * i)
+    raise RuntimeError("GetInterfaceObject(%s) refused %d times: %s" % (name, tries, last))
+
+
 def rows(ch, fn):
     p = os.path.join(ch, fn)
     if not os.path.exists(p):
@@ -90,11 +105,11 @@ def read(dwg, out):
             d["mods"][part["h"]] = nz
         if not nz.get("cutPlanes"):
             continue
-        em = app.GetInterfaceObject("PSCOMWRAPPER.Ks_ComEditModification")
+        em = iface(app, "PSCOMWRAPPER.Ks_ComEditModification")
         em.SetObject(doc.HandleToObject(part["h"]))
         out_cuts = []
         for i in range(em.CutPlaneCount):
-            cp = app.GetInterfaceObject("PSCOMWRAPPER.Ks_ComCutPlane")
+            cp = iface(app, "PSCOMWRAPPER.Ks_ComCutPlane")
             em.GetCutPlane(em.GetCutPlaneHandleFromNumber(i), cp)
             out_cuts.append({"InsertPoint": [round(v, 4) for v in cp.InsertPoint],
                              "Normal": [round(v, 8) for v in cp.GetNormal()],

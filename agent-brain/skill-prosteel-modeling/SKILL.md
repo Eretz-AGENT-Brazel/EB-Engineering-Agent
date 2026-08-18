@@ -11,6 +11,47 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 `app/…`, `qc/…`, `knowledge/…`, `projects/…` path in this skill is relative to that folder.
 (`agent-brain/PROGRAM.md`, `PROGRESS.md` and `standards/` sit at the repo root.)
 
+> ## ⭐⭐⭐ THE HOLES ARE THE DESIGN: 344 BOLTS DERIVED, AND PROSTEEL PICKED THE SOURCE'S OWN LENGTHS (18/08/2026)
+> Model 4 of Amir's own production models — a 66.6 × 12.3 m support grillage, 490 entities — was
+> rebuilt 1:1 and **every one of its 344 bolts came out of `boltparts`, none made by hand.** Two
+> packets, and the software chose the length for each **without being told**:
+> | packet | make-up | what ProSteel chose | source |
+> |---|---|---|---|
+> | **39 mm** | plate 20 + **flange 19** | `M24 x 80 8.8/S` × 184 | identical |
+> | **51 mm** | plate 20 + **web 11** + plate 20 | `M24 x 90 8.8/S` × 160 | identical |
+> `vfy_fit` on the rebuild and on the source printed **the same line** — `bolts=344 OK=344
+> BOLT-NO-HOLE=0 GAP-IN-PACKET=0 OVERSIZED=0 SHORT=0` — and `collision minvol=100` read
+> `parts=489 collisions=0` on both. **43 `boltparts` calls, one per joint part-set**, not one per
+> bolt line: dedupe the collinear hole lines to unique part-sets first (252 lines → 43 calls).
+> ⇒ ⭐⭐ **Get the holes exactly right and the bolting stops being a problem at all.** Model 3's
+> 48 hand-made bolts produced 188 collisions and `OVERSIZED=24`; here the derived route produced
+> zero of both, on seven times the bolt count.
+>
+> ⭐⭐ **AND DEPTH IS THE ONLY WITNESS TO WEB-VS-FLANGE ON A SQUARE SECTION.** `HE300B` is
+> 300×300, so its bbox span is the same in both orientations and cannot say which way the member
+> lies. The **hole depths** could: 11 mm along Z (`tw`) and 19 mm along Y (`tf`) ⇒ the beams lie
+> with the **web horizontal**. Classify every hole by depth before drilling, exactly as for the
+> flange selector.
+> ⭐ **Measured about `flange=1`:** the twelve drilled beams carried **both depth classes at once**,
+> and a single re-drill of the whole part with `flange=1` landed **0.0000 mm on both** — so the
+> selector chooses *between* walls when several lie on the ray and is harmless when only one does.
+>
+> ⚠️ **A HOLE CHECK THAT ONLY MEASURES POSITION IS THREE-QUARTERS BLIND.** `night_build`'s own
+> retry verifier compared **position alone**; a retry that deletes every hole field and re-drills
+> could have doubled the holes without it noticing. The gate now measures **count, position, depth
+> and diameter** per part (`app/night_verify.py`, new — 13 gates, run with the same reader on the
+> source and on the rebuild so a difference in numbers is a difference in models).
+>
+> ⚠️ **The one difference that survived: hole FIELD grouping.** The source holds 4 fields carrying
+> 20 holes on a beam; drilling hole-by-hole gives **20 fields of one hole**. Same geometry, same CNC
+> output, different editing surface (a field is what can be deleted, and what a bolt field owns).
+> ⇒ to match a dialog-built model, group the pattern and use **`drillfield x= y=`** — it is also
+> much faster: 848 single `drill` calls took **649 s**.
+>
+> ⚠️ **`GetInterfaceObject` answering *"Call was rejected by callee"* is AutoCAD BUSY, not a
+> missing COM class.** It killed a completed 2-minute read of this model right at the cut-plane
+> step. Retry with a back-off (`night_read.iface()`), never conclude the wrapper lacks the class.
+
 > ## ⭐⭐ ONE MISTAKE WEARING THREE MASKS — AND THE MEASUREMENT THAT UNMASKED IT (18/08/2026)
 > Rebuilding a customer wall support (`HE360B`, 140 holes, 56 bolts) produced three separate
 > "API limitations" in one afternoon:
