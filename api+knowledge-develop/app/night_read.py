@@ -120,16 +120,25 @@ def read(dwg, out):
             d["mods"][part["h"]] = nz
         if not nz.get("cutPlanes"):
             continue
-        em = iface(app, "PSCOMWRAPPER.Ks_ComEditModification")
-        em.SetObject(doc.HandleToObject(part["h"]))
-        out_cuts = []
-        for i in range(em.CutPlaneCount):
-            cp = iface(app, "PSCOMWRAPPER.Ks_ComCutPlane")
-            em.GetCutPlane(em.GetCutPlaneHandleFromNumber(i), cp)
-            out_cuts.append({"InsertPoint": [round(v, 4) for v in cp.InsertPoint],
-                             "Normal": [round(v, 8) for v in cp.GetNormal()],
-                             "Flag": cp.Flag})
-        d["cuts"][part["h"]] = out_cuts
+        # ⚠️ AND THE WHOLE READ MUST NOT DIE ON ONE COM HICCUP. Measured 19/08/2026 on model
+        # 6: GetInterfaceObject RETURNED an object whose SetObject was missing
+        # (`AttributeError: GetInterfaceObject.SetObject`) -- not a refusal the retry catches,
+        # a bad dispatch handed back as success -- and it killed a completed 10-minute read of
+        # 1,411 entities at the cut-plane step. One part's cuts are worth far less than the
+        # read: record the failure and carry on.
+        try:
+            em = iface(app, "PSCOMWRAPPER.Ks_ComEditModification")
+            em.SetObject(doc.HandleToObject(part["h"]))
+            out_cuts = []
+            for i in range(em.CutPlaneCount):
+                cp = iface(app, "PSCOMWRAPPER.Ks_ComCutPlane")
+                em.GetCutPlane(em.GetCutPlaneHandleFromNumber(i), cp)
+                out_cuts.append({"InsertPoint": [round(v, 4) for v in cp.InsertPoint],
+                                 "Normal": [round(v, 8) for v in cp.GetNormal()],
+                                 "Flag": cp.Flag})
+            d["cuts"][part["h"]] = out_cuts
+        except Exception as e:
+            d.setdefault("cut_read_failures", []).append([part["h"], str(e)[:120]])
 
     with io.open(out, "w", encoding="utf-8") as f:
         f.write(json.dumps(d, ensure_ascii=False, indent=1))

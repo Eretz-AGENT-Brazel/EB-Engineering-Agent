@@ -53,6 +53,31 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > ⇒ **Count what the shop cuts.** A cutting drawing is made from a contour, not from a bbox, so a
 > repetition ratio measured on bboxes over-counts and is worth nothing to Amir.
 
+> ## 🔩 REBUILD A MODEL'S BOLTS FROM ITS OWN STYLES — AND `DIN7991` REFUSES (19/08/2026)
+> `boltparts` is the right instrument when ProSteel must **derive** a joint from the holes: on
+> model 4 it chose the source's own two lengths unprompted. It is the **wrong** instrument for a
+> faithful copy, and two models measured it:
+> | | source | derived by `boltparts` |
+> |---|---|---|
+> | model 5 | **304 bolts, 8 types**, incl. **130 grade-4.6 M10** through ⌀12/⌀13 | 158 bolts, 6 *different* types, **no M10 at all** |
+> ⇒ the 8.8 table pairs on **+2** and has no row for a 12 or 13 mm hole, so the M10s could never
+> appear. The cache already carries each bolt's **own** `dia`, `style`, `len` and axis — build from
+> those and the count is exact: **304 rebuilt, 0 refused, `bolt axes` gate 0.**
+> ⚠️ **A faithful copy also copies the source's own flags.** Amir's model 5 reads
+> `BOLT-NO-HOLE=98` on `vfy_fit`; the rebuild reproduces that rather than "fixing" it. **Log the
+> question, never silently correct his model.**
+>
+> ### ⛔ `DIN7991` IS INSTALLED AND STILL REFUSES — closed after five attempts
+> Model 6's 526 bolts include **306 × `M 12x90 Mu DIN7991`** (countersunk). `op=styles` lists it —
+> `[21] DIN7991 db=DINBolts.mdb@SCH7991` — and `CreateSingleBolt` answers
+> `EB_ERR bolt create failed (style 'DIN7991')` at the source's own diameter and length, and at
+> ⌀14, at len 100, every time. **`DIN912` from the same `DINBolts.mdb` builds fine**, as does
+> `8.8S`. So it is not a missing style and not a missing database: that one table has no row the
+> creator will take. **306 of 526 bolts are unreachable this way** — the measured cost, recorded
+> rather than worked around.
+> ⭐ **The tell that saved the diagnosis:** the census read `bolts=220`, and `526 − 306 = 220`
+> exactly. **When a count is short, subtract the one thing you know refused before theorising.**
+
 > ## ⭐⭐⭐ THE FRAME AND THE CONTOUR ARE PARAMETERS — HAND THEM OVER, DO NOT SEARCH (19/08/2026)
 > Rebuilding Amir's 785-part gallery, four separate "orientation problems" turned out to be one
 > sentence: **the creator will take the answer if you give it to it.**
