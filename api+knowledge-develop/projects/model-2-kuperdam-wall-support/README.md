@@ -6,7 +6,7 @@
 
 | | |
 |---|---|
-| **המקור אצל אמיר** | `C:\Users\User\Desktop\models for api\model 2_kuperdam WALL SUPPORT - 2 FAB.dwg` |
+| **המקור אצל אמיר** | `api+knowledge-develop\projects\sources\model 2_kuperdam WALL SUPPORT - 2 FAB.dwg` |
 | **גודל / חותמת** | ‏281,121 בתים · 19/04/2026 18:36 — **זהה לפני ואחרי. לא נשמר ולא נגע** |
 | **השחזור** | `… - REBUILD.dwg` · 274,253 בתים |
 

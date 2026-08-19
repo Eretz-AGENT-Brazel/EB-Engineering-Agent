@@ -7,7 +7,7 @@
 
 | | |
 |---|---|
-| **המקור אצל אמיר** | `C:\Users\User\Desktop\models for api\model 1_Transformer Base model.dwg` |
+| **המקור אצל אמיר** | `api+knowledge-develop\projects\sources\model 1_Transformer Base model.dwg` |
 | **גודל / חותמת** | ‏145,289 בתים · 02/07/2026 17:01 |
 | **העותק כאן** | `model 1_Transformer Base model.dwg` — **המקור, לא נגעו בו** |
 | **השחזור** | `model 1_Transformer Base model - REBUILD.dwg` |

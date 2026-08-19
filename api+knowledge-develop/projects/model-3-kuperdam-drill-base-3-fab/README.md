@@ -91,7 +91,7 @@ np.appendVertex(n[0], n.Length > 1 ? n[1] : 0.0, 0.0);   // ← ה-bulge נזר�
 
 | | |
 |---|---|
-| **המקור אצל אמיר** | `C:\Users\User\Desktop\models for api\model 3_kuperdam DRILL BASE -3 - FAB.dwg` |
+| **המקור אצל אמיר** | `api+knowledge-develop\projects\sources\model 3_kuperdam DRILL BASE -3 - FAB.dwg` |
 | **גודל / חותמת** | ‏186,446 בתים · 16/04/2026 15:35 — **זהה לפני ואחרי. לא נשמר ולא נגע** |
 | **השחזור** | `… - REBUILD.dwg` |
 | **מצב** | ⚠️ **partial** — הגיאומטריה מאומתת במלואה, הברגים פתוחים |

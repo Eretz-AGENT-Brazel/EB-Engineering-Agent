@@ -6,7 +6,7 @@
 
 | | |
 |---|---|
-| **המקור אצל אמיר** | `C:\Users\User\Desktop\models for api\model 4_kuperdam SUPPORT BEAMS 4+5 - FAB.dwg` |
+| **המקור אצל אמיר** | `api+knowledge-develop\projects\sources\model 4_kuperdam SUPPORT BEAMS 4+5 - FAB.dwg` |
 | **גודל / חותמת** | ‏175,904 בתים · 16/04/2026 15:28:19 — **זהה בתחילת הריצה ובסופה. לא נשמר ולא נגע** |
 | **השחזור** | `… - REBUILD.dwg` (‏181,132 בתים) — עותק בייט של המקור, כל 489 חלקיו נמחקו, ונבנה מחדש מהמאגר בלבד |
 | **מצב** | ✅ **done — כל 13 השערים ירוקים, כולל הברגים** |

@@ -22,7 +22,12 @@ import time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DEV = os.path.dirname(HERE)
-SOURCE_DIR = r"C:\Users\User\Desktop\models for api"
+# ⛔ THE SOURCES LIVE INSIDE THE PROJECT, next to the rebuilds they feed. Amir, 19/08/2026:
+# "כל הידע שלנו מרוכז רק שם, לא בשום תיקייה נפרדת". Moved that day out of a desktop
+# folder; all seven files verified by sha256 before and after the move. Relative to this file,
+# so the queue survives the repo being moved or cloned somewhere else.
+SOURCE_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                          os.pardir, "projects", "sources"))
 PROJECTS = os.path.join(DEV, "projects")
 QUEUE = os.path.join(PROJECTS, "NIGHT-QUEUE.md")
 
@@ -56,8 +61,20 @@ def read_queue():
 
 
 def write_queue(state):
+    # ⛔⛔ AN EMPTY SOURCE FOLDER MUST NOT EMPTY THE QUEUE. Measured 19/08/2026: while the
+    # sources were being moved into the project, SOURCE_DIR pointed for one minute at the folder
+    # that had just been vacated, `drawings()` returned [], and one `night.py list` rewrote the
+    # table with ZERO rows -- wiping four `done` and two `partial` marks in silence. The statuses
+    # were only recoverable because the file is committed. The folder is the queue, so "the folder
+    # is gone" is never a reason to declare the work undone: refuse, and say why.
+    found = drawings()
+    if not found and state:
+        raise RuntimeError(
+            "refusing to rewrite the queue: SOURCE_DIR holds no .dwg (%s) while the queue still "
+            "records %d model(s). Fix the path -- do not let a missing folder erase the marks."
+            % (SOURCE_DIR, len(state)))
     rows = []
-    for p in drawings():
+    for p in found:
         b = os.path.basename(p)
         st, note = state.get(b, ("pending", ""))
         rows.append(u"| `%s` | %s | %s |" % (b, st, note))

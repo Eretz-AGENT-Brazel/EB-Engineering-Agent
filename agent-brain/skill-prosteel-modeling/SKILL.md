@@ -733,6 +733,22 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > two late "improvements" made already-good results worse. **Three attempts without improvement
 > ⇒ record it, move on, come back with a different method.**
 >
+> ### ⛔⛔ AND SO IS BOOKKEEPING CODE — ONE `list` ERASED FOUR `done` MARKS (19/08/2026)
+> The night queue's own docstring says *"the folder IS the queue"*, and `write_queue` rebuilt the
+> table from `drawings()` every time. Moving the sources into the project left `SOURCE_DIR` pointing
+> for one minute at the folder that had just been vacated — so `drawings()` returned `[]`, and a
+> single **read-only-looking** `night.py list` rewrote the table with **zero rows, wiping four
+> `done` and two `partial` marks in silence.** They came back only because the file is committed.
+> ✅ `write_queue` now **refuses** when the folder holds no drawing while the queue still records
+> models — calibrated on both cases: it fires on a bad path, and stays silent on a good one.
+> ⇒ 🧲 **"The input is missing" is never a reason to declare the work undone.** A tool that
+> derives its state from a scan will, the first time the scan comes back empty, **erase exactly the
+> record that says what was already achieved** — and it will look like an ordinary listing while it
+> does it. Same family as the fitting loop above: **the danger is not the word `delete`, it is a
+> WRITE whose content is computed from something that can vanish.**
+> ⚠️ And the tell to recognise: **a command named `list`, `status` or `report` that writes.** If it
+> writes, it can destroy, and it needs the same guard as anything that deletes.
+>
 > ### ⛔⛔ 5. `rw` MEANS "HAS A SETTER", NEVER "SAFE TO SET"
 > A blanket property sync wrote **`Mirrored`** onto twelve pipes and **displaced them by up to
 > 340 mm**, silently, while every call returned success. ⇒ **Sync only fields proved inert, and
