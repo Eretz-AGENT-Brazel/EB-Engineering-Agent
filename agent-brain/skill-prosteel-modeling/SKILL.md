@@ -53,6 +53,52 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > ⇒ **Count what the shop cuts.** A cutting drawing is made from a contour, not from a bbox, so a
 > repetition ratio measured on bboxes over-counts and is worth nothing to Amir.
 
+> ## 💥 A COLLISION RUN IS A **CONTOUR GATE IN DISGUISE** — 132 OF 132 PLATES (19/08/2026, model 3)
+> Model 3 was filed `partial` for its bolts. Measuring before building killed that: `vfy_fit` reads
+> **`bolts=48 OK=48 BOLT-NO-HOLE=0 OVERSIZED=0 SHORT=0`** — the bolts had been fixed and the README
+> still told the next reader they were the blocker. ⚠️ **A `partial` README is a CLAIM, not a
+> measurement. Re-measure before resuming from the point it describes.**
+>
+> What was actually wrong was invisible to every gate this model had ever been given:
+> ```
+> collision minvol=100   rebuild 140      source 0
+> dumppoly               source  plates=132 nonrect=132      rebuild plates=132 nonrect=0
+> ```
+> **All 132 of his plates are shaped; all 132 of mine were rectangles.** The cause is dated, not
+> careless: model 3's `source.json` was read on 18/08, **before the reader could read contours**, so
+> the cache carries no shape field at all and `night_build.plates()` fell to the rectangle route on
+> every one. The **`plate CONTOUR` gate was born the following night, on model 5** — so the model
+> that most needed it was closed before it existed.
+>
+> ### ⭐⭐ THE COLLISION CHECK IS WHAT SAW IT, AND THE MECHANISM IS THE ROOT FILLET
+> The four contours (72 · 44 · 8 · 8 — **132 plates, 4 cutting drawings**) are one rib in two
+> mirrorings and two lengths, each with **two R25 rounded corners** (`bulge = ±0.414`) on one long
+> edge. The crash bodies measure `z 9.25 → 24.409` across the rib's whole footprint — the bbox of two
+> slivers at the two corners, exactly where the `HE500B`'s **root fillets** are. A square corner digs
+> into the fillet; the R25 corner clears it. **That is the whole difference between his 0 and my 140.**
+> ⇒ 🧲 **The rounded corner is not decoration — it is what makes the rib fit in the pocket.** Same
+> family as the spiral stair's treads cut to the collar: *when a part must seat inside another, its
+> corner geometry is structural, not cosmetic.*
+> ⇒ ⭐⭐⭐ **On any model whose cache predates `dumppoly`, run `collision minvol=100` against the
+> source's own number — it is the only gate that can still see a wrong SHAPE.** bbox, centre, dims,
+> thickness, axes and hole positions are all identical for a rib and the rectangle containing it;
+> interference is not.
+>
+> ### ⛔⛔ AND THE FIX WAS BLOCKED BY THE SAME DROPPED FIELD, A THIRD TIME
+> **`setpoly` is the right instrument** — it replaces a plate's contour **in place and keeps the
+> holes** (lesson 3 reshaped 214 ribs with it), so 132 plates can be corrected without deleting them
+> and re-drilling 96 holes. But it built its polygon as
+> `np.appendVertex(n[0], n[1], **0.0**)` — **the bulge thrown away**, while `polycut shape=pts` in the
+> *same source file* already forwards the third value as the bulge.
+> ⇒ 🧲 **This is the bulge family's FOURTH member**, after `getVertexbyValue`, the poly-cut circle
+> and the curved plate's sagitta. **A vertex is `(x, y, bulge)`; any writer that takes only two
+> numbers is correct for straight-edged parts and silently wrong for every other.** When a reader and
+> a writer in one codebase disagree about a field, the reader is usually right and the writer is
+> usually older. **Grep for every consumer of a contour before trusting any of them.**
+> ✅ `EBAgentApi187.cs` carries the one-line fix and **compiles clean**; it was **not loaded**
+> (Amir ended the session), and `app/eb_api.py` was deliberately **left declaring v186** —
+> ⭐ **a version that has never been loaded must never be the declared version.**
+
 > ## ✅ MODEL 5 CLOSED AT 17/17 — AND THE FOUR THINGS THAT CLOSED IT (19/08/2026)
 > Amir's 785-part gallery now reads **`gates failed: 0`**: counts exact on shapes, plates, bolts,
 > holes and cut planes; contours 0 of 306; frames 0/175 and 0/314; plate centre **0.0000**, plate

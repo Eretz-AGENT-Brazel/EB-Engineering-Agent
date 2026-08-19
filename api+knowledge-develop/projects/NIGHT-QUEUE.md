@@ -2,7 +2,7 @@
 
 # 🌙 NIGHT QUEUE — התור של הלילה
 
-*התיקייה `C:\Users\User\Desktop\models for api` **היא** התור: כל `.dwg` בה מקבל שורה. אמיר מפיל קבצים לשם, הסוכן לוקח אותם
+*התיקייה `C:\Users\User\Desktop\EB PROSTEEL AGENT\api+knowledge-develop\projects\sources` **היא** התור: כל `.dwg` בה מקבל שורה. אמיר מפיל קבצים לשם, הסוכן לוקח אותם
 אחד-אחד. הקובץ הזה נכתב ע"י `app/night.py` — לא עורכים אותו ביד באמצע ריצה.*
 
 | הסטטוס | פירושו |
