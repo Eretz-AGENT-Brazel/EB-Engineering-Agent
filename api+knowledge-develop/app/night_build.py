@@ -518,10 +518,53 @@ class Build(object):
         self.checkpoint("bolts")
 
 
+def repair(b):
+    """⭐ BUILD ONLY WHAT IS MISSING. A run can lose parts without losing the model: on
+    19/08/2026 a ProSteel dialog belonging to Amir's OWN second AutoCAD instance made the
+    guard refuse ops mid-build, and 96 shapes and 86 plates never got created -- with zero
+    orphans and everything else correct. Re-running a segment would duplicate the 800 parts
+    that are fine, and a full rebuild would cost 40 minutes to recover 182 parts. So: read
+    what is live, keep only the source parts that have no counterpart, and run the normal
+    segments over that subset."""
+    eb_api.run("list")
+    live = set()
+    for line in io.open(os.path.join(eb_api.channel(), "eb_list.txt"), encoding="utf-8-sig"):
+        f = line.rstrip().split("|")
+        if len(f) > 1 and f[1].strip().startswith("Ks_"):
+            live.add(f[0].strip())
+    ms = [x for x in b.d["shapes"] if b.map.get(x["h"]) not in live]
+    mp_ = [x for x in b.d["plates"] if b.map.get(x["h"]) not in live]
+    print("repair: %d shape(s) and %d plate(s) missing" % (len(ms), len(mp_)))
+    if not ms and not mp_:
+        return
+    keep = set(x["h"] for x in ms) | set(x["h"] for x in mp_)
+    all_s, all_p = b.d["shapes"], b.d["plates"]
+    all_cuts = b.d["cuts"]
+    b.d["shapes"], b.d["plates"] = ms, mp_
+    b.d["cuts"] = dict((k, v) for k, v in all_cuts.items() if k in keep)
+    holes_all = b.d["holes"]
+    b.d["holes"] = [h for h in holes_all if h["owner"] in keep]
+    if ms:
+        b.shapes()
+    if mp_:
+        b.plates()
+    b.cuts()
+    b.holes()
+    b.d["shapes"], b.d["plates"], b.d["cuts"], b.d["holes"] = all_s, all_p, all_cuts, holes_all
+    b.bolts()                     # bolts() clears and rebuilds them all -- idempotent
+
+
 def main(argv):
     b = Build(argv[0], argv[1])
     seg = (argv[2] if len(argv) > 2 else "all").lower()
     b.enter()
+    if seg == "repair":
+        repair(b)
+        b.save_map()
+        print("census:", eb_api.run("dumpmodel")[:110])
+        for n in b.notes[:15]:
+            print("   note:", n)
+        return 0
     if seg in ("all", "wipe"):
         b.wipe()
     for name in ("shapes", "plates", "cuts", "holes", "bolts"):

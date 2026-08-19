@@ -22,8 +22,8 @@ ROOT = os.path.dirname(HERE)
 PLUG = os.path.join(HERE, "plugin")
 CMD = os.path.join(PLUG, "eb_cmd.txt")
 RES = os.path.join(PLUG, "eb_result.txt")
-DLL = os.path.join(PLUG, "EBAgentApi185.dll")
-RUN_CMD = "EB_RUN185"
+DLL = os.path.join(PLUG, "EBAgentApi186.dll")
+RUN_CMD = "EB_RUN186"
 # ---- which drawing every op is expected to run on -------------------------
 # Twice on 06/08/2026 work landed in the WRONG drawing: first two documents were open
 # at once (Amir spotted the two windows), then opening a Bentley sample silently became
@@ -1015,6 +1015,37 @@ def _acad_pids():
     return pids
 
 
+def _my_acad_pids():
+    """The pid of the AutoCAD instance THIS process is attached to -- and only that one.
+
+    ⭐ FIXED 19/08/2026, and it is what makes "Amir works in parallel" actually work. The
+    guard already narrowed itself to AutoCAD's own dialogs (09/08), but `_acad_pids()` returns
+    EVERY acad.exe on the machine -- so the moment Amir opened a ProSteel Copy/Move/Mirror
+    dialog in HIS OWN second instance, the agent refused every op. Measured cost: 96 shapes
+    and 86 plates silently not created in the middle of a model-6 rebuild, with the notes
+    reading `EB_DIALOG ... ProSteel Copy/Move/Mirror/Align` -- his dialog, our stop.
+    His instance is invisible to COM by design, so the only honest scope is the instance we
+    hold: `app.HWND` IS the instance (the fingerprint used elsewhere in this file), and its
+    window's pid is ours. Falls back to the desktop-wide scan when that cannot be read --
+    blocking wrongly is still safer than walking into a dialog.
+    """
+    try:
+        import ctypes
+        from ctypes import wintypes
+        # GetActiveObject, deliberately, and NOT _app(): the ROT exposes exactly ONE
+        # addressable instance (measured 17/08 -- a second acad.exe is invisible, not merely
+        # indistinguishable), so this is the instance we hold. Going through _app() here would
+        # also risk recursing back into this guard.
+        import win32com.client as _w
+        app = _w.GetActiveObject("AutoCAD.Application")
+        hwnd = int(app.HWND)
+        pid = wintypes.DWORD()
+        ctypes.windll.user32.GetWindowThreadProcessId(wintypes.HWND(hwnd), ctypes.byref(pid))
+        return set([pid.value]) if pid.value else set()
+    except Exception:
+        return set()
+
+
 def modal_dialogs():
     """Every top-level dialog owned by AUTOCAD, by title.
 
@@ -1044,7 +1075,7 @@ def modal_dialogs():
         CB = ctypes.WINFUNCTYPE(ctypes.c_bool, wintypes.HWND, wintypes.LPARAM)
         buf = ctypes.create_unicode_buffer(512)
         cls = ctypes.create_unicode_buffer(256)
-        pids = _acad_pids()
+        pids = _my_acad_pids() or _acad_pids()
 
         def cb(hwnd, _l):
             if not u.IsWindowVisible(hwnd):

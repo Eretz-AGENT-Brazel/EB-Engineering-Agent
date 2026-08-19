@@ -703,6 +703,7 @@ namespace EBAgent
                     case "bend": Bend(kv); break;
                     case "bendshape": BendShape(kv); break;
                     case "bendinfo": BendInfo(kv); break;
+                    case "bendshapeinfo": BendShapeInfo(kv); break;
                     case "bendtwo": BendTwo(kv); break;
                     case "plateinfo": PlateInfo(kv); break;
                     case "frame": Frame(kv); break;
@@ -8334,6 +8335,85 @@ namespace EBAgent
         }
 
         // op=bendinfo handle=<bent plate>   -- read the SEGMENT TREE back
+        // ===================================================================
+        //  op=bendshapeinfo handle=<h>       -- v186, READ A BENT PROFILE
+        // ===================================================================
+        // A Ks_BendShape had no reader at all. `dumpfull2` files it under OTHER (centre and
+        // extents only), `dumppoly` answers `not-PsPlate`, and `bendinfo` is for a BendPLATE --
+        // so five bent profiles in model 5 could be seen and not rebuilt. Everything needed is
+        // on PsBendShape: the section (Key/Katalog), the PATH as a PsPolygon3d, the insertion
+        // offsets and the section frame. `bendshape name= catalog= pts=` consumes exactly that.
+        // ⚠️ getVertex hands back a PsPolygon3dVertex whose Center and Flag describe an ARC
+        // segment, so a curved path is reported, not silently straightened.
+        void BendShapeInfo(Dictionary<string, string> kv)
+        {
+            long oid = IdFromHandle(Get(kv, "handle", ""));
+            if (oid == 0) { Result("EB_ERR bendshapeinfo: bad handle"); return; }
+            StringBuilder sb = new StringBuilder();
+            try
+            {
+                Document doc = Application.DocumentManager.MdiActiveDocument;
+                using (Transaction tr = doc.Database.TransactionManager.StartTransaction())
+                {
+                    DBObject o = tr.GetObject(new ObjectId(new System.IntPtr(oid)), OpenMode.ForRead);
+                    PsBendShape bs = o as PsBendShape;
+                    if (bs == null)
+                    {
+                        Result("EB_ERR bendshapeinfo: not a PsBendShape (" +
+                               (o == null ? "null" : o.GetType().Name) + ")");
+                        tr.Commit(); return;
+                    }
+                    sb.Append("key='").Append(Safe(SafeS(delegate() { return bs.Key; }))).Append("'");
+                    sb.Append(" cat='").Append(Safe(SafeS(delegate() { return bs.Katalog; }))).Append("'");
+                    sb.Append(" xsec=").Append(SafeS(delegate() { return bs.CrossSectionType.ToString(); }));
+                    sb.Append(" len=").Append(F(SafeD(delegate() { return bs.ComputeObjectLength(); })));
+                    sb.Append(" offX=").Append(F(SafeD(delegate() { return bs.InsertOffsetX; })));
+                    sb.Append(" offY=").Append(F(SafeD(delegate() { return bs.InsertOffsetY; })));
+                    try { PsVector v = bs.XOrientation;
+                          sb.Append(" X=").Append(F(v.x)).Append("/").Append(F(v.y)).Append("/").Append(F(v.z)); }
+                    catch { }
+                    try { PsVector v = bs.YOrientation;
+                          sb.Append(" Y=").Append(F(v.x)).Append("/").Append(F(v.y)).Append("/").Append(F(v.z)); }
+                    catch { }
+                    try { PsVector v = bs.Direction;
+                          sb.Append(" dir=").Append(F(v.x)).Append("/").Append(F(v.y)).Append("/").Append(F(v.z)); }
+                    catch { }
+                    try
+                    {
+                        PsPoint r1 = new PsPoint(0, 0, 0), r2 = new PsPoint(0, 0, 0);
+                        bs.GetReferenceLine(r1, r2);
+                        sb.Append(" ref=").Append(F(r1.x)).Append(",").Append(F(r1.y)).Append(",").Append(F(r1.z))
+                          .Append("->").Append(F(r2.x)).Append(",").Append(F(r2.y)).Append(",").Append(F(r2.z));
+                    }
+                    catch { }
+                    try
+                    {
+                        PsPolygon3d poly = new PsPolygon3d();
+                        bs.GetPolygon(poly);
+                        int n = poly.Count;
+                        sb.Append(" pathVerts=").Append(n).Append(" path=");
+                        for (int i = 0; i < n; i++)
+                        {
+                            PsPoint pos = new PsPoint(0, 0, 0), ctr = new PsPoint(0, 0, 0);
+                            poly.GetVertexPoint(i, pos, ctr);
+                            if (i > 0) sb.Append(";");
+                            sb.Append(F(pos.x)).Append(",").Append(F(pos.y)).Append(",").Append(F(pos.z));
+                            bool curve = false;
+                            try { PsPolygon3dVertex vx = new PsPolygon3dVertex();
+                                  poly.getVertex(i, vx); curve = vx.isCurve(); } catch { }
+                            if (curve)
+                                sb.Append("@arc(").Append(F(ctr.x)).Append(",").Append(F(ctr.y))
+                                  .Append(",").Append(F(ctr.z)).Append(")");
+                        }
+                    }
+                    catch (System.Exception pe) { sb.Append(" path!").Append(One(pe.Message)); }
+                    tr.Commit();
+                }
+            }
+            catch (System.Exception ex) { Result("EB_ERR bendshapeinfo: " + One(ex.Message)); return; }
+            Result("EB_OK bendshapeinfo handle=" + Get(kv, "handle", "") + " " + sb.ToString());
+        }
+
         void BendInfo(Dictionary<string, string> kv)
         {
             long pid = IdFromHandle(Get(kv, "handle", ""));
@@ -12536,6 +12616,7 @@ namespace EBAgent
             { "arcplate", "|bigarc|center|layer|name|normal|p1|p2|rot|t|w|xpos|ypos|" },
             { "bendshape", "|arc|catalog|circle|handle|helix|kind|layer|name|pts|refaxis|rot|" },
             { "bend", "|angle|at|convert|endoffset|endvertex|front|handle|inner|len|lengthcalc|radius|rear|startoffset|startvertex|useinner|" },
+            { "bendshapeinfo", "|handle|" },
             { "bendinfo", "|handle|max|" },
             { "bendtwo", "|at|delete2|h1|h2|inner|k|radius|" },
             { "plateinfo", "|handle|probe|" },
