@@ -265,6 +265,27 @@ class Build(object):
         # ⚠️ Correct against the `at` that was PASSED, never against the resulting bbox
         # midpoint: for a contour ProSteel re-centres, so correcting against the midpoint
         # re-injects the same error on every iteration (this file has that scar already).
+        moved = self.replace_pass()
+        for _ in range(3):
+            if self.replace_pass() == 0:
+                break
+        if moved:
+            print("   re-placed %d plate(s) by the measured delta" % moved)
+        print("plates: %d/%d, %d from their real CONTOUR, %d rectangles re-centred, %.0fs"
+              % (len([1 for p in self.d["plates"] if p["h"] in self.map]),
+                 len(self.d["plates"]), self.shaped, self.inplane, time.time() - t0))
+        self.checkpoint("plates")
+
+    def replace_pass(self):
+        """One measure-and-correct pass over the plates. Returns how many moved.
+
+        ⭐ IT HAS TO ITERATE, AND ARCS ARE WHY. A contour vertex carries a BULGE in its third
+        component, so the real bounding box of a curved plate reaches PAST its vertices by the
+        arc's sagitta -- and `mode=poly` centres on that true bbox while the `at` we predict is
+        computed from the vertices alone. Measured on model 6: 64 curved plates landed exactly
+        **0.14 mm** out, every one of them, and their 64 holes with them. One corrective pass
+        removes most of it; the loop runs until nothing moves.
+        """
         eb_api.run("dumpfull2")
         got = {}
         for line in io.open(os.path.join(eb_api.channel(), "eb_full2.txt"),
@@ -289,13 +310,7 @@ class Build(object):
                          insheight=self.ins_used[p["h"]]):
                 moved += 1
                 self.at_used[p["h"]] = at1
-        if moved:
-            print("   re-placed %d plate(s) by the measured delta" % moved)
-
-        print("plates: %d/%d, %d from their real CONTOUR, %d rectangles re-centred, %.0fs"
-              % (len([1 for p in self.d["plates"] if p["h"] in self.map]),
-                 len(self.d["plates"]), self.shaped, self.inplane, time.time() - t0))
-        self.checkpoint("plates")
+        return moved
 
     def cuts(self):
         n = ok = 0
@@ -327,8 +342,21 @@ class Build(object):
 
         def drill_part(t, variant):
             """Re-drill one part from scratch under one flange rule."""
-            m = re.search(r"holeFields=(\d+)", eb_api.run("mods", handle=t))
-            for i in range(int(m.group(1)) - 1, -1, -1):
+            # ⚠️ `mods` can answer with an error (a busy AutoCAD, a stale handle), and the
+            # regex then matched nothing and this crashed the whole segment TWICE tonight.
+            # A field count that cannot be read is not a reason to abandon 800 holes: retry,
+            # and if it still will not answer, drill without wiping first.
+            n = None
+            for attempt in range(3):
+                m = re.search(r"holeFields=(\d+)", eb_api.run("mods", handle=t))
+                if m:
+                    n = int(m.group(1))
+                    break
+                time.sleep(0.5 + attempt)
+            if n is None:
+                self.notes.append("part %s: mods unreadable, drilled without clearing" % t)
+                n = 0
+            for i in range(n - 1, -1, -1):
                 eb_api.run("killholefield", handle=t, field=i)
             for a, n, dia, mid in want[t]:
                 kw = dict(handle=t, at="%.4f,%.4f,%.4f" % tuple(a),
@@ -445,20 +473,48 @@ class Build(object):
         for h in old:
             eb_api.delete(h)
         made = failed = 0
+        self.by_grip = 0
         for b in self.d["bolts"]:
             if ";" not in (b.get("axis") or ""):
                 continue
             p1, p2 = b["axis"].split(";")
-            r = eb_api.run("bolt", p1=p1, p2=p2, dia=b.get("dia") or 20,
-                           style=b.get("style") or "8.8S", len=b.get("len") or 50)
+            dia = float(b.get("dia") or 20)
+            ln = float(b.get("len") or 50)
+            r = eb_api.run("bolt", p1=p1, p2=p2, dia=dia,
+                           style=b.get("style") or "8.8S", len=ln)
+            if not r.startswith("EB_OK"):
+                # ⭐⭐ A REFUSED STYLE IS USUALLY A REFUSED **GRIP**. `bolt` failed on all 306
+                # DIN7991 screws in model 6 -- and `boltsingle`, which is B.15.1's manual
+                # insertion where from->to IS THE GRIP LENGTH, built them at once. Measured
+                # ladder for M12 DIN7991: grip 10->x30, 20->x40, 30->x50, 45->x65, 60->x80,
+                # 62->x80, 65->x85, **70->x90**, 90->x110 -- and **grip 75 REFUSES**, because
+                # that row does not exist. So the style was never the problem: a grip that
+                # lands between rows is.
+                # The grip that reproduces a given bolt is the skill's own rule read backwards:
+                #     L = packet + 1.6d   =>   grip = L - 1.6d
+                # For M12x90 that is 90 - 19.2 = 70.8, and 70 is exactly what produced x90.
+                a, c = num(p1), num(p2)
+                v = [c[i] - a[i] for i in range(3)]
+                seg = sum(x * x for x in v) ** 0.5 or 1.0
+                u = [x / seg for x in v]
+                for grip in (ln - 1.6 * dia, ln - 1.6 * dia - 2, ln - 1.6 * dia + 2):
+                    if grip <= 0:
+                        continue
+                    to = ",".join("%.4f" % (a[i] + u[i] * grip) for i in range(3))
+                    r = eb_api.run("boltsingle", dia=dia, style=b.get("style") or "8.8S",
+                                   **{"from": p1, "to": to})
+                    if r.startswith("EB_OK"):
+                        self.by_grip += 1
+                        break
             if r.startswith("EB_OK"):
                 made += 1
             else:
                 failed += 1
                 if failed <= 5:
                     self.notes.append("bolt %s (%s): %s" % (b["h"], b.get("name"), r[:90]))
-        print("bolts: %d removed, %d rebuilt from the source's own styles, %d refused, %.0fs"
-              % (len(old), made, failed, time.time() - t0))
+        print("bolts: %d removed, %d rebuilt from the source's own styles "
+              "(%d of them via boltsingle by GRIP), %d refused, %.0fs"
+              % (len(old), made, self.by_grip, failed, time.time() - t0))
         self.checkpoint("bolts")
 
 
