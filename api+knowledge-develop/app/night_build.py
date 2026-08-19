@@ -179,6 +179,8 @@ class Build(object):
         t0 = time.time()
         self.inplane = 0
         self.shaped = 0
+        self.at_used = {}
+        self.ins_used = {}
         for p in self.d["plates"]:
             pr = p.get("props", {})
             L, W, H = pr.get("L"), pr.get("W"), pr.get("H")
@@ -221,6 +223,8 @@ class Build(object):
                 cy = (min(q[1] for q in v) + max(q[1] for q in v)) / 2.0
                 o, eX, eY = num(org), num(ax), num(ay)
                 at = ",".join("%.4f" % (o[i] + cx * eX[i] + cy * eY[i]) for i in range(3))
+                self.at_used[p["h"]] = at
+                self.ins_used[p["h"]] = round(ins, 4)
                 if self.fire("plate9", p["h"], mode="poly", pts=p["pts"], at=at, t=H,
                              ex=ax, ey=ay, ez=az, insheight=round(ins, 4)):
                     self.shaped += 1
@@ -259,6 +263,42 @@ class Build(object):
                 self.inplane += 1
             self.fire("plate9", p["h"], mode="rect", at=at, l=L, w=W, t=H,
                       ex=ex, ey=ey, insheight=round(ins, 4))
+        # ⭐⭐ AND THEN MEASURE WHERE THEY LANDED. `mode=poly` re-centres the contour about
+        # `at`, and predicting that from the contour's bbox centre is right for a symmetric
+        # contour and wrong for an asymmetric one -- measured on model 5, 97 plates still
+        # landed up to 134 mm out while their shapes were perfect. The cure is not a better
+        # theory: `dumpfull2` returns every plate's world centre in ONE call, so build, read,
+        # and re-place whoever missed, by the measured delta.
+        # ⚠️ Correct against the `at` that was PASSED, never against the resulting bbox
+        # midpoint: for a contour ProSteel re-centres, so correcting against the midpoint
+        # re-injects the same error on every iteration (this file has that scar already).
+        eb_api.run("dumpfull2")
+        got = {}
+        for line in io.open(os.path.join(eb_api.channel(), "eb_full2.txt"),
+                            encoding="utf-8-sig"):
+            f = line.rstrip(chr(10)).split(chr(9))
+            if f[0] == "PLATE":
+                got[f[1]] = f[2]
+        moved = 0
+        for p in self.d["plates"]:
+            t = self.map.get(p["h"])
+            if not t or t not in got or p["h"] not in self.at_used:
+                continue
+            want, have = num(p["c"]), num(got[t])
+            d3 = [want[i] - have[i] for i in range(3)]
+            if max(abs(v) for v in d3) <= 0.01:
+                continue
+            at1 = ",".join("%.4f" % (num(self.at_used[p["h"]])[i] + d3[i]) for i in range(3))
+            pr = p["props"]
+            eb_api.delete(t)
+            if self.fire("plate9", p["h"], mode="poly", pts=p["pts"], at=at1, t=pr["H"],
+                         ex=axes(pr, "X"), ey=axes(pr, "Y"), ez=axes(pr, "Z"),
+                         insheight=self.ins_used[p["h"]]):
+                moved += 1
+                self.at_used[p["h"]] = at1
+        if moved:
+            print("   re-placed %d plate(s) by the measured delta" % moved)
+
         print("plates: %d/%d, %d from their real CONTOUR, %d rectangles re-centred, %.0fs"
               % (len([1 for p in self.d["plates"] if p["h"] in self.map]),
                  len(self.d["plates"]), self.shaped, self.inplane, time.time() - t0))
@@ -388,61 +428,44 @@ class Build(object):
         return bad
 
     def bolts(self):
-        # 1) let ProSteel derive every bolt it can from the holes -- it places them better
-        #    than a hand-made bolt does (measured: OK=44 vs OVERSIZED=56 on model 2)
-        lines = {}
-        for h in self.d["holes"]:
-            t = self.map.get(h["owner"])
-            if not t:
-                continue
-            a, b = num(h["a"]), num(h["b"])
-            v = [b[i] - a[i] for i in range(3)]
-            L = sum(x * x for x in v) ** 0.5
-            n = tuple(abs(round(x / L, 3)) for x in v)
-            key = (n, tuple(round(a[i], 1) if n[i] < 0.5 else 0 for i in range(3)))
-            lines.setdefault(key, set()).add(t)
-        groups = sorted({tuple(sorted(v)) for v in lines.values() if len(v) > 1})
-        for g in groups:
-            eb_api.run("boltparts", handles=",".join(g), style="8.8S")
-        # 2) a bolt with no second STEEL part (a fixing into concrete) is created directly.
-        #    IDENTITY IS THE AXIS, not the midpoint: ProSteel seats its bolt through the packet
-        #    with head and nut offsets, so the same fastener can have a midpoint tens of mm from
-        #    the source's. Comparing midpoints produced 72 bolts against a source of 48, twice.
+        """⭐⭐ REPRODUCE THE SOURCE'S OWN BOLTS, WITH ITS OWN STYLES AND LENGTHS.
+
+        `boltparts` is the right instrument when ProSteel must DERIVE a joint's bolts from the
+        holes -- it chose the source's own two lengths on model 4 without being told. It is the
+        wrong instrument for a faithful 1:1 rebuild of a model like this one, and the numbers
+        say why: the source carries **304 bolts on 304 distinct axes** in eight types, including
+        **130 grade-4.6 M10** through the guardrail tubes' 12 and 13 mm holes. Derived bolting
+        produced 158 bolts of six DIFFERENT types (M12x35, M16x75, M16x80, M20x90 ...) and not
+        one M10 -- because the 8.8 table pairs on +2 only and has no row for a 12 or 13 mm hole.
+        The cache already holds each bolt's own diameter, style, length and axis, so build them.
+
+        ⚠️ The source itself reads `BOLT-NO-HOLE=98` on `vfy_fit`. Reproducing it faithfully
+        reproduces that too. That is the instruction -- the source is the answer -- and the
+        question is logged for Amir rather than silently "corrected".
+        """
+        t0 = time.time()
         eb_api.run("dumpmodel")
-        have = []
-        for l in io.open(os.path.join(eb_api.channel(), "eb_model.txt"), encoding="utf-8-sig"):
-            f = l.rstrip("\n").split("\t")
-            if f[0] == "BOLT" and len(f) > 9 and ";" in f[9]:
-                p = f[9].split(";")
-                have.append((num(p[0]), num(p[1])))
-
-        def same_axis(a1, b1, a2, b2, tol=3.0):
-            d = [b1[i] - a1[i] for i in range(3)]
-            L = sum(x * x for x in d) ** 0.5
-            if L == 0:
-                return False
-            d = [x / L for x in d]
-            for pt in (a2, b2):                      # both ends of the candidate on that line?
-                w = [pt[i] - a1[i] for i in range(3)]
-                t = sum(w[i] * d[i] for i in range(3))
-                perp = sum((w[i] - t * d[i]) ** 2 for i in range(3)) ** 0.5
-                if perp > tol:
-                    return False
-            return True
-
-        added = 0
+        old = [l.rstrip(chr(10)).split(chr(9))[1]
+               for l in io.open(os.path.join(eb_api.channel(), "eb_model.txt"),
+                                encoding="utf-8-sig")
+               if l.startswith("BOLT")]
+        for h in old:
+            eb_api.delete(h)
+        made = failed = 0
         for b in self.d["bolts"]:
             if ";" not in (b.get("axis") or ""):
                 continue
-            p = b["axis"].split(";")
-            a, c = num(p[0]), num(p[1])
-            if any(same_axis(h[0], h[1], a, c) for h in have):
-                continue
-            if eb_api.run("bolt", p1=p[0], p2=p[1], dia=b.get("dia") or 24,
-                          style="8.8S", len=b.get("len") or 85).startswith("EB_OK"):
-                added += 1
-                have.append((a, c))
-        print("bolts: %d joints bolted by ProSteel, %d created directly" % (len(groups), added))
+            p1, p2 = b["axis"].split(";")
+            r = eb_api.run("bolt", p1=p1, p2=p2, dia=b.get("dia") or 20,
+                           style=b.get("style") or "8.8S", len=b.get("len") or 50)
+            if r.startswith("EB_OK"):
+                made += 1
+            else:
+                failed += 1
+                if failed <= 5:
+                    self.notes.append("bolt %s (%s): %s" % (b["h"], b.get("name"), r[:90]))
+        print("bolts: %d removed, %d rebuilt from the source's own styles, %d refused, %.0fs"
+              % (len(old), made, failed, time.time() - t0))
         self.checkpoint("bolts")
 
 

@@ -57,6 +57,15 @@ def compare(src, rbd, mapping):
     for p in rbd["plates"]:
         R[p["h"]] = p
 
+    # ⭐ ORPHANS. A rebuild that deletes and re-places parts can leave the old one behind --
+    # measured on model 5: 180 strays (178 plates, 2 shapes) survived a re-placement pass and
+    # every per-part gate stayed green, because each SOURCE part still had its own correct
+    # counterpart. Only a count of what is in the drawing and NOT in the map can see them.
+    mapped = set(mapping.values())
+    orphans = len([p for p in (rbd["shapes"] + rbd["plates"]) if p["h"] not in mapped])
+    out.append(("orphan parts", "%d in the rebuild with no source part" % orphans,
+                orphans == 0))
+
     # ---- counts
     for k in ("shapes", "plates", "bolts", "holes"):
         out.append(("count %s" % k, "%d source / %d rebuild" % (len(src[k]), len(rbd[k])),
