@@ -187,13 +187,22 @@ def assigned_keys(st=None):
     if not a:
         return []
     keys = [a] if isinstance(a, str) else list(a)          # a single slot is still valid state
-    return [k for k in keys if k in st.get("sessions", {})]
+    # ⛔ DO NOT FILTER BY "has a live session". This line used to end
+    #     return [k for k in keys if k in st["sessions"]]
+    # and it is what really made Amir's assignment shrink: `close_session` pops the session,
+    # so a model he had explicitly assigned silently fell out of his own lock the moment its
+    # drawing was closed -- and re-entering it was then refused with "ASSIGNED to <the
+    # others>". It cost three refusals on 19/08/2026, each one after AutoCAD had died and been
+    # relaunched, i.e. exactly when the agent most needs to get back into its own model.
+    # An assignment is a DECLARATION about which models may be worked on; whether a drawing
+    # happens to be open right now is an operational detail, and `use()` reopens it.
+    return keys
 
 
 def assignment(st=None):
     """The sessions the agent is LOCKED to by Amir (a list, possibly empty)."""
     st = st if st is not None else load()
-    return [st["sessions"][k] for k in assigned_keys(st)]
+    return [st["sessions"][k] for k in assigned_keys(st) if k in st.get("sessions", {})]
 
 
 def assigned(st=None):
@@ -370,12 +379,18 @@ def current(st=None):
         env = os.environ.get("EB_MODEL", "").strip()
         if env:
             k = key_of(env, st)
-            if k in keys:
+            if k in keys and k in st["sessions"]:
                 return st["sessions"][k]
         cur = st.get("current")
-        if cur in keys:
+        if cur in keys and cur in st["sessions"]:
             return st["sessions"][cur]
-        return st["sessions"][keys[0]]
+        # ⚠️ A DECLARED SLOT MAY HAVE NO SESSION YET. Since assigned_keys() stopped filtering
+        # on "has a live session" (see there -- the filter is what made Amir's lock shrink),
+        # every consumer must tolerate a slot whose drawing is simply not open at the moment.
+        for k in keys:
+            if k in st["sessions"]:
+                return st["sessions"][k]
+        return None
     env = os.environ.get("EB_MODEL", "").strip()
     if env:
         return find(env, st) or {
