@@ -28,6 +28,34 @@ if HERE not in sys.path:
 import eb_api  # noqa: E402
 
 
+def as_circle(verts):
+    """A poly-cut CIRCLE arrives as two points with bulge 1.0, not as a polygon.
+
+    Measured on model 6 (19/08/2026): eight OE40 holes are modelled as poly-cuts and read back
+    as [[20,0,1.0], [-20,0,1.0], [20,0,0.0]] -- the third component of a vertex is the BULGE
+    (tan(theta/4); 1.0 = a 180 deg arc), so dropping it collapses the ring to a degenerate line
+    and `polycut shape=pts` refuses with `area=0`. Eight of the model's 22 poly-cuts refused
+    exactly that way before this existed.
+
+    Returns (cx, cy, r) for a circle, or None for a real polygon.
+    """
+    pts, seen = [], set()
+    for v in verts:
+        k = (round(v[0], 4), round(v[1], 4))
+        if k not in seen:
+            seen.add(k)
+            pts.append(v)
+    if len(pts) != 2:
+        return None
+    if not all(abs(abs(v[2]) - 1.0) < 1e-6 for v in pts):
+        return None
+    (x0, y0), (x1, y1) = pts[0][:2], pts[1][:2]
+    r = ((x1 - x0) ** 2 + (y1 - y0) ** 2) ** 0.5 / 2.0
+    if r <= 0:
+        return None
+    return (x0 + x1) / 2.0, (y0 + y1) / 2.0, r
+
+
 def read(dwg, cache, out):
     d = json.load(io.open(cache, encoding="utf-8"))
     owners = [h for h, m in d["mods"].items() if m.get("polyCuts")]
@@ -86,14 +114,25 @@ def apply(rebuild, data, cache):
             print("%s: no rebuild counterpart" % src_h)
             continue
         for c in cuts:
-            pts = ";".join("%.4f,%.4f" % (v[0], v[1]) for v in c["verts"])
             depth = ((c["end"][0] - c["ins"][0]) ** 2 + (c["end"][1] - c["ins"][1]) ** 2 +
                      (c["end"][2] - c["ins"][2]) ** 2) ** 0.5
-            r = eb_api.run("polycut", handle=t, shape="pts", pts=pts,
-                           at="%.4f,%.4f,%.4f" % tuple(c["ins"]),
-                           xaxis="%.6f,%.6f,%.6f" % tuple(c["xaxis"]),
-                           yaxis="%.6f,%.6f,%.6f" % tuple(c["yaxis"]),
-                           depth=round(depth, 4))
+            kw = dict(handle=t,
+                      at="%.4f,%.4f,%.4f" % tuple(c["ins"]),
+                      xaxis="%.6f,%.6f,%.6f" % tuple(c["xaxis"]),
+                      yaxis="%.6f,%.6f,%.6f" % tuple(c["yaxis"]),
+                      depth=round(depth, 4))
+            circ = as_circle(c["verts"])
+            if circ:
+                cx, cy, rad = circ
+                if abs(cx) > 1e-4 or abs(cy) > 1e-4:
+                    ins, xa, ya = c["ins"], c["xaxis"], c["yaxis"]
+                    kw["at"] = "%.4f,%.4f,%.4f" % tuple(
+                        ins[i] + cx * xa[i] + cy * ya[i] for i in range(3))
+                kw.update(shape="circle", r=round(rad, 4))
+            else:
+                kw.update(shape="pts",
+                          pts=";".join("%.4f,%.4f" % (v[0], v[1]) for v in c["verts"]))
+            r = eb_api.run("polycut", **kw)
             if r.startswith("EB_OK"):
                 ok += 1
             else:
