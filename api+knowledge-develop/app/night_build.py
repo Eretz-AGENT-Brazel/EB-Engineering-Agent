@@ -154,22 +154,15 @@ class Build(object):
                 kw["ax"], kw["ay"], kw["rot"] = ax, ay, 0
             self.fire("beam", s["h"], **kw)
 
-        # verify, and REPORT rather than hunt: a member whose frame still disagrees is a
-        # finding for the morning, not something to attack with a destructive loop.
+        # ⏱️ THE IN-BUILD FRAME VERIFY IS GONE, AND THE REASON IS A MEASUREMENT.
+        # Reading `props` per member right after a build burst costs ~10 s each on a big model,
+        # because most calls come back EB_BUSY and only the last retry lands: 129 of model 6's
+        # 472 members took 21 minutes, i.e. an hour of pure waiting for a check that
+        # `night_verify` already performs -- on BOTH drawings, with the steadier reader, as the
+        # `shape FRAME` gate. A verification duplicated inside the build buys nothing and is
+        # charged at the worst possible moment.
         wrong = unread = 0
-        for s in self.d["shapes"]:
-            t = self.map.get(s["h"])
-            src = tuple(s["props"].get(k) for k in "XYZ")
-            if not t or None in src:
-                continue
-            got = self.frame_of(t)
-            if got is None:
-                unread += 1
-            elif got != src:
-                wrong += 1
-                if wrong <= 10:
-                    self.notes.append("shape %s (%s): frame %s, source wanted %s"
-                                      % (s["h"], s["sec"], got, src))
+
         print("shapes: %d built, %d frames still disagree, %d unreadable, %.0fs"
               % (len([1 for s in self.d["shapes"] if s["h"] in self.map]), wrong, unread,
                  time.time() - t0))
