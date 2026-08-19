@@ -164,7 +164,7 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > Recovery is NOT always a dialog** — it can be that the reachable instance is simply not ours.
 > Read what the reachable instance HOLDS before believing the hint.
 
-> ## 🔩 REBUILD A MODEL'S BOLTS FROM ITS OWN STYLES — AND `DIN7991` REFUSES (19/08/2026)
+> ## 🔩 REBUILD A MODEL'S BOLTS FROM ITS OWN STYLES — AND A REFUSED STYLE IS A REFUSED **GRIP** (19/08/2026)
 > `boltparts` is the right instrument when ProSteel must **derive** a joint from the holes: on
 > model 4 it chose the source's own two lengths unprompted. It is the **wrong** instrument for a
 > faithful copy, and two models measured it:
@@ -178,16 +178,54 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > `BOLT-NO-HOLE=98` on `vfy_fit`; the rebuild reproduces that rather than "fixing" it. **Log the
 > question, never silently correct his model.**
 >
-> ### ⛔ `DIN7991` IS INSTALLED AND STILL REFUSES — closed after five attempts
-> Model 6's 526 bolts include **306 × `M 12x90 Mu DIN7991`** (countersunk). `op=styles` lists it —
-> `[21] DIN7991 db=DINBolts.mdb@SCH7991` — and `CreateSingleBolt` answers
-> `EB_ERR bolt create failed (style 'DIN7991')` at the source's own diameter and length, and at
-> ⌀14, at len 100, every time. **`DIN912` from the same `DINBolts.mdb` builds fine**, as does
-> `8.8S`. So it is not a missing style and not a missing database: that one table has no row the
-> creator will take. **306 of 526 bolts are unreachable this way** — the measured cost, recorded
-> rather than worked around.
-> ⭐ **The tell that saved the diagnosis:** the census read `bolts=220`, and `526 − 306 = 220`
-> exactly. **When a count is short, subtract the one thing you know refused before theorising.**
+> ### 🛑🛑 `DIN7991` NEVER REFUSED — I WROTE "CLOSED, DO NOT RETRY" ON A STYLE THAT BUILDS
+> **This block used to read *"`DIN7991` is installed and still refuses — closed after five
+> attempts; 306 of 526 bolts are unreachable this way."* It is FALSE, and it was false while it
+> was being written.** `boltsingle` — B.15.1's manual insertion, where `from→to` **is** the grip —
+> builds `DIN7991` immediately. The measured ladder for **M12 `DIN7991`**:
+> ```
+> grip 10 -> x30   20 -> x40   30 -> x50   45 -> x65   60 -> x80   62 -> x80
+>      65 -> x85   70 -> x90   90 -> x110        ...and grip 75 REFUSES
+> ```
+> ⇒ ⭐⭐⭐ **A REFUSED STYLE IS USUALLY A REFUSED GRIP.** Grip 75 has no row in that table; every
+> grip that has one builds. The style was installed all along (`[21] DIN7991
+> db=DINBolts.mdb@SCH7991`) and was never at fault.
+> ⭐⭐ **And the grip that reproduces a given bolt is this file's own rule read backwards.**
+> `L = packet + 1.6d` ⇒ **`grip = L − 1.6d`**. For `M12x90` that is **70.8**, and grip **70**
+> produced `x90` exactly. `bolts()` now falls back to `boltsingle` at that grip when `bolt`
+> refuses: **model 6 carries 526 of 526 bolts, 0 refused** — read back from the rebuild.
+> ⇒ ⭐⭐ **THIS IS THE THIRD DOOR ONTO ONE CAUSE, and this file already held the other two:**
+> B.20's `dia=22` dropping its bolts, B.15's ~400 silent failures, and now this. **The bolt table
+> is looked up by a NUMBER — hole diameter or grip — and a value that falls between rows yields no
+> bolt.** Not a broken style, not a missing database, not a broken creator. **Ask which number was
+> looked up, and print the ladder.**
+> ⛔⛔ **The process failure is the expensive part, and it is mine.** *"Closed after five
+> attempts"* went into the skill, the project README and PROGRESS — and the fix landed the same
+> morning, four hours later, while all three still told the next reader to stop looking. That is
+> exactly what חוק הרישום forbids: **a negative verdict is only as good as the preconditions the
+> test honoured**, and `CreateSingleBolt` at a nominal LENGTH was never a test of a creator that
+> wants a GRIP. **Never write "do not retry" in the same breath as "five attempts".**
+> ⭐ The one thing worth keeping from the wrong version: the census read `bolts=220` and
+> `526 − 306 = 220` exactly. **When a count is short, subtract what you know refused before
+> theorising.** That arithmetic was right; the conclusion drawn from it was not.
+
+> ## 🔎 THREE ASSUMPTIONS THAT DIED ON MODEL 3, AND ONE WAS ABOUT IDENTITY (18/08/2026)
+> `DRILL BASE`, 226 entities, rebuilt to **0.000 mm on all 44 members and 0.0000 mm on all 132
+> plates**. The geometry was never the lesson; three things the builder *assumed* were.
+> | the assumption | what the model said |
+> |---|---|
+> | a plate's **`L` runs along its frame's X** | **132 plates came back TRANSPOSED.** `L`/`W` are a printed pair, not an axis mapping — derive which is which from the frame, never from the order |
+> | **`insheight` is half the thickness** | model 3 carries its insertion point **on the mid-plane**, so every plate sat **15 mm** off. It is `mid − org` **measured**, and its value is a property of how that part was made |
+> | ⭐⭐ two bolts are the same fastener if their **midpoints** are close | **They are the same fastener when they share an AXIS.** ProSteel seats a bolt with **head and nut offsets**, so one bolt's midpoint can sit tens of mm from the packet's centre — a midpoint test both merges different bolts and splits one |
+> ⇒ 🧲 **All three are one shape of error: a printed summary standing in for a measurement** —
+> the same family as *"the summary line is not the part"*. `L`, `insheight` and a midpoint are all
+> **derived** numbers, and each is derived differently depending on how the part was built.
+> ⛔ **Still open on this model, and why it is `partial`:** its **48 bolts** were created at a
+> **fixed nominal length** where the source's were seated by ProSteel through the packet —
+> **188 collisions against the source's 0**. The route is now proven twice (models 4 and 6): derive
+> the ones that pass through holes with `boltparts`, and create only the rest directly.
+> 🧲 And a question logged without stopping the work: **24 of his 48 bolts pass through parts
+> carrying no modelled holes** — his own model reports `BOLT-NO-HOLE=24`. **Reproduced as-is.**
 
 > ## ⭐⭐⭐ THE FRAME AND THE CONTOUR ARE PARAMETERS — HAND THEM OVER, DO NOT SEARCH (19/08/2026)
 > Rebuilding Amir's 785-part gallery, four separate "orientation problems" turned out to be one
@@ -501,6 +539,44 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > differ, and neither reaches the steel.
 > ⚠️ `wt`, `cutArea` and `paintArea` are **nominal** — identical on the cut and the uncut plate.
 > The skill already said that of `Weight`; it is true of all three.
+>
+> ### ⛔⛔ AND THE APPLIER THREW THE BULGE AWAY — 8 OF 22 CUTS REFUSED `area=0` (19/08/2026, model 6)
+> `night_polycuts` **read** the bulge into the cache (the line above says so) and then wrote
+> `pts=` as `"%.4f,%.4f" % (v[0], v[1])`. A circle is only two points, so dropping the third
+> component collapses the ring to a **degenerate line**, and the op refuses with the exact
+> signature **`verts=3 area=0 applyRc=0`**. Measured on model 6: **14 of 22 applied, the 8 circles
+> all refused** — eight **⌀40 holes** modelled as poly-cuts, invisible to `dumpholes`.
+> ✅ The fix is a two-line test, not a new op: **two distinct vertices whose bulges are ±1.0 ⇒ a
+> circle**, centre = their midpoint, `r` = half their distance ⇒ `polycut shape=circle r=`.
+> After it: **22 of 22, 0 mismatched parts**, read back per part with `mods`.
+> ⇒ 🧲 **This is *"a measurement that does not reach the build is worth zero"* one level deeper:**
+> the number was not merely un-applied, it was **carried correctly all the way into the cache and
+> then discarded by the writer**. A reader and a writer that disagree about a field look like a
+> refusing API — the op's message blames the geometry, and the geometry it was handed really was
+> degenerate. ⇒ **When a creator refuses with a number that describes what you SENT (`area=0`,
+> `verts=3`), print what you sent before theorising about the creator.**
+> ⭐ And the discipline that kept it honest: the pts route was **left untouched**. It is what
+> closed model 5 at 0.001 mm, and all 22 of model 6's cuts measure a bbox-centre offset of
+> **0.0000 mm** — so there was nothing here to calibrate a change against. **Do not "improve" a
+> calibrated path on a model that cannot see the difference.**
+>
+> ### ⭐⭐⭐ AND THE BULGE IS A FAMILY, NOT AN INCIDENT — THREE DEFECTS, ONE IGNORED FIELD
+> Same night, same field, three unrelated-looking failures:
+> | where | what the bulge did |
+> |---|---|
+> | `getVertexbyValue` / `getVertexAsPoint` | returns the bulge **in place of x**, and **in `PsPoint.z`** — B.16 |
+> | a poly-cut **circle** | two vertices + bulge 1.0; dropping it refused `area=0` on 8 of 22 cuts |
+> | ⭐ **a CURVED plate's bounding box** | **64 plates in model 6 landed 0.14 mm out — every one of them curved** |
+> ⭐⭐ **The mechanism on the curved plate is the SAGITTA.** A bulged edge bows **past** its two end
+> vertices, so the part's true bbox reaches further than any vertex — while a bbox predicted **from
+> the vertices alone** stops at them. The re-placement pass was therefore correcting against a
+> target it could never reach, which is why the residual sat stubbornly sub-millimetre instead of
+> going to zero. It now **iterates until nothing moves**.
+> ⇒ 🧲 **A vertex is `(x, y, bulge)`, and the third number is GEOMETRY.** Any code that treats a
+> contour as a list of points is correct only for a straight-edged part — and it fails *quietly and
+> small*, which is the hardest size of error to see. **When a residual is stubborn, sub-millimetre
+> and confined to one family of parts, ask what that family has which the others do not** — here,
+> curvature, and the answer was in the data the whole time.
 
 > ## 🧭 FOUR CORNERS, FOUR SECTION FRAMES — AND THE DUMP SHOWS NONE OF THEM (18/08/2026)
 > The 48 corner angles of his 12 stools print **one identical ecs triad** in `dumpfull2`
@@ -1676,6 +1752,14 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 >   who holds each open drawing. **When Amir asks "תראה לי verify" — run it and paste it.**
 > - Only `worksession.py unassign` (Amir) lifts the lock. `close` of an assigned model
 >   shrinks the set; never leave the lock pointing at nothing.
+> - ⭐⭐ **AND AN ASSIGNMENT IS A DECLARATION, NOT AN OPERATIONAL STATE** (fixed 19/08/2026).
+>   `assigned_keys()` returned `[k for k in keys if k in st["sessions"]]`, and `close_session`
+>   pops the session — so a model Amir had **explicitly assigned fell out of his own lock the
+>   moment its drawing closed**, and re-entering it was then refused with *"ASSIGNED to ‹the
+>   others›"*. **Three refusals in one day, each right after AutoCAD died and was relaunched —
+>   i.e. exactly when the agent most needs to get back into its own model.** Whether a drawing is
+>   open right now is operational and `use()` reopens it; **the declared slots are the lock.**
+>   `worksession_selftest 49/49`.
 >
 > **His two situations, both measured end-to-end 17/08/2026:**
 > 1. **One model for the agent, Amir free** (6/6 gates): agent's AutoCAD launches FIRST,

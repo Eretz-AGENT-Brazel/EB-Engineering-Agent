@@ -1,0 +1,29 @@
+﻿shapes 472 | plates 412 (0 rectangular, 412 SHAPED) | bolts 526 | holes 813 | parts with cuts 407 | mods on 540
+cached -> projects/model-6\rebuild.json
+
+GATE                   MEASURED                                                 
+orphan parts           0 in the rebuild with no source part                     OK
+count shapes           472 source / 472 rebuild                                 OK
+count plates           412 source / 412 rebuild                                 OK
+count bolts            526 source / 526 rebuild                                 OK
+count holes            810 source / 813 rebuild                                 **FAIL**
+shape bbox SPAN        worst 0.0020 mm over 472 members (0 unpaired)            OK
+shape bbox CORNER      worst 0.0010 mm                                          OK
+plate CENTRE           worst 0.1020 mm (0 unpaired)                             **FAIL**
+plate DIMS             worst 0.4080 mm                                          **FAIL**
+plate CONTOUR          0 differ in SHAPE of 412 (131 only re-centred, 0 no contour) OK
+shape FRAME            0 of 472 differ                                          OK
+plate FRAME            0 of 412 differ                                          OK
+cut planes             984 source / 981 rebuild                                 **FAIL**
+hole POSITION          worst 0.1400 mm, 64 off, 0 on unpaired parts             **FAIL**
+hole DEPTH             worst 0.0000 mm                                          OK
+hole DIAMETER          0 mismatches                                             OK
+bolt axes              0 source bolts with no rebuild bolt on their axis        OK
+
+[rebuild] EB_ERR vfy_fit bolts=526 OK=0 BOLT-NO-HOLE=0 (נ§² iron rule) GAP-IN-PACKET=32 (ג the plies do NOT touch: worst 9.72mm of air, in BBC8) OVERSIZED=494 (spare>45) SHORT=0 (spare<15)
+[rebuild] EB_OK collision parts=884 collisions=60 newSolids=60 agree applyRc=1 minvol=100 SENT[minvol=100 mount=default(unreadable) pairs=ss,sp,pp,sb,pb] (write-only class: not verified) sec
+
+[source] EB_ERR vfy_fit bolts=526 OK=156 BOLT-NO-HOLE=0 (נ§² iron rule) GAP-IN-PACKET=32 (ג the plies do NOT touch: worst 10mm of air, in 1C15) OVERSIZED=338 (spare>45) SHORT=0 (spare<15)
+[source] EB_OK collision parts=804 collisions=20 newSolids=20 agree applyRc=1 minvol=100 SENT[minvol=100 mount=default(unreadable) pairs=ss,sp,pp,sb,pb] (write-only class: not verified) sec
+
+gates failed: 5
