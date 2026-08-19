@@ -315,10 +315,14 @@ def close_session(dwg=None):
     ses = st["sessions"].pop(key)
     if st.get("current") == key:
         st["current"] = None
-    keys = [k for k in assigned_keys(st) if k != key]      # never point at nothing
-    st["assigned"] = keys if keys else None
-    if not keys:
-        st.pop("assigned_at", None)
+    # ⛔ CLOSING A DOCUMENT MUST NOT SHRINK AMIR'S ASSIGNMENT. This used to drop the closed
+    # model out of the assigned set, and it cost real work on 19/08/2026: after AutoCAD died
+    # and was relaunched, re-entering model 5's SOURCE -- a model Amir had explicitly assigned
+    # minutes earlier -- was refused with "ASSIGNED to <the other three>", twice. An assignment
+    # is Amir's DECLARATION of what the agent may work on; closing a drawing is an operational
+    # act by the agent. Only `unassign` (his) may change the set.
+    # The old behaviour existed to avoid "pointing at nothing" -- but an assignment naming a
+    # model that happens to be closed is not pointing at nothing: the next `use()` reopens it.
     save(st)
     return ses
 

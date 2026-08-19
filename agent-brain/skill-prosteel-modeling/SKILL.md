@@ -53,6 +53,68 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > ⇒ **Count what the shop cuts.** A cutting drawing is made from a contour, not from a bbox, so a
 > repetition ratio measured on bboxes over-counts and is worth nothing to Amir.
 
+> ## ⛔⛔ A SIXTH LETHAL CALL: `PsBendShape.GetPolygon(PsPolygon3d)` (19/08/2026)
+> Model 5 holds **5 `Ks_BendShape`** — bent profiles that had **no reader at all** (`dumpfull2`
+> files them under `OTHER`, `dumppoly` answers `not-PsPlate`, `bendinfo` is for a bend PLATE). So
+> `op=bendshapeinfo` was written for them, six calls in one go — **and it killed AutoCAD**: no
+> exception, no dialog, `Get-Process acad` empty. Full list: `findings/LETHAL-CALLS-do-not-invoke.md`.
+>
+> ### ⭐⭐ THE SUSPECT WAS WRONG, AND ONLY ISOLATION FOUND THE TRUTH
+> I bet on **`ComputeObjectLength()`**, because this file's own rule says the lethal family is
+> `compute*`/`check*` on an entity class — and I even pre-marked it in the code as the culprit.
+> Rebuilt as **one named probe per invocation** (the pattern `plateinfo` already uses for exactly
+> this reason), the answer came in three runs:
+> | probe | what it calls | result |
+> |---|---|---|
+> | `safe` | `Key` · `Katalog` · `CrossSectionType` · `InsertOffsetX/Y` · `XOrientation` · `YOrientation` · `Direction` | ✅ alive |
+> | `ref` | `GetReferenceLine` | ✅ alive |
+> | **`path`** | **`GetPolygon(PsPolygon3d)`** + `GetVertexPoint`/`getVertex` | ⛔ **process gone** |
+> ⇒ **The family rule is a good prior, not evidence.** A suspicion written into a comment reads
+> like a finding a week later — isolate before you name a culprit.
+> ⭐ And what survived is genuinely useful: a bent profile reports its section and frame safely —
+> `key='BG60X6' cat='CHINA.CN_RZBG' xsec=kNormalType offX=0 offY=-3 X=0/0/1 Y=0/-1/0 dir=1/0/0` —
+> plus its reference line. **The PATH is what must come from somewhere else** (the COM wrapper is
+> the standing escape hatch when .NET refuses *or* kills).
+>
+> ### ⭐ AND THE BEND PLATE'S RECIPE READS FINE — `bendinfo` was never the problem
+> Model 5's eight deck pans: **`flangeCount=2`, each `len=150 ang=90 r=4 off=0/0 vtx=0-1
+> lenCalc=kLengthCalcModeAbsolut innerR=False`** — a flat pan with two 150 mm upstands at 90°,
+> 4 mm radius, absolute length mode. That is a complete build recipe, and v186's `bend` can now
+> write `UseInnerRadius`/`LengthCalculation`/`StartVertex`/`EndVertex` back.
+
+> ## 🔀 WORKING BESIDE AMIR: THE DIALOG GUARD MUST BE SCOPED, AND THE LAUNCH ORDER IS NOT ADVICE (19/08/2026)
+> He asked to work in parallel — *"תינעל על המודלים שאתה צריך אותם"* — and two things went wrong
+> in one hour, both worth carrying.
+>
+> ### ⛔ 1. HIS dialog stopped MY build. 182 parts never got created.
+> `modal_dialogs()` had already been narrowed (09/08) to *AutoCAD's own* dialogs — but
+> `_acad_pids()` returns **every `acad.exe` on the machine**. The moment he opened a **ProSteel
+> Copy/Move/Mirror/Align** dialog in his own second instance, every op came back
+> `EB_DIALOG a dialog is waiting and AutoCAD reports itself idle`, and a model-6 rebuild lost
+> **96 shapes and 86 plates** with zero orphans and no other damage — a silent, partial model.
+> ✅ **Fixed: scope to the instance we HOLD.** `app.HWND` *is* the instance (this file already uses
+> it as the fingerprint), and its window's pid is the only honest scope —
+> measured `{12888}` ours against `{12888, 6916}` for the machine. His dialogs are now invisible
+> to the guard; a dialog in **our** AutoCAD still blocks exactly as before.
+> ⭐ **The general form: a safety check must be scoped to the thing it protects.** A guard that
+> watches the whole machine will eventually stop work for a reason that has nothing to do with us.
+>
+> ### ⛔⛔ 2. WHEN BOTH INSTANCES DIE, HE MUST NOT BE THE FIRST TO RELAUNCH
+> Both AutoCADs disappeared mid-session (`processes: 0`). He relaunched with `Drawing1.dwg` — so
+> **the only COM-addressable instance in the machine was HIS**, and `bootstrap` refused, correctly:
+> ```
+> attached to the wrong AutoCAD: it holds ['Drawing1.dwg'], not '<our model>' -- refused
+> ```
+> Launching ours now would make it the **second** instance and therefore **invisible**, and every
+> op would refuse `EB_ERR unreachable` until one of the two closed.
+> ⇒ ⭐⭐ **This is why "the agent's AutoCAD launches FIRST" is a hard rule, not a preference —
+> and it applies again after any crash.** The recovery is his: he closes his instance, we launch,
+> then he launches second. **Do not relaunch into that situation and do not touch his drawing;
+> say the one sentence and wait.**
+> ⚠️ And the symptom to recognise: **`reachable=0` with a live process and a hint about Drawing
+> Recovery is NOT always a dialog** — it can be that the reachable instance is simply not ours.
+> Read what the reachable instance HOLDS before believing the hint.
+
 > ## 🔩 REBUILD A MODEL'S BOLTS FROM ITS OWN STYLES — AND `DIN7991` REFUSES (19/08/2026)
 > `boltparts` is the right instrument when ProSteel must **derive** a joint from the holes: on
 > model 4 it chose the source's own two lengths unprompted. It is the **wrong** instrument for a

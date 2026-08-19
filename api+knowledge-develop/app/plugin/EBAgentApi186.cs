@@ -8336,19 +8336,23 @@ namespace EBAgent
 
         // op=bendinfo handle=<bent plate>   -- read the SEGMENT TREE back
         // ===================================================================
-        //  op=bendshapeinfo handle=<h>       -- v186, READ A BENT PROFILE
+        //  op=bendshapeinfo handle=<h> [probe=key|frame|ref|path|len|safe]
         // ===================================================================
-        // A Ks_BendShape had no reader at all. `dumpfull2` files it under OTHER (centre and
-        // extents only), `dumppoly` answers `not-PsPlate`, and `bendinfo` is for a BendPLATE --
-        // so five bent profiles in model 5 could be seen and not rebuilt. Everything needed is
-        // on PsBendShape: the section (Key/Katalog), the PATH as a PsPolygon3d, the insertion
-        // offsets and the section frame. `bendshape name= catalog= pts=` consumes exactly that.
-        // ⚠️ getVertex hands back a PsPolygon3dVertex whose Center and Flag describe an ARC
-        // segment, so a curved path is reported, not silently straightened.
+        // v186, READ A BENT PROFILE -- and read it ONE CALL AT A TIME, by name.
+        // ⛔⛔ THE FIRST VERSION OF THIS OP KILLED AUTOCAD (19/08/2026). It made six calls in
+        // one go, among them **PsBendShape.ComputeObjectLength()** -- and this file already
+        // warns that the lethal pair found so far, computeObjectWeigth and
+        // checkHoleEdgeDistance, are both `compute*`/`check*` methods on an entity class, and
+        // that every one of them is suspect. The process vanished with no exception and no
+        // dialog, exactly like the other two, and which of the six did it was unknowable.
+        // So this op now follows the pattern `plateinfo` already uses for the same reason:
+        // ONE named probe per invocation, `safe` runs only the ones proven harmless, and
+        // `len` -- the suspect -- must be asked for explicitly.
         void BendShapeInfo(Dictionary<string, string> kv)
         {
             long oid = IdFromHandle(Get(kv, "handle", ""));
             if (oid == 0) { Result("EB_ERR bendshapeinfo: bad handle"); return; }
+            string probe = Get(kv, "probe", "safe").ToLower();
             StringBuilder sb = new StringBuilder();
             try
             {
@@ -8363,55 +8367,75 @@ namespace EBAgent
                                (o == null ? "null" : o.GetType().Name) + ")");
                         tr.Commit(); return;
                     }
-                    sb.Append("key='").Append(Safe(SafeS(delegate() { return bs.Key; }))).Append("'");
-                    sb.Append(" cat='").Append(Safe(SafeS(delegate() { return bs.Katalog; }))).Append("'");
-                    sb.Append(" xsec=").Append(SafeS(delegate() { return bs.CrossSectionType.ToString(); }));
-                    sb.Append(" len=").Append(F(SafeD(delegate() { return bs.ComputeObjectLength(); })));
-                    sb.Append(" offX=").Append(F(SafeD(delegate() { return bs.InsertOffsetX; })));
-                    sb.Append(" offY=").Append(F(SafeD(delegate() { return bs.InsertOffsetY; })));
-                    try { PsVector v = bs.XOrientation;
-                          sb.Append(" X=").Append(F(v.x)).Append("/").Append(F(v.y)).Append("/").Append(F(v.z)); }
-                    catch { }
-                    try { PsVector v = bs.YOrientation;
-                          sb.Append(" Y=").Append(F(v.x)).Append("/").Append(F(v.y)).Append("/").Append(F(v.z)); }
-                    catch { }
-                    try { PsVector v = bs.Direction;
-                          sb.Append(" dir=").Append(F(v.x)).Append("/").Append(F(v.y)).Append("/").Append(F(v.z)); }
-                    catch { }
-                    try
+                    bool all = (probe == "safe");
+                    if (all || probe == "key")
                     {
-                        PsPoint r1 = new PsPoint(0, 0, 0), r2 = new PsPoint(0, 0, 0);
-                        bs.GetReferenceLine(r1, r2);
-                        sb.Append(" ref=").Append(F(r1.x)).Append(",").Append(F(r1.y)).Append(",").Append(F(r1.z))
-                          .Append("->").Append(F(r2.x)).Append(",").Append(F(r2.y)).Append(",").Append(F(r2.z));
+                        sb.Append(" key='").Append(Safe(SafeS(delegate() { return bs.Key; }))).Append("'");
+                        sb.Append(" cat='").Append(Safe(SafeS(delegate() { return bs.Katalog; }))).Append("'");
+                        sb.Append(" xsec=").Append(SafeS(delegate() { return bs.CrossSectionType.ToString(); }));
                     }
-                    catch { }
-                    try
+                    if (all || probe == "frame")
                     {
-                        PsPolygon3d poly = new PsPolygon3d();
-                        bs.GetPolygon(poly);
-                        int n = poly.Count;
-                        sb.Append(" pathVerts=").Append(n).Append(" path=");
-                        for (int i = 0; i < n; i++)
+                        sb.Append(" offX=").Append(F(SafeD(delegate() { return bs.InsertOffsetX; })));
+                        sb.Append(" offY=").Append(F(SafeD(delegate() { return bs.InsertOffsetY; })));
+                        try { PsVector v = bs.XOrientation;
+                              sb.Append(" X=").Append(F(v.x)).Append("/").Append(F(v.y)).Append("/").Append(F(v.z)); } catch { }
+                        try { PsVector v = bs.YOrientation;
+                              sb.Append(" Y=").Append(F(v.x)).Append("/").Append(F(v.y)).Append("/").Append(F(v.z)); } catch { }
+                        try { PsVector v = bs.Direction;
+                              sb.Append(" dir=").Append(F(v.x)).Append("/").Append(F(v.y)).Append("/").Append(F(v.z)); } catch { }
+                    }
+                    if (probe == "ref")
+                    {
+                        try
                         {
-                            PsPoint pos = new PsPoint(0, 0, 0), ctr = new PsPoint(0, 0, 0);
-                            poly.GetVertexPoint(i, pos, ctr);
-                            if (i > 0) sb.Append(";");
-                            sb.Append(F(pos.x)).Append(",").Append(F(pos.y)).Append(",").Append(F(pos.z));
-                            bool curve = false;
-                            try { PsPolygon3dVertex vx = new PsPolygon3dVertex();
-                                  poly.getVertex(i, vx); curve = vx.isCurve(); } catch { }
-                            if (curve)
-                                sb.Append("@arc(").Append(F(ctr.x)).Append(",").Append(F(ctr.y))
-                                  .Append(",").Append(F(ctr.z)).Append(")");
+                            PsPoint r1 = new PsPoint(0, 0, 0), r2 = new PsPoint(0, 0, 0);
+                            bs.GetReferenceLine(r1, r2);
+                            sb.Append(" ref=").Append(F(r1.x)).Append(",").Append(F(r1.y)).Append(",").Append(F(r1.z))
+                              .Append("->").Append(F(r2.x)).Append(",").Append(F(r2.y)).Append(",").Append(F(r2.z));
                         }
+                        catch (System.Exception e2) { sb.Append(" ref!").Append(One(e2.Message)); }
                     }
-                    catch (System.Exception pe) { sb.Append(" path!").Append(One(pe.Message)); }
+                    if (probe == "path")
+                    {
+                        try
+                        {
+                            PsPolygon3d poly = new PsPolygon3d();
+                            bs.GetPolygon(poly);
+                            int n = poly.Count;
+                            sb.Append(" pathVerts=").Append(n).Append(" path=");
+                            for (int i = 0; i < n; i++)
+                            {
+                                PsPoint pos = new PsPoint(0, 0, 0), ctr = new PsPoint(0, 0, 0);
+                                poly.GetVertexPoint(i, pos, ctr);
+                                if (i > 0) sb.Append(";");
+                                sb.Append(F(pos.x)).Append(",").Append(F(pos.y)).Append(",").Append(F(pos.z));
+                                bool curve = false;
+                                try { PsPolygon3dVertex vx = new PsPolygon3dVertex();
+                                      poly.getVertex(i, vx); curve = vx.isCurve(); } catch { }
+                                if (curve)
+                                    sb.Append("@arc(").Append(F(ctr.x)).Append(",").Append(F(ctr.y))
+                                      .Append(",").Append(F(ctr.z)).Append(")");
+                            }
+                        }
+                        catch (System.Exception pe) { sb.Append(" path!").Append(One(pe.Message)); }
+                    }
+                    if (probe == "len")
+                    {
+                        // ⛔ THE SUSPECT. Never part of `safe`, never run beside anything else:
+                        // if AutoCAD dies on this invocation, this call is the culprit and the
+                        // marker below is the only surviving evidence.
+                        try { File.WriteAllText(Ch("eb_probe.txt"),
+                              "about to run: bendshapeinfo len -> ComputeObjectLength on " +
+                              Get(kv, "handle", ""), Encoding.UTF8); } catch { }
+                        sb.Append(" len=").Append(F(SafeD(delegate() { return bs.ComputeObjectLength(); })));
+                    }
                     tr.Commit();
                 }
             }
             catch (System.Exception ex) { Result("EB_ERR bendshapeinfo: " + One(ex.Message)); return; }
-            Result("EB_OK bendshapeinfo handle=" + Get(kv, "handle", "") + " " + sb.ToString());
+            Result("EB_OK bendshapeinfo handle=" + Get(kv, "handle", "") +
+                   " probe=" + probe + sb.ToString());
         }
 
         void BendInfo(Dictionary<string, string> kv)
@@ -12616,7 +12640,7 @@ namespace EBAgent
             { "arcplate", "|bigarc|center|layer|name|normal|p1|p2|rot|t|w|xpos|ypos|" },
             { "bendshape", "|arc|catalog|circle|handle|helix|kind|layer|name|pts|refaxis|rot|" },
             { "bend", "|angle|at|convert|endoffset|endvertex|front|handle|inner|len|lengthcalc|radius|rear|startoffset|startvertex|useinner|" },
-            { "bendshapeinfo", "|handle|" },
+            { "bendshapeinfo", "|handle|probe|" },
             { "bendinfo", "|handle|max|" },
             { "bendtwo", "|at|delete2|h1|h2|inner|k|radius|" },
             { "plateinfo", "|handle|probe|" },
