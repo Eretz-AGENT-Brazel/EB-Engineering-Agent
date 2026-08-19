@@ -53,6 +53,55 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > ⇒ **Count what the shop cuts.** A cutting drawing is made from a contour, not from a bbox, so a
 > repetition ratio measured on bboxes over-counts and is worth nothing to Amir.
 
+> ## ✅ MODEL 5 CLOSED AT 17/17 — AND THE FOUR THINGS THAT CLOSED IT (19/08/2026)
+> Amir's 785-part gallery now reads **`gates failed: 0`**: counts exact on shapes, plates, bolts,
+> holes and cut planes; contours 0 of 306; frames 0/175 and 0/314; plate centre **0.0000**, plate
+> dims 0.0010; hole position and depth **0.0000** with none off and none unpaired; bolt axes 0.
+>
+> ### ⭐⭐⭐ 1. `AddFlange(len)` IS NOT THE DIALOG'S FLANGE LENGTH
+> The eight deck pans read `flangeCount=2` and **scan to three** (`FlangeCount` counts only
+> top-level segments — this file's own warning), each `len=150 ang=90 r=4 off=0/0
+> lenCalc=kLengthCalcModeAbsolut innerR=False`, over a folded envelope of `2462 × W × 156` and a
+> developed length of 2756.283.
+> | built with | envelope |
+> |---|---|
+> | the source's own `len=150` | 2464 × W × **162** — six too tall |
+> | **base 2300 + upstands 144 + return 148** | **2462 × W × 156 — exact on all eight** |
+> ⛔ **And no mode bridges the 6 mm:** all four `LengthCalculation` values produce *identical*
+> geometry (measured), and `UseInnerRadius=1` adds a further 2 mm. So `lengthcalc` is **inert
+> from the API** while `useinner` is live.
+> ⚠️ **The return folds off the upstand's OWN top edge, read back from the part just built** —
+> the source's edge is the wrong point, a **corner** point silently folds the perpendicular edge
+> (the width grew 6 mm instead), and the base plane answers `rc=-1` once the parent is up.
+> 🧲 **The honest cost, stated not hidden:** the rebuilt pan's flange fields then read 144/148 and
+> `props L` reads the BASE length, where the source reads the DEVELOPED 2756.283 — **an API-built
+> bend plate does not recompute its developed length, so a flat blank must be taken from the
+> source, never from the rebuild.**
+>
+> ### ⭐⭐ 2. WHAT CANNOT BE CREATED CAN STILL BE CARRIED — THE BLOCK ROUTE
+> The 5 `Ks_BendShape` and 52 `Ks_VolBody` anchors have no reachable creator. `block
+> action=createfile handles=…` → `insert at=0,0,0` → `explode keep=1` → delete the leftover
+> reference brought all **57 across at 57 of 57 identical class, layer and centre**, with their
+> holes. ⇒ **For a part whose creation API is closed, transfer is not a workaround — it is the
+> route**, and D.2 says the exploded parts behave as if newly created.
+>
+> ### ⭐⭐ 3. POLY-CUTS ARE A THIRD KIND OF MODIFICATION, AND THE READER IGNORED THEM
+> `night_read` captured cut PLANES only, so a rebuild carried **0 of the source's 18 poly-cuts**.
+> Fourteen are invisible to every gate (this shop models some holes as poly-cuts) — **four TRIM
+> the plate**, and that is what `plate DIMS` caught on a plate whose contour matched byte for byte
+> and whose centre matched to 0.0000: 159.901 against 164.46.
+> ✅ `app/night_polycuts.py` reads them through the COM wrapper and applies them with
+> `polycut shape=pts`.
+> ⚠️⚠️ **A poly-cut's `at` needs the SAME bbox-centre correction a plate does.** Aimed at the
+> cut's own `InsertPoint` it trimmed **exactly half** (2.279 of 4.559). Aim at the polygon's bbox
+> centre — `at = ins + cx·xaxis + cy·yaxis` — and it lands at 0.001 mm.
+>
+> ### ⭐ 4. A ROUND ANGLE, RECOGNISED, IS WORTH 0.015 mm
+> Two `BG60X6` flats sat at `X=-0.819/0.574/0` — cos35/sin35 rounded to three decimals.
+> Substituting the exact values took the bbox span from **0.021 → 0.006 mm**. Same cure this file
+> already records for 20°; the search is worth automating (snap a printed component to a
+> round-degree sine or cosine when one explains it to 1e-9).
+
 > ## ⛔⛔ A SIXTH LETHAL CALL: `PsBendShape.GetPolygon(PsPolygon3d)` (19/08/2026)
 > Model 5 holds **5 `Ks_BendShape`** — bent profiles that had **no reader at all** (`dumpfull2`
 > files them under `OTHER`, `dumppoly` answers `not-PsPlate`, `bendinfo` is for a bend PLATE). So

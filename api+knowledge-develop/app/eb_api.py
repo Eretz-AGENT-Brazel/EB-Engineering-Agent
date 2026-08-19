@@ -545,6 +545,23 @@ def _app():
     want = EXPECT_DWG or ""
     if want:
         cands = acad_instances()
+        # ⭐ DE-DUPLICATE ON THE WINDOW HANDLE FIRST. This file already records the measurement
+        # (17/08/2026): with two acad.exe running, the ROT publishes TWO entries under the same
+        # moniker and **both bind to the same instance** -- identical HWND, identical document
+        # list. So "open in 2 instances" was a false positive, and on 19/08/2026 it aborted a
+        # model-6 rebuild eleven minutes in, with the two document lists printed side by side
+        # and character-for-character identical. The window IS the instance (the fingerprint
+        # used elsewhere in this file), so collapse candidates that share one.
+        seen = {}
+        for a, d in cands:
+            try:
+                k = int(a.HWND)
+            except Exception:
+                k = id(a)
+            if k not in seen:
+                seen[k] = (a, d)
+        if len(seen) < len(cands):
+            cands = list(seen.values())
         if len(cands) > 1:
             hit = [(a, d) for (a, d) in cands
                    if any(want.lower() in n.lower() for n in d)]
