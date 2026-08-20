@@ -1108,6 +1108,33 @@ Use its constructors, not hand-built vertex lists.
 circumradius. `pg.check(tol, fixIt)` before cutting catches an unclosed or self-intersecting
 outline, which would otherwise fail obscurely.
 
+### ⏱️ `polycut` vs `drill` — and what `depth` really does (measured 20/08/2026)
+
+⛔ **`depth` is NOT the prism length.** Measured over six configurations on a live plate:
+```
+ins = at - depth*n          n = xaxis x yaxis
+end = at + 10000*n          <- the far end is FIXED, whatever depth says
+depth <= 0                  -> a symmetric +/-5000 about `at` instead
+```
+So a dialog-made cut (`ins +4999 -> end -5001`, 10 m symmetric) **cannot be reproduced exactly**
+from this op: the hole, its centre and its diameter match, the cut object's extent and its `Flag`
+(1 against the dialog's 0) do not. Neither reaches the steel.
+⛔ **And one setting is a real defect:** aim `at` at the plate mid-plane with a depth that ends
+there and the prism **stops inside the material** — half a hole that counts as one in every
+census. Read `ins`/`end` back on the first cut.
+
+🧲 **For a FIELD of round holes, use `drill`, not `polycut`.** `PsCutObjects.Apply()` rebuilds the
+plate solid with every cut already on it, so the cost is quadratic — **1.6 s at the 25th hole,
+13.4 s at the 100th, ~66 s at the 210th (423 holes = 2 h 40 min)**. `drill` is flat at
+**0.39 s/hole (1,172 holes in 458 s)**. Full account in `SKILL.md`.
+
+⚠️ **`drill dia=` is the BOLT diameter** — a ⌀30 ventilation hole is `dia=30 play=0`. **No
+`flange=` on a plate.** And a hole's read-back midpoint sits at **half the plate thickness** off
+the face, so an "already drilled?" test must compare **in-plane**, never in raw 3-D.
+✅ **`killholefield handle= field=`** removes one field (= one hole here). **Hole order in
+`dumpholes` == field order** — proved by killing the last field and reading back which hole
+vanished. **Delete highest index first.**
+
 ### `cutat` — cut one part at another (manual B.12.1)
 
 ⚠️ **Precondition, verbatim:** *"The plane actually hit by the centerline (or the extended

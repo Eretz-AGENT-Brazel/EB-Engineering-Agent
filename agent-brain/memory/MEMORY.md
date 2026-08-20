@@ -44,4 +44,6 @@
 - [Build target](build-target.md) — ⚡ קריאה ממודל אחר מחליפה את המסמך הפעיל — והבנייה שאחריה נוחתת שם; מצהירים `build_target` לפני שבונים
 - [One error, three masks](one-error-three-masks.md) — ⚡ לפני שמסיקים שה-API מוגבל — להשוות מוטת bbox מול המקור; טעות מידול אחת מתחפשת לשלוש
 - [Copy from the model](copy-from-the-model.md) — ⚡⚡ יש דוגמה במודל ⇒ לא מנחשים ולא שואלים, משווים · חלק = קונטור+מודיפיקציות+מסגרת, לא שורת הסיכום
+- [Drill not poly-cut](drill-not-polycut.md) — ⚡ שדה חורים בלוח ⇒ `drill` (0.39 שנ'/חור, קבוע) ולא `polycut` (ריבועי, עד 66 שנ') · מרכז חור יושב בחצי העובי ⇒ השוואה במישור בלבד
+- [Ventilation perforation](ventilation-perforation.md) — סוג פרט חדש: חירור פלטה 2 מ"מ לאוורור תא — החור הוא המוצר, והיחידה היא הפאה
 - [No invented rules](no-invented-rules.md) — ⚡ מודל לא נגמר עד שכולו הושלם, **בלי שום מגבלת זמן** · ואסור להמציא חוקים שהוא לא אמר (18/08)

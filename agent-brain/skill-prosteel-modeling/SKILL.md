@@ -11,6 +11,129 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 `app/…`, `qc/…`, `knowledge/…`, `projects/…` path in this skill is relative to that folder.
 (`agent-brain/PROGRAM.md`, `PROGRESS.md` and `standards/` sit at the repo root.)
 
+> ## 🌬️ A NEW DETAIL TYPE: **A PERFORATED PLATE, FOR VENTILATION** (Amir, 20/08/2026)
+> *"מדובר בתא משאבות שצריך איוורור ולכן אנחנו קודחים את החורים האלו בפלטות שייכנס אוויר לתא."*
+> Until now every hole in this skill was a **bolt** hole. This one carries no fastener at all —
+> **the hole IS the product**: an air path into a closed chamber. It joins hinged lids and
+> access chambers as a detail type Eretz Barzel builds.
+>
+> | measured on the pump chambers (‏פ.ק אלקטרה) | |
+> |---|---|
+> | skin | **2 mm plate** — the same sheet the chamber walls are made of |
+> | hole | **⌀30**, drilled clean through (`depth = 2.0` read back) |
+> | closest two holes | **44.527 mm centre to centre** ⇒ **14.5 mm of steel** left between them |
+> | hole centre to plate edge | **58–60 mm** ⇒ a **43–45 mm rim** all round |
+> | the module | one pattern per FACE TYPE — **179 holes on each of the 4 long faces, 228 on each of the 2 short ones** |
+>
+> ⭐⭐ **The unit is the FACE, not the hole.** Amir states it as *"4 identical faces with one
+> uniform hole module, and 2 identical faces with another"* — so the module is drawn **once per
+> face type** and replicated. That is build-once-then-replicate applied to a hole field, and it
+> is also what makes the shop drawing sane: **two perforation programs, not six.**
+> ⚠️ The module is **not a grid** — it is a free pattern (staggered rows, varying counts per row),
+> so `drillfield`'s layout string cannot express it. Hole-by-hole `drill` from the source
+> geometry is the route, and at 0.39 s/hole it is cheap.
+> ⭐ **The pattern arrives as `AcDbCircle` entities on a layer of its own** (`HOLES` on one job,
+> `0` on the next) — Amir draws the circles, the agent turns them into holes. **Read the circles'
+> radius rather than assuming**: r=15 both times, and the diameter is the hole's own size, not
+> a bolt + clearance.
+> 🧲 **The rim and the ligament are the numbers to check on any new perforation** — a 2 mm skin
+> with 14.5 mm between ⌀30 holes still handles as a panel; halve that and it buckles in the jig.
+> Neither number is a rule Amir stated; both are **measured off a detail he shipped**, so they are
+> the reference point for the next one, not a standard to quote at him.
+
+> ## ⏱️⏱️ A HOLE IS **DRILLED**, NOT CUT — `drill` IS LINEAR, `polycut` IS QUADRATIC (20/08/2026)
+> Amir's pump chambers need ventilation, so their 2 mm envelope plates carry hundreds of ⌀30
+> holes. Both routes were run on the same job, in the same week, and the difference is not a
+> detail — **it is the difference between a coffee break and half a day.**
+>
+> | route | what it does per hole | measured |
+> |---|---|---|
+> | **`polycut shape=circle`** | `PsCutObjects.Apply()` **rebuilds the plate's solid with every cut already on it** | **1.6 s** at the 25th hole · **13.4 s** at the 100th · **≈66 s** at the 210th ⇒ **423 holes = 2 h 40 min** |
+> | ⭐ **`drill dia=30 play=0`** | `PsDrillObject` adds a hole field; the body is not re-derived | **0.39 s/hole, FLAT** ⇒ **1,172 holes = 458 s** |
+>
+> ⇒ 🧲 **For a field of holes in a plate, DRILL. Reserve `polycut` for openings that are not
+> round, or that trim the plate's outline.** The cost of the poly-cut route grows with the number
+> of cuts *already on that plate*, so it is worst exactly where a ventilation or perforation
+> pattern needs it most. Amir's own words after the comparison: *"קידוח DRILL הרבה יותר מקל על
+> מודל מאשר לחתוך צורה עם פוליקאט"*.
+> ⚠️ `dia=` is the BOLT diameter and the hole comes out `dia + play`, so a **⌀30 hole is
+> `dia=30 play=0`** — the +2 iron rule is for BOLT holes; a ventilation hole is drawn at its own
+> size. And **no `flange=` on a plate** (that selector is for shapes).
+> ⭐ Read back on a 2 mm plate: `dia=30.0 depth=2.0` — the hole goes clean through, one field per
+> call, and `mods` counts them in `holeFields`.
+>
+> ### ⛔⛔ THE MID-PLANE TRAP — IT COST 24 DUPLICATE HOLES IN AMIR'S LIVE FILE
+> A hole's read-back midpoint sits **half the plate thickness off the face you drilled from**.
+> So a "does this hole already exist?" test written as a **3-D** distance against the point you
+> are about to drill is off by `t/2` on **every** hole, answers *"not there"* every time, and the
+> batch re-drills the lot. Measured: 24 of Amir's own holes on `EAF` were silently doubled, and
+> the same bug then made a repair pass match **0 of 8** targets.
+> ⇒ 🧲 **Compare holes IN-PLANE — project onto the plate's own `X`/`Y` and drop the normal
+> component.** Same family as *"read where the material is, not where the point is"*.
+> ⚠️ And **a duplicate hole is invisible to geometry** — same bbox, same solid, same collision
+> count. It surfaces in the **parts list and the cutting drawing**, which is where it costs money.
+> **Count holes per part against the pattern you asked for, every time.**
+>
+> ### ✅ THE REPAIR ROUTE, AND THE ORDERING THAT MAKES IT SAFE
+> `killholefield handle= field=` removes one hole field, and with one hole per field that is one
+> hole. **Hole order in `dumpholes` == field order** — proved, not assumed, by killing the last
+> field and reading back *which* hole vanished (then re-drilling it). **Delete highest index
+> first**; removing a field renumbers everything after it.
+> ⭐ **A guard that refuses is worth more than a guard that reports.** The repair script demanded
+> *exactly 8 B-holes and 8 A-holes, disjoint*, before deleting anything — and when the 3-D bug
+> made it match 0, it deleted nothing and said so. That is the only reason the mistake cost a
+> re-run instead of 32 wrong holes.
+>
+> ### ⚠️ `polycut`'s `depth` IS NOT THE PRISM LENGTH — measured on six configurations
+> `ins = at − depth·n`, and **the far end is FIXED at `at + 10000·n`**; `depth ≤ 0` gives a
+> symmetric ±5000 instead. So a dialog-made cut (Amir's: ins +4999 → end −5001, 10 m symmetric)
+> **cannot be reproduced exactly from the op** — the hole, its centre and its diameter are
+> identical, the cut object's extent and its `Flag` (1 against his 0) are not. Neither reaches
+> the steel. Say so rather than chase it.
+> ⛔ And one configuration is a **real** defect: aim `at` at the plate's mid-plane with a depth
+> that ends there and the prism **stops inside the material** — half a hole, which counts as one
+> hole in every census. Caught by reading `ins`/`end` back on the probe.
+
+> ## 🧩 REPLICATING A HOLE MODULE ONTO IDENTICAL FACES — CALIBRATE ON WHAT HE ALREADY DID (20/08/2026)
+> The job: one ventilation module drawn as circles on **one** face, to be reproduced on the other
+> three identical faces (and a second module across two more). The method that made it exact:
+>
+> 1. **Express the module in the SOURCE plate's own frame** — `(u,v) = ((P−org)·X, (P−org)·Y)`.
+> 2. **Re-emit it in each TARGET plate's frame.** `props` `org`/`X`/`Y` is the whole mapping;
+>    nothing is searched.
+> 3. ⭐⭐ **Calibrate against the face Amir had already started by hand.** He had drilled 24 of
+>    them on one face; mapping the module onto that face reproduced **24 of 24 at 0.0000 mm**
+>    *before* a single new hole was made. **That is the go/no-go, and it is free.**
+>
+> ⛔⛔ **AND THE TRAP THAT ONLY THE FRAME READ REVEALS: TWO PLATES CAN SHARE ONE INSERTION POINT.**
+> The four long faces are two pairs, and each pair prints the **same `org`** — the second plate of
+> a pair lives at local `u 1052.5…2180` while the first lives at `u −115…1012.5`. Map by `(u,v)`
+> alone and the module lands **on top of its neighbour**, outside the target's own material.
+> The offset is the plate pitch (**+1167.5** here) and it equals the distance between the two
+> plates' centres — two independent routes to the same number, which is what makes it safe to use.
+> ⇒ 🧲 **Before replicating anything by local coordinates, print each target's local `u`/`v`
+> extent from its own bbox and check the module falls inside it.**
+>
+> ### ⚠️ AND READ THE SOURCE MODULE FOR COINCIDENCES BEFORE YOU REPLICATE IT
+> His 179-circle module carried **3 pairs at 0.0000 mm and 8 pairs at 0.527 mm** — all on the same
+> three rows, the signature of a row copied twice with a tiny offset. Replicated to four faces
+> that is **44 holes that should not exist**, and two ⌀30 holes half a millimetre apart are not
+> two holes: the CNC cuts one blob. **A pairwise minimum-distance pass over the pattern costs
+> seconds and belongs before the first hole.** ⛔ It is a **question for Amir**, never a silent
+> correction — he chose to delete the exact pairs and, of the near pairs, the `B` member.
+> ⚠️ Report it against the CLOCK, too: the same audit found **16 redundant ⌀17 holes stacked
+> 2–3 deep on six `EA120X120X8` angles** in his model, which **pre-dated the session** — proved by
+> the `dumpholes` census taken before the first drill (`withholes=9 holes=56`). **When an audit
+> fires on the customer's own model, prove WHEN the defect arrived before naming it.**
+>
+> ### 🖥️ AND A FROZEN SCREEN IS NOT A HUNG SESSION
+> A batch that saturates the command stream leaves AutoCAD `Responding=False` and the drawing
+> unredrawn, so Amir sees nothing happening for minutes at a time. **The witness that it is alive
+> is the age of `ch/<slot>/eb_result.txt`, not the window** — and the count inside it
+> (`before[…p142…] after[…p143…]`) is read from the part itself, so it is progress, not a claim.
+> ⭐ `_REGENALL` when a batch ends, or when he asks to see it. And say the number of holes left
+> and the current seconds-per-hole rather than an estimate made on the first 25.
+
 > ## ⛔⛔⛔ I BUILT 314 PLATES AS RECTANGLES. ONLY 69 OF THEM ARE RECTANGLES. (18/08/2026, model 5)
 > Amir stopped the run with one sentence — *"אני אראה את זה בחומרה אם לא תדייק את כל הפלטות, את
 > כל הצורה שלהם — **יש לך המון ריפים שם**"* — and he was right before any measurement existed.
