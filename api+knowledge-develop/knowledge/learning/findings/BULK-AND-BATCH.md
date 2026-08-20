@@ -103,25 +103,39 @@ op=xclone from=<drawing open in this AutoCAD> handles=<h,h,…> [out=eb_xclone.t
    are Forms and parameter holders (`CPSPC_PrecastPanelForm`, `CPSPC_PrecastPanelParameters`,
    `UserConnection`) — the interactive layer, exactly like the 62 `PSN_*` macros.
 
-### ⏳ AND `xclone` HAS A COST CURVE — IT HUNG ON THE THIRD BATCH OF DIMENSIONS
+### ⏳ `xclone` IS INSTANT ON PARTS AND PATHOLOGICALLY SLOW ON ANNOTATION
 
-Measured on the same night. In batches of 200 it cloned **678 profiles, 329 ProConcrete
-objects, 7 solids, 26 bend shapes** and then dimensions at **2 s, 87 s, and never**: the third
-batch pinned AutoCAD at one core for 14 minutes with memory flat, and the session had to be
-killed (see [[LETHAL-CALLS-do-not-invoke]], entry seven).
+Measured on the same night, same op, same drawing:
 
-> ⭐⭐ **2 s → 87 s → ∞ was the warning, in the log, before the hang.** A batch forty times
-> slower than the identical batch before it means the call's cost depends on what the
-> destination already holds — dimensions drag dimension styles, text styles and blocks, and each
-> clone reconciles them against everything already cloned.
-> ⇒ **Watch the per-chunk time and stop at the second jump.** And for the next attempt, try
-> **one call for the whole class** rather than chunks: if the cost is per call over the existing
-> set, fewer calls is strictly cheaper. That is the measurement to make.
+| what | how many | how long |
+|---|---:|---|
+| profiles with an absent catalogue | 678 | **5 s** (batches of 200) |
+| ProConcrete panels + slabs | 329 | **2 s** |
+| 3D solids · bend shapes | 7 · 26 | **3 s · 1 s** |
+| ProConcrete shapes · assemblies · work frames · the grid | 29 · 18 · 6 · 1 | **0.4-0.5 s each call** |
+| **dimensions** | 200 | **2 s, then 87 s, then ~40 MINUTES** |
+| **lines** | 133 | tens of minutes |
 
-⛔ **A hang ends the session, not just the op.** The hung instance keeps its COM registration,
-so `GetActiveObject` resolves to it and never answers — and a healthy AutoCAD started afterwards
-is **unreachable**, verified. It also keeps the drawing's file lock. Save before every risky
-batch; the 20-second-old save is what made this cost nothing.
+🛑 **AND IT WAS FIRST WRITTEN UP AS A HANG. THAT WAS WRONG.** It shows the exact spin signature
+this project documents — `Responding=False`, CPU pinned at one core, memory flat, the file
+untouched — and it **returns**. See [[LETHAL-CALLS-do-not-invoke]] § "the seventh entry was
+wrong": one core and flat memory is what *any* single-threaded compute-bound call looks like,
+and **only whether it comes back separates a slow call from a loop.**
+
+> ⭐⭐ **The cost is in the OBJECT, not in the op.** A part carries a section reference; a
+> dimension carries dimension styles, text styles, blocks **and associativity to the geometry it
+> measures**, so cloning it drags an object graph that has to be reconciled against everything
+> already cloned. That is why the same call is 0.4 s for 29 concrete columns and tens of minutes
+> for 200 dimensions.
+> ⇒ **Clone parts freely. Treat annotation as a long-running job**: give it its own window, do
+> not chunk it small (each call re-pays the reconciliation), and expect to wait.
+
+⛔⛔ **AND A LONG CALL BLOCKS THE WHOLE MACHINE, WHICH IS THE REAL OPERATIONAL LESSON.** While
+that instance was busy it **kept its COM registration**, so `GetActiveObject` resolved to it and
+never answered — and a healthy AutoCAD launched afterwards, verified `Responding=True` with a
+copy of the drawing open, was **unreachable**. It also held the file lock. The 17/08 rule
+("only the earliest live instance is reachable") holds for a **busy** instance too.
+⇒ **Save before a long batch, and do not start one you cannot afford to wait out.**
 
 ⇒ **Everything the API can build parametrically is built parametrically. The rest is cloned,
 and every cloned part is declared as cloned.** A rebuild that hides which route each part took

@@ -116,6 +116,34 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > place a bolt correctly, and **a bolt that is right in position and length and wrong in grip
 > passes every visible gate** while being the wrong part in the shop.
 >
+> ### ⏳⏳ AND THE MISTAKE THAT COST THE REST OF THE NIGHT: I CALLED A SLOW CALL A HANG
+> `xclone` clones **parts** instantly — 678 profiles in 5 s, 329 ProConcrete panels in 2 s, and
+> 29 concrete shapes / 18 assemblies / 6 work frames / the grid at **0.4-0.5 s per call**. On
+> **annotation** the same op is pathologically slow: **200 dimensions took 2 s, then 87 s, then
+> ~40 minutes**, and 133 lines the same. A part carries a section reference; a dimension carries
+> dimension styles, text styles, blocks **and associativity to the geometry it measures**, so the
+> clone drags a graph that must be reconciled against everything already cloned.
+>
+> **I wrote it up as an eighth lethal call.** It showed the documented spin signature exactly —
+> `Responding=False`, CPU pinned at one core, memory flat, the file untouched — so I recorded it
+> as unrecoverable, stopped building, and wrote the session off. **Forty minutes later it
+> returned with the work done**, and I only found out because a stray background probe reported
+> the process responding again.
+>
+> > ⭐⭐⭐ **ONE CORE AND FLAT MEMORY IS WHAT EVERY SINGLE-THREADED COMPUTE-BOUND CALL LOOKS
+> > LIKE.** The spin signature cannot tell a loop from a slow call. **Only whether it returns
+> > can** — and the only way to know that is to wait.
+> > ⇒ **The test is the op's own history:** a call already measured at 0.4 s that now takes 14
+> > minutes is a hang. A call whose **cost curve was climbing in the log** (2 s → 87 s → ?) is a
+> > slow call you have not waited out. ⚠️ And the cost of the early verdict was not the machine —
+> > **it was everything that would have followed it.** A negative conclusion issued early is more
+> > expensive than the wait it was meant to save.
+>
+> ⛔ **What does stand: a long call blocks the whole machine.** The busy instance keeps its COM
+> registration (so `GetActiveObject` resolves to it and never answers) **and** the drawing's file
+> lock — a healthy AutoCAD launched afterwards measured **unreachable**. ⇒ **save before a long
+> batch, and do not start one you cannot afford to wait out.**
+>
 > ### 🕳️ AND A SLOTTED HOLE IS WHATEVER `lhm` SAYS IT IS
 > The same 2,282 parts: `lhm=0` → 11,657 holes and **the slot flag is lost**; `lhm=1` → 11,657
 > with **608 flagged**; `lhm=2` (**the default**) → **12,265**, because every slot is reported as

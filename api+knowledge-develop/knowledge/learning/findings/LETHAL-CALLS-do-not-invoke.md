@@ -26,36 +26,39 @@ family needs one place to look before calling anything unfamiliar.*
 | **binding + reading a `PsEditConnection`** | `PsTransaction.GetObject(Int64, PsOpenMode, PsEditConnection&)` | **B.27 audit, 10/08** | **first call**, on beam `15EE`. Not isolated: bind-then-read is one call, so which half is the killer is unknown |
 | ⏳ **`SetFileName("*.mdb")`** | **`PsDBaseDatabase`** (op `dbase`) | **lesson 6, 13/08** | ‏`Data\Bolts\Australia.mdb` (479 KB). **A HANG, not a crash** — the process stays listed, `Responding=False`, **CPU pinned at a full core** and memory **flat at 610 MB for 2 minutes** (an endless loop, not a slow parse). Killed and relaunched. **Guarded in `eb_api.run`: `dbase` now refuses any file that is not `.dbf`** |
 | **`GetPolygon(PsPolygon3d)`** | **`PsBendShape`** (op `bendshapeinfo probe=path`) | **19/08/2026, model 5** |
-| ⏳ **`xclone` over a batch of DIMENSIONS** | our own op — `Database.WblockCloneObjects` across two open drawings | **20/08/2026, the bridge model** | **A HANG, not a crash.** The same op had just cloned 678 profiles, 329 ProConcrete objects, 7 solids, 26 bend shapes and **400 dimensions** in batches of 200, at 2 s and then 87 s. The THIRD batch of 200 never returned: `Responding=False`, **CPU pinned at exactly one core for 14 minutes**, memory **flat at 2,524 MB**, and the drawing on disk untouched since the previous save. Everything was saved 20 seconds earlier, so the kill cost nothing but the session |
+| ⚠️ ~~**`xclone` over a batch of DIMENSIONS**~~ | our own op — `Database.WblockCloneObjects` across two open drawings | **20/08/2026, the bridge model** | 🛑 **NOT A HANG — RETRACTED THE SAME EVENING, ONE HOUR LATER.** It looked exactly like the spin signature (`Responding=False`, CPU pinned at one core, memory flat at 2,524 MB, the file untouched) and it **RETURNED after ~40 minutes** with the work done. It is a **pathologically slow call on annotation**, not an endless loop: 200 profiles / concrete objects / solids / bend shapes clone in **0.4-0.5 s**, and 200 dimensions or lines take tens of minutes. Belongs in [[BULK-AND-BATCH]] as a cost curve, not here |
  isolated **by name** with the `plateinfo` probe pattern. `probe=safe` (Key/Katalog/CrossSectionType/offsets/axes) and `probe=ref` (`GetReferenceLine`) both returned and left the process alive; `probe=path` -- `GetPolygon` plus `GetVertexPoint`/`getVertex` -- killed it, `Get-Process acad` empty. ⭐ **The suspect was wrong:** I had bet on `ComputeObjectLength()` because this file says `compute*`/`check*` are the family, and pre-marked it as the culprit. Only the isolation found the truth |
 
-### ⏳ AND THE SEVENTH — OUR OWN OP, AND THE COST CURVE IS THE WARNING
+### 🛑 THE SEVENTH ENTRY WAS WRONG, AND IT WAS WRONG FOR ONE HOUR
 
-`xclone` is not a ProSteel call; it is `WblockCloneObjects`, and it is the route this project
-now depends on for every class that has no creator. It hung on the **third** batch of 200
-dimensions after two batches succeeded, so **nothing about the call itself is refused** — what
-changed is how much the destination already held.
+I wrote `xclone`-on-dimensions up as an eighth lethal call — a hang — on the strength of the
+signature this very file defines: `Responding=False`, **CPU pinned at exactly one core for 14
+minutes**, memory **flat at 2,524 MB**, the drawing on disk untouched. I killed nothing (the
+kill was refused), documented it as unrecoverable, and wrote the session off.
 
-> ⭐⭐ **THE COST CURVE WAS THE WARNING, AND IT WAS VISIBLE BEFORE THE HANG: 2 s → 87 s → ∞.**
-> A batch that takes forty times longer than the identical batch before it is not "a big model";
-> it is a call whose cost depends on what is already there. **Watch the per-chunk time and stop
-> at the second jump** — the third chunk is where it stops coming back.
+**Forty minutes in, it returned.** The work was done. Then the same op cloned 29 ProConcrete
+shapes, 18 assemblies, 6 work frames and the grid in **0.4-0.5 seconds each**, and went slow
+again on 133 lines.
 
-⚠️ **What that means for the op, until it is measured again:** clone the classes that carry no
-style/table baggage freely (profiles, ProConcrete objects, solids, bend shapes — all clean at
-200 per call), and treat **dimensions** as the suspect: they drag dimension styles, text styles
-and blocks, and each clone has to reconcile them against everything already cloned.
-⇒ **Next attempt: ONE call for all of them, not chunks** — if the cost is paid per call over the
-existing set, fewer calls is strictly cheaper. That is a measurement to make, not a fact yet.
+> ⭐⭐⭐ **THE SPIN SIGNATURE DOES NOT DISTINGUISH A LOOP FROM A SLOW CALL.** One core and flat
+> memory is what *any* single-threaded compute-bound operation looks like. This file's own test
+> — "a spin will not recover, so waiting is wasted" — **cannot be applied at 14 minutes.** The
+> only thing that separates the two is **whether it eventually returns**, and the only way to
+> know is to let it.
+> ⇒ **Before calling anything a hang: was the op known to be cheap?** A call that has already
+> been measured at 0.4 s and now takes 14 minutes is a hang. A call whose cost curve was
+> *already climbing in the log* — 2 s → 87 s → ? — is a **slow call you have not waited out**.
 
-⛔⛔ **AND THE HANG TOOK THE WHOLE MACHINE WITH IT, WHICH IS THE REAL LESSON.**
-A hung instance **keeps its COM registration**, so `GetActiveObject("AutoCAD.Application")`
-still resolves to it and simply never answers. A second, perfectly healthy AutoCAD launched
-afterwards — verified `Responding=True`, holding a copy of the drawing — was **unreachable**:
-the probe hung too. ⇒ the 17/08 finding *"only the earliest live instance is reachable"* holds
-**even when that instance is dead in the water**, and the file lock it holds cannot be released
-either. **A hang is not a local failure; it is the end of the session** unless the process can
-be terminated.
+⚠️ **And the cost of getting it wrong was not the machine — it was the session.** Because I read
+it as fatal I stopped building, wrote it up as an ended night, and only found out it had
+finished when a stray background probe reported the process responding again.
+**A negative verdict issued early costs everything that would have followed it.**
+
+⛔ **What DOES stand, measured:** while that instance was busy it **kept its COM registration**,
+so `GetActiveObject` resolved to it and never answered, and a healthy AutoCAD launched
+afterwards was **unreachable** — the 17/08 rule holds for a *busy* earliest instance, not only
+a healthy one. And it kept the drawing's file lock. **So a long call blocks the whole machine,
+which is a reason to keep calls short, not a reason to call them dead.**
 
 ### ⏳ THE FIFTH ONE IS A NEW SHAPE: IT HANGS INSTEAD OF DYING
 
