@@ -116,6 +116,21 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > place a bolt correctly, and **a bolt that is right in position and length and wrong in grip
 > passes every visible gate** while being the wrong part in the shop.
 >
+> ### ⛔⛔ A COPY THAT KEEPS THE ORIGINAL'S FILENAME DEFEATS EVERY NAME-BASED GUARD
+> Every protection in this project keys on the drawing's **name**: the work-session pin, the
+> per-model mailbox slot, the plugin's wrong-drawing check, `use()`. So the moment a customer's
+> file is copied into `projects/<name>/` **under the same filename**, `use("bridge model for
+> amir.dwg")` can no longer tell the copy from the original — and if the original is open in the
+> same AutoCAD, it is the one that answers.
+>
+> **Caught one minute before it fired, 20/08/2026:** the verifier ran `collision` "on the
+> rebuild and on the project's copy of the source". `collision` **creates a `Ks_VolBody` per
+> hit** — it is a WRITE. The gate built to prove the rebuild faithful would have written into
+> the file I had promised never to touch, and the promise was being kept by a filename.
+> ⇒ **Never run a writing op on a drawing selected by basename when a same-named file is open.**
+> Read-only instruments (`vfy_fit`, `vfy_dupes`) on the source; `collision` on the rebuild only;
+> and `build_target` never pointed at anything but the rebuild.
+>
 > ### ⏳⏳ AND THE MISTAKE THAT COST THE REST OF THE NIGHT: I CALLED A SLOW CALL A HANG
 > `xclone` clones **parts** instantly — 678 profiles in 5 s, 329 ProConcrete panels in 2 s, and
 > 29 concrete shapes / 18 assemblies / 6 work frames / the grid at **0.4-0.5 s per call**. On
