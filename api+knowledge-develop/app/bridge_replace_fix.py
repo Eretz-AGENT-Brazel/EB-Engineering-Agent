@@ -88,12 +88,21 @@ def main(dry=False):
             print("   %s  by %.3f mm" % (t, dd))
         return
     app, doc = eb_api._app_doc()
+    # ⚠️ AutoCAD COM WANTS A VARIANT ARRAY OF DOUBLES, NOT A PYTHON LIST. Passing lists gave
+    # E_INVALIDARG (0x80070057) on all 793 plates in 3 seconds -- a type error wearing the
+    # costume of a modelling failure. `pt()` below is the whole fix.
+    import pythoncom
+    from win32com.client import VARIANT
+
+    def pt(v):
+        return VARIANT(pythoncom.VT_ARRAY | pythoncom.VT_R8, [float(x) for x in v])
+
     moved = failed = 0
     t0 = time.time()
     for t, have, want, dd in todo:
         try:
             ent = doc.HandleToObject(t)
-            ent.Move(have, want)      # COM move: the modifications travel with the part
+            ent.Move(pt(have), pt(want))   # COM move: the modifications travel with the part
             moved += 1
         except Exception as e:
             failed += 1

@@ -1,0 +1,29 @@
+PASS  orphan parts         0 in the rebuild with no source part
+PASS  count shapes         6240 source / 6240 rebuild
+PASS  count plates         7807 source / 7807 rebuild
+FAIL  count bolts          5680 source / 5463 rebuild
+FAIL  count holes          12265 source / 12229 rebuild
+FAIL  shape bbox SPAN      worst 34.0530 mm over 6240 members (0 unpaired)
+FAIL  shape bbox CORNER    worst 28.4230 mm
+FAIL  plate CENTRE         worst 62.5100 mm (0 unpaired)
+FAIL  plate DIMS           worst 125.0190 mm
+FAIL  plate CONTOUR        3 differ in SHAPE of 7807 (6515 only re-centred, 0 no contour)
+FAIL  shape FRAME          56 of 6240 differ
+FAIL  plate FRAME          33 of 7807 differ
+FAIL  cut planes           4477 source / 4460 rebuild
+FAIL  poly-cuts            3828 source / 3827 rebuild
+FAIL  hole POSITION        worst 376.0000 mm, 3099 off, 0 on unpaired parts
+FAIL  hole DEPTH           worst 4.4600 mm
+FAIL  hole DIAMETER        226 mismatches
+FAIL  bolt axes            217 source bolts with no rebuild bolt on their axis
+PASS  model ENVELOPE       worst corner 0.000 mm  (source [-628797422, -56009064, -31220]..[216707, 144429886, 20000])
+
+gates failed: 15 of 19
+
+[rebuild] EB_ERR vfy_fit bolts=5463 OK=3637  BOLT-NO-HOLE=568 (נ§² iron rule)  GAP-IN-PACKET=112 (ג  the plies do NOT touch: worst 19mm of air, in 7738)  OVERSIZED=1138 (spare>45)  SHORT=8 (spare<15)  no-nominal=0  worst spare=354mm (791F)  [SPARE = nominal length - packet: nut + washer + protruding thread.
+[rebuild] EB_ERR vfy_dupes bolts=5463  DUP-BOLT positions=8 redundant=8  DUP-HOLE parts=145 redundant=845  tol=3  [a duplicate is invisible to every bolt-vs-hole check -- each copy matches the same hole happily. It shows up in the PARTS LIST, not in the geometry] -> eb_vfy_dupes.txt reqid=7a5d51be
+[rebuild] EB_OK collision parts=19719 collisions=6444 newSolids=6444 agree applyRc=1 minvol=100 SENT[minvol=100 mount=default(unreadable) pairs=ss,sp,pp,sb,pb] (write-only class: not verified) secs=945.1 | CBC8@-97.926,80299.192,12939 CBC9@-97.926,80419.192,12939 CBCA@-97.926,80539.192,12939 CBCB@2.074,80299.
+
+[source (read-only)] EB_ERR vfy_fit bolts=5680 OK=3629  BOLT-NO-HOLE=253 (נ§² iron rule)  GAP-IN-PACKET=305 (ג  the plies do NOT touch: worst 366.481mm of air, in 46435A)  OVERSIZED=1435 (spare>45)  SHORT=0 (spare<15)  no-nominal=58  worst spare=418mm (46435A)  [SPARE = nominal length - packet: nut + washer + protrudi
+[source (read-only)] EB_ERR vfy_dupes bolts=5680  DUP-BOLT positions=8 redundant=8  DUP-HOLE parts=97 redundant=477  tol=3  [a duplicate is invisible to every bolt-vs-hole check -- each copy matches the same hole happily. It shows up in the PARTS LIST, not in the geometry] -> eb_vfy_dupes.txt reqid=cd4b1fa2
+[source (read-only)] (not run: collision WRITES, and only the rebuild may be written to)
