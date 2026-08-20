@@ -49,3 +49,5 @@
 - [No invented rules](no-invented-rules.md) — ⚡ מודל לא נגמר עד שכולו הושלם, **בלי שום מגבלת זמן** · ואסור להמציא חוקים שהוא לא אמר (18/08)
 - [Survey files](survey-files.md) — ⚡ קובץ מדידה תמיד במטרים (`INSUNITS=0`, שום דבר לא יתריע) · ההמרה ל-SOLID ובדיקת ההתנגשויות היא של הממדל האנושי, אני בוסט
 - [Project intake](project-intake.md) — 🗣️ בכל תחילת פרויקט שואלים על מהותו (4 שאלות של אמיר + מה שהניסיון הוסיף); ממשיכים לשאול עד ש"לא רלוונטי", והתשובות נרשמות ב-README של הפרויקט
+- [Bridge model rebuild](bridge-model-rebuild.md) — מודל 7 של ברני, 21,737 ישויות: השחזור הסוגר של מסלול 2 (20/08/2026), ומה שהוא סתר
+- [Bulk ops and batch](bulk-ops-and-batch.md) — ⚡ במודל גדול הפרוטוקול הוא המחיר: `dumpparts` · `batch` · `erase`/`wipe` · `xclone` (v188–v193)

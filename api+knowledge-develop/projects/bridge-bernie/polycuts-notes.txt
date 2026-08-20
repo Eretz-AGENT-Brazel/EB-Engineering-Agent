@@ -1,0 +1,7 @@
+45809: no rebuild counterpart
+polycut: EB_ERR polycut handle=5741 shape=pts verts=4 area=450 depth=10000 applyRc=0 before[f0 c5 hf0 o0 p1 s0 be=0:0/0] after[f0 c5 hf0 o0 p1 s0 be=0:0/0]
+polycut: EB_ERR polycut handle=690 shape=pts verts=5 area=939215.617 depth=10000 applyRc=0 before[f0 c0 hf0 o0 p1 s0 be=0:0/0] after[f0 c0 hf0 o0 p1 s0 be=0:0/0]
+polycut: EB_ERR polycut handle=690 shape=pts verts=5 area=939215.617 depth=10000 applyRc=0 before[f0 c0 hf0 o0 p1 s0 be=0:0/0] after[f0 c0 hf0 o0 p1 s0 be=0:0/0]
+polycut: EB_ERR polycut handle=143D shape=pts verts=5 area=939215.617 depth=10000 applyRc=0 before[f0 c0 hf0 o0 p2 s0 be=0:0/0] after[f0 c0 hf0 o0 p2 s0 be=0:0/0]
+polycut: EB_ERR polycut handle=173B shape=pts verts=5 area=5363050.217 depth=10000 applyRc=0 before[f0 c0 hf0 o0 p5 s0 be=0:0/0] after[f0 c0 hf0 o0 p5 s0 be=0:0/0]
+polycut: EB_ERR polycut handle=18D2 shape=pts verts=5 area=304005.179 depth=10000 applyRc=0 before[f0 c0 hf0 o0 p3 s0 be=0:0/0] after[f0 c0 hf0 o0 p3 s0 be=0:0/0]

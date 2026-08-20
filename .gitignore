@@ -72,3 +72,12 @@ api+knowledge-develop/projects/sandbox/_archive/
 # eb_api.save()'s timestamped snapshots land next to the model and are moved to _archive/
 # when a part closes; until then they are deliberate local backups, not repo content.
 api+knowledge-develop/projects/sandbox/*-backup-*.dwg
+
+# ---- the bridge model (model 7), 20/08/2026 --------------------------------
+# The read CACHE is 34.7 MB and is regenerated in 3.8 minutes by
+# `app/bridge_read.py`; the REBUILD is a 32 MB DWG that is still unfinished and will be
+# replaced from REBUILD-2 the moment the frozen AutoCAD is closed. Neither belongs in a
+# git blob at that size -- the SOURCE is committed, because that is the input nobody can
+# regenerate, and everything else is reproducible from it plus the scripts.
+api+knowledge-develop/projects/bridge-bernie/source.json
+api+knowledge-develop/projects/bridge-bernie/*REBUILD*.dwg

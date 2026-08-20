@@ -25,7 +25,37 @@ family needs one place to look before calling anything unfamiliar.*
 | **`addUserXaxis(PsPoint, PsPoint)`** | **`PsGrid`**, on a grid bound through `PsTransaction.GetObject` | **B.23 audit, 10/08** | killed it **twice**. First with four calls in one run; then **isolated to this call alone**, on a freshly saved model, with `probe=addx` — dead again |
 | **binding + reading a `PsEditConnection`** | `PsTransaction.GetObject(Int64, PsOpenMode, PsEditConnection&)` | **B.27 audit, 10/08** | **first call**, on beam `15EE`. Not isolated: bind-then-read is one call, so which half is the killer is unknown |
 | ⏳ **`SetFileName("*.mdb")`** | **`PsDBaseDatabase`** (op `dbase`) | **lesson 6, 13/08** | ‏`Data\Bolts\Australia.mdb` (479 KB). **A HANG, not a crash** — the process stays listed, `Responding=False`, **CPU pinned at a full core** and memory **flat at 610 MB for 2 minutes** (an endless loop, not a slow parse). Killed and relaunched. **Guarded in `eb_api.run`: `dbase` now refuses any file that is not `.dbf`** |
-| **`GetPolygon(PsPolygon3d)`** | **`PsBendShape`** (op `bendshapeinfo probe=path`) | **19/08/2026, model 5** | isolated **by name** with the `plateinfo` probe pattern. `probe=safe` (Key/Katalog/CrossSectionType/offsets/axes) and `probe=ref` (`GetReferenceLine`) both returned and left the process alive; `probe=path` -- `GetPolygon` plus `GetVertexPoint`/`getVertex` -- killed it, `Get-Process acad` empty. ⭐ **The suspect was wrong:** I had bet on `ComputeObjectLength()` because this file says `compute*`/`check*` are the family, and pre-marked it as the culprit. Only the isolation found the truth |
+| **`GetPolygon(PsPolygon3d)`** | **`PsBendShape`** (op `bendshapeinfo probe=path`) | **19/08/2026, model 5** |
+| ⏳ **`xclone` over a batch of DIMENSIONS** | our own op — `Database.WblockCloneObjects` across two open drawings | **20/08/2026, the bridge model** | **A HANG, not a crash.** The same op had just cloned 678 profiles, 329 ProConcrete objects, 7 solids, 26 bend shapes and **400 dimensions** in batches of 200, at 2 s and then 87 s. The THIRD batch of 200 never returned: `Responding=False`, **CPU pinned at exactly one core for 14 minutes**, memory **flat at 2,524 MB**, and the drawing on disk untouched since the previous save. Everything was saved 20 seconds earlier, so the kill cost nothing but the session |
+ isolated **by name** with the `plateinfo` probe pattern. `probe=safe` (Key/Katalog/CrossSectionType/offsets/axes) and `probe=ref` (`GetReferenceLine`) both returned and left the process alive; `probe=path` -- `GetPolygon` plus `GetVertexPoint`/`getVertex` -- killed it, `Get-Process acad` empty. ⭐ **The suspect was wrong:** I had bet on `ComputeObjectLength()` because this file says `compute*`/`check*` are the family, and pre-marked it as the culprit. Only the isolation found the truth |
+
+### ⏳ AND THE SEVENTH — OUR OWN OP, AND THE COST CURVE IS THE WARNING
+
+`xclone` is not a ProSteel call; it is `WblockCloneObjects`, and it is the route this project
+now depends on for every class that has no creator. It hung on the **third** batch of 200
+dimensions after two batches succeeded, so **nothing about the call itself is refused** — what
+changed is how much the destination already held.
+
+> ⭐⭐ **THE COST CURVE WAS THE WARNING, AND IT WAS VISIBLE BEFORE THE HANG: 2 s → 87 s → ∞.**
+> A batch that takes forty times longer than the identical batch before it is not "a big model";
+> it is a call whose cost depends on what is already there. **Watch the per-chunk time and stop
+> at the second jump** — the third chunk is where it stops coming back.
+
+⚠️ **What that means for the op, until it is measured again:** clone the classes that carry no
+style/table baggage freely (profiles, ProConcrete objects, solids, bend shapes — all clean at
+200 per call), and treat **dimensions** as the suspect: they drag dimension styles, text styles
+and blocks, and each clone has to reconcile them against everything already cloned.
+⇒ **Next attempt: ONE call for all of them, not chunks** — if the cost is paid per call over the
+existing set, fewer calls is strictly cheaper. That is a measurement to make, not a fact yet.
+
+⛔⛔ **AND THE HANG TOOK THE WHOLE MACHINE WITH IT, WHICH IS THE REAL LESSON.**
+A hung instance **keeps its COM registration**, so `GetActiveObject("AutoCAD.Application")`
+still resolves to it and simply never answers. A second, perfectly healthy AutoCAD launched
+afterwards — verified `Responding=True`, holding a copy of the drawing — was **unreachable**:
+the probe hung too. ⇒ the 17/08 finding *"only the earliest live instance is reachable"* holds
+**even when that instance is dead in the water**, and the file lock it holds cannot be released
+either. **A hang is not a local failure; it is the end of the session** unless the process can
+be terminated.
 
 ### ⏳ THE FIFTH ONE IS A NEW SHAPE: IT HANGS INSTEAD OF DYING
 

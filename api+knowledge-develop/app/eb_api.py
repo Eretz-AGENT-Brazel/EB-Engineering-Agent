@@ -11,6 +11,7 @@ Plus COM-level view/zoom/copy/delete/undo.
 Profile resolver bridges speech ("HEB 500") to DB key ("HE500B", catalog "DIN_HEB").
 """
 
+import io
 import os
 import re
 import sys
@@ -22,8 +23,8 @@ ROOT = os.path.dirname(HERE)
 PLUG = os.path.join(HERE, "plugin")
 CMD = os.path.join(PLUG, "eb_cmd.txt")
 RES = os.path.join(PLUG, "eb_result.txt")
-DLL = os.path.join(PLUG, "EBAgentApi186.dll")
-RUN_CMD = "EB_RUN186"
+DLL = os.path.join(PLUG, "EBAgentApi193.dll")
+RUN_CMD = "EB_RUN193"
 # ---- which drawing every op is expected to run on -------------------------
 # Twice on 06/08/2026 work landed in the WRONG drawing: first two documents were open
 # at once (Amir spotted the two windows), then opening a Bentley sample silently became
@@ -1377,6 +1378,79 @@ def _pt(p):
 def handle_of(result):
     m = re.search(r"handle=(\w+)", result or "")
     return m.group(1) if m else None
+
+
+
+# ===========================================================================
+#  v190  BATCH -- many ops in ONE round trip
+# ===========================================================================
+# Measured 20/08/2026, on the night the bridge model arrived: the file protocol costs
+# 0.28 s per op no matter how small the op is (ping 0.336, props 0.284, mods 0.251).
+# A 1:1 rebuild of that model is ~43,000 ops -- 3.4 hours of protocol for work the
+# transactions do in minutes. The plugin now has a dispatcher it can call in a loop
+# (`op=batch file=...`), and this is the client side of it.
+#
+# ⭐ EVERY ITEM STILL GETS ITS OWN RESULT LINE. A batch that answered only with a total
+# would hide WHICH part failed, and on a 1:1 rebuild the failures are the finding.
+# ⚠️ The work-session gate, the wrong-drawing guard and the instance lock all apply to
+# the batch INVOCATION -- which is right: every item lands in the active document, so
+# one guard on the way in protects the whole file.
+_TAB = chr(9)
+
+
+def batch(items, wait=None, file="eb_batch.txt", out="eb_batch_out.txt", stop=False,
+          chunk=0, on_chunk=None):
+    """items: sequence of (op, kwargs-dict). Returns [(i, op, result_text), ...].
+
+    chunk>0 splits the work into several invocations of that size -- use it when a single
+    file would run longer than `wait`, and to get a save in between.
+    """
+    items = list(items)
+    if chunk and len(items) > chunk:
+        outp = []
+        for a in range(0, len(items), chunk):
+            part = batch(items[a:a + chunk], wait=wait, file=file, out=out, stop=stop)
+            outp.extend([(a + i, o, r) for (i, o, r) in part])
+            if on_chunk:
+                on_chunk(a + len(part), len(items), outp)
+        return outp
+    lines = []
+    for op, kw in items:
+        kw = dict(kw or {})
+        if op in _BOLT_OPS and "style" not in kw:
+            kw["style"] = DEFAULT_BOLT_STYLE          # the standing decision, per item
+        if op == "dbase":
+            raise ValueError("dbase inside a batch is refused -- see LETHAL-CALLS")
+        if op == "batch":
+            raise ValueError("nested batch is refused")
+        lines.append(_TAB.join(["op=" + op] + ["%s=%s" % (k, v) for k, v in kw.items()]))
+    ch = channel()
+    with io.open(os.path.join(ch, file), "w", encoding="utf-8", newline=chr(10)) as f:
+        f.write(chr(10).join(lines) + chr(10))
+    if wait is None:
+        wait = max(60.0, 0.05 * len(lines) + 30.0)
+    res = run("batch", wait=wait, file=file, out=out)
+    rows = []
+    try:
+        with io.open(os.path.join(ch, out), encoding="utf-8-sig") as f:
+            for ln in f:
+                p3 = ln.rstrip(chr(10)).split(_TAB)
+                if len(p3) >= 3:
+                    rows.append((int(p3[0]), p3[1], p3[2]))
+    except Exception:
+        pass
+    if not res or not res.startswith("EB_OK"):
+        rows.append((-1, "batch", res or "EB_TIMEOUT (no result)"))
+    return rows
+
+
+def batch_progress():
+    """How far the batch running right now has got (written every 250 items)."""
+    try:
+        return io.open(os.path.join(channel(), "eb_batch_progress.txt"),
+                       encoding="utf-8-sig").read().strip()
+    except Exception:
+        return ""
 
 
 def fire(cmd):

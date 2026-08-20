@@ -51,6 +51,79 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > ⚠️ **An answer of "I don't know" is a finding, not a dead end** — it names the thing that has to be
 > settled before that part of the model is defensible, and it belongs in the README beside the answers.
 
+> ## ⚡⚡ WHEN THE MODEL IS BIG, THE PLUMBING IS THE JOB (the bridge model, 20/08/2026 night)
+> *Bernie's bridge: **21,737 entities** — 7,807 plates, 6,240 profiles, 5,680 bolts, 314 concrete
+> wall panels, 11,657 holes, 4,477 cut planes, 7,834 chamfers, 3,828 poly-cuts. Fifteen times
+> anything before it, and the first model where SIZE itself was the obstacle.*
+>
+> **The measurement that reframed everything:** the file protocol costs **~0.28 s per op** no
+> matter how small the op is (`ping` 0.336 s — and `ping` does nothing). So a 1:1 rebuild's
+> ~43,000 ops is **3.4 hours of pure plumbing**, and reading props+mods per part is **2.1 hours**
+> before a single part is built. ⇒ `dumpparts` (everything, one call, **5.3 s**) and `batch`
+> (**0.002 s/op, ×140**) turned the night from arithmetic-impossible into: **profiles 76 s,
+> plates 111 s, cut planes 10 s, chamfers 19 s, poly-cuts 18 s, 11,657 holes 11 s.**
+> ⚠️ **And `drill` is not 0.39 s per hole** — that number was the round trip. In a batch the same
+> op is ~1 ms. **Before optimising the modelling, measure how much of it is the pipe.**
+> Ops and their guards: `references/plugin-ops.md` · the account:
+> `knowledge/learning/findings/BULK-AND-BATCH.md`
+>
+> ### ⛔⛔ THE CORRECTION THAT COST 6,762 PLATES — `at` IS THE ORIGIN, NOT THE CENTRE
+> Models 1-6 recorded *"`plate9 mode=poly` re-centres the contour about `at`, so aim at the
+> contour's bbox centre."* **It does not re-centre.** `at` is the plate's **own origin**, and the
+> contour's coordinates are honoured as written:
+> ```
+> at = org + contour centre  ->  the plate lands at org + 2*centre   (WRONG, 6,762 of 7,807)
+> at = org                   ->  the plate lands at org + centre     = the source, 0.0000 mm
+> ```
+> The error is **exactly the contour's own offset, applied twice** — 89.0 mm on 1,368 plates,
+> 21.5 on 772, and **4,543.5 mm** where a contour runs x −5031…−4056. The two rules agree only
+> when the contour is symmetric about its origin, which is why five earlier models never showed
+> it and why the one that did showed it as a *small* displacement. ⚠️ **A rule inferred from
+> symmetric cases is a rule you have not tested.**
+>
+> ### ⛔⛔ A CATALOGUE THAT IS NOT INSTALLED DOES NOT REFUSE — IT SUBSTITUTES
+> **678 of 6,240 profiles name catalogues this machine does not have** (`PANEL`, `AMUDIM`,
+> `HOESCHISODACH`; the shapes DB here holds 357 and none of them is one of those). That is a
+> **data** limit, not an API limit — and the failure mode is the dangerous kind:
+> `beam catalog=PANEL name='SVAHA 1000X30'` **built 431 members out of `DIN.DIN_FLACH`**, because
+> the resolver found the same *name* in another catalogue. Right size, wrong part, and **every
+> count, bbox and position gate stays green.** ⇒ **verify the CATALOGUE of what you built**, and
+> when the catalogue is absent, move the part across with `xclone` and declare it moved.
+>
+> ### 🧱 WHAT MAY BE CLONED, AND WHAT MAY NEVER BE
+> ⭐ **Everything the API can build parametrically is built parametrically. Two walls, and only
+> two, justify carrying a part across from the source drawing instead:**
+> **(1)** a **section catalogue this machine does not have**; **(2)** a class with **no creator at
+> all** — `Ks_ConcretePanel`/`Slab`/`Shape` (checked in *both* surfaces: `IKs_ComConcretePanel`
+> has `Copy`, `ArrayRectangular`, `Move`, `Delete` **and no creator**, and the twelve `PC3D*`
+> assemblies are Forms and parameter holders, exactly like the 62 `PSN_*` macros),
+> `AcDb3dSolid`, dimensions, `Ks_Grid`.
+> ⛔ **A clone is never a shortcut for something that could have been built** — and every cloned
+> part is reported as cloned, per class. A rebuild that hides which route each part took is not
+> a measurement, and 1:1 is a claim about how the model was made as well as how it looks.
+>
+> ### 🔩 `bolt p1/p2` IS THE GRIP — AND THE DUMPED AXIS IS THE LENGTH
+> Placing 5,680 bolts on the source's own axes refused 2,213 of them, always
+> `create failed (style '8.8S')`. The style was never the problem: the axis in `dumpmodel` spans
+> the bolt's **length** (M12 × 50 → 50.0 mm), while `CreateSingleBolt` reads p1→p2 as the
+> **grip** — and the real grip is `KlemmLen` = **24.0**. Handing 50 asks for a 50 + 1.6·12 mm
+> bolt that has no table row. With the grip: **1,996 of the 2,213 placed.**
+> ⭐ **And WHERE the grip sits was measured, not assumed** — all three anchorings create, so the
+> choice was made by geometry: **from p1** put the rebuilt bolt's origin on the source's origin
+> exactly; centred was 13 mm out, from p2 26 mm out. ⇒ **the axis starts at the bolt's origin and
+> the grip is its first `KlemmLen` millimetres.**
+> ⚠️ `KlemmLen` is in no standard property filter — a reader that does not ask for it cannot
+> place a bolt correctly, and **a bolt that is right in position and length and wrong in grip
+> passes every visible gate** while being the wrong part in the shop.
+>
+> ### 🕳️ AND A SLOTTED HOLE IS WHATEVER `lhm` SAYS IT IS
+> The same 2,282 parts: `lhm=0` → 11,657 holes and **the slot flag is lost**; `lhm=1` → 11,657
+> with **608 flagged**; `lhm=2` (**the default**) → **12,265**, because every slot is reported as
+> its **two end circles**. `getMaximalLength` answers 0 in all three ⇒ the travel is not a
+> readable property, but **the distance between the paired circles is exactly it** (9.0 mm ×318,
+> 10.0 ×179, 7.0 ×65, 8.0 ×16 — all 608 paired, none left over). **Read `lhm=2` to measure a
+> slot, `lhm=1` to count holes**, and drill it back with `drill … slot=<travel>`.
+
 > ## 📐📐 SURVEY FILES — YOU DO NOT DESIGN INTO AN EMPTY ROOM (lesson 8, Amir, 20/08/2026)
 > *"כאשר אנחנו ניגשים לביצוע פרויקט, אנחנו לא תמיד מייצרים פרויקט מאפס — אנחנו צריכים להיכנס לחלל
 > מסוים… ולכן אנחנו משתמשים בקבצי מדידה."* A whole lesson with no modelling in it: read the survey

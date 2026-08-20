@@ -10,6 +10,60 @@
 (the command-line channel). Every "verified" line below was measured by reading the model back —
 the op count is not quoted here either, for the same reason.*
 
+> ## ⚡⚡ NEW 20/08/2026 (night) — FIVE OPS FOR A MODEL 15× BIGGER THAN ANY BEFORE IT
+>
+> *Born on the bridge model: 21,737 entities. Nothing here is a new ProSteel capability — it is
+> the same ops reached differently, because at this size **the plumbing is the cost**: the file
+> protocol charges ~0.28 s per op no matter how small the op is (`ping` 0.336, `props` 0.284,
+> `mods` 0.251). Full account: `knowledge/learning/findings/BULK-AND-BATCH.md`.*
+>
+> | op | call | measured |
+> |---|---|---|
+> | **`dumpparts`** | `op=dumpparts [out=] [cls=] [mods=0]` — props **and** modification counts for **every** entity, one call | **5.3 s** for all 21,737 — the per-part route is **2.1 hours** |
+> | **`batch`** | `op=batch file=eb_batch.txt [out=] [stop=1]`; each line `op=beam⇥name=…⇥p1=…`; each result `<line#>⇥<op>⇥<full text>` | **0.002 s/op — ×140.** 6,240 profiles in 76 s · 7,807 plates in 111 s · 11,657 holes in **11 s** · 4,477 cut planes in 10 s · 7,773 chamfers in 19 s · 3,827 poly-cuts in 18 s |
+> | **`erase`** | `op=erase handles=<h,h,…>` | 902 plates in **under a second** (COM deletes: 3+ minutes) |
+> | **`wipe`** | `op=wipe cls=<class substring> \| layer=<exact>` — ⛔ **refuses with no filter** | 6,666 plates in **0.4 s** |
+> | **`xclone`** | `op=xclone from=<other OPEN drawing> handles=<h,…>` — `WblockCloneObjects` across databases, one result line per handle | the only route for a class with no creator, or a **catalogue this machine does not have** |
+> 
+> ⏳⏳ **AND `xclone` HAS A COST CURVE — IT IS THE SEVENTH CALL THAT CAN HANG AutoCAD.** In batches of 200 it cloned 678 profiles, 329 ProConcrete objects, 7 solids and 26 bend shapes clean, then dimensions at **2 s, 87 s, and never**: the third batch pinned one core for 14 minutes with memory flat and had to be killed. ⭐ **The curve was the warning** — a batch 40× slower than the identical one before it means the cost depends on what the destination already holds (dimensions drag styles and blocks). **Stop at the second jump**, and try one call per class instead of chunks. ⛔ And a hang **ends the session**: the hung instance keeps the COM registration and the file lock, so a healthy AutoCAD started afterwards is unreachable (verified). **Save before every risky batch.**
+>
+> ⭐ **Why `batch` was safe to add:** the op switch moved out of the CommandMethod into
+> `Exec(op, kv)`, and `Result()` writes into a buffer while a batch runs. **All 200+ existing
+> ops became batchable without one of them being touched.** Guards stay on the *invocation*
+> (wrong-drawing, freshness, instance lock) — correct, because every item lands in the same
+> active document; the per-item check kept is the parameter allowlist. Nested batch and
+> `dbase` are refused inside one.
+> ⚠️ **Results flush every 250 items** with a progress file beside them: a batch of 7,800 that
+> dies at 6,000 still hands back the 6,000 it earned. **Every item keeps its own result line** —
+> a batch that reports only a total hides *which* part failed, and on a 1:1 rebuild the
+> failures are the finding.
+>
+> ### 🛑 And four corrections this model forced
+>
+> | claim | what was measured |
+> |---|---|
+> | ⛔⛔ **`plate9 mode=poly` re-centres the contour about `at`** *(models 1-6)* | **It does not.** `at` is the plate's **own origin**; the contour's coordinates are honoured as they are. Aiming at `org + contour-bbox-centre` put **6,762 of 7,807 plates** out of place by exactly the contour's offset applied twice — 89.0 mm on 1,368, 21.5 on 772, **4,543.5 mm** where the contour runs x −5031…−4056. `at = org` lands them at **0.0000**. The two rules agree only for a contour symmetric about its origin, which is why the earlier models never saw it |
+> | ⛔ **`whoami` tells you which drawing an op will hit** | It is a **diagnostic** — shared mailbox, **not gated** — so it answers for whatever is in front. It named the *source* while beams were landing correctly in the *rebuild*. ⇒ fire a **gated** op first (that activates the pin), then read `eb_api._active_doc_name()` through COM |
+> | ⛔ **`beam` refuses a catalogue it does not have** | **It substitutes, silently.** `catalog=PANEL name='SVAHA 1000X30'` built **431 members out of `DIN.DIN_FLACH`** — same *name*, different catalogue. Right size, wrong part, and every count/bbox/position gate stays green. ⇒ **verify the catalogue of what you built**, not just the count |
+> | ⛔ **The Measurement Unit dialog cannot be dismissed from code** | **It can.** `BM_CLICK`/`WM_COMMAND` were the wrong mechanism; **synthesized mouse input works**: `BringWindowToTop` + `SetForegroundWindow`, then `SetCursorPos` on the green tick and `mouse_event` down/up. ⚠️ And it is raised by **any drawing with no persisted unit setting** — not only by a new one |
+>
+> ### 🕳️ `dumpholes lhm=` decides what a slotted hole even IS
+> Same 2,282 parts, three readings: **`lhm=0`** → 11,657 holes, **0** flagged slotted (the flag
+> is lost) · **`lhm=1`** → 11,657 holes, **608** flagged (one row per slot) · **`lhm=2`** (the
+> default) → **12,265** holes, 1,216 flagged — every slot as its **two end circles**.
+> `getMaximalLength` answers **0** in all three, so the travel is not a readable property —
+> but the **distance between the paired circles** is exactly it: 9.0 mm ×318, 10.0 ×179,
+> 7.0 ×65, 8.0 ×16, all 608 paired with none left over.
+> ⇒ **read `lhm=2` to MEASURE a slot, `lhm=1` to COUNT holes**, and drill it back with
+> `drill … slot=<travel>`. A reader that trusts the default count sees 608 holes that do not exist.
+>
+> ### 🔩 `bolt p1/p2` is the GRIP, and the dumped axis is the LENGTH
+> The axis in `dumpmodel` spans the bolt's own length (M24 × 120 → 120.0 mm). Handing that to
+> `CreateSingleBolt` asks for a grip of 120 on an M24, which needs a 158.4 mm bolt — no table
+> row, **silent refusal**, ~1 in 7 of 5,680. The grip is `KlemmLen`, and it is **not** in the
+> property filter most readers use. *(Another instance of the standing rule: a style that
+> refuses is usually a grip that refuses.)*
+
 > ## 🆕 MEASURED 13/08/2026 — read this block before calling drill, bolt, plate9, miter or collision
 >
 > | op | what changed |
