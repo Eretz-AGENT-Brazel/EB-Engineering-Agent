@@ -11,6 +11,46 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 `app/…`, `qc/…`, `knowledge/…`, `projects/…` path in this skill is relative to that folder.
 (`agent-brain/PROGRAM.md`, `PROGRESS.md` and `standards/` sit at the repo root.)
 
+> ## 🗣️🗣️ AT THE START OF EVERY PROJECT, ASK WHAT IT ACTUALLY IS (standing rule — Amir, 20/08/2026)
+> > *"אני רוצה שהסוכן כדרך קבע **ישאל ויתעניין במהות הפרויקט**, על מנת להבין את המשימה על הצד
+> > הטוב ביותר… השאלות האלו הם לרוב **הבסיס המאד גדול להצלחת המשימה** ולתכנון מדויק ונכון.
+> > זה **שיח מקצועי מאד וקריטי** לתכנון פרויקטים."*
+>
+> **This is a standing procedure, not a courtesy.** A new project does not begin with geometry — it
+> begins with a professional conversation. **Keep asking and stay curious until the human modeller
+> says a line of questioning is not relevant**; his "not relevant" is the only thing that closes one.
+>
+> ### The four Amir named
+> | # | ask |
+> |---|---|
+> | **1** | **מה מהות הפרויקט?** What are we actually setting out to design, **and what does it serve**? |
+> | **2** | **מי הלקוח, ומה תחום העיסוק שלו?** |
+> | **3** | **מה האילוצים שעומדים בפנינו?** |
+> | **4** | **יש קובץ מדידה? ויש תמונות שמקשרות אליו**, so the survey can be understood and not just read? |
+>
+> ### And the ones experience says to add — each one has already cost this project something
+> | ask | why it is on the list |
+> |---|---|
+> | **מה ה-0.00 של הפרויקט?** | the datum is an EB decision per project; the survey file does not know it. Lesson 8 |
+> | **איך מרכיבים את זה בשטח, ומי מרכיב?** | on MARTAR **three details were rejected by the customer and the geometry was right in all three** — every one was assembly. A drawing rarely answers this |
+> | **מה זז בחלל?** | a crane, a door, a forklift route is a **swept volume**, and a survey only records where it stood that morning |
+> | **סביבה וגימור** — חוץ/פנים, שטיפה, מזון, מלח | a dairy hall is not a warehouse. It decides galvanised vs painted vs stainless before a single section is chosen |
+> | **מה נכנס דרך מה?** | member length vs the opening, the lorry, the crane access. It caps the piece size, which caps the splices |
+> | **מה אמור לחזור על עצמו?** | *"מידלתי פעם אחת ואז שכפלתי — זה כל העיקרון."* Repetition is the money, and it is decided at intake, not at the end |
+> | **מי הקונסטרוקטור, ומה כבר מאושר?** | what the engineer of record has approved is not ours to touch; value-engineering findings are **questions to him**, never edits |
+> | **מה הלו"ז ובאיזה שלב התכנון?** | it decides whether a finding is a live question or an expensive re-opening |
+>
+> ### How to ask, so it is a conversation and not an interrogation
+> ⭐ **Open with the four. Let the rest arrive as the work exposes them** — one line at a time,
+> *פרה פרה*, exactly the way a missing dimension is asked for. **Never dump fifteen questions at
+> once**; that is a form and it reads like one.
+> ⭐⭐ **And write the answers down where they will be found again:** the project's
+> `projects/<name>/README.md`, at the top, before any geometry. An intake answered in chat and not
+> recorded is an intake that will be re-asked — and *"a measurement that does not reach the build is
+> worth zero"* applies to what he told you just as much as to what you measured.
+> ⚠️ **An answer of "I don't know" is a finding, not a dead end** — it names the thing that has to be
+> settled before that part of the model is defensible, and it belongs in the README beside the answers.
+
 > ## 📐📐 SURVEY FILES — YOU DO NOT DESIGN INTO AN EMPTY ROOM (lesson 8, Amir, 20/08/2026)
 > *"כאשר אנחנו ניגשים לביצוע פרויקט, אנחנו לא תמיד מייצרים פרויקט מאפס — אנחנו צריכים להיכנס לחלל
 > מסוים… ולכן אנחנו משתמשים בקבצי מדידה."* A whole lesson with no modelling in it: read the survey
