@@ -19,3 +19,24 @@ FAIL bolt axes            217 source bolts with no rebuild bolt on their axis
 FAIL model ENVELOPE       worst corner 29179.996 mm  (source [-628797422, -56009064, -31220]..[216707, 144429886, 20000])
 
 gates failed: 16 of 19
+
+--------------------------------------------------------------------------------
+ADDENDUM, measured 22:00 -- AFTER the table above, two repairs landed on REBUILD-3
+and their effect was measured directly (dumpholes + offline compare), not by a
+second full gate run:
+
+    plate centres out of tolerance   794 (worst 62.5 mm)  ->  1  (0.0114 mm)
+    holes exact of 12,265                          9,090  ->  9,182
+    holes beyond 20 mm                             1,098  ->  1,086
+    slotted holes                                  1,204  ->  1,216  = the source exactly
+    junk Ks_VolBody left by `collision clean=1`    6,444  ->  0
+
+COLLISION CONTROL (the reading that was missing when the table was made):
+    the SOURCE, measured on a distinctly-named copy, 1,189 s  ->  4,158 collisions
+    the REBUILD                                              ->  6,444
+    so 2,286 are mine, and the source is not collision-free either.
+
+STILL WITHOUT AN EXPLANATION: 1,086 holes more than 20 mm from the source's. The
+wrong-flange hypothesis was REFUTED by a per-hole experiment (flange=None satisfied
+178 more; 1, 0 and 2 satisfied none; 3,751 holes satisfied by no variant). Do not
+re-run that experiment -- it has been paid for.
