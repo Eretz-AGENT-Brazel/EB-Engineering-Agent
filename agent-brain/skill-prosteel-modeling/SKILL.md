@@ -116,6 +116,34 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > place a bolt correctly, and **a bolt that is right in position and length and wrong in grip
 > passes every visible gate** while being the wrong part in the shop.
 >
+> ### ⛔⛔⛔ AND THEN I DAMAGED 2,133 HOLES TRYING TO FIX 1,098 — TAKE THE COPY FIRST
+> The gates said 1,098 holes sat more than 20 mm from the source's, with a textbook wrong-flange
+> signature. So I ran the documented cure: per part, wipe the hole fields and re-drill under
+> `flange=1/0/2/unset`, keep the best. Measured afterwards, on the same yardstick as the gate:
+> ```
+>                  before my fix     after
+>   holes exact     9,166            8,264      then 6,472 after a second attempt
+>   holes present  12,229           10,096      then  8,304
+> ```
+> **I destroyed holes while trying to place them**, twice, and the second attempt was worse than
+> the first. Two mistakes compounded:
+> 1. **The metric was never validated.** My "wanted" list came from `lhm=1` (11,657 rows, a slot
+>    as one hole) while the gate compares against `lhm=2` (12,265, a slot as two circles). The
+>    fix optimised a number that did not mean what the gate meant, so "improved" and "worse"
+>    were measured on different rulers.
+> 2. **The search was destructive and its re-application could not reproduce the original.**
+>    `killholefield` then re-drill: when the re-drill silently created fewer holes than it wiped
+>    (`rc=0, holes=0` — the API's silent refusal), the part was left with less than it started.
+>
+> > ⭐⭐⭐ **BEFORE A DESTRUCTIVE PASS OVER A LIVE MODEL, TAKE A COPY ON PURPOSE.** What saved
+> > this night was a copy made at 19:01 **for an unrelated reason** — testing whether a second
+> > AutoCAD was reachable. Recovering meant copying that file, re-applying only the fix that had
+> > been *measured* to help (the plate move: 794 → 1), and leaving the hole layer as it was
+> > before I touched it. **Luck is not a rollback strategy.**
+> > ⭐⭐ **And validate the metric against the gate BEFORE optimising it.** A fix that improves
+> > your own number while the gate's number gets worse is not a fix; it is a second defect
+> > wearing the first one's clothes.
+>
 > ### ⛔⛔⛔ AND THE GATES CAUGHT ME CORRECTING AGAINST THE WRONG TARGET — 794 PLATES
 > The plate segment builds at `at = org` and then runs a "measure and re-place" pass: read each
 > plate's bounding-box centre, compare with the source's, move whoever missed. **That pass ran
