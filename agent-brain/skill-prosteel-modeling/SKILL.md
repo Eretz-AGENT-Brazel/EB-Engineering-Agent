@@ -116,6 +116,37 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > place a bolt correctly, and **a bolt that is right in position and length and wrong in grip
 > passes every visible gate** while being the wrong part in the shop.
 >
+> ### ⛔⛔⛔ AND THE GATES CAUGHT ME CORRECTING AGAINST THE WRONG TARGET — 794 PLATES
+> The plate segment builds at `at = org` and then runs a "measure and re-place" pass: read each
+> plate's bounding-box centre, compare with the source's, move whoever missed. **That pass ran
+> before the cuts, chamfers and poly-cuts were applied — and the source's bounding-box centre
+> already includes the effect of the source's own modifications.** So the pass moved 902
+> correctly-placed plates by exactly the amount those modifications would later account for,
+> and then applying the modifications moved them again.
+>
+> The correlation the gates produced is total, and it is what makes this a rule rather than a
+> guess:
+> ```
+> 794 plates off position  ->  794 of 794 were touched by the re-place pass
+>                          ->  794 of 794 carry modifications in the source
+> 7,013 plates exact       ->  5,875 of them carry modifications too — and the pass
+>                              never touched them
+> ```
+>
+> > ⭐⭐⭐ **A POSITION GATE MEASURED ON A BOUNDING BOX IS ONLY VALID WHEN BOTH SIDES CARRY THE
+> > SAME MODIFICATIONS.** Build → apply every modification → *then* measure and correct.
+> > Correcting earlier is correcting against geometry the part does not have yet, and the error
+> > it injects is invisible until the modifications land.
+> > ⭐⭐ **And a correction must MOVE the part, never delete-and-rebuild it.** Delete+create was
+> > harmless while the pass ran before the modifications; run it afterwards and it throws away
+> > every hole, cut and chamfer the part has since acquired. `entity.Move` through COM carries
+> > them with it.
+>
+> ⚠️ **The deeper habit this breaks:** a corrective loop that converges is not thereby correct.
+> That pass reported "pass 1: 902 moved, pass 2: 0 moved — converged", and the convergence was
+> real. It converged **onto the wrong answer**, because the target it was chasing was wrong.
+> **Convergence proves the loop is stable, never that the target is right.**
+>
 > ### ⛔⛔ A COPY THAT KEEPS THE ORIGINAL'S FILENAME DEFEATS EVERY NAME-BASED GUARD
 > Every protection in this project keys on the drawing's **name**: the work-session pin, the
 > per-model mailbox slot, the plugin's wrong-drawing check, `use()`. So the moment a customer's

@@ -49,12 +49,20 @@ def read(dwg, out):
     t0 = time.time()
     eb_api.build_target(None)
     eb_api.use(os.path.basename(dwg), task="READ ONLY - source of the 1:1 rebuild")
-    eb_api.run("list", wait=180)
-    who = eb_api.run("whoami", wait=60)
-    if os.path.basename(dwg).lower() not in who.lower():
-        raise RuntimeError("the source is not the active document: " + who[:150])
-    if "REBUILD" in who:
-        raise RuntimeError("that is the rebuild, not the source")
+    eb_api.run("list", wait=180)          # gated -> activates the pinned document
+    # ⚠️ ASK COM WHICH DOCUMENT IS ACTIVE, NOT `whoami` -- that op is a diagnostic and is not
+    # gated, so it answers for whatever window is in front (measured 20/08/2026).
+    act = eb_api._active_doc_name() or ""
+    if act.lower() != os.path.basename(dwg).lower():
+        raise RuntimeError("asked to read %r but the active document is %r"
+                           % (os.path.basename(dwg), act))
+    # ⛔ AND THE "NOT THE REBUILD" GUARD MUST NOT BLOCK READING THE REBUILD ON PURPOSE.
+    # It cost the first gate run of the night: the verifier reads BOTH drawings with this
+    # reader, and a flat `if "REBUILD" in who: raise` refused the rebuild it was asked for.
+    # The real protection is the name match above; this only catches the mix-up it was
+    # written for -- asking for the source while the rebuild is in front.
+    if "REBUILD" in act and "REBUILD" not in os.path.basename(dwg):
+        raise RuntimeError("asked for the source but the rebuild is active: " + act)
     ch = eb_api.channel()
 
     # ---- 1. the five bulk readers -----------------------------------------

@@ -1,0 +1,21 @@
+PASS  orphan parts         0 in the rebuild with no source part
+PASS  count shapes         6240 source / 6240 rebuild
+PASS  count plates         7807 source / 7807 rebuild
+FAIL  count bolts          5680 source / 5463 rebuild
+FAIL  count holes          12265 source / 12229 rebuild
+FAIL  shape bbox SPAN      worst 34.0530 mm over 6240 members (0 unpaired)
+FAIL  shape bbox CORNER    worst 28.4230 mm
+FAIL  plate CENTRE         worst 62.5100 mm (0 unpaired)
+FAIL  plate DIMS           worst 125.0190 mm
+FAIL  plate CONTOUR        3 differ in SHAPE of 7807 (6515 only re-centred, 0 no contour)
+FAIL  shape FRAME          56 of 6240 differ
+FAIL  plate FRAME          33 of 7807 differ
+FAIL  cut planes           4477 source / 4460 rebuild
+FAIL  poly-cuts            3828 source / 3827 rebuild
+FAIL  hole POSITION        worst 376.0000 mm, 3099 off, 0 on unpaired parts
+FAIL  hole DEPTH           worst 4.4600 mm
+FAIL  hole DIAMETER        226 mismatches
+FAIL  bolt axes            217 source bolts with no rebuild bolt on their axis
+PASS  model ENVELOPE       worst corner 0.000 mm  (source [-628797422, -56009064, -31220]..[216707, 144429886, 20000])
+
+gates failed: 15 of 19
