@@ -8,8 +8,11 @@ measured in minutes instead of hours. Every gate is read on the rebuild AND on t
 because a gate whose reading on the source is unknown cannot tell "my model is wrong" from
 "the checker is strict" -- that distinction is what saved model 2 and what cleared model 3.
 
-⚠️ `collision` CREATES a Ks_VolBody per hit, so it is a WRITE: it runs on the rebuild, and on
-the project's COPY of the source, never on Bernie's own file.
+⛔⛔ `collision` CREATES a Ks_VolBody per hit, so it is a WRITE -- and the project's COPY of the
+source has THE SAME BASENAME as Bernie's original, which is open in the same AutoCAD. Since a
+drawing is selected by name, "run it on the copy" would have run it on HIS FILE. So collision
+runs on the REBUILD ONLY; the source side gets read-only instruments (`vfy_fit`, `vfy_dupes`)
+and `build_target` is never pointed at it. Caught before it fired, 20/08/2026.
 """
 import io
 import json
@@ -208,18 +211,28 @@ def gates(src, rbd, mapping):
 
 
 def ops_on(dwg, target, label):
+    """The instrument ops. ⛔⛔ `collision` WRITES -- it creates a Ks_VolBody per hit -- and the
+    project's COPY of the source has THE SAME BASENAME as Bernie's original, which is open in
+    this same AutoCAD. `use(basename)` cannot tell them apart, so running collision "on the
+    copy" would run it on HIS FILE. Caught before it fired, 20/08/2026.
+
+    ⇒ **collision runs on the REBUILD only.** On the source side only read-only instruments
+    run (`vfy_fit`, `vfy_dupes`), and `build_target` is never pointed at it.
+    """
     eb_api.build_target(None)
     eb_api.use(os.path.basename(dwg), task="verify " + label)
-    eb_api.run("list", wait=300)
+    eb_api.run("list", wait=900)
     act = eb_api._active_doc_name() or ""
     if act.lower() != os.path.basename(dwg).lower():
         raise RuntimeError("not the active document: %r" % act)
-    fit = eb_api.run("vfy_fit", wait=900)
-    dup = eb_api.run("vfy_dupes", wait=900)
-    if target:
+    is_rebuild = "REBUILD" in act
+    fit = eb_api.run("vfy_fit", wait=1800)
+    dup = eb_api.run("vfy_dupes", wait=1800)
+    col = "(not run: collision WRITES, and only the rebuild may be written to)"
+    if is_rebuild:
         eb_api.build_target(dwg)
-    col = eb_api.run("collision", minvol=100, clean=1, wait=3600)
-    eb_api.build_target(None)
+        col = eb_api.run("collision", minvol=100, clean=1, wait=7200)
+        eb_api.build_target(None)
     return fit.strip(), dup.strip(), col.strip()
 
 
@@ -239,7 +252,7 @@ def main(argv):
         lines.append("%s  %-20s %s" % ("PASS" if ok else "FAIL", name, detail))
     lines.append("")
     lines.append("gates failed: %d of %d" % (failed, len(rows)))
-    for dwg, tgt, lab in ((rebuild, True, "rebuild"), (source, True, "source copy")):
+    for dwg, tgt, lab in ((rebuild, True, "rebuild"), (source, False, "source (read-only)")):
         try:
             fit, dup, col = ops_on(dwg, tgt, lab)
             lines.append("")
