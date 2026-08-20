@@ -47,3 +47,4 @@
 - [Drill not poly-cut](drill-not-polycut.md) — ⚡ שדה חורים בלוח ⇒ `drill` (0.39 שנ'/חור, קבוע) ולא `polycut` (ריבועי, עד 66 שנ') · מרכז חור יושב בחצי העובי ⇒ השוואה במישור בלבד
 - [Ventilation perforation](ventilation-perforation.md) — סוג פרט חדש: חירור פלטה 2 מ"מ לאוורור תא — החור הוא המוצר, והיחידה היא הפאה
 - [No invented rules](no-invented-rules.md) — ⚡ מודל לא נגמר עד שכולו הושלם, **בלי שום מגבלת זמן** · ואסור להמציא חוקים שהוא לא אמר (18/08)
+- [Survey files](survey-files.md) — ⚡ קובץ מדידה תמיד במטרים (`INSUNITS=0`, שום דבר לא יתריע) · ההמרה ל-SOLID ובדיקת ההתנגשויות היא של הממדל האנושי, אני בוסט

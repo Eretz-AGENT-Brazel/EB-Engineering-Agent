@@ -1,6 +1,6 @@
 ---
 name: prosteel-modeling
-description: How to model real steel structures in AutoCAD 2015 + ProStructures (ProSteel) V8i SS6 the way Eretz Barzel actually does it — the agent's job is to BE Amir's modeller, taking the grunt work and reaching every function the software has. Covers connections as parametric objects (base plates, end plates, fin plates, web cleats, copes, haunches, purlins, splices, gussets, stiffeners/ריפים), modelled holes at every bolt passage, non-rectangular plate contours, column shortening, hinged assemblies (access-chamber lids, doors on hinge pins, the closed/open state pair, padlock hasps), build-once-then-replicate as both a modelling method and a fabrication-economics goal, metric-always, the absolute ban on LISP, and the mapped API surface (~1,400 relevant public types across 116 managed assemblies — PsCreateFastener, PsGeometryFunctions, PsMiscTools, PsObjectGroup, PsSelection, PsCollisionCheck, PsCreatePositioning, PsDrillObject, PsEditLogicalLink and the nine connection classes) plus the measured dead ends and a measured performance baseline. Also carries the column-base anchorage engineering (EN 1992-4 / EN 1993-1-8 / AISC DG1) for value engineering, since the company fabricates rather than designs loads. Use whenever modelling, editing, auditing or automating steel in ProSteel/AutoCAD, reading an existing steel model, or deciding whether a detail is modelled correctly for fabrication. Built from live lessons with Amir (Eretz Barzel); every claim was verified by reading the model back, never from a screenshot.
+description: How to model real steel structures in AutoCAD 2015 + ProStructures (ProSteel) V8i SS6 the way Eretz Barzel actually does it — the agent's job is to BE Amir's modeller, taking the grunt work and reaching every function the software has. Covers connections as parametric objects (base plates, end plates, fin plates, web cleats, copes, haunches, purlins, splices, gussets, stiffeners/ריפים), modelled holes at every bolt passage, non-rectangular plate contours, column shortening, hinged assemblies (access-chamber lids, doors on hinge pins, the closed/open state pair, padlock hasps), build-once-then-replicate as both a modelling method and a fabrication-economics goal, metric-always, reading a surveyor's site-survey DWG (קובץ מדידה — always in METRES, flat plan plus coded 3D point cloud, rotating it onto the building's own axes) so the real space and its clashes are in the design from the first line, the absolute ban on LISP, and the mapped API surface (~1,400 relevant public types across 116 managed assemblies — PsCreateFastener, PsGeometryFunctions, PsMiscTools, PsObjectGroup, PsSelection, PsCollisionCheck, PsCreatePositioning, PsDrillObject, PsEditLogicalLink and the nine connection classes) plus the measured dead ends and a measured performance baseline. Also carries the column-base anchorage engineering (EN 1992-4 / EN 1993-1-8 / AISC DG1) for value engineering, since the company fabricates rather than designs loads. Use whenever modelling, editing, auditing or automating steel in ProSteel/AutoCAD, reading an existing steel model, or deciding whether a detail is modelled correctly for fabrication. Built from live lessons with Amir (Eretz Barzel); every claim was verified by reading the model back, never from a screenshot.
 ---
 
 # Modelling steel in ProSteel — the Eretz Barzel way
@@ -10,6 +10,91 @@ and corrects the agent in real time. Companion project: `C:\Users\User\Desktop\E
 whose development track lives in `api+knowledge-develop\` since the 12/08/2026 reorg — every
 `app/…`, `qc/…`, `knowledge/…`, `projects/…` path in this skill is relative to that folder.
 (`agent-brain/PROGRAM.md`, `PROGRESS.md` and `standards/` sit at the repo root.)
+
+> ## 📐📐 SURVEY FILES — YOU DO NOT DESIGN INTO AN EMPTY ROOM (lesson 8, Amir, 20/08/2026)
+> *"כאשר אנחנו ניגשים לביצוע פרויקט, אנחנו לא תמיד מייצרים פרויקט מאפס — אנחנו צריכים להיכנס לחלל
+> מסוים… ולכן אנחנו משתמשים בקבצי מדידה."* A whole lesson with no modelling in it: read the survey
+> of Tara's cheese hall (`10660-15512.dwg`) and then read the gallery that was designed into it.
+> **Full worked reading, code system and traps: `references/survey-files.md`.**
+>
+> ### 🧲🧲 THE THREE THINGS AMIR ASKED ME TO CARRY
+> | | |
+> |---|---|
+> | **1** | **Know the ground you are going to build on.** A survey exists so the constraints of the real space are in the design from the first line, not discovered on site. |
+> | **2** | ⭐ **Converting the survey into SOLIDs and running the clash check is the HUMAN modeller's job** — Amir and the company's people. *"תוספת שלך וסיוע בדבר הוא בוסט שיכול לתרום המון."* ⇒ I read, measure, cross-check and flag; **I do not take that step over.** |
+> | **3** | 🛑 **A SURVEY FILE IS ALWAYS IN METRES, NEVER MILLIMETRES — and this is critical.** Everything must be scaled **×1000** before it can meet steel. |
+>
+> ### ⛔ AND NOTHING IN THE FILE WILL WARN YOU
+> Measured on the delivered drawing: **`INSUNITS = 0` — "unitless".** The file does not declare metres,
+> so no insert, no XREF and no paste will ever flag the 1000× error. **The rule is the only guard there
+> is.** ⚠️ And `×1000` alone is not the answer: this survey sat on a **local grid at X≈20000, Y≈10000**,
+> so scaling first parks the job **20 km from the origin**. **MOVE to a local origin first, then scale.**
+> ⛔ **Do NOT run `bootstrap()` / `enforce_metric()` on a customer survey file** — it writes
+> `INSUNITS=4` (millimetres) into a drawing that is in metres, i.e. it stamps the wrong unit into
+> someone else's file. Attach with `use()` + a plain op instead.
+>
+> ### ⭐⭐ THE SHAPE OF A SURVEY FILE: A FLAT PLAN PLUS A CODED POINT CLOUD
+> This is what makes it look like chaos, and it is not chaos:
+> | half | what it carries |
+> |---|---|
+> | **the linework** (walls, concrete, crane rail, ducts) | **every polyline flattened onto ONE plane** — here `Z = 106.490` for all of it. **X and Y only.** |
+> | **the points** (blocks with attributes) | each sits at its **true Z**, and the `ELEV` attribute **equals that Z exactly**. Range here 0.00 → 6.94 |
+> ⇒ **The plan says WHERE, the points say HOW HIGH, and nothing in the geometry joins them — the
+> join is the CODE.** That is why the office workflow is *extrude each element to its own measured
+> height*: the file cannot do it for you, and no amount of 3D-orbiting will reveal a height.
+> 🧲 **So the first question on any survey file is never "what does it look like" but "what is 0.00
+> here".** Amir: **"אנחנו מגדירים זה כל פרויקט ואת ה-0.00 שלו"** ⇒ **the datum is an EB decision,
+> declared per project, and it must be stated in one line before anything is extruded.** The file's
+> own zero is only the surveyor's benchmark (here `P1` at exactly 20000/10000, `ELEV 0.00`).
+>
+> ### ⭐⭐⭐ AND THE STEP THAT LEAVES NO TRACE IN EITHER FILE: THE SURVEY IS **ROTATED** INTO THE MODEL
+> The finished gallery carries the survey inside it, on a layer called **`MEDIDA`** (the surveyor's
+> own word), as a block inserted at **scale 1.000** — the ×1000 was applied to the *content* — and
+> **rotated 62.0993°**. Why that number:
+> ```
+> building axis   27.66° + 62.0993° =  89.76°  ≈  the model's Y
+> crane rails    117.30° + 62.0993° = 179.40°  ≈  the model's X
+> ```
+> ⇒ **the survey was turned until the building's own axes ARE the world axes**, which is why every
+> member in the steel model then comes out on a round number. **A real building is not aligned to the
+> WCS; align the survey to the building, once, and the whole model gets easy.** The Z shift was chosen
+> the same way (the plan plane 106.490 m → `+4216.5 mm`), leaving the raw point cloud parked ~102 m
+> below — present, and out of the way.
+>
+> ### ⛔ SEVEN TRAPS, ALL MEASURED ON ONE DELIVERED FILE
+> 1. **All linework on one Z plane** (106.490 here). Extrude it where it lies and you are 106 m up.
+> 2. **One code, two heights.** `Code TH` (cable tray) held **3.19 AND 4.12 m** on the same layer —
+>    one duct in plan, two ducts 0.9 m apart in space.
+> 3. **The same measured point twice** — point 56 at `Z=4.630` *and* at `Z=106.490` with `ELEV=4.62`.
+> 4. **Real points parked on `Defpoints`** — non-plotting *and* frozen. Five here. They do not print
+>    and you do not see them.
+> 5. **Half the drawing on layer `0`** (44 of 68 polylines, all 12 texts) ⇒ layer filtering misses it.
+> 6. **Texts at an absurd Z** (1414.986) — a 3-D window selection grabs or misses them at random.
+> 7. **`POELEV`/`PONAME`/`POCODE` frozen** ⇒ the plan *looks* like it has no heights in it at all.
+>
+> ### 🛑 AND THE MISTAKE I MADE READING IT: A BBOX GIVES THE SIZE, NEVER THE DIAGONAL
+> I read the crane rails' plan direction off a bounding box and reported **62.7°**. The real vertex
+> order says **117.30°**, the mirror diagonal — and with it the crane span went from a wrong 5.12 m to
+> a measured **7.87 m** between rail centrelines. ⭐ **The tell was there before the correction:** the
+> wrong angle left a 35° mismatch against the building axis that explained nothing, and 117.30° makes
+> it **89.64° ≈ perpendicular**. **When an angle you derived explains nothing, suspect the derivation
+> — a 2-point line has two diagonals and a bbox cannot tell you which.** Same family as this file's
+> own *"measure the span, never copy the dump's angle"*.
+>
+> ### ⭐ WHAT A SURVEY ACTUALLY BUYS THE STEEL — read as numbers, on this job
+> The gallery's whole scheme falls out of two measured elevations. The crane reads **underside 4.40 m,
+> top 4.62 m**; the wall head is ~6.5 and the roof 8.6. So the only clear band is above 4.62 — and the
+> finished deck sits at **6606.5 mm, i.e. 1,986 mm over the crane's top point**, with the 1.40 m units
+> on top of it and **751 mm still spare under the roof**. Of the 40 steel parts that do cross the crane's
+> height band, **every one is at `x −400…900` or `x 2400…2700`** — pushed to the two edges, the middle
+> left clear. ⇒ 🧲 **Two numbers off a point cloud decided the level of the whole structure.** And note
+> what a survey can never give you: **a crane is a SWEPT VOLUME, not an obstacle** — the measured
+> position is where it stood that morning. Its travel comes from the crane's own dimensions, which is
+> a question for Amir, not a reading.
+> ⭐ Two more things this job did that are worth copying: **the column is split at z≈3175 into
+> 3254 + 3250 mm** (a transport/erection splice, and it is why 19 parts cluster at that exact height),
+> and **access starts at +2.24 m, not from the floor** — landing on structure that the survey shows
+> already exists there.
 
 > ## 🌬️ A NEW DETAIL TYPE: **A PERFORATED PLATE, FOR VENTILATION** (Amir, 20/08/2026)
 > *"מדובר בתא משאבות שצריך איוורור ולכן אנחנו קודחים את החורים האלו בפלטות שייכנס אוויר לתא."*
@@ -538,8 +623,14 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > `night_read` keeps `SHAPE` / `PLATE` / `BOLT` rows; everything else is an **`OTHER`** row and is
 > invisible to it — **68 entities here**: **48 `Ks_VolBody` on layer `PS_Bolt`** (bolts a connection
 > generated), 5 `Ks_BendShape`, 4 `Ks_VolBody` on layer 0, 2 `Ks_Connection`, **2 `AcDb3dSolid` on
-> `REFREG`** (the existing situation as illustration — not steel), 4 lines, a polyline, a rebar
-> manager and a block reference.
+> `REFREG`**, 4 lines, a polyline, a rebar manager and a block reference.
+> 🛑 **RETRACTED 20/08/2026.** This line used to gloss the two `REFREG` solids as *"the existing
+> situation as illustration — not steel"*. **They are the two REFRIGERATION UNITS.** Measured in
+> Amir's live model: **1223 × 4087 × 1400 mm each, base z 6456/6460, top 7856/7860**, standing on the
+> deck. They are not background — **they are the LOAD the whole gallery exists to carry** (the job is
+> *גלריה מזגנים*, an air-conditioning gallery). ⇒ ⭐ **A layer name is a claim about purpose, and
+> `REFREG` means refrigeration.** One `GetBoundingBox` would have said so; instead the payload of the
+> project was filed as scenery for two days.
 > ⭐⭐ **But `Ks_BendPlate` DOES come through — and there is an exact test for it.** It casts to
 > `PsPlate`, so the 8 bend plates sit inside the 314 `PLATE` rows with no class column to give them
 > away. The geometry gives them away instead:
