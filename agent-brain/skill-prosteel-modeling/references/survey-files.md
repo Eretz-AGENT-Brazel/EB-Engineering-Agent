@@ -248,3 +248,63 @@ not be staying** — ask.
    AutoCAD 2000), the SHX fonts, the plot styles, a ZIP of the whole thing, and **33 photographs and
    9 videos from the day of the survey**. **Read the report and look at the photographs** — the file
    answers *where* and *how high*; only the photographs answer *what is that thing*.
+
+---
+
+## 10. A second survey, read the same day — Carlsberg K10 (20/08/2026)
+
+Amir handed over a live project folder: the surveyor's `10010-15672.dwg`, the EB model
+`19.08.2026 Carlsberg K10.dwg` that the survey was embedded into, and a photo set. The job is a
+steel structure to carry an **automated pallet conveyor** at the Carlsberg plant, line 10.
+**Read only — nothing was modelled.** What the second file confirms, and what it adds:
+
+### ✅ The unit rule held again, unprompted
+`INSUNITS = 0` on this survey too — **two surveys, two different offices, both silent about being
+in metres.** Local grid again (~20000/10000), 32.5 × 48 m surveyed.
+⚠️ **81 polylines and 3 texts on `Defpoints`** here — the non-plotting-layer trap, second file running.
+
+### ⭐⭐ THE SURVEY AND THE SOLIDS TRACED FROM IT ARE ONE LOCKED PAIR
+```
+MEDIDA        ins = (-1789.829, 3597.688, 0)   scale 1.000   rot = 353.82203°
+WALLS SOLID   ins = (-1789.829, 3597.688, 0)   scale 1.000   rot = 353.82203°
+```
+**Identical insertion point, identical scale, identical rotation.** The extruded walls and the survey
+they were traced from are inserted as a pair, so **they physically cannot drift apart** — move one and
+you move both. That is the convention to copy, and it is what makes the solids trustworthy months later.
+⭐ **And the rotation is per project, not a constant:** Tara **+62.0993°**, Carlsberg **−6.178°**. The
+*method* generalises (turn the survey until the building's axes are the world's); the *number* never does.
+
+### ⭐ THE CLIENT'S STATED DIMENSION SHOULD BE FINDABLE AS A MEASURED OBJECT
+Amir quoted the customer's numbers — **conveyor 550 mm, pallet 180 mm** — before anything was opened.
+In the model the conveyor solids read **3750 × 1582 × 550, z 3550 → 4100**: the 550 is there, exact, as
+a modelled body. ⇒ 🧲 **Go and find the number they told you inside the model. If it is not there as a
+measured object, either the model or the brief has moved.** The stack that fell out:
+```
+5900  top of pallet load     CRATES 1200 × 1000 × 1800  (the 180 pallet is inside this, not separate)
+4100  top of conveyor        19 supplier blocks, ALL at z=4100, at 3090 centres
+3550  underside of conveyor  <- 4100 - 550, the customer's figure
+3462  top of our 6 mm plate      (an 88 mm gap to the conveyor -- a question, not an assumption)
+3456  top of our steel = top of the existing 300 mm slab (3156..3456)
+  16  top of base plates      10 off, 16 mm; columns 3020; beams 200 then 220
+```
+⭐ Supplier content travels in the model: one block is named **`SL_TUR_ROL1000_R03`** — the conveyor
+maker's own part. **Look for the vendor's blocks before asking for an interface drawing.**
+
+### 🗂️ HOW THE EXISTING SITUATION IS ORGANISED IN AN EB PROJECT MODEL
+Existing plant steel gets **its own named layers and is modelled as real members** — here
+`OLD SMALL BRIDGE` (136 members, 24.9 × 3.62 m, z 5700→6680, its deck one 24932 × 2532 × 80 element
+on 43 cross members at 597 centres, **skewed in plan**) and `OLD BIG BRIDGE` (38 members, z 5280→6700).
+Everything that is *not* steel is a solid on its own layer: `WALLS SOLID`, `DOOR`, `CONVEYORS`,
+`SL_Conveyors`, `CRATES`, plus `MEDIDA` for the survey itself. **Our new steel stays on `PS_*`.**
+⇒ the clash question becomes answerable by layer, and the model reads at a glance.
+
+### 🛑 AND THE TRAP I ALMOST FELL INTO AGAIN, IN A NEW COSTUME
+Testing the pallets against the existing bridge **by LAYER BOUNDING BOX** said all three crates clash.
+That is not a clash test — a layer's bbox is the envelope of 136 members. Re-run **per member**, the
+answer survived but the reason changed: the crates intersect **one specific element, `223F`** (the
+bridge deck, underside 5700) by **646 mm in plan and 200 mm in height**, over the full 24.9 m.
+⇒ 🧲 **A clash is a statement about two BODIES. Any test that compares groups is a screening pass, and
+its output is a candidate list — never a finding.** Same family as *"a bbox gives the size, never the
+diagonal"* (§6) and as the collision-vs-contour lesson in the main skill file.
+⚠️ **And it was reported to Amir as a question, not a verdict** — the 1800 crate may be a placeholder,
+and he is the authority on what the plant actually runs.

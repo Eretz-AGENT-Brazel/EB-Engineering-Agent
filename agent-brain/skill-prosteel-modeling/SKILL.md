@@ -101,6 +101,23 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > the same way (the plan plane 106.490 m → `+4216.5 mm`), leaving the raw point cloud parked ~102 m
 > below — present, and out of the way.
 >
+> ### ⭐⭐ CONFIRMED ON A SECOND PROJECT THE SAME DAY — Carlsberg K10 (pallet conveyor, line 10)
+> A second surveyor, a second office: **`INSUNITS = 0` again** — two for two, both silent about being
+> in metres — and **81 polylines parked on `Defpoints`** again. And two things the second file adds:
+> **1. The survey and the solids traced from it are inserted as a LOCKED PAIR.** `MEDIDA` and
+> `WALLS SOLID` carry **the same insertion point, the same scale 1.000 and the same rotation** to six
+> decimals. They cannot drift apart. **Copy that convention.**
+> **2. The rotation is per project, never a constant** — Tara **+62.0993°**, Carlsberg **−6.178°**.
+> ⭐ **And go find the customer's stated number inside the model:** *"conveyor 550"* reads back as
+> conveyor solids **z 3550 → 4100**, exact. **If a figure you were told is not there as a measured
+> object, either the model or the brief has moved.**
+> 🛑 **The trap, in a new costume:** testing pallets against the existing bridge **by LAYER bounding
+> box** is not a clash test — a layer's bbox is the envelope of 136 members. Per member, the answer
+> survived but the cause changed (one element, `223F`, by 646 mm in plan and 200 in height).
+> ⇒ 🧲 **A clash is a statement about two BODIES; a group test is a screening pass whose output is a
+> candidate list, never a finding** — and it goes to Amir as a question, since a placeholder crate
+> height would dissolve it. Full reading: `references/survey-files.md` § 10.
+>
 > ### ⛔ SEVEN TRAPS, ALL MEASURED ON ONE DELIVERED FILE
 > 1. **All linework on one Z plane** (106.490 here). Extrude it where it lies and you are 106 m up.
 > 2. **One code, two heights.** `Code TH` (cable tray) held **3.19 AND 4.12 m** on the same layer —
