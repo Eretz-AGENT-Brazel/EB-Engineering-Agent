@@ -81,3 +81,9 @@ api+knowledge-develop/projects/sandbox/*-backup-*.dwg
 # regenerate, and everything else is reproducible from it plus the scripts.
 api+knowledge-develop/projects/bridge-bernie/source.json
 api+knowledge-develop/projects/bridge-bernie/*REBUILD*.dwg
+
+# The collision CONTROL copy: `collision` is a WRITE, so the control reading needs a drawing
+# with a DISTINCT name (the project copy shares Bernie's filename, and a name-based guard
+# cannot tell them apart). It ends up carrying 4,158 Ks_VolBody -- scratch, never content.
+api+knowledge-develop/projects/bridge-bernie/*SOURCE-CHECK*.dwg
+api+knowledge-develop/projects/bridge-bernie/*.bak.dwg
