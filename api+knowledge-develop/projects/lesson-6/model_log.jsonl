@@ -660,3 +660,6 @@
 {"op": "beam", "args": {"kind": "standard", "name": "U220", "catalog": "FRANCE.FR_UPN", "p1": "41000,5800,0", "p2": "41800,5800,0", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "212", "ts": "13:54:22"}
 {"op": "beam", "args": {"kind": "standard", "name": "L70X7", "catalog": "DIN.DIN_WINK_GL", "p1": "41000,6200,0", "p2": "41800,6200,0", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "214", "ts": "13:54:24"}
 {"op": "beam", "args": {"kind": "standard", "name": "SHS150X150X5", "catalog": "BRITAIN.BS_CELSIUS_SHS", "p1": "41000,7000,0", "p2": "41000,7000,1500", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "217", "ts": "13:58:05"}
+{"op": "beam", "args": {"kind": "standard", "name": "HE200B", "catalog": "FRANCE.FR_HEB", "p1": "41000,8000,0", "p2": "42000,8000,0", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "23A", "ts": "14:38:52"}
+{"op": "beam", "args": {"kind": "standard", "name": "SHS80X80X3.6", "catalog": "BRITAIN.BS_CELSIUS_SHS", "p1": "41000,8400,0", "p2": "42000,8400,0", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "23B", "ts": "14:38:53"}
+{"op": "beam", "args": {"kind": "standard", "name": "U220", "catalog": "FRANCE.FR_UPN", "p1": "41000,8800,0", "p2": "42000,8800,0", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "23C", "ts": "14:38:53"}
