@@ -70,20 +70,26 @@ the op count is not quoted here either, for the same reason.*
 > exactly zero — that hypothesis is retracted. 442 holes on 71 parts answer to neither direction
 > and the cause there is still unknown.
 >
-> **⇒ v194 makes the op check its own work:**
+> **⇒ v194–v196 tried to make the op check its own work, and only half of it stands:**
 > ```
-> drill at=<point> n=<ray> at2=<far end> verify=<mm>  dia= play= [slot=] [flange=]
+> drill at=<point> n=<ray> at2=<far end> verify=<mm>   dia= play= [slot=] [flange=]
 > ```
-> * **`verify=<mm>`** — after drilling, the op measures `at` to the nearest hole centre. Farther
->   than that? It wipes what it just made, **retries from `at2` with the ray reversed**, and
->   reports `ray=reversed off=<mm>`.
-> * ⛔ **`holes=0` is now `EB_ERR`, not `EB_PARTIAL`** — "partial with zero holes" read as
->   mostly-fine to a batch counting `EB_OK` prefixes, and **3,920 silent no-ops went past
->   unnoticed** on 20/08.
->
-> ⭐⭐ **The rule behind both: counting holes cannot see a hole in the wrong wall. An op that
-> verifies existence but not POSITION has verified nothing** — reading back exists to compare
-> against what was asked for.
+> * ✅ **`holes=0` is now `EB_ERR`, not `EB_PARTIAL`** — that "partial" read as mostly-fine to a
+>   batch counting `EB_OK` prefixes, and **3,920 silent no-ops went past unnoticed** on 20/08.
+>   This one is proven and worth having on its own.
+> * ⛔⛔ **`verify=` IS NOT TRUSTWORTHY YET. Do not use it on a real model.** Two builds, two
+>   failures, both measured:
+>   * **v194/v195** compared `at` to the **nearest hole on the part** — meaningless on a part
+>     carrying twenty holes. Its first sweep reversed 542 rays "successfully" and made the model
+>     **worse**: exact 9,811 → 9,337.
+>   * **v196** fixed the metric (snapshot the centres before and after, measure only what is new)
+>     and then failed differently: drilling a part's 20 holes one at a time with `verify=20` left
+>     **one** hole, each call reporting `holes=1`. The retry's field wipe is eating the holes
+>     already drilled.
+> ⚠️ **What works today is the ray decided OUTSIDE the op** — batch the whole part with
+> `at=<far end>` and the ray negated, then measure. That is what took the bridge model from
+> 9,182 exact holes to **9,834**, and it is deterministic and convergent (two rounds, identical).
+> ⇒ **Finish `verify=` in a scratch band of a learning model, never in a deliverable.**
 >
 > ### 🚚 `move` (v194) — a correction moves, it does not rebuild
 > ```

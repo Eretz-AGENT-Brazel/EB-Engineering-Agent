@@ -132,8 +132,12 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > > already reading its holes back — and only counting them, so a hole in the wrong wall passed as
 > > success 1,086 times. **Reading back exists to compare against what was ASKED FOR**, not to
 > > confirm that something happened.
-> > ⇒ v194: `drill … at2= verify=<mm>` measures where the hole landed and retries the reversed ray
-> > itself, and `holes=0` is now `EB_ERR` rather than a "partial" that a batch reads as fine.
+> > ⇒ v194-v196 tried to put that check inside the op. **Only half of it stands:** `holes=0`
+> > is now `EB_ERR` (proven), and **`verify=` is not trustworthy yet** — two builds, two
+> > measured failures, the first of which made a model WORSE (exact 9,811 → 9,337) by
+> > "successfully" reversing 542 rays. ⚠️ **The ray decided OUTSIDE the op is what works**
+> > (9,182 → 9,834 exact holes, convergent). Finish the in-op verify in a scratch band, not
+> > in a deliverable — that mistake was made twice in one afternoon.
 >
 > ⚠️ **And the order that would have saved the whole detour:** one part by hand FIRST, then the
 > sweep. The hand test took four calls and two minutes; guessing cost a night and 2,133 holes.
