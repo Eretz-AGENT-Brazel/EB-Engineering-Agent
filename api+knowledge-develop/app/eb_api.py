@@ -23,8 +23,8 @@ ROOT = os.path.dirname(HERE)
 PLUG = os.path.join(HERE, "plugin")
 CMD = os.path.join(PLUG, "eb_cmd.txt")
 RES = os.path.join(PLUG, "eb_result.txt")
-DLL = os.path.join(PLUG, "EBAgentApi208.dll")
-RUN_CMD = "EB_RUN208"
+DLL = os.path.join(PLUG, "EBAgentApi209.dll")
+RUN_CMD = "EB_RUN209"
 # ---- which drawing every op is expected to run on -------------------------
 # Twice on 06/08/2026 work landed in the WRONG drawing: first two documents were open
 # at once (Amir spotted the two windows), then opening a Bentley sample silently became
@@ -1474,6 +1474,70 @@ def beam(profile, p1, p2, rot=0, catalog=None):
         return run("beam", name=profile, catalog=cat, p1=_pt(p1), p2=_pt(p2), rot=rot)
     name, cat = resolve_profile(profile)
     return run("beam", name=name, catalog=cat, p1=_pt(p1), p2=_pt(p2), rot=rot)
+
+
+def beam_framed(name, catalog, p1, p2, ax, ay, wantspan, mirror=None, layer=None,
+                tol=0.1, wait=600):
+    """Create a shape whose SECTION FRAME is chosen by measurement, not by assumption.
+
+    ⭐ WHY THIS EXISTS. `beam` takes the frame as ax/ay, and the property bag of an existing
+    part does not say which of its two axes is which -- nor their signs. Measured on the bridge
+    model, 21/08/2026: passing props X->ax, Y->ay is correct for 6,064 of its 6,240 shapes and
+    WRONG for the rest. On one L100X10 the eight sign/order variants of the same two axes gave
+    span errors of
+
+        X,Y  9.092   Y,X  9.080   -X,Y  9.092   X,-Y  0.021
+        -X,-Y 0.021  -Y,X 9.080   Y,-X 9.080   -Y,-X 9.080     mm
+
+    A wrong frame is invisible in every count: the part exists, its length and section are
+    right, and an 80x80 tube turned to the wrong angle simply carries a bounding box up to
+    80*sqrt(2) - 80 = 33.1 mm wider than it should. That is exactly the 34 mm error that sat in
+    176 shapes of the first rebuild.
+
+    ⇒ There is nothing to infer. Build a candidate, ask the op for `spanErr`, keep the best.
+    The eight candidates are tried in the order that puts the two plain readings first, so a
+    part whose frame was already right costs one call.
+
+    Returns (handle, spanErr, which) -- or (None, None, None) if nothing could be built.
+    Erases every losing attempt, so the drawing is left with exactly one shape.
+    """
+    def neg(v):
+        return ",".join(("%.8f" % -float(x)) for x in v.replace("/", ",").split(","))
+
+    a = ax.replace("/", ",")
+    b = ay.replace("/", ",")
+    cands = [("X,Y", a, b), ("Y,X", b, a), ("X,-Y", a, neg(b)), ("-X,Y", neg(a), b),
+             ("-X,-Y", neg(a), neg(b)), ("-Y,X", neg(b), a), ("Y,-X", b, neg(a)),
+             ("-Y,-X", neg(b), neg(a))]
+    best = (None, None, None)
+    for which, xa, ya in cands:
+        kw = dict(kind="standard", name=name, catalog=catalog, p1=p1, p2=p2,
+                  ax=xa, ay=ya, rot=0, wantspan=wantspan)
+        if mirror is not None:
+            kw["mirror"] = mirror
+        if layer:
+            kw["layer"] = layer
+        r = run("beam", wait=wait, **kw)
+        if not r.startswith("EB_OK"):
+            continue
+        i = r.find("handle=")
+        if i < 0:
+            continue
+        h = r[i + 7:].split()[0]
+        m = re.search(r"spanErr=(\S+)", r)
+        try:
+            e = float(m.group(1)) if m else 1e18
+        except (TypeError, ValueError):
+            e = 1e18
+        if best[0] is None or e < best[1] - 1e-9:
+            if best[0] is not None:
+                run("erase", wait=wait, handles=best[0])
+            best = (h, e, which)
+        else:
+            run("erase", wait=wait, handles=h)
+        if best[1] is not None and best[1] <= tol:
+            break
+    return best
 
 
 def plate(center, length, width, thickness, normal=(0, 0, 1)):

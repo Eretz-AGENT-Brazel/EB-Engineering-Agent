@@ -54,3 +54,4 @@
 - [Drill exit wall](drill-exit-wall.md) — ⚡⚡ החור נוחת בדופן שבה הקרן **יוצאת**; רצפט at=אמצע/n=חוץ/depth, ועל חתך I רק `depth` מגביל לאוגן; `made=` במקום ספירת סך
 - [Partlist and selection](partlist-and-selection.md) — ⚡ רשימת חלקים מקוד (posauto→partlist, sel=0,1,1, קורא Jet 32 ביט); ‏PsSelection לא יציב בין הרצות ⇒ selprobe
 - [Bolt length from the DB](bolt-length-from-db.md) — ⚡⚡ ‏`bolt len=` מתעלמים ממנו; האורך נבחר מהאחיזה דרך טבלת ה-mdb של ProSteel (grip = אמצע KLEMMMIN..KLEMMMAX − DELTA לפי קוטר)
+- [Measure, do not infer](measure-dont-infer.md) — ⚡⚡ מצב שה-API לא מחזיר (היסט מישור חיתוך · יד מסגרת חתך · אורך בורג) ⇒ לבנות את כל המועמדים ולמדוד; ‏`made=` ו-`spanErr=` בתוך האופים

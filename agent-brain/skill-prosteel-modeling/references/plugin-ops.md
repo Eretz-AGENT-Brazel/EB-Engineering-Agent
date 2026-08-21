@@ -4038,3 +4038,44 @@ identical to the source's and 95.16% of midpoints inside 0.1 mm.
 M14 and no M27 at all — which is the whole reason M12 grips above ~38 refuse, and why the
 earlier "8.8S only accepts grip 24" note was wrong outside M12. Copy of both tables lives in
 `knowledge/bolt_table_AS_88s.tsv` and `knowledge/bolt_table_DIN.tsv`.
+
+### 🧲 THE SECTION FRAME IS NOT INFERABLE — `wantspan=` / `spanErr=` (v209)
+
+`beam` and `plate9` take the frame as `ax`/`ay` (or `ex`/`ey`), and an existing part's property
+bag does not say which of its two axes is which, nor their signs. Passing props X→ax, Y→ay was
+right for **6,064 of the bridge's 6,240 shapes and wrong for the rest** — and a wrong frame is
+invisible in every count: the part exists, the section is right, the length is right to the
+micron, and an 80×80 tube turned to the wrong angle carries a bounding box up to
+`80·√2 − 80 = 33.1 mm` too wide. That was the whole of a 34 mm error I first blamed on cut
+planes for an afternoon.
+
+One L100X10, the SAME two axes, eight sign/order variants:
+
+```
+X,Y 9.092   Y,X 9.080   -X,Y 9.092   X,-Y 0.021   -X,-Y 0.021   -Y,X 9.080   Y,-X 9.080   -Y,-X 9.080
+```
+
+```
+beam   ... wantspan=<x,y,z>   -> ... spanErr=<worst-axis mm>
+plate9 ... wantspan=<x,y,z>   -> ... spanErr=<worst-axis mm>
+```
+
+Report the delta, never the intention — the same rule as `drill`'s `made=`. Callers that pass no
+`wantspan` are untouched.
+
+**Use the client wrapper, not the raw op**, when rebuilding from a read model:
+
+```python
+handle, spanErr, which = eb_api.beam_framed(name, catalog, p1, p2, ax, ay, wantspan,
+                                            mirror=..., layer=..., tol=0.1)
+```
+
+It tries the eight candidates (the two plain readings first, so an already-correct frame costs
+one call), keeps the smallest `spanErr`, erases every loser. On the three shapes that defeated
+the first rebuild: L100X10 → `X,-Y` 0.021 mm · SHS80X80X3.6 → `Y,X` 0.016 · L70X7 → `X,-Y` 0.028.
+
+> ⭐⭐ **THE RULE ALL OF THIS BELONGS TO.** Where the API cannot read a state back — a cut
+> plane's offset, a section frame's handedness, a bolt's chosen length — do not reason about it.
+> **Build every candidate, measure against the source, keep what fits.** Three separate defects
+> in one model fell to that move, and every hypothesis reasoned to instead (the flange selector,
+> the reversed ray, the cut-plane flag, `DoForAll` consuming a selection) was refuted afterwards.
