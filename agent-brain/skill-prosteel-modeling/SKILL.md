@@ -116,6 +116,28 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > place a bolt correctly, and **a bolt that is right in position and length and wrong in grip
 > passes every visible gate** while being the wrong part in the shop.
 >
+> ### 🕳️🕳️ AND THE ANSWER, FOUND BY HAND THE NEXT DAY: THE RAY, NOT THE FLANGE
+> One part, on the bench, four calls — the thing I should have done before any sweep:
+> ```
+> HE300A, 290 deep, 14 mm flange
+>   at = a (12612), ray +z   ->  hole at z 12895     the FAR flange
+>   at = b (12626), ray -z   ->  hole at z 12619     exactly the source's hole
+> ```
+> Same part, same point, same section frame. **The ray decides which wall gets drilled**, and the
+> ray taken straight from a hole dump is often the wrong way round. Applied to the 112 affected
+> parts: **644 of 1,086 holes corrected** — exact holes 9,182 → 9,834, beyond 20 mm 1,086 → 442,
+> diameter mismatches 226 → 20. (442 on 71 parts answer to neither direction; still unexplained.)
+>
+> > ⭐⭐⭐ **AN OP THAT VERIFIES EXISTENCE BUT NOT POSITION HAS VERIFIED NOTHING.** `drill` was
+> > already reading its holes back — and only counting them, so a hole in the wrong wall passed as
+> > success 1,086 times. **Reading back exists to compare against what was ASKED FOR**, not to
+> > confirm that something happened.
+> > ⇒ v194: `drill … at2= verify=<mm>` measures where the hole landed and retries the reversed ray
+> > itself, and `holes=0` is now `EB_ERR` rather than a "partial" that a batch reads as fine.
+>
+> ⚠️ **And the order that would have saved the whole detour:** one part by hand FIRST, then the
+> sweep. The hand test took four calls and two minutes; guessing cost a night and 2,133 holes.
+>
 > ### ⛔⛔⛔ AND THEN I DAMAGED 2,133 HOLES TRYING TO FIX 1,098 — TAKE THE COPY FIRST
 > The gates said 1,098 holes sat more than 20 mm from the source's, with a textbook wrong-flange
 > signature. So I ran the documented cure: per part, wipe the hole fields and re-drill under

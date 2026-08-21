@@ -57,6 +57,48 @@ the op count is not quoted here either, for the same reason.*
 > ⇒ **read `lhm=2` to MEASURE a slot, `lhm=1` to COUNT holes**, and drill it back with
 > `drill … slot=<travel>`. A reader that trusts the default count sees 608 holes that do not exist.
 >
+> ### 🕳️🕳️ `drill` PUTS THE HOLE IN THE WALL THE **RAY** CHOOSES — AND THE DUMP'S RAY IS OFTEN BACKWARDS
+> Measured 21/08/2026 by hand on one part (`HE300A`, 290 deep, 14 mm flange):
+> ```
+> at = a (12612), ray = +z   ->  the hole lands at z 12895     the FAR flange
+> at = b (12626), ray = -z   ->  the hole lands at z 12619     exactly where the source has it
+> ```
+> Same part, same point, same section frame — **only the ray direction differs, and it decides
+> which wall gets drilled.** Applied to the 112 parts whose holes were misplaced: **644 of 1,086
+> corrected** (exact 9,182 → 9,834 · beyond 20 mm 1,086 → 442 · diameter mismatches 226 → 20).
+> ⚠️ **It is NOT the flange selector.** `flange=1/0/2` was tested per hole first and gained
+> exactly zero — that hypothesis is retracted. 442 holes on 71 parts answer to neither direction
+> and the cause there is still unknown.
+>
+> **⇒ v194 makes the op check its own work:**
+> ```
+> drill at=<point> n=<ray> at2=<far end> verify=<mm>  dia= play= [slot=] [flange=]
+> ```
+> * **`verify=<mm>`** — after drilling, the op measures `at` to the nearest hole centre. Farther
+>   than that? It wipes what it just made, **retries from `at2` with the ray reversed**, and
+>   reports `ray=reversed off=<mm>`.
+> * ⛔ **`holes=0` is now `EB_ERR`, not `EB_PARTIAL`** — "partial with zero holes" read as
+>   mostly-fine to a batch counting `EB_OK` prefixes, and **3,920 silent no-ops went past
+>   unnoticed** on 20/08.
+>
+> ⭐⭐ **The rule behind both: counting holes cannot see a hole in the wrong wall. An op that
+> verifies existence but not POSITION has verified nothing** — reading back exists to compare
+> against what was asked for.
+>
+> ### 🚚 `move` (v194) — a correction moves, it does not rebuild
+> ```
+> op=move handles=<h,h,…> by=dx,dy,dz
+> ```
+> One transaction, batchable. **Once the modifications exist, a position fix may not
+> delete-and-rebuild** — that discards every hole, cut and chamfer the part has acquired. 793
+> plates were repaired this way through COM before the op existed.
+>
+> ### 🔢 `posauto` measured on a real model (21/08/2026)
+> **14,018 parts → 1,823 distinct positions**, 1,337 buckets, **18,317** comparisons, 357 s.
+> The bucketing is what makes it viable: naive pairwise on 14,018 parts would be 98 million
+> `CheckTwoPartsAreEqual` calls. ⭐ And the ratio is the fabrication economics in one number —
+> 14,018 pieces built from 1,823 unique ones.
+>
 > ### 🔩 `bolt p1/p2` is the GRIP, and the dumped axis is the LENGTH
 > The axis in `dumpmodel` spans the bolt's own length (M24 × 120 → 120.0 mm). Handing that to
 > `CreateSingleBolt` asks for a grip of 120 on an M24, which needs a 158.4 mm bolt — no table
