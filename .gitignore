@@ -72,6 +72,10 @@ api+knowledge-develop/projects/sandbox/_archive/
 # eb_api.save()'s timestamped snapshots land next to the model and are moved to _archive/
 # when a part closes; until then they are deliberate local backups, not repo content.
 api+knowledge-develop/projects/sandbox/*-backup-*.dwg
+# 21/08/2026: until today save() checked a HARDCODED sandbox path, so it never reached
+# the backup step for a project model and this rule only ever needed the sandbox line.
+# With that fixed, every project folder gets snapshots -- same treatment for all of them.
+api+knowledge-develop/projects/*/*-backup-*.dwg
 
 # ---- the bridge model (model 7), 20/08/2026 --------------------------------
 # The read CACHE is 34.7 MB and is regenerated in 3.8 minutes by

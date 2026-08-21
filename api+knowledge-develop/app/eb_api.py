@@ -1849,7 +1849,28 @@ def save(backup=True):
     # the live file. COM's doc.Save() is the route that has actually produced correct files.
     # It is also the route that reports the SIZE, which is the only way to catch this class of
     # failure: a save that "succeeds" and writes nothing.
-    path = _os.path.join(PROJECTS, "sandbox", EXPECT_DWG or "sandbox.dwg")
+    # ⛔⛔ 21/08/2026: this line used to be
+    #        path = _os.path.join(PROJECTS, "sandbox", EXPECT_DWG or "sandbox.dwg")
+    #     -- the sandbox folder, HARDCODED. For any model that does not live in
+    #     projects/sandbox/ the checked path does not exist, so `before` is 0,
+    #     `_os.path.exists(path)` is False, and the function returns
+    #        "EB_ERR save: <name> was NOT written to disk"
+    #     while doc.Save() has in fact just written the real file. Measured on model 3
+    #     (projects/model-3-kuperdam-drill-base-3-fab/): the drawing went 200,104 B @18:30:27
+    #     -> 200,131 B @18:31:13 and the function still called it a failure. Worse, the
+    #     BACKUP is taken after that check, so every project model has been saving without
+    #     one. It went unnoticed because sandbox models -- the ones the manual chapters use
+    #     -- are exactly the case the hardcoded path gets right.
+    #     The session registry already knows where the drawing really is: use it.
+    path = None
+    try:
+        _ses = ws.current()
+        if _ses and _ses.get("dwg") and _os.path.isabs(_ses["dwg"]):
+            path = _ses["dwg"]
+    except Exception:
+        path = None
+    if not path:
+        path = _os.path.join(PROJECTS, "sandbox", EXPECT_DWG or "sandbox.dwg")
     before_size = _os.path.getsize(path) if _os.path.exists(path) else 0
     before = _os.path.getmtime(path) if _os.path.exists(path) else 0
     app, doc = _app_doc(tries=10)

@@ -133,6 +133,72 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > **תמציתיות** and unambiguous phrasing · **the software is the platform** on which we can verify
 > at 100% that I understood him and he understood me.
 
+> ## ⛔⛔ A COUNTER CAN READ A FLAG AND LOOK LIKE GEOMETRY — `dumppoly nonrect=` (model 3, 21/08/2026)
+> *The item Amir named as the one not to walk into a project without: verify `setpoly`, then repair
+> model 3's 132 ribs. Both done — and the gate that had been waiting for the repair turned out to
+> be unreachable by construction.*
+>
+> ### `setpoly` works, and it keeps the holes
+> ```
+> setpoly handle=190F  verts 5->7  rect 1->1  holes 0->0  set=ok
+>         pts=70.375,-220,0;-45.375,-220,-0.414;…
+> dumppoly -> POLY 190F … 7 1 70.375,-220,0;-45.375,-220,-0.414;…   ← vertex for vertex
+> ```
+> The v187 third-value fix carries the bulge, and **96 holes survived all 132 calls** — which is
+> the whole reason the op exists instead of delete-and-redrill.
+>
+> ### ⛔ But `nonrect` is `pl.RectangleMode`, a stored creation flag — and it is READ ONLY
+> ```csharp
+> try { rectMode = pl.RectangleMode ? "1" : "0"; } catch { rectMode = "?"; }   // PolyOf()
+> ```
+> ```
+> error CS0200: Property … 'PsPlate.RectangleMode' cannot be assigned to -- it is read only
+> ```
+> A plate **born** rectangular reads `nonrect=0` for ever, however exact its contour becomes. So
+> the recorded target — *"`dumppoly` on both drawings, `nonrect=132` in both"* — was not hard, it
+> was **impossible**. ⚠️ **The general rule: before trusting a census counter, read what it counts.**
+> A counter that reports a creation flag while its caller reads it as a shape test will **fail a
+> correct model and pass a wrong one.**
+>
+> ### ✅ The gate that does work: lift both contours into WORLD space
+> Each drawing dumps contours in each plate's own frame (`dumppoly`) *and* each plate's frame
+> (`dumpparts` → `org`, `X=`, `Y=`). World coordinates are unambiguous:
+> ```
+> plates compared in WORLD space: 132     worst vertex deviation: 0.0000 mm     over 0.05 mm: 0
+> ```
+>
+> ### ⭐⭐ And a plate's frame is MEASURED, never assumed — same as a section's
+> Writing the source's contour verbatim made the model **worse** (collisions 141 → 184). Searching
+> by collision count found a winner; computing it from both models' own axes is the honest route:
+> ```
+> u' = u·(Xs·Xr) + v·(Ys·Xr)      all 132 plates: (a,b,c,d) = (0,1,1,0)
+> v' = u·(Xs·Yr) + v·(Ys·Yr)      one swap, determinant -1  ⇒  the bulge sign flips
+> ```
+> **The rebuild's plate frames were left-handed with respect to the source's** (`rebuild Z =
+> -source Z`). 140 → 8 collisions. *(Reversing the traversal with the bulges moved to their new
+> segments was also built and measured: no change. Do not stack guesses — build the candidates.)*
+>
+> ### ⭐⭐ What the last 8 turned out to be: `partOrigin`
+> ```
+> source  CE9   partOrigin = kRipOrigin        pos='1033'  count=1/8
+> rebuild 1941  partOrigin = kUndefinedOrigin  pos=''      count=1/0
+> ```
+> Eight long diagonal ribs still overlap their `HEB 500` by 29.7 × 29.7 × 61.4 mm, and **no
+> transform moves it** — against the source they agree on org, bbox, L/W/H, `cutArea` (0.003 mm²)
+> and weight (1 g). The source's ribs are **owned by the RIP connection**; mine are standalone
+> plates. ⇒ *The unit is the connection, not the object* arrives as a measurement: a
+> connection-owned stiffener and its host are one assembly and the checker treats them as one.
+> **A standalone plate where the model wanted a connection part is a defect you can only see in
+> `partOrigin`.**
+>
+> ### 🐛 And an instrument that reported failure on success
+> `eb_api.save()` checked `projects/sandbox/<name>.dwg` — **hardcoded**. For any model outside the
+> sandbox that path does not exist, so it returned *"was NOT written to disk"* while `doc.Save()`
+> had just written the real file (200,104 B @18:30:27 → 200,131 B @18:31:13), **and the backup step
+> sits after that check, so no project model was ever getting one.** Fixed: the path now comes from
+> the work-session registry. ⚠️ It went unnoticed because the sandbox is exactly the case the
+> hardcoded path gets right — **a checker validated only on its happy path is not validated.**
+
 > ## ⚡⚡ WHEN THE MODEL IS BIG, THE PLUMBING IS THE JOB (the bridge model, 20/08/2026 night)
 > *Bernie's bridge: **21,737 entities** — 7,807 plates, 6,240 profiles, 5,680 bolts, 314 concrete
 > wall panels, 11,657 holes, 4,477 cut planes, 7,834 chamfers, 3,828 poly-cuts. Fifteen times

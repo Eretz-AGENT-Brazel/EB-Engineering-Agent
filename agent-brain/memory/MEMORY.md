@@ -60,3 +60,5 @@
 - [Model as question channel](model-as-question-channel.md) — ⚡⚡ מה שלא מובן — לסמן בתוך המודל, לבנות חלופות, ולבקש שיסמנו לי בחזרה
 - [Demand feedback](demand-feedback.md) — ⚡⚡ בסוף כל מסירה לדרוש פידבק — מה היה טוב ומה לשפר; העבודה שלי מאושרת בידי אדם תמיד
 - [Bernie EN, Amir HE](bernie-english-amir-hebrew.md) — שני האנשים שמדברים איתי בעלייה לאוויר, ובאיזו שפה עונים לכל אחד
+- [A counter may read a flag](counter-may-read-a-flag.md) — ⚡⚡ `dumppoly nonrect=` קורא דגל read-only ולא צורה; לקרוא מה מונה סופר לפני שסומכים עליו כשער
+- [partOrigin tells the route](partorigin-tells-the-route.md) — השדה היחיד שחושף לוח בודד שעומד במקום שבו המקור בנה חלק של חיבור
