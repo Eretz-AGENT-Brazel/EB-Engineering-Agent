@@ -646,12 +646,19 @@ and 5,405 of 5,680 midpoints match to 0.1 mm.
    controlled 12-part model gives exactly 12. Next lever is `PerformPartlist2` with
    `kPartlistExport`.
 
-### The one open decision
+### DECIDED 21/08/2026 — leave them modelled
 
-The parts that cannot be modelled to match (the cut-plane offset and plate frames above) could
-be **cloned from Bernie's file with `xclone`** — the route already used for the 678 profiles
-whose catalogues are not installed on this machine. That would take the body gate to ~100% and
-changes what the deliverable is; it is Amir's call and has not been done.
+The ~450 parts whose bodies do not match (299 plates, 150 shapes) could have been **cloned from
+Bernie's file with `xclone`**, the route already used for the 678 profiles whose catalogues are
+not installed here. That would have taken the body gate to ~100%.
+
+**Amir's decision: leave them modelled.** A part I modelled with its deviation written down is
+worth more than a part I copied. 450 of 14,047, deviations mostly 1–10 mm, every one recorded.
+
+⇒ And the repair that is still worth running is a MODELLING one, not a clone: the pass that
+closed 62 shapes tried two section frames, while `eb_api.beam_framed` tries eight and has
+already been measured at 9.08 → 0.021 mm on exactly the cases that pass could not close. It is
+written, documented and unrun; plates have never had the equivalent test.
 
 Bernie's original is untouched: `bridge model for amir.dwg`, MD5 `ac59b0cdb178aec77cad3cdb7ae1b3ba`.
 
