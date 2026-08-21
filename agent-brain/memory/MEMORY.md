@@ -56,3 +56,5 @@
 - [Bolt length from the DB](bolt-length-from-db.md) — ⚡⚡ ‏`bolt len=` מתעלמים ממנו; האורך נבחר מהאחיזה דרך טבלת ה-mdb של ProSteel (grip = אמצע KLEMMMIN..KLEMMMAX − DELTA לפי קוטר)
 - [Measure, do not infer](measure-dont-infer.md) — ⚡⚡ מצב שה-API לא מחזיר (היסט מישור חיתוך · יד מסגרת חתך · אורך בורג) ⇒ לבנות את כל המועמדים ולמדוד; ‏`made=` ו-`spanErr=` בתוך האופים
 - [A model you cannot see](model-you-cannot-see.md) — ⚡⚡ 13,967 חלקים היו `Visible=False` ו-19 שערים לא ראו: חלק מוסתר נמדד מושלם. `classify visible=1`
+- [Deliver the product](deliver-the-product.md) — ⚡⚡ העבודה השחורה נשארת אצלי; מוסר המודל/התכניות ומה שנמדד — לא מלל הדרך (טבלת שערים ותקיעה = חריגות)
+- [Model as question channel](model-as-question-channel.md) — ⚡⚡ מה שלא מובן — לסמן בתוך המודל, לבנות חלופות, ולבקש שיסמנו לי בחזרה

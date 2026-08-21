@@ -28,5 +28,10 @@ metadata:
 📝 **התשובות נרשמות בראש `projects/<שם>/README.md` לפני כל גיאומטריה** — תשובה שנאמרה בצ'אט
 ולא נרשמה תישאל שוב. ‏"לא יודע" הוא **ממצא** ונרשם ככזה.
 
+⚡ **והמסגרת, 21/08/2026:** *"נותן שירות טוב מבין קודם מה הצורך ומה הבעיה, ואז הוא ניגש
+לפיתרון שלה"* — זה **השירות עצמו**, לא נוהל לפניו. ⚠️ **ו"לא רלוונטי" / "לא צריך" סוגר
+את קו השאלות — מבצעים מה שמבקשים.** לדחוף מעבר לזה אינו יסודיות אלא חיכוך.
+
 קשור: [[survey-files]] · [[martar-pile-template]] · [[buildable-or-not-modelled]] ·
-[[consult-before-widening]] · [[no-silent-skipping]] · [[eb-business-context]]
+[[consult-before-widening]] · [[no-silent-skipping]] · [[eb-business-context]] ·
+[[deliver-the-product]] · [[model-as-question-channel]]
