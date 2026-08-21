@@ -504,3 +504,48 @@ posauto: 14,018 חלקים -> 1,823 פוזיציות שונות · 1,337 קבו�
 4. **‏7 ה-SOLID** — מה הם מייצגים בשטח?
 
 </div>
+
+---
+
+## 21/08/2026 — the holes, solved (1,112 wrong → 4)
+
+The `drill` rule was found by bench measurement in a sandbox band, not by sweeping the
+deliverable: **the hole lands in the wall where the ray LEAVES the part.** Reproducing a wanted
+hole `a→b` therefore means aiming OUTWARD from its midpoint with `depth=|a−b|`, and on an
+I-profile `depth` is the only thing that confines the hole to one flange at all — `flange=` and
+`innercontour=` were measured to make no difference there. Full write-up:
+`knowledge/learning/findings/DRILL-WHICH-WALL.md`.
+
+The whole hole layer was then rebuilt from that one rule rather than patched
+(`app/bridge_holes_exitwall.py`, idempotent: read the field counts, wipe them, re-drill all
+11,657, retry the refusals alone, then nudge the survivors in-plane).
+
+One gate over both states — `app/bridge_hole_gate.py`, source `lhm=2` against rebuild `lhm=2`,
+greedy one-to-one per part, worst-endpoint distance:
+
+| | before | after |
+|---|---|---|
+| within 0.1 mm | 10,779 (87.88%) | **11,973 (97.62%)** |
+| within 0.5 mm | 10,861 | 12,133 |
+| within 20 mm | 11,153 (90.93%) | **12,261 (99.97%)** |
+| beyond 20 mm | **652** | **0** |
+| no partner at all | 460 | **4** |
+
+U220 334→0 · SHS80X80X3.6 196→0 · HE200B 184→0 · SHS150 120→8→0 · HE300A 84→0 · IPE160 84→0 ·
+HE400B 30→0. Slots are exact: 608 wanted, 608 present, on the same 131 parts.
+
+**The 4 that remain** are on one plate, `5741` ← source `3E5DE9`. Bernie's is
+`PLATE 470x320x12`; mine is `PLATE 470x195x12` — **125 mm narrower**, because the cut planes my
+rebuild applied removed material that should have stayed. The holes fall on steel that is not
+there. That is a cut-plane defect on one plate, not a drilling one.
+
+### Two instruments were wrong before the model was
+
+- `drill` reported EB_OK by counting the part's TOTAL holes, so a call that created nothing on a
+  part that already had holes passed. 24 holes were reported drilled **twice** and none existed.
+  ⇒ **v199 reports `made=<delta>`; `made=0` is EB_ERR.**
+- The first gate rounded coordinates into dictionary keys, and `round(78642.45,1)` vs
+  `round(78642.43,1)` split one hole into two buckets — it reported 889 plate holes missing when
+  every one was present. ⇒ a geometric comparison needs a TOLERANCE, never a key. It also has to
+  compare like with like: `lhm=1` wanted rows against an `lhm=2` dump invents ~600 failures.
+
