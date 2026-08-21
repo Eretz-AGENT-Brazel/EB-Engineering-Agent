@@ -662,3 +662,29 @@ written, documented and unrun; plates have never had the equivalent test.
 
 Bernie's original is untouched: `bridge model for amir.dwg`, MD5 `ac59b0cdb178aec77cad3cdb7ae1b3ba`.
 
+
+---
+
+## 21/08/2026, after the session was already closed — the model could not be seen
+
+Amir opened the rebuild and saw concrete, the grid, and a cloud of bolts. No steel.
+
+```
+classify -> parts=19832  tally[... HIDDEN=13967 ...]
+   Ks_Plate  Visible=False  7,806      Ks_Bolt          True  5,405
+   Ks_Shape  Visible=False  6,143      Ks_ConcretePanel True    314
+   Ks_Shape  Visible=True      68  <-- built that morning
+   Ks_Plate  Visible=True       1  <-- built that morning
+```
+
+Every layer was on and unfrozen; the entities themselves carried `Visible=False`. The only
+visible steel was what had been created that morning, which is what identifies the first build
+as where it came from rather than any of the day's repairs. Fixed with one call,
+`classify visible=1` — 19,832 parts changed, ~7 s — and saved.
+
+**Nineteen acceptance gates missed it, because a hidden part measures perfect**: right section,
+right length to the micron, holes to 0.1 mm, weight to 0.089%. The gate set answered "is it
+right?" and never asked "is it there?" — the first question anyone opening the file asks.
+`app/bridge_verify.visibility_gate()` now runs first and is a hard failure. Written up in
+`knowledge/learning/findings/A-MODEL-YOU-CANNOT-SEE.md`.
+

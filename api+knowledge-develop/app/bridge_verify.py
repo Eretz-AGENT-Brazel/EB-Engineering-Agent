@@ -16,6 +16,7 @@ and `build_target` is never pointed at it. Caught before it fired, 20/08/2026.
 """
 import io
 import json
+import re
 import os
 import sys
 import time
@@ -56,11 +57,45 @@ def shape_of(r):
     return sorted((round(q[0] - cx, 2), round(q[1] - cy, 2), q[2]) for q in r)
 
 
+def visibility_gate():
+    """⭐⭐ CAN THE MODEL BE SEEN? Nineteen gates measured this rebuild to 0.1 mm and not one of
+    them asked that question. Amir opened the file on 21/08/2026 and saw the concrete, the grid
+    and a cloud of bolts: 13,967 parts -- 7,806 plates and 6,143 shapes -- carried
+    Visible=False. The only visible steel was the 68 shapes and 1 plate created that morning,
+    which is how the first build was identified as the source of it.
+
+    Geometry gates cannot catch this. A hidden part has the right section, the right length, the
+    right holes and the right weight; it measures perfect and it is not there. A model you
+    cannot see is not a model. ⇒ this runs on every verification, and it is a HARD failure.
+
+    `op=classify` reads it (and `classify visible=1` fixes it in about 7 s for 20,000 parts).
+    """
+    r = eb_api.run("classify", wait=1200)
+    if not r.startswith("EB_OK"):
+        return ("visible parts", "classify refused: %s" % r[:70], False)
+    # No HIDDEN token in the tally means nothing is hidden -- absence is the PASS here, so it
+    # must not fall through to a sentinel that reads like a failure.
+    m = re.search(r"HIDDEN=(\d+)", r)
+    hidden = int(m.group(1)) if m else 0
+    n = re.search(r"parts=(\d+)", r)
+    total = int(n.group(1)) if n else -1
+    return ("visible parts",
+            "%d of %d hidden (Visible=False)%s"
+            % (hidden, total,
+               "" if hidden == 0 else "  <-- run: classify visible=1"),
+            hidden == 0)
+
+
 def gates(src, rbd, mapping):
     out = []
     R = {}
     for p in rbd["shapes"] + rbd["plates"]:
         R[p["h"]] = p
+
+    try:
+        out.append(visibility_gate())
+    except Exception as e:
+        out.append(("visible parts", "could not be read: %s" % str(e)[:80], False))
 
     mapped = set(mapping.values())
     orphans = len([p for p in (rbd["shapes"] + rbd["plates"]) if p["h"] not in mapped])

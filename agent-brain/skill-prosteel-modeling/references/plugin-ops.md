@@ -4079,3 +4079,26 @@ the first rebuild: L100X10 → `X,-Y` 0.021 mm · SHS80X80X3.6 → `Y,X` 0.016 �
 > **Build every candidate, measure against the source, keep what fits.** Three separate defects
 > in one model fell to that move, and every hypothesis reasoned to instead (the flange selector,
 > the reversed ray, the cut-plane flag, `DoForAll` consuming a selection) was refuted afterwards.
+
+### 🧲 A MODEL YOU CANNOT SEE IS NOT A MODEL — check `classify` before anything else
+
+The bridge rebuild passed nineteen geometry gates to 0.1 mm. Amir opened it and saw concrete, a
+grid and a cloud of bolts: **13,967 parts carried `Visible=False`** (7,806 plates, 6,143
+shapes). Every layer was on and unfrozen — the entities themselves were hidden. The only visible
+steel was what had been built that morning.
+
+```
+classify                 -> parts=19832 ... tally[... HIDDEN=13967 ...]   read it
+classify visible=1       -> parts=19832 changed=19832 failed=0            ~7 s, fixes it
+classify set=display value=<n> | set=area | set=family                    the other classes
+```
+
+**Why no gate caught it: a hidden part measures perfect.** Right section, right length to the
+micron, right holes, right weight. ⇒ `bridge_verify.visibility_gate()` now runs FIRST and is a
+hard failure.
+
+> ⚠️ The whole family — a success message printed over an absence:
+> parts hidden · a layer off or frozen · a part on a non-plotting layer · `partlist` returning
+> **true** on a row-less file · `drill` answering EB_OK because it counted the part's TOTAL holes
+> instead of the delta. Same bug in different clothes, and measuring harder never finds any of
+> them. Beside every gate that asks *how close*, put one that asks *is it there*.
