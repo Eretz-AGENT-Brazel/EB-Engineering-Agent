@@ -607,3 +607,51 @@ by more than 1%, and the reason is not the rebuild:
 measurement, not a correction — the file is his. It does mean a parts list taken off it would
 under-report steel on those members, which is Amir's call to act on or ignore.
 
+
+---
+
+## 21/08/2026, session close — where the rebuild stands, and what is left
+
+| | source | rebuild | |
+|---|---|---|---|
+| shapes | 6,240 | **6,240** | exact count |
+| plates | 7,807 | **7,807** | exact count |
+| holes | 12,265 | **12,265** | exact count |
+| bolts | 5,680 | 5,405 | 275 not buildable here, reasons named below |
+| steel weight | 914,708 kg | 915,518 kg | +0.089% |
+
+**Holes** — `app/bridge_hole_gate.py`: 11,967 within 0.1 mm (97.57%), 12,255 within 20 mm
+(99.92%), **0 missing**, 10 beyond 20 mm on a single L100X10 whose frame is still 9 mm out.
+
+**Bodies** — worst-axis extent over 14,047 mapped parts: 13,457 within 0.1 mm (95.80%), 147 in
+0.1–1 mm, 390 in 1–10, 53 at 10 mm or more. Shapes alone: 6,090 of 6,240 within 0.1 mm.
+
+**Bolts** — the axis-length spectrum is identical to the source's on every reproducible length,
+and 5,405 of 5,680 midpoints match to 0.1 mm.
+
+### What is left, and why
+
+1. **299 plates and 150 shapes off by 1 mm or more.** The section-frame test that fixed 62
+   shapes (`app/bridge_reframe.py`) tried two candidates; `eb_api.beam_framed` now tries eight
+   and is measurably better on exactly the cases the pass could not close — it has not been run
+   as a repair, and **plates have never had the equivalent test at all**.
+2. **275 bolts.** `M12 x 210/350/400/450` (177) — `AS_Bolt_88s` ends at M12 x 60, so no such row
+   exists; `M12 x 150 IG 8.8G` (40) — that style is not installed; `M24 x 32.769` (58) — not a
+   catalogue length.
+3. **17 parts carry one cut plane fewer** than the source. 14 of them have bodies exact to
+   0.001 mm — the third plane removes nothing and only the record differs. 3 are genuinely off.
+4. **1,022 annotation objects and the dimensions** were never attempted; `xclone` is the route
+   and it is slow on annotation (~40 min for a batch, measured).
+5. **`partlist` row completeness at scale** — 166 rows for 14,062 numbered parts, while a
+   controlled 12-part model gives exactly 12. Next lever is `PerformPartlist2` with
+   `kPartlistExport`.
+
+### The one open decision
+
+The parts that cannot be modelled to match (the cut-plane offset and plate frames above) could
+be **cloned from Bernie's file with `xclone`** — the route already used for the 678 profiles
+whose catalogues are not installed on this machine. That would take the body gate to ~100% and
+changes what the deliverable is; it is Amir's call and has not been done.
+
+Bernie's original is untouched: `bridge model for amir.dwg`, MD5 `ac59b0cdb178aec77cad3cdb7ae1b3ba`.
+
