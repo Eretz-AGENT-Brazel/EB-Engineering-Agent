@@ -58,3 +58,5 @@
 - [A model you cannot see](model-you-cannot-see.md) — ⚡⚡ 13,967 חלקים היו `Visible=False` ו-19 שערים לא ראו: חלק מוסתר נמדד מושלם. `classify visible=1`
 - [Deliver the product](deliver-the-product.md) — ⚡⚡ העבודה השחורה נשארת אצלי; מוסר המודל/התכניות ומה שנמדד — לא מלל הדרך (טבלת שערים ותקיעה = חריגות)
 - [Model as question channel](model-as-question-channel.md) — ⚡⚡ מה שלא מובן — לסמן בתוך המודל, לבנות חלופות, ולבקש שיסמנו לי בחזרה
+- [Demand feedback](demand-feedback.md) — ⚡⚡ בסוף כל מסירה לדרוש פידבק — מה היה טוב ומה לשפר; העבודה שלי מאושרת בידי אדם תמיד
+- [Bernie EN, Amir HE](bernie-english-amir-hebrew.md) — שני האנשים שמדברים איתי בעלייה לאוויר, ובאיזו שפה עונים לכל אחד
