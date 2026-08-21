@@ -549,3 +549,61 @@ there. That is a cut-plane defect on one plate, not a drilling one.
   every one was present. ⇒ a geometric comparison needs a TOLERANCE, never a key. It also has to
   compare like with like: `lhm=1` wanted rows against an `lhm=2` dump invents ~600 failures.
 
+
+---
+
+## 21/08/2026, later — the gates re-measured, and what the source itself says
+
+Everything below is from a fresh read of the rebuild (`app/bridge_read.py`, 3.9 min, 0 read
+failures) against `source.json`.
+
+### Holes — `app/bridge_hole_gate.py`
+
+| | count | |
+|---|---|---|
+| within 0.1 mm | 11,971 | 97.60% |
+| within 0.5 mm | 12,131 | 98.91% |
+| within 20 mm | 12,259 | **99.95%** |
+| beyond 20 mm | **0** | |
+| no partner at all | **6** | all on one plate |
+
+### Bodies — worst-axis extent, 14,047 mapped parts
+
+| | count | |
+|---|---|---|
+| < 0.1 mm | 13,424 | **95.56%** |
+| 0.1–1 mm | 147 | 1.05% |
+| 1–10 mm | 400 | 2.85% |
+| ≥ 10 mm | 76 | 0.54% |
+
+⭐ The improvement here came from **modification ORDER**, not from any parameter: the build
+applied cut planes before the facets, holes and poly-cuts existed, and re-applying the same
+plane to the fully-modified body cuts differently — 148 of 232 off-parts improved, summed
+worst-axis error 1,693.7 → 931.6 mm. The cut-plane *flag* hypothesis was measured and refuted
+(see `qc/retracted.tsv`).
+
+### Cut planes — 17 parts carry one fewer than the source
+
+The third plane returns `applyRc=1` and changes nothing: the first two already removed that
+material. **14 of the 17 have bodies exact to 0.001 mm** — only the modification record differs.
+3 are genuinely off, by 34.05 mm. And 3+ planes are not a ceiling: the rebuild holds 189 parts
+with 3, 48 with 4 and 23 with 5.
+
+### ⚠️ Weights — and a finding about the source, not the rebuild
+
+Total steel: source **914,707.6 kg**, rebuild **915,517.7 kg**, **+0.089%**. But 597 parts differ
+by more than 1%, and the reason is not the rebuild:
+
+- Grouped by section, the rebuild's kg-per-metre has a coefficient of variation of **0.0% in
+  every one of 39 sections** — weight strictly proportional to length, as it must be — and its
+  median matches the source's **exactly** wherever the source is self-consistent (U100 10.60,
+  SHS60X60X3.6 6.27, RHS200X100X5 22.60, RO60.3X2.9 4.11, SHS40X40X3.2 3.61, SHS100X100X4 11.90).
+- The source's spread reaches **78.6%** on `SHS60X60X5`, where a part of L=840 mm **with no
+  modifications** carries the same 58.94 kg as a part of L=7,000 mm. On `SHS80X80X4`, eight parts
+  of identical section and length and no modifications carry **two different weights** (24.65 and
+  146.98) — and 30.62 m of SHS80×80×4 is 288 kg, so neither is current.
+
+⇒ the weights in Bernie's file are stale on part of the model. This is reported as a
+measurement, not a correction — the file is his. It does mean a parts list taken off it would
+under-report steel on those members, which is Amir's call to act on or ignore.
+
