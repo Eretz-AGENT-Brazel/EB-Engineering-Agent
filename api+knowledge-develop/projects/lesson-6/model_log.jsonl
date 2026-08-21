@@ -663,3 +663,72 @@
 {"op": "beam", "args": {"kind": "standard", "name": "HE200B", "catalog": "FRANCE.FR_HEB", "p1": "41000,8000,0", "p2": "42000,8000,0", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "23A", "ts": "14:38:52"}
 {"op": "beam", "args": {"kind": "standard", "name": "SHS80X80X3.6", "catalog": "BRITAIN.BS_CELSIUS_SHS", "p1": "41000,8400,0", "p2": "42000,8400,0", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "23B", "ts": "14:38:53"}
 {"op": "beam", "args": {"kind": "standard", "name": "U220", "catalog": "FRANCE.FR_UPN", "p1": "41000,8800,0", "p2": "42000,8800,0", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "23C", "ts": "14:38:53"}
+{"op": "bolt", "args": {"p1": "41000,10000,160", "p2": "41000,10016,160", "dia": 12, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "284", "ts": "15:36:46"}
+{"op": "bolt", "args": {"p1": "41000,10000,200", "p2": "41000,10020,200", "dia": 12, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "285", "ts": "15:36:47"}
+{"op": "bolt", "args": {"p1": "41000,10000,240", "p2": "41000,10024,240", "dia": 12, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "286", "ts": "15:36:47"}
+{"op": "bolt", "args": {"p1": "41000,10000,280", "p2": "41000,10028,280", "dia": 12, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "287", "ts": "15:36:48"}
+{"op": "bolt", "args": {"p1": "41000,10000,320", "p2": "41000,10032,320", "dia": 12, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "288", "ts": "15:36:48"}
+{"op": "bolt", "args": {"p1": "41000,10000,360", "p2": "41000,10036,360", "dia": 12, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "289", "ts": "15:36:48"}
+{"op": "bolt", "args": {"p1": "41000,11216,0", "p2": "41000,11232,0", "dia": 12, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "28A", "ts": "15:37:13"}
+{"op": "bolt", "args": {"p1": "41000,11220,0", "p2": "41000,11240,0", "dia": 12, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "28B", "ts": "15:37:14"}
+{"op": "bolt", "args": {"p1": "41000,11224,0", "p2": "41000,11248,0", "dia": 12, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "28C", "ts": "15:37:15"}
+{"op": "bolt", "args": {"p1": "41000,11228,0", "p2": "41000,11256,0", "dia": 12, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "28D", "ts": "15:37:15"}
+{"op": "bolt", "args": {"p1": "41000,11232,0", "p2": "41000,11264,0", "dia": 12, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "28E", "ts": "15:37:16"}
+{"op": "bolt", "args": {"p1": "41000,11236,0", "p2": "41000,11272,0", "dia": 12, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "28F", "ts": "15:37:17"}
+{"op": "bolt", "args": {"p1": "41000,11238,0", "p2": "41000,11276,0", "dia": 12, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "290", "ts": "15:37:18"}
+{"op": "bolt", "args": {"p1": "41000,11616,0", "p2": "41000,11632,0", "dia": 16, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "291", "ts": "15:37:19"}
+{"op": "bolt", "args": {"p1": "41000,11620,0", "p2": "41000,11640,0", "dia": 16, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "292", "ts": "15:37:20"}
+{"op": "bolt", "args": {"p1": "41000,11624,0", "p2": "41000,11648,0", "dia": 16, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "293", "ts": "15:37:20"}
+{"op": "bolt", "args": {"p1": "41000,11628,0", "p2": "41000,11656,0", "dia": 16, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "294", "ts": "15:37:21"}
+{"op": "bolt", "args": {"p1": "41000,11632,0", "p2": "41000,11664,0", "dia": 16, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "295", "ts": "15:37:22"}
+{"op": "bolt", "args": {"p1": "41000,11636,0", "p2": "41000,11672,0", "dia": 16, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "296", "ts": "15:37:23"}
+{"op": "bolt", "args": {"p1": "41000,11638,0", "p2": "41000,11676,0", "dia": 16, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "297", "ts": "15:37:24"}
+{"op": "bolt", "args": {"p1": "41000,12016,0", "p2": "41000,12032,0", "dia": 20, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "298", "ts": "15:37:24"}
+{"op": "bolt", "args": {"p1": "41000,12020,0", "p2": "41000,12040,0", "dia": 20, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "299", "ts": "15:37:25"}
+{"op": "bolt", "args": {"p1": "41000,12024,0", "p2": "41000,12048,0", "dia": 20, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "29A", "ts": "15:37:26"}
+{"op": "bolt", "args": {"p1": "41000,12028,0", "p2": "41000,12056,0", "dia": 20, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "29B", "ts": "15:37:27"}
+{"op": "bolt", "args": {"p1": "41000,12032,0", "p2": "41000,12064,0", "dia": 20, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "29C", "ts": "15:37:28"}
+{"op": "bolt", "args": {"p1": "41000,12036,0", "p2": "41000,12072,0", "dia": 20, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "29D", "ts": "15:37:29"}
+{"op": "bolt", "args": {"p1": "41000,12038,0", "p2": "41000,12076,0", "dia": 20, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "29E", "ts": "15:37:29"}
+{"op": "bolt", "args": {"p1": "41000,12416,0", "p2": "41000,12432,0", "dia": 24, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "29F", "ts": "15:37:30"}
+{"op": "bolt", "args": {"p1": "41000,12420,0", "p2": "41000,12440,0", "dia": 24, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2A0", "ts": "15:37:31"}
+{"op": "bolt", "args": {"p1": "41000,12424,0", "p2": "41000,12448,0", "dia": 24, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2A1", "ts": "15:37:32"}
+{"op": "bolt", "args": {"p1": "41000,12428,0", "p2": "41000,12456,0", "dia": 24, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2A2", "ts": "15:37:33"}
+{"op": "bolt", "args": {"p1": "41000,12432,0", "p2": "41000,12464,0", "dia": 24, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2A3", "ts": "15:37:34"}
+{"op": "bolt", "args": {"p1": "41000,12436,0", "p2": "41000,12472,0", "dia": 24, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2A4", "ts": "15:37:35"}
+{"op": "bolt", "args": {"p1": "41000,12438,0", "p2": "41000,12476,0", "dia": 24, "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2A5", "ts": "15:37:35"}
+{"op": "bolt", "args": {"p1": "41000,12000,0", "p2": "41000,12026.5000,0", "dia": "12", "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2A6", "ts": "15:38:59"}
+{"op": "bolt", "args": {"p1": "41000,12060,0", "p2": "41000,12081.5000,0", "dia": "16", "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2A7", "ts": "15:39:00"}
+{"op": "bolt", "args": {"p1": "41000,12120,0", "p2": "41000,12146.5000,0", "dia": "16", "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2A8", "ts": "15:39:01"}
+{"op": "bolt", "args": {"p1": "41000,12180,0", "p2": "41000,12211.5000,0", "dia": "16", "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2A9", "ts": "15:39:01"}
+{"op": "bolt", "args": {"p1": "41000,12240,0", "p2": "41000,12261.5000,0", "dia": "20", "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2AA", "ts": "15:39:02"}
+{"op": "bolt", "args": {"p1": "41000,12300,0", "p2": "41000,12326.5000,0", "dia": "20", "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2AB", "ts": "15:39:03"}
+{"op": "bolt", "args": {"p1": "41000,12360,0", "p2": "41000,12391.5000,0", "dia": "20", "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2AC", "ts": "15:39:04"}
+{"op": "bolt", "args": {"p1": "41000,12420,0", "p2": "41000,12504.0000,0", "dia": "20", "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2AD", "ts": "15:39:05"}
+{"op": "bolt", "args": {"p1": "41000,12480,0", "p2": "41000,12515.0000,0", "dia": "24", "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2AE", "ts": "15:39:05"}
+{"op": "bolt", "args": {"p1": "41000,12540,0", "p2": "41000,12585.0000,0", "dia": "24", "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2AF", "ts": "15:39:06"}
+{"op": "bolt", "args": {"p1": "41000,12600,0", "p2": "41000,12650.0000,0", "dia": "24", "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2B0", "ts": "15:39:07"}
+{"op": "bolt", "args": {"p1": "41000,12660,0", "p2": "41000,12737.5000,0", "dia": "24", "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2B1", "ts": "15:39:08"}
+{"op": "bolt", "args": {"p1": "41000,12720,0", "p2": "41000,12817.5000,0", "dia": "24", "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2B2", "ts": "15:39:09"}
+{"op": "bolt", "args": {"p1": "41000,12780,0", "p2": "41000,13057.5000,0", "dia": "24", "style": "8.8S", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2B3", "ts": "15:39:10"}
+{"op": "bolt", "args": {"p1": "41000,13206,0", "p2": "41000,13235.5000,0", "dia": "14", "style": "DIN912", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2B4", "ts": "15:40:18"}
+{"op": "bolt", "args": {"p1": "41000,13171,0", "p2": "41000,13195.5000,0", "dia": "14", "style": "DIN912", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2B5", "ts": "15:40:18"}
+{"op": "bolt", "args": {"p1": "41000,13136,0", "p2": "41000,13155.5000,0", "dia": "14", "style": "DIN912", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2B6", "ts": "15:40:19"}
+{"op": "bolt", "args": {"p1": "41000,13101,0", "p2": "41000,13115.5000,0", "dia": "14", "style": "DIN912", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2B7", "ts": "15:40:20"}
+{"op": "bolt", "args": {"p1": "41000,13066,0", "p2": "41000,13075.5000,0", "dia": "14", "style": "DIN912", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2B8", "ts": "15:40:21"}
+{"op": "bolt", "args": {"p1": "41000,13031,0", "p2": "41000,13035.5000,0", "dia": "14", "style": "DIN912", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2B9", "ts": "15:40:22"}
+{"op": "bolt", "args": {"p1": "41000,13241,0", "p2": "41000,13275.5000,0", "dia": "14", "style": "DIN912", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2BA", "ts": "15:40:23"}
+{"op": "bolt", "args": {"p1": "41000,13206,0", "p2": "41000,13235.5000,0", "dia": "14", "style": "DIN912", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2BB", "ts": "15:40:24"}
+{"op": "bolt", "args": {"p1": "41000,13171,0", "p2": "41000,13195.5000,0", "dia": "14", "style": "DIN912", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2BC", "ts": "15:40:24"}
+{"op": "bolt", "args": {"p1": "41000,13136,0", "p2": "41000,13155.5000,0", "dia": "14", "style": "DIN912", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2BD", "ts": "15:40:25"}
+{"op": "bolt", "args": {"p1": "41000,13101,0", "p2": "41000,13115.5000,0", "dia": "14", "style": "DIN912", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2BE", "ts": "15:40:26"}
+{"op": "bolt", "args": {"p1": "41000,13066,0", "p2": "41000,13075.5000,0", "dia": "14", "style": "DIN912", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2BF", "ts": "15:40:27"}
+{"op": "bolt", "args": {"p1": "41000,13437,0", "p2": "41000,13499.5000,0", "dia": "27", "style": "DIN6914", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2C0", "ts": "15:40:27"}
+{"op": "bolt", "args": {"p1": "41000,13402,0", "p2": "41000,13459.5000,0", "dia": "27", "style": "DIN6914", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2C1", "ts": "15:40:28"}
+{"op": "bolt", "args": {"p1": "41000,13367,0", "p2": "41000,13419.5000,0", "dia": "27", "style": "DIN6914", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2C2", "ts": "15:40:29"}
+{"op": "bolt", "args": {"p1": "41000,13332,0", "p2": "41000,13379.5000,0", "dia": "27", "style": "DIN6914", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2C3", "ts": "15:40:30"}
+{"op": "bolt", "args": {"p1": "41000,13297,0", "p2": "41000,13339.5000,0", "dia": "27", "style": "DIN6914", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2C4", "ts": "15:40:31"}
+{"op": "bolt", "args": {"p1": "41000,13262,0", "p2": "41000,13299.5000,0", "dia": "27", "style": "DIN6914", "dwg": "A-dialogs-templates-settings.dwg"}, "handle": "2C5", "ts": "15:40:32"}
+{"op": "bolt", "args": {"p1": "-252.9260,86669.1920,5877.0000", "p2": "-175.4260,86669.1920,5877.0000", "dia": "24", "style": "8.8S", "layer": "PS_Bolt", "dwg": "bridge model for amir - REBUILD-3.dwg"}, "handle": "13BBB", "ts": "15:41:50"}
+{"op": "bolt", "args": {"p1": "-252.9260,86549.1920,6067.0000", "p2": "-175.4260,86549.1920,6067.0000", "dia": "24", "style": "8.8S", "layer": "PS_Bolt", "dwg": "bridge model for amir - REBUILD-3.dwg"}, "handle": "13BBC", "ts": "15:41:52"}
+{"op": "bolt", "args": {"p1": "-247.9260,86661.1920,7017.0000", "p2": "-247.9260,86738.6920,7017.0000", "dia": "24", "style": "8.8S", "layer": "PS_Bolt", "dwg": "bridge model for amir - REBUILD-3.dwg"}, "handle": "13BBD", "ts": "15:41:53"}
