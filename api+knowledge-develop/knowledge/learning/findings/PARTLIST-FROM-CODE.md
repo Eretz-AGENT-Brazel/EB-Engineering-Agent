@@ -54,7 +54,57 @@ in that order**, and a size check is not a witness.
 v201 therefore counts the numbered parts and reports `numbered=` in the result line, with
 `[bytes is NOT a witness -- an empty list is a full Access schema]` spelled out.
 
+## ⭐ How to READ an MDB on this machine
+
+64-bit Python has no OLEDB provider installed. **32-bit PowerShell does:**
+
+```
+C:\Windows\SysWOW64\WindowsPowerShell1.0\powershell.exe
+   Provider=Microsoft.Jet.OLEDB.4.0;Data Source=<file.mdb>
+```
+
+Which turns guesswork into a row count. The file holds two tables, `DwgHeader` (1 row) and
+**`Partlist`**, and `Partlist` carries the whole fabrication schema — **127 columns**:
+
+```
+_NAME _COUNT _KEY _CATALOG _POS__NUMBER _SHIPPING_NO_ _MATERIAL _LENGTH _WIDTH _HIGH
+_WEIGHT _SECTAREA _PAINTAREA _LEN_ADDITION _CONGROUP _INSERTX _INSERTY
+_PHI_Start _PHI_End _PHI_ST_A/E _PHI_FL_A/E        <- the end-cut angles
+_DetDwgNr _DetDwgIdx _DetDwgName _OrigPos _ShapeClass
+_NumHoles _NumCuts _NumPCuts _NumOutlets _NumBodies _NumFacets
+_Shape_depth _Flange_With _Flange_Thickness _Web_thickness _Clearance _Price
+_Coating _BoltDia _Grip_length _Mirrored _Handle _COGX _COGY _COGZ _SPEZWEIGHT ...
+```
+
+A row reads `Tube Rond 219.1x4 | 1 | RO219.1X4 | FRANCE.FR_TUBE_ROND | P418 | S235JRG2 | ...`.
+⇒ **everything a workshop needs is reachable from code**, including the per-part hole and cut
+counts and the centre of gravity.
+
 ## ⚠️ What is NOT yet trustworthy here
+
+- **ROW COMPLETENESS IS UNSOLVED, and this is the open end.** On the same drawing, the same op
+  wrote **17.6 MB** at 14:29 and **166 rows** every time since. The cause is the selection: with
+  the FIRST boolean true the `Partlist` table comes out EMPTY (`1,0,0`, `1,1,0` and `1,1,1` all
+  did, the last of them while selecting 19,897 parts), and `0,1,1` is the only mode measured to
+  write rows at all — 166 of them, for a model with 14,062 numbered parts. Worse, the mapping is
+  not stable across runs: `(true,false,false)` answered 19,719 at 14:29 and 386 at 14:42, same
+  drawing, same active document, verified by COM. ⇒ v205 defaults to `sel=0,1,1`, reports
+  `parts=<n>/<entities>` and `numbered=`, and **the file must be read back with the Jet provider
+  before any list is believed.**
+- **`box=`** (`SelectAllObjectsInRange`) returned an EMPTY selection for a range that certainly
+  contains parts, so its coordinate convention is not what I assumed. Untested = unusable.
+- `PerformPartlist2` and the `KsPartlistAuto` modes (`kPartlistPrinter`, `kPartlistPreview`,
+  `kPartlistExport`) are unexercised. `kPartlistExport` is the one to try next, and it may well
+  be the call that respects the whole selection.
+
+### Refuted along the way
+
+**"`DoForAll` consumes the selection it walks."** It looked certain — v200 had no walk and wrote
+17.6 MB, v201 added a walk before `CreateMDBFile` and every list since came out empty. v204
+moved the walk after the write, onto a selection of its own, and the list was **still empty**.
+The walk was never the cause. ⇒ ⭐ two changes in one version is one experiment too few; the
+version that "explains" a regression is a suspect, not a verdict.
+
 
 - **The `numbered=` count itself.** `PsSelection` has no indexer — it walks by callback,
   `DoForAll(PropertyAction)`, which hands each part's `PsObjectProperties` straight in. On the
