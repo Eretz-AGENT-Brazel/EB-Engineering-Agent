@@ -51,3 +51,6 @@
 - [Project intake](project-intake.md) — 🗣️ בכל תחילת פרויקט שואלים על מהותו (4 שאלות של אמיר + מה שהניסיון הוסיף); ממשיכים לשאול עד ש"לא רלוונטי", והתשובות נרשמות ב-README של הפרויקט
 - [Bridge model rebuild](bridge-model-rebuild.md) — מודל 7 של ברני, 21,737 ישויות: השחזור הסוגר של מסלול 2 (20/08/2026), ומה שהוא סתר
 - [Bulk ops and batch](bulk-ops-and-batch.md) — ⚡ במודל גדול הפרוטוקול הוא המחיר: `dumpparts` · `batch` · `erase`/`wipe` · `xclone` (v188–v193)
+- [Drill exit wall](drill-exit-wall.md) — ⚡⚡ החור נוחת בדופן שבה הקרן **יוצאת**; רצפט at=אמצע/n=חוץ/depth, ועל חתך I רק `depth` מגביל לאוגן; `made=` במקום ספירת סך
+- [Partlist and selection](partlist-and-selection.md) — ⚡ רשימת חלקים מקוד (posauto→partlist, sel=0,1,1, קורא Jet 32 ביט); ‏PsSelection לא יציב בין הרצות ⇒ selprobe
+- [Bolt length from the DB](bolt-length-from-db.md) — ⚡⚡ ‏`bolt len=` מתעלמים ממנו; האורך נבחר מהאחיזה דרך טבלת ה-mdb של ProSteel (grip = אמצע KLEMMMIN..KLEMMMAX − DELTA לפי קוטר)

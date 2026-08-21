@@ -123,7 +123,8 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 >   at = a (12612), ray +z   ->  hole at z 12895     the FAR flange
 >   at = b (12626), ray -z   ->  hole at z 12619     exactly the source's hole
 > ```
-> Same part, same point, same section frame. **The ray decides which wall gets drilled**, and the
+> Same part, same point, same section frame. The ray does decide which wall gets drilled — but
+> **not the way this bench read it. See the correction below before using any of it.** The
 > ray taken straight from a hole dump is often the wrong way round. Applied to the 112 affected
 > parts: **644 of 1,086 holes corrected** — exact holes 9,182 → 9,834, beyond 20 mm 1,086 → 442,
 > diameter mismatches 226 → 20. (442 on 71 parts answer to neither direction; still unexplained.)
@@ -138,6 +139,51 @@ whose development track lives in `api+knowledge-develop\` since the 12/08/2026 r
 > > "successfully" reversing 542 rays. ⚠️ **The ray decided OUTSIDE the op is what works**
 > > (9,182 → 9,834 exact holes, convergent). Finish the in-op verify in a scratch band, not
 > > in a deliverable — that mistake was made twice in one afternoon.
+>
+> ### ✅ CORRECTED 21/08/2026 — IT IS THE **EXIT** WALL, AND THERE IS A DEPTH SETTER
+>
+> Reversing the ray is **not** the rule, and the sweep built on it had to be rolled back. On a
+> real `SHS80X80X3.6` in a sandbox band, walls at x 40960 / 41040:
+> ```
+>   at = OUTER +x face,  n = -x   ->  the hole appears in the -x wall     the FAR one
+>   at = OUTER -x face,  n = +x   ->  the hole appears in the +x wall     the FAR one
+>   at = INNER -x face,  n = -x   ->  the hole appears in the -x wall
+>   any of those + innercontour=1 ->  ONE hole through the whole 80 mm
+> ```
+> ⭐⭐ **THE HOLE LANDS IN THE WALL WHERE THE RAY *LEAVES* THE PART.** Reversing `n` moves the
+> exit wall with it, so the hole swaps ends instead of arriving — that is why 542 "successful"
+> reversals drove the exact count DOWN. To reproduce a wanted hole `a→b`:
+> ```
+>   at = the midpoint of the wanted hole
+>   n  = away from the part's centre        (outer end minus inner end)
+>   depth = |a - b|
+> ```
+> 8/8 on every section whose geometry I MEASURED (SHS80 four walls, HE200B and U220 both
+> flanges). The 0/3 were an L70X7 and a plate where I invented the target coordinates instead of
+> reading them — both holes came out exactly one leg / one thickness long at the geometry that
+> was really there.
+>
+> ⚠️ **On an I-profile none of it applies:** an HE200B drilled from either side gives one hole
+> from 100 to −100, the whole section, and `flange=0/1/2` and `innercontour=0/1` make **no
+> difference at all**. A flange-only hole needs **`depth=`** — `PsDrillObject.SetHoleDepth`,
+> wired in v198 along with `dstart` `midline` `xoff` `yoff` `xpos` `ypos` `counter` `step`
+> (the op had been reaching 14 of the type's 27 setters). `depth=15` there gives z 100 → 85,
+> the top flange alone; the depth is measured from the EXIT face inward.
+>
+> Bridge rebuild, one gate over both states: **within 0.1 mm 10,779 → 11,973; beyond 20 mm
+> 652 → 0; unmatched 460 → 4.** Every hollow and I section went to zero.
+>
+> > ⭐⭐⭐ **AND THE OP HAD BEEN LYING ABOUT WHETHER IT DRILLED AT ALL.** `drill` read back
+> > `HolesOf`, the part's **total**, and called anything above zero success — so a call that
+> > created nothing on a part that already had two holes reported EB_OK. 24 holes on 11 plates
+> > were reported drilled twice, in a batch and again on an individual retry, and not one
+> > existed. ⇒ **v199 reports `made=<delta on this call>` and `made=0` is EB_ERR.** A read-back
+> > that is not a DELTA is not a read-back.
+>
+> > ⭐ **0.0095 mm decides a drill.** `at x=184832.1595` → refused, `184832.1500` → drilled.
+> > The centre sat that far outside the rebuilt plate's contour, and moving 0.5 mm *along the
+> > ray* does not help — the sensitive direction is IN THE PLANE. Pulling the insert point
+> > 0.02 mm toward the part's centre landed 20 of those 24.
 >
 > ⚠️ **And the order that would have saved the whole detour:** one part by hand FIRST, then the
 > sweep. The hand test took four calls and two minutes; guessing cost a night and 2,133 holes.

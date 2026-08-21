@@ -72,7 +72,16 @@ the op count is not quoted here either, for the same reason.*
 >
 > **⇒ v194–v196 tried to make the op check its own work, and only half of it stands:**
 > ```
-> drill at=<point> n=<ray> at2=<far end> verify=<mm>   dia= play= [slot=] [flange=]
+> drill at=<point> n=<ray> dia= play= [depth=] [dstart=] [slot=] [rotslot=] [innercontour=]
+>       [midline=] [xoff=] [yoff=] [xpos=] [ypos=] [counter=len,ang] [step=len,dia]
+>       [at2= verify=]        <- v194-196, NOT trustworthy; use the recipe below instead
+>
+> ⭐⭐ THE HOLE LANDS IN THE WALL WHERE THE RAY *LEAVES* THE PART (measured on an SHS80,
+>    21/08/2026). To reproduce a wanted hole a->b:  at = its midpoint,  n = outward
+>    (away from the part centre),  depth = |a-b|.   8/8 across SHS / HE / U sections.
+> ⚠️ On an I-profile the drill ALWAYS crosses the whole section and flange=/innercontour=
+>    change nothing -- depth= (SetHoleDepth) is the only way to confine it to a flange.
+> ⭐ v199 reports made=<delta on THIS call>; made=0 is EB_ERR. A total is not a read-back.
 > ```
 > * ✅ **`holes=0` is now `EB_ERR`, not `EB_PARTIAL`** — that "partial" read as mostly-fine to a
 >   batch counting `EB_OK` prefixes, and **3,920 silent no-ops went past unnoticed** on 20/08.
@@ -3947,3 +3956,85 @@ after three attempts with no improvement, record it and move on.**
 | `dumpholes` | ⚠️ blind to holes modelled as **poly-cuts** — answered `holes=0` on a plate carrying four ⌀19 |
 | `posauto dry=1` | ⚠️ writes `eb_posauto.txt` to the **shared plugin folder**, not the model's channel |
 | COM `Ks_ComEditModification` → `GetPolyCut` → `Ks_ComPolyCut.GetPolygon` | **reads a polyCut's outline** — the capability this file listed as missing. Vertex = `(x, y, bulge)` |
+
+### `partlist` — the parts list, from code (v200-v205)
+
+```
+partlist templates=1                       -> the legal template names -> eb_partlist_templates.txt
+partlist out=<file.mdb> template=<name> [sel=0,1,1] [box=] [tol=l,w,h,wt] [filter=n]
+```
+
+`PsCreatePartlist.CreateMDBFile` — **no dialog**. Verified on a controlled model: 12 beams in,
+**12 rows out**, each with the right profile, position, material, length and weight
+(HEB 200 = 61.3 kg, SHS80x80x3.6 = 8.53, IPE 160 = 15.8). The `Partlist` table carries the full
+**127-column** fabrication schema — `_WEIGHT _LENGTH _PAINTAREA _SECTAREA _NumHoles _NumCuts
+_COGX/Y/Z _DetDwgNr _BoltDia _Grip_length _SPEZWEIGHT` and the end-cut angles.
+
+- 🧲 **`posauto` FIRST.** A parts list reports only parts that carry a position number. Without
+  them `CreateMDBFile` still returns **true** and writes a valid **empty** file — 122,880 bytes
+  of complete Access schema. A size check is not a witness.
+- 🧲 **`sel=0,1,1`** is the only mode measured to write rows. `0,1,0`, `1,1,0`, `1,0,0` and
+  `1,1,1` all wrote **zero rows**, the last of them while selecting 19,897 parts — so
+  `ObjectCount` cannot tell you whether the write will happen.
+- 🧲 **Read the file back with 32-bit PowerShell + `Microsoft.Jet.OLEDB.4.0`**
+  (`C:\Windows\SysWOW64\WindowsPowerShell1.0\powershell.exe`). 64-bit Python has no
+  provider. Bracket the column names in Jet SQL: `SELECT [_NAME],[_WEIGHT] FROM Partlist`.
+  When scanning the bytes directly, decode **UTF-16LE** — an ASCII scan of a good 17.6 MB list
+  finds only noise.
+- ⚠️ **Row completeness at scale is OPEN.** On the 20,298-entity bridge the same call wrote
+  17.6 MB once and **166 rows** every run since, for 14,062 numbered parts. The drawing holds
+  only 18 assemblies, so that is not the explanation. Next lever:
+  `PerformPartlist2(listfile, formatfile, AsSinglePartList, KsPartlistAuto, target)` with
+  `kPartlistExport` — `CreateMDBFile` exposes no single-part/assembly switch at all.
+- ⚠️ `box=` (`SelectAllObjectsInRange`) returned an EMPTY selection over a range that certainly
+  holds parts. Untested = unusable.
+
+### `selprobe` — what a PsSelection actually selects (v202, read-only)
+
+```
+selprobe [repeat=<n>]   -> eb_selprobe.txt: all 8 boolean combinations, status and ObjectCount
+```
+
+Built because `collision` and `partlist` both call `SelectAllObjects(true,false,false)` and that
+call answered **19,719** at 14:29 and **386** at 14:42 on the same drawing, active document
+confirmed by COM. Measured on the bridge, twice, identically inside one session:
+
+| a,b,c | count | | a,b,c | count |
+|---|---|---|---|---|
+| 0,0,0 | 406 | | 0,0,1 | 965 |
+| 1,0,0 | 386 | | 1,0,1 | 564 |
+| 0,1,0 | 19,739 | | **0,1,1** | **20,298 = the whole drawing** |
+| 1,1,0 | 19,719 | | 1,1,1 | 19,897 |
+
+⇒ the second boolean is what lets the model's parts in; the third adds 559 more either way.
+**Run `selprobe` on a model before trusting an op that selects everything.**
+
+### 🧲 THE BOLT LENGTH IS LOOKED UP FROM THE GRIP — `len=` is ignored
+
+`bolt len=` was passed on 5,463 bolts and every family came out **one step short**
+(`M12 x 50` → `M12 x 45`, M16 55→50, M20 65→60, M24 120→110). The length is selected by the
+grip through ProSteel's own bolt database, and `op=styles` names the file and table for each of
+the 27 installed styles:
+
+```
+Data\Bolts\Australia.mdb @ AS_Bolt_88s      <- style 8.8S   (the AUSTRALIAN table)
+Data\Bolts\DinBolts.mdb  @ SCH912, SCH6914  <- DIN912, DIN6914
+```
+
+Read them with **32-bit PowerShell + `Microsoft.Jet.OLEDB.4.0`**. Every row carries
+`KLEMMMIN`/`KLEMMMAX`, the grip band for that length, so:
+
+```
+grip = (KLEMMMIN + KLEMMMAX)/2 − DELTA(diameter)
+DELTA:  M12 15.75 · M14(DIN912) 15 · M16 20 · M20 23.5 · M24 28.5 · M27(DIN6914) 35
+p1 = the axis start,  p2 = p1 + grip·direction   (the bolt then spans its full length from p1)
+```
+
+**14/14** on every designation the bridge uses, first try, `M20 x 120` (grip 84) and
+`M24 x 330` (grip 277.5) included. 5,405 bolts rebuilt in 130 s with an axis-length spectrum
+identical to the source's and 95.16% of midpoints inside 0.1 mm.
+
+⚠️ **Check the table before promising a size.** `AS_Bolt_88s` ends at **M12 x 60** and holds no
+M14 and no M27 at all — which is the whole reason M12 grips above ~38 refuse, and why the
+earlier "8.8S only accepts grip 24" note was wrong outside M12. Copy of both tables lives in
+`knowledge/bolt_table_AS_88s.tsv` and `knowledge/bolt_table_DIN.tsv`.
